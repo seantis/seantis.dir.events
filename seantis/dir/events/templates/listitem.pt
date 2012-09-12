@@ -1,0 +1,13 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+   xmlns:tal="http://xml.zope.org/namespaces/tal"
+   xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="seantis.dir.events"
+   xml:lang="en"
+   lang="en">
+
+  <div class="directoryInfoText">
+    <div>
+        <a tal:attributes="href context/absolute_url; id context/id" tal:content="context/title"></a>
+        <div style="font-weight: normal;" class="documentDescription" tal:content="context/description"></div>
+    </div>
+  </div>
+</div>
