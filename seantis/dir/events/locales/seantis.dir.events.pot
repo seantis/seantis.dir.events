@@ -1,0 +1,107 @@
+# --- PLEASE EDIT THE LINES BELOW CORRECTLY ---
+# SOME DESCRIPTIVE TITLE.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2012-09-13 11:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: seantis.dir.events\n"
+
+#: ./item.py:45
+msgid "Attachment 1"
+msgstr ""
+
+#: ./item.py:50
+msgid "Attachment 2"
+msgstr ""
+
+#: ./item.py:104
+msgid "Contact Email"
+msgstr ""
+
+#: ./item.py:98
+msgid "Contact Name"
+msgstr ""
+
+#: ./item.py:110
+msgid "Contact Phone"
+msgstr ""
+
+#: ./profiles/default/types/seantis.dir.events.directory.xml
+msgid "Events Directory"
+msgstr ""
+
+#: ./profiles/default/types/seantis.dir.events.item.xml
+msgid "Events Directory Item"
+msgstr ""
+
+#: ./item.py:68
+msgid "Housenumber"
+msgstr ""
+
+#: ./directory.py:12
+msgid "Image"
+msgstr ""
+
+#: ./item.py:56
+msgid "Locality"
+msgstr ""
+
+#: ./item.py:35
+msgid "Long Description"
+msgstr ""
+
+#: ./item.py:40
+msgid "Opening Hours"
+msgstr ""
+
+#: ./item.py:92
+msgid "Organizer"
+msgstr ""
+
+#: ./item.py:116
+msgid "Prices"
+msgstr ""
+
+#: ./item.py:29
+msgid "Short Description"
+msgstr ""
+
+#: ./item.py:62
+msgid "Street"
+msgstr ""
+
+#: ./item.py:23
+msgid "Submitter Email"
+msgstr ""
+
+#: ./item.py:18
+msgid "Submitter Name"
+msgstr ""
+
+#: ./item.py:122
+msgid "Tickets / Registration"
+msgstr ""
+
+#: ./item.py:80
+msgid "Town"
+msgstr ""
+
+#: ./item.py:86
+msgid "Website"
+msgstr ""
+
+#: ./item.py:74
+msgid "Zipcode"
+msgstr ""
+
