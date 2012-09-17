@@ -24,3 +24,11 @@ class ExtendedDirectoryViewlet(grok.Viewlet):
     grok.viewletmanager(directory.DirectoryViewletManager)
 
     template = grok.PageTemplateFile('templates/directorydetail.pt')
+
+class EventsDirectoryView(directory.View):
+
+    grok.name('view')
+    grok.context(IEventsDirectory)
+    grok.require('zope2.View')
+
+    template = grok.PageTemplateFile('templates/directory.pt')

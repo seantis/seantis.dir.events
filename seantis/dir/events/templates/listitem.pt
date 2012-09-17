@@ -5,9 +5,15 @@
    lang="en">
 
   <div class="directoryInfoText">
-    <div>
-        <a tal:attributes="href context/absolute_url; id context/id" tal:content="context/title"></a>
-        <div style="font-weight: normal;" class="documentDescription" tal:content="context/description"></div>
+    <div class="events">
+        <h3><a 
+          tal:attributes="href context/absolute_url; id context/id" 
+          tal:content="context/title">
+        </a></h3>
+        <div class="documentDescription" tal:content="context/short_description"></div>
+        <tal:block repeat="category python: context.categories()">
+        <div tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
+        </tal:block>
     </div>
   </div>
 </div>
