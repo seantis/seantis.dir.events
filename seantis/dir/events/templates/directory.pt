@@ -30,9 +30,6 @@
             <metal:use use-macro="context/@@seantis-dir-macros/macros/resultlist">
             </metal:use>
 
-            <metal:use use-macro="context/@@seantis-dir-macros/macros/map">
-            </metal:use>
-
             <div class="directoryCategories">
                 <h3 i18n:translate="">Categories</h3>
                 <tal:block define="listvalues python: view.category_values('cat1', filtered=False)">
@@ -46,6 +43,9 @@
                     </metal:use>
                 </tal:block>
             </div>
+
+            <metal:use use-macro="context/@@seantis-dir-macros/macros/map">
+            </metal:use>
 
             <div class="visualClear"></div>
         </div>
