@@ -19,6 +19,11 @@
     <!-- Grok the package to initialise schema interfaces and content classes -->
     <grok:grok package="." />
 
+    <!-- Resources -->
+    <browser:resourceDirectory
+        name="seantis.dir.events.stylesheets"
+        directory="css"/>
+
     <!-- Register an extension profile to make the product installable -->
     <genericsetup:registerProfile
         name="default"
