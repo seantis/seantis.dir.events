@@ -9,6 +9,7 @@ from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IFieldMapExtender, IDirectoryItem
 
 from seantis.dir.events.directory import IEventsDirectory
+from seantis.dir.events import utils
 from seantis.dir.events import _
   
 class IEventsDirectoryItem(IDirectoryItem):
@@ -124,7 +125,10 @@ class IEventsDirectoryItem(IDirectoryItem):
     )
 
 class EventsDirectoryItem(item.DirectoryItem):
-    pass
+    
+    @property
+    def cat3(self):
+        return list(utils.datecategories(self.start, self.end))
 
 class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.context(IEventsDirectoryItem)
