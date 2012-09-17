@@ -35,13 +35,13 @@
 
             <div class="directoryCategories">
                 <h3 i18n:translate="">Categories</h3>
-                <tal:block define="listvalues python: view.category_values(1, filtered=False)">
+                <tal:block define="listvalues python: view.category_values('cat1', filtered=False)">
                     <metal:use use-macro="context/@@seantis-dir-macros/macros/categorylist">
                     </metal:use>
                 </tal:block>
 
                 <h3 i18n:translate="">Locations</h3>
-                <tal:block define="listvalues python: view.category_values(2, filtered=False)">
+                <tal:block define="listvalues python: view.category_values('cat2', filtered=False)">
                     <metal:use use-macro="context/@@seantis-dir-macros/macros/categorylist">
                     </metal:use>
                 </tal:block>
