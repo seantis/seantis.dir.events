@@ -1,3 +1,4 @@
+from calendar import monthrange
 from datetime import datetime, timedelta
 from seantis.dir.events import _
 
@@ -13,25 +14,176 @@ def overlaps(start, end, otherstart, otherend):
 
 def to_utc(date):
 
-    date = (date - date.utcoffset())
+    if date.utcoffset():
+        date = (date - date.utcoffset())
+
     return datetime(date.year, date.month, date.day, date.hour, date.minute)
+
+weekdays = dict(MO=0, TU=1, WE=2, TH=3, FR=4, SA=5, SU=6)
+def next_weekday(date, weekday):
+    w = weekdays[weekday]
+
+    if date.weekday() == w:
+        return date
+    
+    return date + timedelta((w - date.weekday()) % 7)
+
+def this_weekend(date):
+    this_morning = datetime(date.year, date.month, date.day, 0, 0)
+
+    if this_morning.weekday() == weekdays["SA"]:
+        weekend_start = this_morning + timedelta(days=-1, hours=16)
+    elif this_morning.weekday() == weekdays["SU"]:
+        weekend_start = this_morning + timedelta(days=-2, hours=16)
+    else:
+        weekend_start = next_weekday(this_morning, "FR") + timedelta(hours=16)
+
+    weekend_end = next_weekday(weekend_start, "SU")
+    weekend_end += timedelta(hours=-16, days=1, microseconds=-1)
+
+    return weekend_start, weekend_end
+
+def this_month(date):
+    last_day = monthrange(date.year, date.month)[1]
+    month_start = datetime(date.year, date.month, 1, 0, 0)
+    month_end = datetime(date.year, date.month, last_day, 0, 0)
+    month_end += timedelta(days=1, microseconds=-1)
+
+    return month_start, month_end
+
+class DateRangeInfo(object):
+
+    def __init__(self, start, end):
+        self.now = datetime.utcnow()
+        self.s = to_utc(start)
+        self.e = to_utc(end)
+
+    def get_now(self):
+        return self._now
+
+    def set_now(self, now):
+        self._now = now
+        self.this_morning = datetime(now.year, now.month, now.day)
+        self.this_evening = self.this_morning + timedelta(days=1, microseconds=-1)
+
+    now = property(get_now, set_now)
+
+    @property
+    def is_over(self):
+        return self.now > self.e
+
+    @property
+    def is_today(self):
+        return overlaps(self.s, self.e, self.this_morning, self.this_evening)
+
+    @property
+    def is_tomorrow(self):
+        return overlaps(self.s, self.e, 
+            self.this_morning + timedelta(days=1),
+            self.this_evening + timedelta(days=1)
+        )
+
+    @property
+    def is_day_after_tomorrow(self):
+        return overlaps(self.s, self.e,
+            self.this_morning + timedelta(days=2),
+            self.this_evening + timedelta(days=2),
+        )
+
+    @property
+    def is_this_week(self):
+        # range between now and next sunday evening with
+        # range contains at least two days (saturday until next sunday)
+        end_of_week = next_weekday(self.this_evening + timedelta(days=2), "SU")
+        return overlaps(self.s, self.e, self.this_morning, end_of_week)
+
+    @property
+    def is_next_week(self):
+        # range between next sunday (as in self.is_this_week)
+        # and the sunday after that
+        start_of_week = next_weekday(self.this_morning + timedelta(days=2), "SU")
+        start_of_week += timedelta(days=1)
+        start_of_week = datetime(
+            start_of_week.year, start_of_week.month, start_of_week.day, 0, 0
+        )
+        end_of_week = next_weekday(start_of_week, "SU") + timedelta(days=1, microseconds=-1)
+
+        return overlaps(self.s, self.e, start_of_week, end_of_week)
+
+    @property
+    def is_this_weekend(self):
+        # between friday at 4 and saturday midnight
+
+        weekend_start, weekend_end = this_weekend(self.now)
+        return overlaps(self.s, self.e, weekend_start, weekend_end)
+
+    @property
+    def is_next_weekend(self):
+        weekend_start, weekend_end = this_weekend(self.now)
+        weekend_start += timedelta(days=7)
+        weekend_end += timedelta(days=7)
+
+        return overlaps(self.s, self.e, weekend_start, weekend_end)
+
+    @property
+    def is_this_month(self):
+        month_start, month_end = this_month(self.now)
+
+        return overlaps(self.s, self.e, month_start, month_end)
+
+    @property
+    def is_next_month(self):
+        prev_start, prev_end = this_month(self.now)
+        month_start = prev_end + timedelta(microseconds=1)
+
+        month_start, month_end = this_month(month_start)
+        return overlaps(self.s, self.e, month_start, month_end)
+
+    @property
+    def is_this_year(self):
+        return self.now.year in (self.s.year, self.e.year)
+
+    @property
+    def is_next_year(self):
+        return (self.now.year + 1) in (self.s.year, self.e.year)
 
 def datecategories(start, end):
     
-    start = to_utc(start)
-    end = to_utc(end)
+    daterange = DateRangeInfo(start, end)
 
-    today = datetime.utcnow()
-
-    if end < today:
+    if daterange.is_over:
         yield _(u'Already Over')
         raise StopIteration
 
-    this_morning = datetime(today.year, today.month, today.day)
-    this_night = this_morning + timedelta(days=1, microseconds=-1)
-
-    if overlaps(start, end, this_morning, this_night):
+    if daterange.is_today:
         yield _(u'Today')
 
-    if overlaps(start, end, this_morning+timedelta(days=1), this_night+timedelta(days=1)):
+    if daterange.is_tomorrow:
         yield _(u'Tomorrow')
+
+    if daterange.is_day_after_tomorrow:
+        yield _(u'Day after Tomorrow')
+
+    if daterange.is_this_weekend:
+        yield _(u'This Weekend')
+
+    if daterange.is_next_weekend:
+        yield _(u'Next Weekend')
+
+    if daterange.is_this_week:
+        yield _(u'This Week')
+
+    if daterange.is_next_week:
+        yield _(u'Next Week')
+
+    if daterange.is_this_month:
+        yield _(u'This Month')
+
+    if daterange.is_next_month:
+        yield _(u'Next Month')
+
+    if daterange.is_this_year:
+        yield _(u'This Year')
+
+    if daterange.is_next_year:
+        yield _(u'Next Year')
