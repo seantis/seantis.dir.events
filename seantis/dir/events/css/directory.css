@@ -39,3 +39,17 @@
 #content .directoryCategories ul li {
     margin-left: -25px;
 }
+
+.events .eventdate span {
+    font-weight: bold;
+    color: white;
+    background-color: #195c90;
+    padding: 2px 7px;
+    border-radius: 2px;
+}
+
+.events .eventtags {
+    font-size: 0.9em;
+    line-height: 11px;
+    margin-top: 4px;
+}

@@ -6,13 +6,14 @@
 
   <div class="directoryInfoText">
     <div class="events">
+        <div class="eventdate"><span tal:content="python: context.start.strftime('%d.%m.%Y')"></span></div>
         <h3><a 
-          tal:attributes="href context/absolute_url; id context/id" 
-          tal:content="context/title">
+            tal:attributes="href context/absolute_url; id context/id" 
+            tal:content="context/title">
         </a></h3>
         <div class="documentDescription" tal:content="context/short_description"></div>
-        <tal:block repeat="category python: context.categories()">
-        <div tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
+        <tal:block repeat="category python: context.categories()[:2]">
+            <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
         </tal:block>
     </div>
   </div>
