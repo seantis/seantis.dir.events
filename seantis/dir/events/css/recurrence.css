@@ -1,0 +1,6 @@
+/* seantis.dir.events adjustments for recurrenceinput widget */
+
+/* disable infinite events for now (checked again at validation, see seantis.dir.events.item) */
+#rirangeoptions .field div:first-child {
+    display: none;
+}

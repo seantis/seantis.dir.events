@@ -26,6 +26,8 @@ setup(name='seantis.dir.events',
       install_requires=[
           'setuptools',
           'Plone',
+          'python-dateutil',
+          'plone.app.event',
           'plone.app.dexterity',
           'collective.autopermission',
           'collective.testcaselayer',

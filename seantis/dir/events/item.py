@@ -1,7 +1,9 @@
 from five import grok
 from zope.schema import Text, TextLine, URI
+from zope.interface import Invalid
 from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
+from plone.directives import form
 
 from seantis.dir.base import item
 from seantis.dir.base import core
@@ -123,6 +125,19 @@ class IEventsDirectoryItem(IDirectoryItem):
         title=_(u'Tickets / Registration'),
         required=False
     )
+
+
+# plone.app.event is currently not working well with an unlimited or huge
+# number of recurrences with abysmal performance. For this reason the occurences
+# are limited for now and the infinite option is hidden using recurrence.css
+from plone.app.event.dx.behaviors import IEventRecurrence
+from dateutil.rrule import rrulestr
+@form.validator(field=IEventRecurrence['recurrence'])
+def validate_recurrence(value):
+    rrule = rrulestr(value)
+    for ix, rule in enumerate(rrule):
+        if ix > 364:
+            raise Invalid(_(u'You may not add more than 365 occurences'))
 
 class EventsDirectoryItem(item.DirectoryItem):
     
