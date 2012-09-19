@@ -63,7 +63,7 @@ class IEventsDirectoryItem(IDirectoryItem):
     searchable('street')
     street = TextLine(
         title=_(u'Street'),
-        required=True
+        required=False
     )
 
     searchable('housenumber')
@@ -81,7 +81,7 @@ class IEventsDirectoryItem(IDirectoryItem):
     searchable('town')
     town = TextLine(
         title=_(u'Town'),
-        required=True
+        required=False
     )
 
     searchable('website')
@@ -93,7 +93,7 @@ class IEventsDirectoryItem(IDirectoryItem):
     searchable('organizer')
     organizer = TextLine(
         title=_(u'Organizer'),
-        required=True
+        required=False
     )
 
     searchable('contact_name')
@@ -105,7 +105,7 @@ class IEventsDirectoryItem(IDirectoryItem):
     searchable('contact_email')
     contact_email = Email(
         title=_(u'Contact Email'),
-        required=True
+        required=False
     )
 
     searchable('contact_phone')
@@ -126,6 +126,19 @@ class IEventsDirectoryItem(IDirectoryItem):
         required=False
     )
 
+IEventsDirectoryItem.setTaggedValue('seantis.dir.base.omitted', 
+    ['cat3', 'cat4', 'description']
+)
+
+IEventsDirectoryItem.setTaggedValue('seantis.dir.base.order',
+    ['title', 'cat1', 'cat2', 'short_description', 'long_description', 
+     'IEventBasic.start', 'IEventBasic.end', 'IEventBasic.whole_day', 
+     'IEventBasic.timezone', 'IEventRecurrence.recurrence', 
+     'image','attachment_1', 'attachment_2', 'locality', 'street', 
+     'housenumber', 'zipcode', 'town', 'website', 'organizer', 'contact_name', 
+     'contact_email', 'contact_phone', 'prices', 'registration', '*'
+    ]
+)
 
 # plone.app.event is currently not working well with an unlimited or huge
 # number of recurrences with abysmal performance. For this reason the occurences
@@ -134,6 +147,9 @@ from plone.app.event.dx.behaviors import IEventRecurrence
 from dateutil.rrule import rrulestr
 @form.validator(field=IEventRecurrence['recurrence'])
 def validate_recurrence(value):
+    if not value:
+        return
+        
     rrule = rrulestr(value)
     for ix, rule in enumerate(rrule):
         if ix > 364:
