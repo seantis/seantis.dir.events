@@ -52,4 +52,29 @@
     font-size: 0.9em;
     line-height: 11px;
     margin-top: 4px;
+    background-color: #ddd;
+    display: inline;
+    padding: 1px 4px;
+    border-radius: 2px;
+}
+
+.events .short {
+    font-weight: normal;
+    font-size: 14px;
+    color: #222;
+    padding: 0 0 3px 0;
+}
+
+.events .long {
+    font-size: 12px;   
+}
+
+.events .event {
+    width: 50%;
+    float: left;   
+}
+
+.events #directoryResultMap {
+    width: 50%;
+    float: right;   
 }

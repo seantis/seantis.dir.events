@@ -40,7 +40,7 @@ class IEventsDirectoryItem(IDirectoryItem):
     )
 
     image = NamedImage(
-        title=_(u'Opening Hours'),
+        title=_(u'Image'),
         required=False
     )
 

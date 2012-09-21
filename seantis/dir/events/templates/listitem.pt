@@ -11,7 +11,7 @@
             tal:attributes="href context/absolute_url; id context/id" 
             tal:content="context/title">
         </a></h3>
-        <div class="documentDescription" tal:content="context/short_description"></div>
+        <div class="short" tal:content="context/short_description"></div>
         <tal:block repeat="category python: context.categories()[:2]">
             <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
         </tal:block>

@@ -19,16 +19,62 @@
         <div tal:replace="structure provider:plone.belowcontenttitle" />
         <div tal:replace="structure provider:plone.abovecontentbody" />
         
-        <div id="directoryDetails">
+        <div id="directoryDetails" class="events">
+            <div class="event">
+              <div class="event-head">
+                <div class="eventdate"><span tal:content="python: context.start.strftime('%d.%m.%Y')"></span></div>
 
-            <div class="directoryTypes" tal:condition="context/cat1" tal:content="python: ', '.join(context.cat1)"></div>
+                <h2>
+                    <tal:block content="context/title" />
+                </h2>
 
-            <h2>
-                <tal:block content="context/title" />
-            </h2>
+                <div class="descriptions">
+                  <div class="short" tal:content="context/short_description"></div>
+                  <div class="long" tal:content="context/long_description"></div>
+                </div>
+
+                <tal:block repeat="category python: context.categories()[:2]">
+                    <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
+                </tal:block>
+              </div>
+
+              <div class="event-details">
+                <div class="location">
+                  <div class="locality" tal:content="context/locality"></div>
+                  <div class="street">
+                    <span tal:content="context/street"></span>
+                    <span tal:content="context/housenumber"></span>
+                  </div>
+                  <div class="town">
+                    <span tal:content="context/zipcode"></span>
+                    <span tal:content="context/town"></span>
+                  </div>
+                </div>
+
+                <div class="organizer">
+                  <div class="name" tal:content="context/organizer"></div>
+                  <div class="website" tal:condition="context/website">
+                    <a tal:content="context/website" tal:attributes="href context/website"></a>
+                  </div>
+                  <div class="contact">
+                    <div class="name" tal:content="context/contact_name"></div>
+                    <div class="email" tal:condition="context/contact_email">
+                      <a tal:content="context/contact_email" tal:attributes="href python: 'mailto:' + context.contact_email"></a>
+                    </div>
+                    <div class="phone" tal:content="context/contact_phone"></div>
+                  </div>
+                </div>
+
+                <div class="ticket">
+                  <div class="registration" tal:content="context/registration"></div>
+                  <div class="prices" tal:content="context/prices"></div>
+                </div>
+            </div>
+            </div>
 
             <metal:use use-macro="context/@@seantis-dir-macros/macros/map"></metal:use>
 
+            <div style="clear: both;"></div>
         </div>
 
         <div tal:replace="structure provider:plone.belowcontentbody" />
