@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+
 from five import grok
 from zope.schema import Text, TextLine, URI
 from zope.interface import Invalid
@@ -156,7 +158,7 @@ def validate_recurrence(value):
             raise Invalid(_(u'You may not add more than 365 occurences'))
 
 class EventsDirectoryItem(item.DirectoryItem):
-    
+
     @property
     def cat3(self):
         return list(utils.datecategories(self.start, self.end))

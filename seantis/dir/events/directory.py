@@ -1,9 +1,14 @@
+from datetime import datetime, timedelta
+
 from five import grok
 from plone.namedfile.field import NamedImage
+from Products.CMFPlone.PloneBatch import Batch
 
 from seantis.dir.base import directory
+from seantis.dir.base.const import ITEMSPERPAGE
 from seantis.dir.base.interfaces import IDirectory
 from seantis.dir.events import _
+from seantis.dir.events.recurrence import occurrences
 
 class IEventsDirectory(IDirectory):
     """Extends the seantis.dir.base.directory.IDirectory"""
@@ -44,3 +49,17 @@ class EventsDirectoryView(directory.View):
     grok.require('zope2.View')
 
     template = grok.PageTemplateFile('templates/directory.pt')
+
+    @property
+    def batch(self):    
+        min_date = datetime.utcnow() - timedelta(days=7)
+        max_date = datetime.utcnow() + timedelta(days=365*2)
+
+        events = []
+        for item in self.items:
+            events.extend(occurrences(item, min_date, max_date))
+
+        events.sort(key=lambda o: str(o.start))
+
+        start = int(self.request.get('b_start') or 0)
+        return Batch(events, ITEMSPERPAGE, start, orphan=1)

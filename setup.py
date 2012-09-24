@@ -32,7 +32,8 @@ setup(name='seantis.dir.events',
           'collective.autopermission',
           'collective.testcaselayer',
           'collective.dexteritytextindexer',
-          'seantis.dir.base'
+          'seantis.dir.base',
+          'zope.proxy'
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
