@@ -67,14 +67,30 @@
 
 .events .long {
     font-size: 12px;   
+    padding: 0 0 4px 0;
 }
 
 .events .event {
-    width: 50%;
-    float: left;   
+     float: left;
+     width: 58%;   
 }
 
-.events #directoryResultMap {
-    width: 50%;
-    float: right;   
+.events .event-details {
+     margin-top: 20px;   
 }
+
+.events .event-details h3 {
+     font-size: 1em;
+     color: #555;
+}
+
+.events .event-details > div {
+    border: 1px solid #205c90;
+    border-width: 0 0 0 10px;
+    padding: 0 0 10px 10px
+}
+
+.events .event-details > div:last-child {
+    padding-bottom: 5px;   
+}
+
