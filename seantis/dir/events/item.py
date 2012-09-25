@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import pytz
 
 from five import grok
 from zope.schema import Text, TextLine, URI
@@ -169,6 +170,32 @@ class EventsDirectoryItem(item.DirectoryItem):
             categories.extend(utils.datecategories(o.start, o.end))
 
         return categories
+
+# Will work once the occurrences properly support timezones
+# class HumanDateMixin(object):
+
+#     calendar_type = 'gregorian'
+
+#     def human_date(self, item=None):
+#         item = item or self.context
+
+#         daterange = utils.DateRangeInfo(item.start, item.end)
+#         local_date = item.start.astimezone(pytz.timezone(item.timezone))
+
+#         if daterange.is_today:
+#             return _(u'Today ${time}', 
+#                 mapping=dict(time=local_date.strftime('%H:%M'))
+#             ) 
+#         elif daterange.is_tomorrow:
+#             return _(u'Tomorrow ${time}',
+#                 mapping=dict(time=local_date.strftime('%H:%M'))
+#             )
+        
+#         calendar = self.request.locale.dates.calendars[self.calendar_type]
+#         weekday = calendar.getDayNamesAbbrev()[local_date.weekday()]
+
+
+#         return weekday + ', ' + local_date.strftime('%d.%m.%Y')
 
 class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.context(IEventsDirectoryItem)
