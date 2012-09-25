@@ -1,6 +1,7 @@
-
 from zope.proxy import ProxyBase
 from dateutil.rrule import rrulestr
+
+from seantis.dir.events.utils import overlaps, to_utc
 
 # plone.app.event creates occurrences using adapters, which seems a bit wasteful
 # to me. It also doesn't play too well with my interfaces (overridding either
@@ -29,21 +30,28 @@ class Occurrence(ProxyBase):
 
 def occurrences(item, min_date, max_date):
 
+    min_date = to_utc(min_date)
+    max_date = to_utc(max_date)
+
     if not item.recurrence:
-        return [Occurrence(item, item.start, item.end)]
+
+        if not overlaps(min_date, max_date, to_utc(item.start), to_utc(item.end)):
+            return []
+        else:
+            return [Occurrence(item, item.start, item.end)]
     
     duration = item.end - item.start
 
     result = []
     for start in rrulestr(item.recurrence):
 
-        if start < min_date:
+        if to_utc(start) < min_date:
             continue
 
         end = start + duration
-        if end > max_date:
+        if to_utc(end) > max_date:
             break
 
-        result.append(Occurrence(item, start, start + duration))
+        result.append(Occurrence(item, start, end))
 
     return result

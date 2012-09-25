@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 from five import grok
 from plone.namedfile.field import NamedImage
 from Products.CMFPlone.PloneBatch import Batch
@@ -7,6 +5,7 @@ from Products.CMFPlone.PloneBatch import Batch
 from seantis.dir.base import directory
 from seantis.dir.base.const import ITEMSPERPAGE
 from seantis.dir.base.interfaces import IDirectory
+from seantis.dir.events import utils
 from seantis.dir.events import _
 from seantis.dir.events.recurrence import occurrences
 
@@ -52,12 +51,16 @@ class EventsDirectoryView(directory.View):
 
     @property
     def batch(self):    
-        min_date = datetime.utcnow() - timedelta(days=7)
-        max_date = datetime.utcnow() + timedelta(days=365*2)
+        min_date, max_date = utils.event_range()
 
         events = []
         for item in self.items:
             events.extend(occurrences(item, min_date, max_date))
+
+        datefilter = self.get_filter_terms().get('cat3', None)
+        if datefilter:
+            key = utils.filter_function(self.context, self.request, datefilter)
+            events = filter(utils.filter_key(key), events)
 
         events.sort(key=lambda o: str(o.start))
 

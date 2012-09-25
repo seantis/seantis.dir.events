@@ -1,6 +1,14 @@
 from calendar import monthrange
 from datetime import datetime, timedelta
+
 from seantis.dir.events import _
+from seantis.dir.base.utils import translate
+
+def event_range():
+    return (
+        datetime.utcnow() - timedelta(days=7),
+        datetime.utcnow() + timedelta(days=365*2)
+    )
 
 def overlaps(start, end, otherstart, otherend):
 
@@ -51,6 +59,19 @@ def this_month(date):
 
     return month_start, month_end
 
+methods = list()
+categories = dict()
+
+def category(name, unique=False):
+    def decorator(fn):
+        global methods, categories
+
+        methods.append((fn.__name__, name, unique))
+        categories[name] = fn.__name__
+        return fn
+
+    return decorator
+
 class DateRangeInfo(object):
 
     def __init__(self, start, end):
@@ -69,14 +90,17 @@ class DateRangeInfo(object):
     now = property(get_now, set_now)
 
     @property
+    @category(_(u'Already Over'), unique=True)
     def is_over(self):
         return self.now > self.e
 
     @property
+    @category(_(u'Today'))
     def is_today(self):
         return overlaps(self.s, self.e, self.this_morning, self.this_evening)
 
     @property
+    @category(_(u'Tomorrow'))
     def is_tomorrow(self):
         return overlaps(self.s, self.e, 
             self.this_morning + timedelta(days=1),
@@ -84,6 +108,7 @@ class DateRangeInfo(object):
         )
 
     @property
+    @category(_(u'Day after Tomorrow'))
     def is_day_after_tomorrow(self):
         return overlaps(self.s, self.e,
             self.this_morning + timedelta(days=2),
@@ -91,6 +116,24 @@ class DateRangeInfo(object):
         )
 
     @property
+    @category(_(u'This Weekend'))
+    def is_this_weekend(self):
+        # between friday at 4 and saturday midnight
+
+        weekend_start, weekend_end = this_weekend(self.now)
+        return overlaps(self.s, self.e, weekend_start, weekend_end)
+
+    @property
+    @category(_(u'Next Weekend'))
+    def is_next_weekend(self):
+        weekend_start, weekend_end = this_weekend(self.now)
+        weekend_start += timedelta(days=7)
+        weekend_end += timedelta(days=7)
+
+        return overlaps(self.s, self.e, weekend_start, weekend_end)
+
+    @property
+    @category(_(u'This Week'))
     def is_this_week(self):
         # range between now and next sunday evening with
         # range contains at least two days (saturday until next sunday)
@@ -98,6 +141,7 @@ class DateRangeInfo(object):
         return overlaps(self.s, self.e, self.this_morning, end_of_week)
 
     @property
+    @category(_(u'Next Week'))
     def is_next_week(self):
         # range between next sunday (as in self.is_this_week)
         # and the sunday after that
@@ -111,27 +155,14 @@ class DateRangeInfo(object):
         return overlaps(self.s, self.e, start_of_week, end_of_week)
 
     @property
-    def is_this_weekend(self):
-        # between friday at 4 and saturday midnight
-
-        weekend_start, weekend_end = this_weekend(self.now)
-        return overlaps(self.s, self.e, weekend_start, weekend_end)
-
-    @property
-    def is_next_weekend(self):
-        weekend_start, weekend_end = this_weekend(self.now)
-        weekend_start += timedelta(days=7)
-        weekend_end += timedelta(days=7)
-
-        return overlaps(self.s, self.e, weekend_start, weekend_end)
-
-    @property
+    @category(_(u'This Month'))
     def is_this_month(self):
         month_start, month_end = this_month(self.now)
 
         return overlaps(self.s, self.e, month_start, month_end)
 
     @property
+    @category(_(u'Next Month'))
     def is_next_month(self):
         prev_start, prev_end = this_month(self.now)
         month_start = prev_end + timedelta(microseconds=1)
@@ -140,10 +171,12 @@ class DateRangeInfo(object):
         return overlaps(self.s, self.e, month_start, month_end)
 
     @property
+    @category(_(u'This Year'))
     def is_this_year(self):
         return self.now.year in (self.s.year, self.e.year)
 
     @property
+    @category(_(u'Next Year'))
     def is_next_year(self):
         return (self.now.year + 1) in (self.s.year, self.e.year)
 
@@ -151,39 +184,26 @@ def datecategories(start, end):
     
     daterange = DateRangeInfo(start, end)
 
-    if daterange.is_over:
-        yield _(u'Already Over')
-        raise StopIteration
+    for method, name, unique in sorted(methods, key=lambda i: i[2], reverse=True):
+        if getattr(daterange, method):
+            yield name
+            
+            if unique:
+                raise StopIteration
 
-    if daterange.is_today:
-        yield _(u'Today')
+def filter_function(context, request, text):
 
-    if daterange.is_tomorrow:
-        yield _(u'Tomorrow')
+    localized = lambda text: translate(context, request, text)
 
-    if daterange.is_day_after_tomorrow:
-        yield _(u'Day after Tomorrow')
+    for key in categories:
+        if text == localized(key):
+            return categories[key]
 
-    if daterange.is_this_weekend:
-        yield _(u'This Weekend')
+    return None
 
-    if daterange.is_next_weekend:
-        yield _(u'Next Weekend')
+def filter_key(filter_function_key):
+    def compare(item):
+        daterange = DateRangeInfo(item.start, item.end)
+        return getattr(daterange, filter_function_key)
 
-    if daterange.is_this_week:
-        yield _(u'This Week')
-
-    if daterange.is_next_week:
-        yield _(u'Next Week')
-
-    if daterange.is_this_month:
-        yield _(u'This Month')
-
-    if daterange.is_next_month:
-        yield _(u'Next Month')
-
-    if daterange.is_this_year:
-        yield _(u'This Year')
-
-    if daterange.is_next_year:
-        yield _(u'Next Year')
+    return compare

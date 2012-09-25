@@ -14,6 +14,7 @@ from seantis.dir.base.interfaces import IFieldMapExtender, IDirectoryItem
 
 from seantis.dir.events.directory import IEventsDirectory
 from seantis.dir.events import utils
+from seantis.dir.events.recurrence import occurrences
 from seantis.dir.events import _
   
 class IEventsDirectoryItem(IDirectoryItem):
@@ -161,7 +162,13 @@ class EventsDirectoryItem(item.DirectoryItem):
 
     @property
     def cat3(self):
-        return list(utils.datecategories(self.start, self.end))
+        min_date, max_date = utils.event_range()
+
+        categories = []
+        for o in occurrences(self, min_date, max_date):
+            categories.extend(utils.datecategories(o.start, o.end))
+
+        return categories
 
 class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.context(IEventsDirectoryItem)
