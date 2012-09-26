@@ -1,5 +1,6 @@
 from calendar import monthrange
 from datetime import datetime, timedelta
+from dateutil.tz import tzutc
 
 from seantis.dir.events import _
 from seantis.dir.base.utils import translate
@@ -25,7 +26,9 @@ def to_utc(date):
     if date.utcoffset():
         date = (date - date.utcoffset())
 
-    return datetime(date.year, date.month, date.day, date.hour, date.minute)
+    return datetime(date.year, date.month, date.day, date.hour, date.minute,
+        tzinfo=tzutc()
+    )
 
 weekdays = dict(MO=0, TU=1, WE=2, TH=3, FR=4, SA=5, SU=6)
 def next_weekday(date, weekday):
