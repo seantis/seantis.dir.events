@@ -73,6 +73,9 @@ def category(name, unique=False):
 
     return decorator
 
+def is_valid_method(name):
+    return name in categories.values()
+
 class DateRangeInfo(object):
 
     def __init__(self, start, end):

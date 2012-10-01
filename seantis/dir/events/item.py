@@ -1,6 +1,3 @@
-from datetime import datetime, timedelta
-import pytz
-
 from five import grok
 from zope.schema import Text, TextLine, URI
 from zope.interface import Invalid
@@ -160,16 +157,7 @@ def validate_recurrence(value):
             raise Invalid(_(u'You may not add more than 365 occurences'))
 
 class EventsDirectoryItem(item.DirectoryItem):
-
-    @property
-    def cat3(self):
-        min_date, max_date = utils.event_range()
-
-        categories = []
-        for o in occurrences(self, min_date, max_date):
-            categories.extend(utils.datecategories(o.start, o.end))
-
-        return categories
+    pass
 
 # Will work once the occurrences properly support timezones
 # class HumanDateMixin(object):

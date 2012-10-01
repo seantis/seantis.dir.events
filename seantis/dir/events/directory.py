@@ -25,13 +25,13 @@ IEventsDirectory.setTaggedValue('seantis.dir.base.omitted',
 class EventsDirectory(directory.Directory):
     
     def labels(self):
-        return dict(cat1=_(u'What'), cat2=_(u'Where'), cat3=_(u'When'))
+        return dict(cat1=_(u'What'), cat2=_(u'Where'))
 
     def used_categories(self):
-        return ('cat1', 'cat2', 'cat3')
+        return ('cat1', 'cat2')
 
     def unused_categories(self):
-        return ('cat4',)
+        return ('cat3', 'cat4')
 
 class ExtendedDirectoryViewlet(grok.Viewlet):
     grok.context(IEventsDirectory)
