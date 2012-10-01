@@ -50,17 +50,20 @@ class EventsDirectoryView(directory.View):
     template = grok.PageTemplateFile('templates/directory.pt')
 
     @property
-    def batch(self):    
+    def batch(self):   
         min_date, max_date = utils.event_range()
 
         events = []
         for item in self.items:
             events.extend(occurrences(item, min_date, max_date))
 
-        datefilter = self.get_filter_terms().get('cat3', None)
+        datefilter = self.get_filter_terms().get('cat3')
         if datefilter:
             key = utils.filter_function(self.context, self.request, datefilter)
-            events = filter(utils.filter_key(key), events)
+        else:
+            key = 'is_this_month'
+
+        events = filter(utils.filter_key(key), events)
 
         events.sort(key=lambda o: str(o.start))
 
