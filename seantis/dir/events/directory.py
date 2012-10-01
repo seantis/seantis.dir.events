@@ -57,14 +57,10 @@ class EventsDirectoryView(directory.View):
         for item in self.items:
             events.extend(occurrences(item, min_date, max_date))
 
-        datefilter = self.get_filter_terms().get('cat3')
-        if datefilter:
-            key = utils.filter_function(self.context, self.request, datefilter)
-        else:
-            key = 'is_this_month'
+        # dtmethod = self.request.get('date')
+        # dtmethod = utils.is_valid_method(dtmethod) and dtmethod or 'is_this_month'
 
-        events = filter(utils.filter_key(key), events)
-
+        # events = filter(utils.filter_key(dtmethod), events)
         events.sort(key=lambda o: str(o.start))
 
         start = int(self.request.get('b_start') or 0)
