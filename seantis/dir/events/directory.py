@@ -48,20 +48,3 @@ class EventsDirectoryView(directory.View):
     grok.require('zope2.View')
 
     template = grok.PageTemplateFile('templates/directory.pt')
-
-    @property
-    def batch(self):   
-        min_date, max_date = utils.event_range()
-
-        events = []
-        for item in self.items:
-            events.extend(occurrences(item, min_date, max_date))
-
-        # dtmethod = self.request.get('date')
-        # dtmethod = utils.is_valid_method(dtmethod) and dtmethod or 'is_this_month'
-
-        # events = filter(utils.filter_key(dtmethod), events)
-        events.sort(key=lambda o: str(o.start))
-
-        start = int(self.request.get('b_start') or 0)
-        return Batch(events, ITEMSPERPAGE, start, orphan=1)
