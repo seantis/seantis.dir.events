@@ -30,18 +30,11 @@
             <metal:use use-macro="context/@@seantis-dir-macros/macros/resultlist">
             </metal:use>
 
-            <div class="directoryCategories">
-                <h3 i18n:translate="">Categories</h3>
-                <tal:block define="category string:cat1">
-                    <metal:use use-macro="context/@@seantis-dir-macros/macros/categorylist">
-                    </metal:use>
-                </tal:block>
-
-                <h3 i18n:translate="">Locations</h3>
-                <tal:block define="category string:cat2">
-                    <metal:use use-macro="context/@@seantis-dir-macros/macros/categorylist">
-                    </metal:use>
-                </tal:block>
+            <div class="directoryDates">
+                <h3 i18n:translate="">Date</h3>
+                <ul>
+                    <li tal:repeat="method view/filter_methods"><a tal:content="python: method[1]" tal:attributes="href python: view.filter_url(method[0]); class python: method[0] == view.selected_filter_method and 'selected' or ''"></a></li>
+                </ul>
             </div>
 
             <metal:use use-macro="context/@@seantis-dir-macros/macros/map">

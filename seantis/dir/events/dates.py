@@ -1,7 +1,8 @@
-from datetime import datetime, timedelta
-
 import pytz
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta, MO, FR
+
+from collections import OrderedDict
 
 from seantis.dir.events import _
 
@@ -32,17 +33,20 @@ def to_utc(date):
 
 methods = list()
 categories = dict()
+labels = dict()
 
-def category(name, unique=False):
+def category(label):
     """ Deocrator that, applied to DateRangeInfo methods, marks them
     as category methods for further processing. 
 
     """
     def decorator(fn):
-        global methods, categories
+        global methods, categories, labels
 
-        methods.append((fn.__name__, name, unique))
-        categories[name] = fn.__name__
+        methods.append((fn.__name__, label))
+        categories[label] = fn.__name__
+        labels[fn.__name__] = label
+        
         return fn
 
     return decorator
@@ -111,7 +115,6 @@ class DateRangeInfo(object):
         self.this_evening = self.this_morning + timedelta(days=1, microseconds=-1)
 
     @property
-    @category(_(u'Already Over'), unique=True)
     def is_over(self):
         return self.now > self.e
 
@@ -214,13 +217,12 @@ def datecategories(start, end):
             if unique:
                 raise StopIteration
 
-def filter_key(category):
+def filter_key(method):
     """ Returns a filter-key function that filters objects that have
-    a start/end property according to the given category method. 
+    a start/end property according to the given method. 
 
     """
     def compare(item):
-        daterange = DateRangeInfo(item.start, item.end)
-        return getattr(daterange, category)
+        return getattr(DateRangeInfo(item.start, item.end), method)
 
     return compare

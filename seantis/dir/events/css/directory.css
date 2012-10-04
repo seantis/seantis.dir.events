@@ -25,18 +25,38 @@
     min-width: 300px;
 }
 
-.directoryCategories {
-    width: 15%;
+.directoryDates {
+    width: 13%;
     float: left;
     min-width: 100px;
-    margin: 15px 0;
+    margin: 15px 15px 0 0;
 }
 
-#content .directoryCategories ul {
+.directoryDates h3 {
+   background-color: #efefef;
+   margin: -15px 5px 0 -10px;
+   padding-left: 10px;
+}
+
+.directoryDates a {
+    display: block;
+    margin: 0 5px -2px -10px;
+    padding: 4px 0 2px 10px;
+    border: none !important;
+}
+
+.directoryDates a.selected, 
+#content .directoryDates a:hover {
+    background-color: #feff9a;
+    color: black !important;
+    border-radius: 2px;
+}
+
+#content .directoryDates ul {
     list-style-type: none;
 }
 
-#content .directoryCategories ul li {
+#content .directoryDates ul li {
     margin-left: -25px;
 }
 

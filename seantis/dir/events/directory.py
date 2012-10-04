@@ -2,7 +2,10 @@ from five import grok
 from plone.namedfile.field import NamedImage
 
 from seantis.dir.base import directory
+from seantis.dir.base import utils
+from seantis.dir.base import session
 from seantis.dir.base.interfaces import IDirectory
+from seantis.dir.events import dates
 from seantis.dir.events import _
 
 class IEventsDirectory(IDirectory):
@@ -44,3 +47,32 @@ class EventsDirectoryView(directory.View):
     grok.require('zope2.View')
 
     template = grok.PageTemplateFile('templates/directory.pt')
+
+    def get_last_filter_method(self):
+        return session.get_session(self.context, 'filter_method') or 'is_this_month'
+
+    def set_last_filter_method(self, method):
+        session.set_session(self.context, 'filter_method', method)
+
+    def update(self, **kwargs):
+        filter_method = self.request.get('range', self.get_last_filter_method())
+
+        # do not trust the user's input blindly
+        if not dates.is_valid_method(filter_method):
+            filter_method = 'is_this_month'
+        else:
+            self.set_last_filter_method(filter_method)
+
+        self.catalog.filter_method = filter_method
+
+        super(EventsDirectoryView, self).update(**kwargs)
+
+    @property
+    def selected_filter_method(self):
+        return self.catalog.filter_method
+
+    def filter_methods(self):
+        return dates.methods
+
+    def filter_url(self, method):
+        return self.directory.absolute_url() + '?range=' + method
