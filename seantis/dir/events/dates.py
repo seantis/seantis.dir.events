@@ -1,8 +1,7 @@
 import pytz
+
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta, MO, FR
-
-from collections import OrderedDict
 
 from seantis.dir.events import _
 

@@ -1,5 +1,5 @@
 from zope.proxy import ProxyBase
-from dateutil.rrule import rrulestr, rruleset
+from dateutil.rrule import rrulestr
 
 from seantis.dir.events.utils import overlaps, to_utc
 

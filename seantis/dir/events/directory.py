@@ -2,7 +2,6 @@ from five import grok
 from plone.namedfile.field import NamedImage
 
 from seantis.dir.base import directory
-from seantis.dir.base import utils
 from seantis.dir.base import session
 from seantis.dir.base.interfaces import IDirectory
 from seantis.dir.events import dates
