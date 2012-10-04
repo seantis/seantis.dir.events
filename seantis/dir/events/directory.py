@@ -1,13 +1,9 @@
 from five import grok
 from plone.namedfile.field import NamedImage
-from Products.CMFPlone.PloneBatch import Batch
 
 from seantis.dir.base import directory
-from seantis.dir.base.const import ITEMSPERPAGE
 from seantis.dir.base.interfaces import IDirectory
-from seantis.dir.events import utils
 from seantis.dir.events import _
-from seantis.dir.events.recurrence import occurrences
 
 class IEventsDirectory(IDirectory):
     """Extends the seantis.dir.base.directory.IDirectory"""

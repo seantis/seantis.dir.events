@@ -19,10 +19,6 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     def sortkey(self):
         return lambda i: i.start
 
-    def daterange(self, start, end):
-        self.start = start
-        self.end = end
-
     def spawn(self, realitems):
         for item in realitems:
             for occurrence in occurrences(item, self.start, self.end):
