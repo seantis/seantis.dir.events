@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from five import grok
 from zope.schema import Text, TextLine, URI
 from zope.interface import Invalid
@@ -13,8 +11,6 @@ from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IFieldMapExtender, IDirectoryItem
 
 from seantis.dir.events.directory import IEventsDirectory
-from seantis.dir.events import utils
-from seantis.dir.events.recurrence import occurrences
 from seantis.dir.events import _
   
 class IEventsDirectoryItem(IDirectoryItem):

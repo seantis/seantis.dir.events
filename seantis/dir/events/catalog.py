@@ -3,7 +3,7 @@ from five import grok
 from seantis.dir.base.catalog import DirectoryCatalog
 from seantis.dir.base.interfaces import IDirectoryCatalog
 
-from seantis.dir.events import utils
+from seantis.dir.events import dates
 from seantis.dir.events.recurrence import occurrences
 from seantis.dir.events.directory import IEventsDirectory
 
@@ -13,7 +13,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     grok.provides(IDirectoryCatalog)
 
     def __init__(self, *args, **kwargs):
-        self.start, self.end = utils.event_range()
+        self.start, self.end = dates.event_range()
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
 
     def sortkey(self):

@@ -1,46 +1,46 @@
 from datetime import datetime, timedelta
 
 from seantis.dir.events.tests import IntegrationTestCase
-from seantis.dir.events import utils
+from seantis.dir.events import dates
 
 class TestDateRanges(IntegrationTestCase):
 
     def test_next_weekday(self):
         date = datetime(2012, 9, 18, 0, 0) # tuesday
 
-        self.assertEqual(date.weekday(), utils.weekdays['TU'])
-        self.assertEqual(utils.next_weekday(date, "TU"), date)
-        self.assertEqual(utils.next_weekday(date, "WE"), date + timedelta(days=1))
-        self.assertEqual(utils.next_weekday(date, "TH"), date + timedelta(days=2))
-        self.assertEqual(utils.next_weekday(date, "MO"), date + timedelta(days=6))
+        self.assertEqual(date.weekday(), dates.weekdays['TU'])
+        self.assertEqual(dates.next_weekday(date, "TU"), date)
+        self.assertEqual(dates.next_weekday(date, "WE"), date + timedelta(days=1))
+        self.assertEqual(dates.next_weekday(date, "TH"), date + timedelta(days=2))
+        self.assertEqual(dates.next_weekday(date, "MO"), date + timedelta(days=6))
 
     def test_this_weekend(self):
         date = datetime(2012, 9, 18, 0, 0) # tuesday
-        start, end = utils.this_weekend(date)
+        start, end = dates.this_weekend(date)
 
         self.assertEqual((start.year, start.month, start.day), (2012, 9, 21))
-        self.assertEqual(start.weekday(), utils.weekdays["FR"])
+        self.assertEqual(start.weekday(), dates.weekdays["FR"])
         self.assertEqual(start.hour, 16)
 
         self.assertEqual((end.year, end.month, end.day), (2012, 9, 23))
-        self.assertEqual(end.weekday(), utils.weekdays["SU"])
+        self.assertEqual(end.weekday(), dates.weekdays["SU"])
         self.assertEqual(end.hour, 23)
         self.assertEqual(end.minute, 59)
         self.assertEqual(end.second, 59)
 
         date = datetime(2012, 9, 23, 0, 0) # sunday
-        start, end = utils.this_weekend(date)
+        start, end = dates.this_weekend(date)
 
         self.assertEqual((start.year, start.month, start.day), (2012, 9, 21))
         self.assertEqual((end.year, end.month, end.day), (2012, 9, 23))
 
         old_start, old_end = start, end
 
-        start, end = utils.this_weekend(start)
+        start, end = dates.this_weekend(start)
         self.assertEqual(start, old_start)
         self.assertEqual(end, old_end)
 
-        start, end = utils.this_weekend(end)
+        start, end = dates.this_weekend(end)
         self.assertEqual(start, old_start)
         self.assertEqual(end, old_end)
 
@@ -48,7 +48,7 @@ class TestDateRanges(IntegrationTestCase):
 
         start = datetime(2012, 1, 1, 22, 0) # sunday
         end = datetime(2012, 1, 2, 02, 0)
-        daterange = utils.DateRangeInfo(start, end)
+        daterange = dates.DateRangeInfo(start, end)
 
         daterange.now = datetime(2011, 1, 1, 0, 0)
         self.assertFalse(daterange.is_today)

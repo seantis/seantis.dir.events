@@ -1,18 +1,19 @@
-import pytz
-
-from calendar import monthrange
 from datetime import datetime, timedelta
 
+import pytz
+from dateutil.relativedelta import relativedelta, MO, FR
+
 from seantis.dir.events import _
-from seantis.dir.base.utils import translate
 
 def event_range():
+    """ Returns the date range (start, end) in which the events are visible. """
     return (
         to_utc(datetime.utcnow() - timedelta(days=7)),
         to_utc(datetime.utcnow() + timedelta(days=365*2))
     )
 
 def overlaps(start, end, otherstart, otherend):
+    """ Returns true if the two date ranges somehow overlap. """
 
     if otherstart <= start and start <= otherend:
         return True
@@ -23,47 +24,20 @@ def overlaps(start, end, otherstart, otherend):
     return False
 
 def to_utc(date):
+    """ Converts date to utc, making it timezone aware if not already. """
     if not date.tzinfo:
         date = pytz.timezone('utc').localize(date)
 
     return pytz.timezone('utc').normalize(date)
 
-weekdays = dict(MO=0, TU=1, WE=2, TH=3, FR=4, SA=5, SU=6)
-def next_weekday(date, weekday):
-    w = weekdays[weekday]
-
-    if date.weekday() == w:
-        return date
-    
-    return date + timedelta((w - date.weekday()) % 7)
-
-def this_weekend(date):
-    this_morning = datetime(date.year, date.month, date.day, 0, 0, tzinfo=date.tzinfo)
-
-    if this_morning.weekday() == weekdays["SA"]:
-        weekend_start = this_morning + timedelta(days=-1, hours=16)
-    elif this_morning.weekday() == weekdays["SU"]:
-        weekend_start = this_morning + timedelta(days=-2, hours=16)
-    else:
-        weekend_start = next_weekday(this_morning, "FR") + timedelta(hours=16)
-
-    weekend_end = next_weekday(weekend_start, "SU")
-    weekend_end += timedelta(hours=-16, days=1, microseconds=-1)
-
-    return weekend_start, weekend_end
-
-def this_month(date):
-    last_day = monthrange(date.year, date.month)[1]
-    month_start = datetime(date.year, date.month, 1, 0, 0, tzinfo=date.tzinfo)
-    month_end = datetime(date.year, date.month, last_day, 0, 0, tzinfo=date.tzinfo)
-    month_end += timedelta(days=1, microseconds=-1)
-
-    return month_start, month_end
-
 methods = list()
 categories = dict()
 
 def category(name, unique=False):
+    """ Deocrator that, applied to DateRangeInfo methods, marks them
+    as category methods for further processing. 
+
+    """
     def decorator(fn):
         global methods, categories
 
@@ -74,30 +48,67 @@ def category(name, unique=False):
     return decorator
 
 def is_valid_method(name):
+    """ Returns true if the given name is a valid DateRangeInfo method. """
     return name in categories.values()
+
+weekdays = dict(MO=0, TU=1, WE=2, TH=3, FR=4, SA=5, SU=6)
+def this_weekend(date):
+    """ Returns a daterange with the start being friday 4pm and the end
+    being sunday midnight, relative to the given date. 
+
+    """
+    this_morning = datetime(date.year, date.month, date.day, 0, 0, tzinfo=date.tzinfo)
+
+    if this_morning.weekday() in (weekdays["SA"], weekdays["SU"]):
+        weekend_start = this_morning + relativedelta(weekday=FR(-1))
+    else:
+        weekend_start = this_morning + relativedelta(weekday=FR(+1))
+
+    weekend_end = weekend_start + relativedelta(weekday=MO(1))
+
+    weekend_start += timedelta(hours=16)
+    weekend_end += timedelta(microseconds=-1)
+     
+    return weekend_start, weekend_end
+
+def this_month(date):
+    month_start = datetime(date.year, date.month, 1, 0, 0, tzinfo=date.tzinfo)
+    month_end = month_start + relativedelta(months=1, microseconds=-1)
+    
+    return month_start, month_end
+
+def next_weekday(date, weekday):
+    w = weekdays[weekday]
+
+    if date.weekday() == w:
+        return date
+    
+    return date + timedelta((w - date.weekday()) % 7)
 
 class DateRangeInfo(object):
 
+    __slots__ = ('_now', 's', 'e', 'this_morning', 'this_evening')
+
     def __init__(self, start, end):
-        if all((start.tzinfo, end.tzinfo)):
+        assert bool(start.tzinfo) == bool(end.tzinfo),\
+        "Either both dates are timzone aware or naive, no mix"
+
+        if start.tzinfo and end.tzinfo:
             self.now = to_utc(datetime.utcnow())
-        elif not any((start.tzinfo, end.tzinfo)):
-            self.now = datetime.utcnow()
         else:
-            assert False, "Either both dates are timzone aware or naive, no mix"
+            self.now = datetime.utcnow()
 
-        self.s = start
-        self.e = end
+        self.s, self.e = start, end
 
-    def get_now(self):
+    @property
+    def now(self):
         return self._now
 
-    def set_now(self, now):
+    @now.setter
+    def now(self, now):
         self._now = now
         self.this_morning = datetime(now.year, now.month, now.day, tzinfo=now.tzinfo)
         self.this_evening = self.this_morning + timedelta(days=1, microseconds=-1)
-
-    now = property(get_now, set_now)
 
     @property
     @category(_(u'Already Over'), unique=True)
@@ -192,6 +203,7 @@ class DateRangeInfo(object):
         return (self.now.year + 1) in (self.s.year, self.e.year)
 
 def datecategories(start, end):
+    """ Returns a list of datecategories for the given daterange. """
     
     daterange = DateRangeInfo(start, end)
 
@@ -202,19 +214,13 @@ def datecategories(start, end):
             if unique:
                 raise StopIteration
 
-def filter_function(context, request, text):
+def filter_key(category):
+    """ Returns a filter-key function that filters objects that have
+    a start/end property according to the given category method. 
 
-    localized = lambda text: translate(context, request, text)
-
-    for key in categories:
-        if text == localized(key):
-            return categories[key]
-
-    return None
-
-def filter_key(filter_function_key):
+    """
     def compare(item):
         daterange = DateRangeInfo(item.start, item.end)
-        return getattr(daterange, filter_function_key)
+        return getattr(daterange, category)
 
     return compare
