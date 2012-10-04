@@ -38,12 +38,12 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     def items(self):
         real = super(EventsDirectoryCatalog, self).items()
-        return list(self.spawn(real))
+        return sorted(self.spawn(real), key=self.sortkey())
 
     def filter(self, term):
         real = super(EventsDirectoryCatalog, self).filter(term)
-        return list(self.spawn(real))
+        return sorted(self.spawn(real), key=self.sortkey())
 
     def search(self, text):
         real = super(EventsDirectoryCatalog, self).search(text)
-        return list(self.spawn(real))    
+        return sorted(self.spawn(real), key=self.sortkey())
