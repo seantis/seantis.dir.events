@@ -25,10 +25,30 @@
             <div tal:replace="structure provider:seantis.dir.base.directory.viewletmanager"/>
         </tal:block>
 
-        <div id="directoryInfo" tal:define="items view/batch;">
+        <div id="directoryInfo" tal:define="groups python: view.groups(view.batch);">
+            <div id="directoryResultList">
 
-            <metal:use use-macro="context/@@seantis-dir-macros/macros/resultlist">
-            </metal:use>
+              <tal:block repeat="group python: groups.items()">
+                <div class="eventgroup" tal:content="python: group[0]"></div>
+                <div class="directoryResult event" tal:repeat="item python: group[1]">
+                  <metal:use use-macro="context/@@seantis-dir-macros/macros/map-marker"></metal:use>
+
+                  <div class="directoryInfoText">
+                    <h3><a
+                          tal:attributes="href python: item.url(); id item/id" 
+                          tal:content="item/title">
+                    </a></h3>
+
+                    <div class="short" tal:content="item/short_description"></div>
+                      
+                      <tal:block repeat="category python: item.categories()[:2]">
+                          <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
+                      </tal:block>
+                  </div>
+                </div>
+                
+              </tal:block>
+            </div>
 
             <div class="directoryDates">
                 <h3 i18n:translate="">Date</h3>

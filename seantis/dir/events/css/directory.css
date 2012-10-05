@@ -1,56 +1,49 @@
 /* seantis.dir.events */
 
 .directoryMarker {
-     right: 5px;   
-}
-
-#landingPageIntro {
-    margin: 15px 0 30px 0;
+    right: 0;
 }
 
 #directoryResultList {
-    width: 40%;
     float: left;
+    width: 40%;
     min-width: 300px;
     margin-right: 3%;
 }
 
-#directoryResultList div:first-child {
-    border-top: none;   
-}
-
 #directoryResultMap {
-    width: 42%;
     float: left;
+    width: 38.8%;
     min-width: 300px;
 }
 
 .directoryDates {
-    width: 13%;
     float: left;
+    width: 15%;
     min-width: 100px;
-    margin: 15px 15px 0 0;
+    margin: 0 3% 0 0;
 }
 
 .directoryDates h3 {
-   background-color: #efefef;
-   margin: -15px 5px 0 -10px;
-   padding-left: 10px;
-   border-radius: 2px;
+   font-size: 14px;  
+   padding: 4px 0 4px 10px;
+   margin: 0 0 3px 0;
+   border: 1px solid #afafaf;
+   border-width: 1px 1px 1px 10px;
 }
 
 .directoryDates a {
     display: block;
-    margin: 0 5px -2px -10px;
-    padding: 4px 0 2px 10px;
-    border: none !important;
+    border: 1px solid #efefef !important;
+    border-width: 1px 1px 1px 10px !important;
+    padding: 5px;
 }
 
 .directoryDates a.selected, 
 #content .directoryDates a:hover {
-    background-color: #feff9a;
     color: black !important;
-    border-radius: 2px;
+    border: 1px solid #0083be !important;
+    border-width: 1px 1px 1px 10px !important;
 }
 
 .directoryDates a.selected {
@@ -65,7 +58,7 @@
     margin-left: -25px;
 }
 
-.events .eventdate span {
+.eventgroup {
     font-weight: bold;
     color: white;
     background-color: #195c90;
@@ -73,7 +66,7 @@
     border-radius: 2px;
 }
 
-.events .eventtags {
+.eventtags {
     font-size: 0.9em;
     line-height: 11px;
     margin-top: 4px;
@@ -82,40 +75,3 @@
     padding: 1px 4px;
     border-radius: 2px;
 }
-
-.events .short {
-    font-weight: normal;
-    font-size: 14px;
-    color: #222;
-    padding: 0 0 3px 0;
-}
-
-.events .long {
-    font-size: 12px;   
-    padding: 0 0 4px 0;
-}
-
-.events .event {
-     float: left;
-     width: 58%;   
-}
-
-.events .event-details {
-     margin-top: 20px;   
-}
-
-.events .event-details h3 {
-     font-size: 1em;
-     color: #555;
-}
-
-.events .event-details > div {
-    border: 1px solid #205c90;
-    border-width: 0 0 0 10px;
-    padding: 0 0 10px 10px
-}
-
-.events .event-details > div:last-child {
-    padding-bottom: 5px;   
-}
-

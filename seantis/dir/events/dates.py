@@ -7,8 +7,11 @@ from seantis.dir.events import _
 
 def event_range():
     """ Returns the date range (start, end) in which the events are visible. """
+    now = datetime.utcnow()
+    this_morning = datetime(now.year, now.month, now.day)
+
     return (
-        to_utc(datetime.utcnow() - timedelta(days=7)),
+        to_utc(this_morning),
         to_utc(datetime.utcnow() + timedelta(days=365*2))
     )
 
@@ -29,6 +32,14 @@ def to_utc(date):
         date = pytz.timezone('utc').localize(date)
 
     return pytz.timezone('utc').normalize(date)
+
+def human_date(date):
+    now = to_utc(datetime.utcnow())
+
+    if now.date() == date.date():
+        return _(u'Today')
+
+    return date.strftime('%y-%m-%d')
 
 methods = list()
 categories = dict()

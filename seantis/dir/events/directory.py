@@ -1,5 +1,7 @@
 from five import grok
 from plone.namedfile.field import NamedImage
+from itertools import groupby
+from collections import OrderedDict
 
 from seantis.dir.base import directory
 from seantis.dir.base import session
@@ -75,3 +77,19 @@ class EventsDirectoryView(directory.View):
 
     def filter_url(self, method):
         return self.directory.absolute_url() + '?range=' + method
+
+    def groups(self, items):
+        def groupkey(item):
+            date = dates.human_date(item.start)
+            print date
+            return date
+
+        groups = groupby(items, groupkey)
+        
+        # Zope Page Templates don't know how to handle generators :-|
+        result = OrderedDict()
+
+        for group in groups:
+            result[group[0]] = [i for i in group[1]]
+            
+        return result
