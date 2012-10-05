@@ -195,7 +195,6 @@ class View(core.View):
 
     @property
     def start(self):
-        print self.context.recurrence
         occurrence = self.occurrence or self.context
         return occurrence.start
 
