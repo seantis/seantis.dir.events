@@ -4,7 +4,7 @@ from seantis.dir.base.catalog import DirectoryCatalog
 from seantis.dir.base.interfaces import IDirectoryCatalog
 
 from seantis.dir.events import dates
-from seantis.dir.events.recurrence import occurrences
+from seantis.dir.events import recurrence
 from seantis.dir.events.directory import IEventsDirectory
 
 class EventsDirectoryCatalog(DirectoryCatalog):
@@ -32,9 +32,10 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     def spawn(self, realitems):
         is_match = dates.filter_key(self.filter_method)
         for item in realitems:
-            for occurrence in occurrences(item, self.start, self.end):
+            for occurrence in recurrence.occurrences(item, self.start, self.end):
                 if is_match(occurrence):
-                    yield occurrence
+                    for split in recurrence.split_days(occurrence):
+                        yield split
 
     def items(self):
         real = super(EventsDirectoryCatalog, self).items()

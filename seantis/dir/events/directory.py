@@ -81,7 +81,6 @@ class EventsDirectoryView(directory.View):
     def groups(self, items):
         def groupkey(item):
             date = dates.human_date(item.start)
-            print date
             return date
 
         groups = groupby(items, groupkey)

@@ -70,7 +70,29 @@ def occurrence(item, start):
     assert len(found) in (0, 1), "Multiple occurences on the same day?"
 
     return found and found[0] or None
+
+def split_days(occurrence):
     
+    days = (occurrence.end - occurrence.start).days
+
+    if days == 0:
+        yield occurrence
+    else:
+        for day in xrange(0, days+1):
+            duration = occurrence.end - occurrence.start
+
+            start = occurrence.start + timedelta(days=day)
+            end = start + duration
+
+            if day > 0:
+                start = datetime(start.year, start.month, start.day, tzinfo=start.tzinfo)
+            if day == days:
+                end = datetime(end.year, end.month, end.day, tzinfo=end.tzinfo)
+                end += timedelta(days=1, microseconds=-1)
+
+            yield Occurrence(occurrence._wrapped, start, end)
+
+
 
 def occurrences(item, min_date, max_date):
 
