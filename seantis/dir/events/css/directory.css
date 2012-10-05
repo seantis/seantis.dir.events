@@ -8,6 +8,15 @@
     margin-top: 22px;   
 }
 
+.event:hover,
+.groupSelection {
+    background-color: #efefef;
+}
+
+.event:hover {
+    cursor: pointer;   
+}
+
 #directoryResultList {
     float: left;
     width: 40%;
@@ -62,12 +71,16 @@
     margin-left: -25px;
 }
 
-.eventgroup {
+.eventgroup-title {
     font-weight: bold;
     color: white;
     background-color: #195c90;
     padding: 2px 7px;
     border-radius: 2px;
+}
+
+.eventgroup .event:first-child {
+    border-top: none;
 }
 
 .eventtags {
