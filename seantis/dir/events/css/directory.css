@@ -4,6 +4,10 @@
     right: 0;
 }
 
+#directoryInfo {
+    margin-top: 22px;   
+}
+
 #directoryResultList {
     float: left;
     width: 40%;
