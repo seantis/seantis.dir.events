@@ -33,7 +33,8 @@ setup(name='seantis.dir.events',
           'collective.testcaselayer',
           'collective.dexteritytextindexer',
           'seantis.dir.base',
-          'zope.proxy'
+          'zope.proxy',
+          'pytz'
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
