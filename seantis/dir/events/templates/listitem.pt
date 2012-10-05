@@ -8,7 +8,7 @@
     <div class="events">
         <div class="eventdate"><span tal:content="python: context.start.strftime('%d.%m.%Y')"></span></div>
         <h3><a 
-            tal:attributes="href context/absolute_url; id context/id" 
+            tal:attributes="href python: context.url(); id context/id" 
             tal:content="context/title">
         </a></h3>
         <div class="short" tal:content="context/short_description"></div>
