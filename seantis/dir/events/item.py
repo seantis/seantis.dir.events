@@ -1,3 +1,5 @@
+import pytz
+
 from five import grok
 from zope.schema import Text, TextLine, URI
 from zope.interface import Invalid
@@ -10,6 +12,7 @@ from seantis.dir.base import core
 from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IFieldMapExtender, IDirectoryItem
 
+from seantis.dir.events import dates
 from seantis.dir.events.directory import IEventsDirectory
 from seantis.dir.events import _
   
@@ -157,32 +160,6 @@ def validate_recurrence(value):
 class EventsDirectoryItem(item.DirectoryItem):
     pass
 
-# Will work once the occurrences properly support timezones
-# class HumanDateMixin(object):
-
-#     calendar_type = 'gregorian'
-
-#     def human_date(self, item=None):
-#         item = item or self.context
-
-#         daterange = utils.DateRangeInfo(item.start, item.end)
-#         local_date = item.start.astimezone(pytz.timezone(item.timezone))
-
-#         if daterange.is_today:
-#             return _(u'Today ${time}', 
-#                 mapping=dict(time=local_date.strftime('%H:%M'))
-#             ) 
-#         elif daterange.is_tomorrow:
-#             return _(u'Tomorrow ${time}',
-#                 mapping=dict(time=local_date.strftime('%H:%M'))
-#             )
-        
-#         calendar = self.request.locale.dates.calendars[self.calendar_type]
-#         weekday = calendar.getDayNamesAbbrev()[local_date.weekday()]
-
-
-#         return weekday + ', ' + local_date.strftime('%d.%m.%Y')
-
 class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.context(IEventsDirectoryItem)
     grok.name('seantis.dir.events.item.detail')
@@ -197,6 +174,7 @@ class View(core.View):
     grok.require('zope2.View')
 
     template = grok.PageTemplateFile('templates/item.pt')
+    hide_search_viewlet = True
 
 class ExtendedDirectoryItemFieldMap(grok.Adapter):
     """Adapter extending the import/export fieldmap of seantis.dir.events.item."""
