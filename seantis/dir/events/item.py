@@ -1,4 +1,4 @@
-import pytz
+from datetime import datetime
 
 from five import grok
 from zope.schema import Text, TextLine, URI
@@ -6,6 +6,7 @@ from zope.interface import Invalid
 from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
 from plone.directives import form
+from plone.memoize import view
 
 from seantis.dir.base import item
 from seantis.dir.base import core
@@ -13,6 +14,7 @@ from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IFieldMapExtender, IDirectoryItem
 
 from seantis.dir.events import dates
+from seantis.dir.events import recurrence
 from seantis.dir.events.directory import IEventsDirectory
 from seantis.dir.events import _
   
@@ -175,6 +177,53 @@ class View(core.View):
 
     template = grok.PageTemplateFile('templates/item.pt')
     hide_search_viewlet = True
+
+    @property
+    def is_recurring(self):
+        return self.context.recurrence and True or False
+
+    @property
+    def date(self):
+        date = self.request.get('date')
+        if not date: 
+            return None
+
+        try:
+            return datetime.strptime(date, '%Y-%m-%d')
+        except:
+            return None
+
+    @property
+    def start(self):
+        print self.context.recurrence
+        occurrence = self.occurrence or self.context
+        return occurrence.start
+
+    @property
+    def end(self):
+        occurrence = self.occurrence or self.context
+        return occurrence.end
+
+    @property
+    @view.memoize
+    def occurrence(self):
+        date = self.date
+        if date and self.is_recurring:
+            return recurrence.occurrence(self.context, self.date)
+        else:
+            return None
+
+    @property
+    def occurrence_exists(self):
+        return self.occurrence and True or False
+
+    @property
+    @view.memoize
+    def occurrences(self):
+        min_date, max_date = dates.event_range()
+        
+        return recurrence.occurrences(self.context, min_date, max_date)
+
 
 class ExtendedDirectoryItemFieldMap(grok.Adapter):
     """Adapter extending the import/export fieldmap of seantis.dir.events.item."""

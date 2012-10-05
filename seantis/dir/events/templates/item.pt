@@ -22,7 +22,7 @@
         <div id="directoryDetails" class="events">
             <div class="event">
               <div class="event-head">
-                <div class="eventdate"><span tal:content="python: context.start.strftime('%d.%m.%Y')"></span></div>
+                <div class="eventdate"><span tal:content="python: view.start.strftime('%d.%m.%Y')"></span></div>
 
                 <h2>
                     <tal:block content="context/title" />
