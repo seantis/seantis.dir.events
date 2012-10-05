@@ -53,7 +53,7 @@ class Occurrence(ProxyBase):
             return base
 
         base += '?' in base and '&' or '?'
-        return base + urlencode({'date': self._start.strftime('%y-%m-%d')})
+        return base + urlencode({'date': self._start.strftime('%Y-%m-%d')})
 
 def occurrences(item, min_date, max_date):
 
