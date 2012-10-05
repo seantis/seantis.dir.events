@@ -33,13 +33,22 @@ def to_utc(date):
 
     return pytz.timezone('utc').normalize(date)
 
-def human_date(date):
+def human_date(date, request, calendar_type='gregorian'):
     now = to_utc(datetime.utcnow())
 
     if now.date() == date.date():
         return _(u'Today')
 
-    return date.strftime('%y-%m-%d')
+    if now.date() == (date.date() + timedelta(days=1)):
+        return _(u'Tomorrow')
+
+    calendar = request.locale.dates.calendars[calendar_type]
+    weekday = calendar.getDayNames()[date.weekday()]
+
+    if now.year == date.year:
+        return weekday + ' ' + date.strftime('%d.%m')
+    else:
+        return weekday + ' ' + date.strftime('%d.%m.%Y')
 
 def human_daterange(start, end):
     if (end - start).days < 1:
