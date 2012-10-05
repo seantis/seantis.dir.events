@@ -41,9 +41,15 @@
 
                     <div class="short" tal:content="item/short_description"></div>
                       
+                    <div class="eventtags-list">
                       <tal:block repeat="category python: item.categories()[:2]">
                           <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
                       </tal:block>
+                    </div>
+
+                    <div class="timerange" tal:content="python: item.human_daterange()"></div>
+
+                    <div style="clear:both;"></div>
                   </div>
                 </div>
                 

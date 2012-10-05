@@ -1,9 +1,11 @@
+from pytz import timezone
 from datetime import datetime, timedelta
 
 from zope.proxy import ProxyBase
 from dateutil.rrule import rrulestr
 from urllib import urlencode
 
+from seantis.dir.events import dates
 from seantis.dir.events.utils import overlaps, to_utc
 
 # plone.app.event creates occurrences using adapters, which seems a bit wasteful
@@ -56,6 +58,21 @@ class Occurrence(ProxyBase):
 
         base += '?' in base and '&' or '?'
         return base + urlencode({'date': self._start.strftime('%Y-%m-%d')})
+    
+    def human_daterange(self):
+        # occurrences split to days all get the same date string
+        if not self.recurrence and (self._end - self._start).days > 0:
+            start = self._wrapped.start
+            end = self._wrapped.end
+        else:
+            start = self._start
+            end = self._end
+
+        start = start.astimezone(timezone(self._wrapped.timezone))
+        end = end.astimezone(timezone(self._wrapped.timezone))
+        
+        return dates.human_daterange(start, end)
+
 
 def occurrence(item, start):
     """ Returns the occurrence at startdate. This suffices because two
@@ -84,15 +101,13 @@ def split_days(occurrence):
             start = occurrence.start + timedelta(days=day)
             end = start + duration
 
-            if day > 0:
+            if day > 1:
                 start = datetime(start.year, start.month, start.day, tzinfo=start.tzinfo)
             if day == days:
                 end = datetime(end.year, end.month, end.day, tzinfo=end.tzinfo)
                 end += timedelta(days=1, microseconds=-1)
 
             yield Occurrence(occurrence._wrapped, start, end)
-
-
 
 def occurrences(item, min_date, max_date):
 

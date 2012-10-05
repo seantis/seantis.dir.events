@@ -41,6 +41,16 @@ def human_date(date):
 
     return date.strftime('%y-%m-%d')
 
+def human_daterange(start, end):
+    if (end - start).days < 1:
+        return start.strftime('%H:%M - ') + end.strftime('%H:%M')
+    else:
+        now = to_utc(datetime.utcnow())
+        if now.year == start.year:
+            return start.strftime('%d.%m %H:%M - ') + end.strftime('%d.%m %H:%M')
+        else:
+            return start.strftime('%d.%m.%Y %H:%M - ') + end.strftime('%d.%m.%Y %H:%M')
+
 methods = list()
 categories = dict()
 labels = dict()

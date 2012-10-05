@@ -75,3 +75,14 @@
     padding: 1px 4px;
     border-radius: 2px;
 }
+
+.eventtags-list {
+    width: 50%;
+    float:left;   
+}
+
+.timerange {
+    float: right;
+    color: #777;
+    display: inline-block;
+}
