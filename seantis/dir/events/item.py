@@ -7,6 +7,10 @@ from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
 from plone.directives import form
 from plone.memoize import view
+from plone.app.event.dx.behaviors import IEventRecurrence
+from dateutil.rrule import rrulestr
+
+from z3c.form import util, validator
 
 from seantis.dir.base import item
 from seantis.dir.base import core
@@ -147,8 +151,6 @@ IEventsDirectoryItem.setTaggedValue('seantis.dir.base.order',
 # plone.app.event is currently not working well with an unlimited or huge
 # number of recurrences with abysmal performance. For this reason the occurences
 # are limited for now and the infinite option is hidden using recurrence.css
-from plone.app.event.dx.behaviors import IEventRecurrence
-from dateutil.rrule import rrulestr
 @form.validator(field=IEventRecurrence['recurrence'])
 def validate_recurrence(value):
     if not value:
@@ -158,6 +160,19 @@ def validate_recurrence(value):
     for ix, rule in enumerate(rrule):
         if ix > 364:
             raise Invalid(_(u'You may not add more than 365 occurences'))
+
+# Ensure that the event date is corrent
+class EventValidator(validator.InvariantsValidator):
+    def validateObject(self, obj):
+        errors = super(EventValidator, self).validateObject(obj)
+        if obj.start > obj.end:
+            errors += (Invalid(_(u'Event start before end')))
+    
+        return errors
+
+validator.WidgetsValidatorDiscriminators(EventValidator, 
+    schema=util.getSpecification(IEventsDirectoryItem, force=True)
+)
 
 class EventsDirectoryItem(item.DirectoryItem):
     pass
