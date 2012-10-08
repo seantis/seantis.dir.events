@@ -144,9 +144,17 @@ def occurrences(item, min_date, max_date):
             return [Occurrence(item, item.start, item.end)]
     
     duration = item.end - item.start
+
+    # plone.app.event doesn't seem to store the timezone info on the
+    # rrule string when the user selects an end-date for a recurrence.
+    # Those dates should have the timezone of the item and the following
+    # function called by dateutil will resolve that issue.
+    def get_timezone(name, offset):
+        if not name and not offset:
+            return item.timezone
     
     result = []
-    rrule = rrulestr(item.recurrence, dtstart=item.start)
+    rrule = rrulestr(item.recurrence, dtstart=item.start, tzinfos=get_timezone)
 
     for start in rrule.between(min_date, max_date, inc=True):
         result.append(Occurrence(item, start, start + duration))
