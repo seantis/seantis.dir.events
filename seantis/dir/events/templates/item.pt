@@ -15,27 +15,30 @@
 <metal:main fill-slot="main">
     <tal:main-macro metal:define-macro="main">
         <div tal:replace="structure provider:plone.abovecontenttitle" />
-        <a tal:attributes="href python: context.parent().absolute_url() + '?reset=true'"><h1 class="documentFirstHeading" tal:content="python: context.parent().title" /></a>
         <div tal:replace="structure provider:plone.belowcontenttitle" />
         <div tal:replace="structure provider:plone.abovecontentbody" />
         
         <div id="directoryDetails" class="events">
-            <div class="event">
+            <div class="event-view">
               <div class="event-head">
-                <div class="eventdate"><span tal:content="python: view.start.strftime('%d.%m.%Y')"></span></div>
+                <div class="event-title">
+                  <h2>
+                      <tal:block content="context/title" />
+                  </h2>
 
-                <h2>
-                    <tal:block content="context/title" />
-                </h2>
+                  <div class="eventdate"><span tal:content="python: view.human_date"></span> <span tal:content="python: view.human_daterange"></span></div>
+                </div>
 
                 <div class="descriptions">
                   <div class="short" tal:content="context/short_description"></div>
                   <div class="long" tal:content="context/long_description"></div>
                 </div>
 
-                <tal:block repeat="category python: context.categories()[:2]">
+                <div class="eventtagslist">
+                  <tal:block repeat="category python: context.categories()[:2]">
                     <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
-                </tal:block>
+                  </tal:block>
+                </div>
               </div>
 
               <div class="event-details">

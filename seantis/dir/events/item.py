@@ -219,6 +219,14 @@ class View(core.View):
         return occurrence.end
 
     @property
+    def human_date(self):
+        return dates.human_date(self.start, self.request)
+
+    @property
+    def human_daterange(self):
+        return dates.human_daterange(self.start, self.end)
+
+    @property
     @view.memoize
     def occurrence(self):
         date = self.date
