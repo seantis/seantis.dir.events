@@ -74,9 +74,11 @@ class Occurrence(ProxyBase):
         return dates.human_daterange(start, end)
 
 
-def occurrence(item, start):
+def pick_occurrence(item, start):
     """ Returns the occurrence at startdate. This suffices because two
-    occurrences of the same item are never on the same day. """
+    occurrences of the same item are never on the same day. 
+
+    """
 
     min_date = datetime(start.year, start.month, start.day, 
         tzinfo=item.start.tzinfo
@@ -89,6 +91,11 @@ def occurrence(item, start):
     return found and found[0] or None
 
 def split_days(occurrence):
+    """ Iterates through a list of occurrences and splits the occurrences
+    which span more than 24 hours into sub-occurrences. The idea is to
+    have events that last multiple days display on each day separately.
+
+    """
     
     days = (occurrence.end - occurrence.start).days
 
@@ -101,19 +108,37 @@ def split_days(occurrence):
             start = occurrence.start + timedelta(days=day)
             end = start + duration
 
-            if day > 1:
-                start = datetime(start.year, start.month, start.day, tzinfo=start.tzinfo)
-            if day == days:
+            first_day = day == 0
+            last_day = day == days
+
+            if first_day:
+                start = occurrence.start
+            else:
+                start = datetime(start.year, start.month, start.day, 
+                    tzinfo=start.tzinfo
+                )
+
+            if last_day:
+                end = occurrence.end
+            else:
                 end = datetime(end.year, end.month, end.day, tzinfo=end.tzinfo)
                 end += timedelta(days=1, microseconds=-1)
 
-            yield Occurrence(occurrence._wrapped, start, end)
+            # if the given occurrence is already a proxy, don't double-wrap it
+            if isinstance(occurrence, Occurrence):
+                yield Occurrence(occurrence._wrapped, start, end)
+            else:
+                yield Occurrence(occurrence, start, end)
 
 def occurrences(item, min_date, max_date):
+    """ Returns the occurrences for item between min and max date.
+    Will return a list with a single item if the given item has no recurrence.
+
+    """
 
     if not item.recurrence:
 
-        if not overlaps(min_date, max_date, to_utc(item.start), to_utc(item.end)):
+        if not overlaps(min_date, max_date, item.start, item.end):
             return []
         else:
             return [Occurrence(item, item.start, item.end)]

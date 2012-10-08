@@ -208,7 +208,7 @@ class View(core.View):
     def occurrence(self):
         date = self.date
         if date and self.is_recurring:
-            return recurrence.occurrence(self.context, self.date)
+            return recurrence.pick_occurrence(self.context, self.date)
         else:
             return None
 
