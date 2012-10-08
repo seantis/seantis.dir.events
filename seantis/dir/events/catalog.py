@@ -14,7 +14,6 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     def __init__(self, *args, **kwargs):
         self._daterange = 'this_month'
-        self.start, self.end = dates.eventrange()
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
 
     @property
@@ -30,10 +29,10 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         return lambda i: i.start
 
     def spawn(self, realitems):
-        self.start, self.end = getattr(dates.DateRanges(), self._daterange)
+        start, end = getattr(dates.DateRanges(), self._daterange)
 
         for item in realitems:
-            for occurrence in recurrence.occurrences(item, self.start, self.end):
+            for occurrence in recurrence.occurrences(item, start, end):
                 for split in recurrence.split_days(occurrence):
                     yield split
 
