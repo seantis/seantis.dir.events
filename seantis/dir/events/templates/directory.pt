@@ -26,7 +26,12 @@
         </tal:block>
 
         <div id="directoryInfo" tal:define="groups python: view.groups(view.batch);">
-            <div id="directoryResultList">
+          
+            <div id="directoryResultList" class="no-results" i18n:translate="" tal:condition="python: not view.has_results">
+              No Events
+            </div>
+          
+            <div id="directoryResultList" tal:condition="python: view.has_results">
 
               <tal:block repeat="group python: groups.items()">
                 <div class="eventgroup-title" tal:content="python: group[0]"></div>

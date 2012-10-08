@@ -78,6 +78,10 @@ class EventsDirectoryView(directory.View):
     def filter_url(self, method):
         return self.directory.absolute_url() + '?range=' + method
 
+    @property
+    def has_results(self):
+        return len(self.items) > 0
+
     def groups(self, items):
         def groupkey(item):
             date = dates.human_date(item.start, self.request)
