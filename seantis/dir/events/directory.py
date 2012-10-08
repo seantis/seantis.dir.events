@@ -49,33 +49,33 @@ class EventsDirectoryView(directory.View):
 
     template = grok.PageTemplateFile('templates/directory.pt')
 
-    def get_last_filter_method(self):
-        return session.get_session(self.context, 'filter_method') or 'is_this_month'
+    def get_last_daterange(self):
+        return session.get_session(self.context, 'daterange') or 'this_month'
 
-    def set_last_filter_method(self, method):
-        session.set_session(self.context, 'filter_method', method)
+    def set_last_daterange(self, method):
+        session.set_session(self.context, 'daterange', method)
 
     def update(self, **kwargs):
-        filter_method = self.request.get('range', self.get_last_filter_method())
+        daterange = self.request.get('range', self.get_last_daterange())
 
         # do not trust the user's input blindly
-        if not dates.is_valid_method(filter_method):
-            filter_method = 'is_this_month'
+        if not dates.is_valid_daterange(daterange):
+            daterange = 'this_month'
         else:
-            self.set_last_filter_method(filter_method)
+            self.set_last_daterange(daterange)
 
-        self.catalog.filter_method = filter_method
+        self.catalog.daterange = daterange
 
         super(EventsDirectoryView, self).update(**kwargs)
 
     @property
-    def selected_filter_method(self):
-        return self.catalog.filter_method
+    def selected_daterange(self):
+        return self.catalog.daterange
 
-    def filter_methods(self):
+    def dateranges(self):
         return dates.methods
 
-    def filter_url(self, method):
+    def daterange_url(self, method):
         return self.directory.absolute_url() + '?range=' + method
 
     @property

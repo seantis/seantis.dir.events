@@ -48,58 +48,50 @@ class TestDateRanges(IntegrationTestCase):
 
         start = datetime(2012, 1, 1, 22, 0) # sunday
         end = datetime(2012, 1, 2, 02, 0)
-        daterange = dates.DateRangeInfo(start, end)
+        dateranges = dates.DateRanges()
+        overlaps = lambda method: dateranges.overlaps(method, start, end)
 
-        daterange.now = datetime(2011, 1, 1, 0, 0)
-        self.assertFalse(daterange.is_today)
-        self.assertFalse(daterange.is_today)
-        self.assertFalse(daterange.is_this_year)
-        self.assertTrue(daterange.is_next_year)
+        dateranges.now = datetime(2011, 1, 1, 0, 0)
+        self.assertFalse(overlaps('today'))
+        self.assertFalse(overlaps('this_year'))
+        self.assertTrue(overlaps('next_year'))
 
-        daterange.now = datetime(2012, 1, 1, 12, 0)
-        self.assertFalse(daterange.is_over)
-        self.assertTrue(daterange.is_today)
-        self.assertTrue(daterange.is_this_year)
+        dateranges.now = datetime(2012, 1, 1, 12, 0)
+        self.assertTrue(overlaps('today'))
+        self.assertTrue(overlaps('this_year'))
 
-        daterange.now = datetime(2012, 1, 2, 02, 0)
-        self.assertFalse(daterange.is_over)
+        dateranges.now = datetime(2011, 12, 31, 12, 0) # saturday
+        self.assertFalse(overlaps('today'))
+        self.assertTrue(overlaps('tomorrow'))
+        self.assertTrue(overlaps('this_week'))
 
-        daterange.now = datetime(2012, 1, 2, 02, 1)
-        self.assertTrue(daterange.is_over)
+        dateranges.now = datetime(2011, 12, 24, 12, 0) # saturday one week before
+        self.assertTrue(overlaps('this_week'))
+        self.assertTrue(overlaps('next_week')) # spillover
 
-        daterange.now = datetime(2011, 12, 31, 12, 0) # saturday
-        self.assertFalse(daterange.is_today)
-        self.assertTrue(daterange.is_tomorrow)
-        self.assertTrue(daterange.is_this_week)
+        dateranges.now = datetime(2011, 12, 23, 12, 0) # friday one week before
+        self.assertFalse(overlaps('this_week'))
+        self.assertTrue(overlaps('next_week'))
 
-        daterange.now = datetime(2011, 12, 24, 12, 0) # saturday one week before
-        self.assertTrue(daterange.is_this_week)
-        self.assertTrue(daterange.is_next_week) # because end spills over
+        dateranges.now = datetime(2012, 1, 2, 12, 0)
+        self.assertTrue(overlaps('this_week'))
 
-        daterange.now = datetime(2011, 12, 23, 12, 0) # friday one week before
-        self.assertFalse(daterange.is_this_week)
-        self.assertTrue(daterange.is_next_week)
+        dateranges.now = datetime(2011, 12, 29, 0, 0) # thursday
+        self.assertTrue(overlaps('this_week'))
+        self.assertTrue(overlaps('this_weekend'))
+        self.assertTrue(overlaps('next_week')) # spillover
+        self.assertFalse(overlaps('next_weekend'))
 
-        daterange.now = datetime(2012, 1, 2, 12, 0)
-        self.assertTrue(daterange.is_over)
-        self.assertTrue(daterange.is_this_week)
+        dateranges.now = datetime(2011, 12, 22, 0, 0) # one week earlier
+        self.assertFalse(overlaps('this_week'))
+        self.assertFalse(overlaps('this_weekend'))
+        self.assertTrue(overlaps('next_week'))
+        self.assertTrue(overlaps('next_weekend'))
 
-        daterange.now = datetime(2011, 12, 29, 0, 0) # thursday
-        self.assertTrue(daterange.is_this_week)
-        self.assertTrue(daterange.is_this_weekend)
-        self.assertTrue(daterange.is_next_week) #spillover
-        self.assertFalse(daterange.is_next_weekend)
+        dateranges.now = datetime(2011, 12, 12, 0, 0)
+        self.assertFalse(overlaps('this_month'))
+        self.assertTrue(overlaps('next_month'))
 
-        daterange.now = datetime(2011, 12, 22, 0, 0) # one week earlier
-        self.assertFalse(daterange.is_this_week)
-        self.assertFalse(daterange.is_this_weekend)
-        self.assertTrue(daterange.is_next_week)
-        self.assertTrue(daterange.is_next_weekend)
-
-        daterange.now = datetime(2011, 12, 12, 0, 0)
-        self.assertFalse(daterange.is_this_month)
-        self.assertTrue(daterange.is_next_month)
-
-        daterange.now = datetime(2012, 1, 1, 0, 0)
-        self.assertTrue(daterange.is_this_month)
-        self.assertFalse(daterange.is_next_month)
+        dateranges.now = datetime(2012, 1, 1, 0, 0)
+        self.assertTrue(overlaps('this_month'))
+        self.assertFalse(overlaps('next_month'))

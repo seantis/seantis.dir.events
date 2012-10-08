@@ -5,7 +5,7 @@ from dateutil.relativedelta import relativedelta, MO, FR
 
 from seantis.dir.events import _
 
-def event_range():
+def eventrange():
     """ Returns the date range (start, end) in which the events are visible. """
     now = datetime.utcnow()
     this_morning = datetime(now.year, now.month, now.day)
@@ -61,28 +61,28 @@ def human_daterange(start, end):
             return start.strftime('%d.%m.%Y %H:%M - ') + end.strftime('%d.%m.%Y %H:%M')
 
 methods = list()
-categories = dict()
+ranges = dict()
 labels = dict()
 
-def category(label):
+def daterange(label):
     """ Deocrator that, applied to DateRangeInfo methods, marks them
     as category methods for further processing. 
 
     """
     def decorator(fn):
-        global methods, categories, labels
+        global methods, ranges, labels
 
         methods.append((fn.__name__, label))
-        categories[label] = fn.__name__
+        ranges[label] = fn.__name__
         labels[fn.__name__] = label
-        
+
         return fn
 
     return decorator
 
-def is_valid_method(name):
+def is_valid_daterange(name):
     """ Returns true if the given name is a valid DateRangeInfo method. """
-    return name in categories.values()
+    return name in ranges.values()
 
 weekdays = dict(MO=0, TU=1, WE=2, TH=3, FR=4, SA=5, SU=6)
 def this_weekend(date):
@@ -118,20 +118,11 @@ def next_weekday(date, weekday):
     
     return date + timedelta((w - date.weekday()) % 7)
 
-class DateRangeInfo(object):
 
-    __slots__ = ('_now', 's', 'e', 'this_morning', 'this_evening')
+class DateRanges(object):
 
-    def __init__(self, start, end):
-        assert bool(start.tzinfo) == bool(end.tzinfo),\
-        "Either both dates are timzone aware or naive, no mix"
-
-        if start.tzinfo and end.tzinfo:
-            self.now = to_utc(datetime.utcnow())
-        else:
-            self.now = datetime.utcnow()
-
-        self.s, self.e = start, end
+    def __init__(self):
+        self.now = to_utc(datetime.utcnow())
 
     @property
     def now(self):
@@ -143,59 +134,55 @@ class DateRangeInfo(object):
         self.this_morning = datetime(now.year, now.month, now.day, tzinfo=now.tzinfo)
         self.this_evening = self.this_morning + timedelta(days=1, microseconds=-1)
 
-    @property
-    def is_over(self):
-        return self.now > self.e
+    def overlaps(self, method, start, end):
+        s, e = getattr(self, method)
+        return overlaps(s, e, start, end)
 
     @property
-    @category(_(u'Today'))
-    def is_today(self):
-        return overlaps(self.s, self.e, self.this_morning, self.this_evening)
+    @daterange(_(u'Today'))
+    def today(self):
+        return self.this_morning, self.this_evening
 
     @property
-    @category(_(u'Tomorrow'))
-    def is_tomorrow(self):
-        return overlaps(self.s, self.e, 
-            self.this_morning + timedelta(days=1),
-            self.this_evening + timedelta(days=1)
+    @daterange(_(u'Tomorrow'))
+    def tomorrow(self):
+        return (self.this_morning + timedelta(days=1),
+                self.this_evening + timedelta(days=1)
         )
 
     @property
-    @category(_(u'Day after Tomorrow'))
-    def is_day_after_tomorrow(self):
-        return overlaps(self.s, self.e,
-            self.this_morning + timedelta(days=2),
-            self.this_evening + timedelta(days=2),
+    @daterange(_(u'Day after Tomorrow'))
+    def day_after_tomorrow(self):
+        return (self.this_morning + timedelta(days=2),
+                self.this_evening + timedelta(days=2)
         )
 
     @property
-    @category(_(u'This Weekend'))
-    def is_this_weekend(self):
+    @daterange(_(u'This Weekend'))
+    def this_weekend(self):
         # between friday at 4 and saturday midnight
-
-        weekend_start, weekend_end = this_weekend(self.now)
-        return overlaps(self.s, self.e, weekend_start, weekend_end)
-
+        return this_weekend(self.now)
+        
     @property
-    @category(_(u'Next Weekend'))
-    def is_next_weekend(self):
+    @daterange(_(u'Next Weekend'))
+    def next_weekend(self):
         weekend_start, weekend_end = this_weekend(self.now)
         weekend_start += timedelta(days=7)
         weekend_end += timedelta(days=7)
 
-        return overlaps(self.s, self.e, weekend_start, weekend_end)
+        return weekend_start, weekend_end
 
     @property
-    @category(_(u'This Week'))
-    def is_this_week(self):
+    @daterange(_(u'This Week'))
+    def this_week(self):
         # range between now and next sunday evening with
         # range contains at least two days (saturday until next sunday)
         end_of_week = next_weekday(self.this_evening + timedelta(days=2), "SU")
-        return overlaps(self.s, self.e, self.this_morning, end_of_week)
+        return self.this_morning, end_of_week
 
     @property
-    @category(_(u'Next Week'))
-    def is_next_week(self):
+    @daterange(_(u'Next Week'))
+    def next_week(self):
         # range between next sunday (as in self.is_this_week)
         # and the sunday after that
         start_of_week = next_weekday(self.this_morning + timedelta(days=2), "SU")
@@ -206,52 +193,35 @@ class DateRangeInfo(object):
         )
         end_of_week = next_weekday(start_of_week, "SU") + timedelta(days=1, microseconds=-1)
 
-        return overlaps(self.s, self.e, start_of_week, end_of_week)
+        return start_of_week, end_of_week
 
     @property
-    @category(_(u'This Month'))
-    def is_this_month(self):
-        month_start, month_end = this_month(self.now)
-
-        return overlaps(self.s, self.e, month_start, month_end)
+    @daterange(_(u'This Month'))
+    def this_month(self):
+        return this_month(self.now)
 
     @property
-    @category(_(u'Next Month'))
-    def is_next_month(self):
+    @daterange(_(u'Next Month'))
+    def next_month(self):
         prev_start, prev_end = this_month(self.now)
         month_start = prev_end + timedelta(microseconds=1)
 
-        month_start, month_end = this_month(month_start)
-        return overlaps(self.s, self.e, month_start, month_end)
+        return this_month(month_start)
 
     @property
-    @category(_(u'This Year'))
-    def is_this_year(self):
-        return self.now.year in (self.s.year, self.e.year)
+    @daterange(_(u'This Year'))
+    def this_year(self):
+        start_of_year = datetime(self.now.year, 1, 1, tzinfo=self.now.tzinfo)
+        end_of_year = datetime(self.now.year+1, 1, 1, tzinfo=self.now.tzinfo)
+        end_of_year -= timedelta(microseconds=1)
+
+        return start_of_year, end_of_year
 
     @property
-    @category(_(u'Next Year'))
-    def is_next_year(self):
-        return (self.now.year + 1) in (self.s.year, self.e.year)
+    @daterange(_(u'Next Year'))
+    def next_year(self):
+        start_of_year = datetime(self.now.year+1, 1, 1, tzinfo=self.now.tzinfo)
+        end_of_year = datetime(self.now.year+2, 1, 1, tzinfo=self.now.tzinfo)
+        end_of_year -= timedelta(microseconds=1)
 
-def datecategories(start, end):
-    """ Returns a list of datecategories for the given daterange. """
-    
-    daterange = DateRangeInfo(start, end)
-
-    for method, name, unique in sorted(methods, key=lambda i: i[2], reverse=True):
-        if getattr(daterange, method):
-            yield name
-            
-            if unique:
-                raise StopIteration
-
-def filter_key(method):
-    """ Returns a filter-key function that filters objects that have
-    a start/end property according to the given method. 
-
-    """
-    def compare(item):
-        return getattr(DateRangeInfo(item.start, item.end), method)
-
-    return compare
+        return start_of_year, end_of_year

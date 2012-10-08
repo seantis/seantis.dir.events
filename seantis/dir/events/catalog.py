@@ -13,29 +13,29 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     grok.provides(IDirectoryCatalog)
 
     def __init__(self, *args, **kwargs):
-        self.filter_method = 'is_this_month'
-        self.start, self.end = dates.event_range()
+        self._daterange = 'this_month'
+        self.start, self.end = dates.eventrange()
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
 
     @property
-    def filter_method(self):
-        return self._filter_method
+    def daterange(self):
+        return self._daterange
 
-    @filter_method.setter
-    def filter_method(self, method):
-        assert dates.is_valid_method(method), "invalid filter method %s" % method
-        self._filter_method = method
+    @daterange.setter
+    def daterange(self, range):
+        assert dates.is_valid_daterange(range), "invalid date range %s" % range
+        self._daterange = range
 
     def sortkey(self):
         return lambda i: i.start
 
     def spawn(self, realitems):
-        is_match = dates.filter_key(self.filter_method)
+        self.start, self.end = getattr(dates.DateRanges(), self._daterange)
+
         for item in realitems:
             for occurrence in recurrence.occurrences(item, self.start, self.end):
-                if is_match(occurrence):
-                    for split in recurrence.split_days(occurrence):
-                        yield split
+                for split in recurrence.split_days(occurrence):
+                    yield split
 
     def items(self):
         real = super(EventsDirectoryCatalog, self).items()
