@@ -6,7 +6,7 @@ from dateutil.rrule import rrulestr
 from urllib import urlencode
 
 from seantis.dir.events import dates
-from seantis.dir.events.utils import overlaps, to_utc
+from seantis.dir.events.dates import overlaps, to_utc
 
 # plone.app.event creates occurrences using adapters, which seems a bit wasteful
 # to me. It also doesn't play too well with my interfaces (overridding either
