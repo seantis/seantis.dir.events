@@ -29,6 +29,12 @@
                   <div class="eventdate"><span tal:content="python: view.human_date"></span> <span tal:content="python: view.human_daterange"></span></div>
                 </div>
 
+                <div class="event-image" tal:condition="context/image">
+                  <a tal:attributes="href string:${context/absolute_url}/@@images/image">
+                    <img tal:replace="structure context/@@images/image/mini" />
+                  </a>
+                </div>
+
                 <div class="descriptions">
                   <div class="short" tal:content="context/short_description"></div>
                   <div class="long" tal:content="context/long_description"></div>

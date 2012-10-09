@@ -96,6 +96,3 @@ class EventsDirectoryView(directory.View):
             result[group[0]] = [i for i in group[1]]
             
         return result
-
-    def onclick(self, item):
-        return 'window.location="%s";' % item.url()

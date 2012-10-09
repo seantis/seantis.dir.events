@@ -36,10 +36,15 @@
               <tal:block repeat="group python: groups.items()">
                 <div class="eventgroup-title" tal:content="python: group[0]"></div>
                 <div class="eventgroup">
-                  <div class="directoryResult event" tal:repeat="item python: group[1]" tal:attributes="id item/id; onclick python: view.onclick(item)">
+                  <div class="directoryResult event" tal:repeat="item python: group[1]" tal:attributes="id item/id">
                     <metal:use use-macro="context/@@seantis-dir-macros/macros/map-marker"></metal:use>
 
                     <div class="directoryInfoText">
+                      
+                      <div class="event-image" tal:condition="item/image">
+                        <img tal:replace="structure item/@@images/image/tile" />
+                      </div>
+
                       <h3><a
                         tal:attributes="href python: item.url()" 
                         tal:content="item/title">

@@ -158,8 +158,8 @@ def validate_recurrence(value):
         
     rrule = rrulestr(value)
     for ix, rule in enumerate(rrule):
-        if ix > 364:
-            raise Invalid(_(u'You may not add more than 365 occurences'))
+        if ix > 52: # one occurrence per week
+            raise Invalid(_(u'You may not add more than 52 occurences'))
 
 # Ensure that the event date is corrent
 class EventValidator(validator.InvariantsValidator):

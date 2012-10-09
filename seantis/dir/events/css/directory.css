@@ -8,13 +8,9 @@
     margin-top: 22px;   
 }
 
-#directoryResultList .event:hover,
-.groupSelection {
-    background-color: #efefef;
-}
-
-.event:hover {
-    cursor: pointer;   
+#content #directoryResultList .event:hover h3 *,
+#content groupSelection h3 * {
+    color: #75AD0A !important;
 }
 
 #directoryResultList {
@@ -102,6 +98,18 @@
     float: right;
     color: #777;
     display: inline-block;
+}
+
+.event-image {
+    float: left;
+    padding: 5px;
+    margin: 5px 7px 0 0;
+    border: 1px solid #dce4eb;
+    background-color: #efefef;   
+}
+
+.event-view .event-image {
+    margin: 0 10px 0 15px;
 }
 
 .event-view {
