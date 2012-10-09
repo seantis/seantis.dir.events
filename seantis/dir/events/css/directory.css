@@ -8,8 +8,7 @@
     margin-top: 22px;   
 }
 
-#content #directoryResultList .event:hover h3 *,
-#content groupSelection h3 * {
+#content .groupSelection h3 * {
     color: #75AD0A !important;
 }
 
@@ -109,7 +108,7 @@
 }
 
 .event-view .event-image {
-    margin: 0 10px 0 15px;
+    margin: 0 10px 10px 15px;
 }
 
 .event-view {

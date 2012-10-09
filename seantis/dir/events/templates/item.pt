@@ -45,6 +45,8 @@
                     <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
                   </tal:block>
                 </div>
+
+                <div style="clear: both;"></div>
               </div>
 
               <div class="event-details">
