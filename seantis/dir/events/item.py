@@ -259,6 +259,27 @@ class ExtendedDirectoryItemFieldMap(grok.Adapter):
         itemmap.typename = 'seantis.dir.events.item'
         itemmap.interface = IEventsDirectoryItem
 
-        extended = []
+        extended = [
+            "start", "end", "timezone", "whole_day", "recurrence",
+            "short_description", "long_description", "locality", "street",
+            "housenumber", "zipcode", "town", "website", "organizer",
+            "contact_name", "contact_email", "contact_phone", "prices",
+            "registration", "submitter", "submitter_email"
+        ]
+
+        boolwrap = lambda v: v and '1' or ''
+        boolunwrap = lambda v: v == '1'
+
+        itemmap.bind_wrapper("whole_day", boolwrap)
+        itemmap.bind_unwrapper("whole_day", boolunwrap)
+
+        datewrap = lambda v: v.strftime('%Y.%m.%d %H-%M')
+        dateunwrap = lambda v: datetime.strptime(v, '%Y.%m.%d %H-%M')
+
+        itemmap.bind_wrapper("start", datewrap)
+        itemmap.bind_unwrapper("start", dateunwrap)
+        
+        itemmap.bind_wrapper("end", datewrap)
+        itemmap.bind_unwrapper("end", dateunwrap)
         
         itemmap.add_fields(extended, len(itemmap))
