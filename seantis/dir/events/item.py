@@ -1,3 +1,4 @@
+import imghdr
 from datetime import datetime
 
 from five import grok
@@ -160,6 +161,16 @@ def validate_recurrence(value):
     for ix, rule in enumerate(rrule):
         if ix > 52: # one occurrence per week
             raise Invalid(_(u'You may not add more than 52 occurences'))
+
+# Ensure that the uploaded image at least has an image header, a check
+# which is important because users can upload files anonymously
+@form.validator(field=IEventsDirectoryItem['image'])
+def validate_image(value):
+    if not value:
+        return
+
+    if not imghdr.what(value.filename, value.data):
+        raise Invalid(_(u'Unknown image format'))
 
 # Ensure that the event date is corrent
 class EventValidator(validator.InvariantsValidator):
