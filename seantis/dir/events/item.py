@@ -1,5 +1,6 @@
 import imghdr
 from datetime import datetime
+from subprocess import Popen, PIPE
 
 from five import grok
 from zope.schema import Text, TextLine, URI
@@ -18,6 +19,7 @@ from seantis.dir.base import core
 from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IFieldMapExtender, IDirectoryItem
 
+from seantis.dir.events import utils
 from seantis.dir.events import dates
 from seantis.dir.events import recurrence
 from seantis.dir.events.directory import IEventsDirectory
@@ -171,6 +173,30 @@ def validate_image(value):
 
     if not imghdr.what(value.filename, value.data):
         raise Invalid(_(u'Unknown image format'))
+
+# Attachments are limited to certain filetypes
+mime_whitelist = {
+    'application/pdf':_(u'PDF'),
+}
+
+# unix only currently (-> /user/bin/file)
+utils.assert_unix()
+
+@form.validator(field=IEventsDirectoryItem['attachment_1'])
+@form.validator(field=IEventsDirectoryItem['attachment_2'])
+def validate_attachment(value):
+    if not value:
+        return
+
+    filecheck = Popen("/usr/bin/file -b --mime -", 
+        shell=True, stdout=PIPE, stdin=PIPE
+    ) 
+    filetype = filecheck.communicate(value.data[:1024])[0].strip().split(';')[0]
+
+    if not filetype in mime_whitelist:
+        raise Invalid(_(u'Unsupported Fileformat. Supported is ${formats}',
+            mapping={'formats': u','.join(sorted(mime_whitelist.values()))}
+        ))
 
 # Ensure that the event date is corrent
 class EventValidator(validator.InvariantsValidator):
