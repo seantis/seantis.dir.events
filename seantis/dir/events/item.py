@@ -283,6 +283,12 @@ class View(core.View):
         
         return recurrence.occurrences(self.context, min_date, max_date)
 
+    def attachment_filename(self, attachment):
+        filename = getattr(self.context, attachment).filename
+        if len(filename) > 30:
+            return filename[:30] + '...'
+        else:
+            return filename
 
 class ExtendedDirectoryItemFieldMap(grok.Adapter):
     """Adapter extending the import/export fieldmap of seantis.dir.events.item."""
