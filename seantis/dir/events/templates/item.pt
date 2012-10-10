@@ -79,7 +79,9 @@
 
                 <div class="ticket" tal:condition="python: any((context.registration, context.prices))">
                   <h3 i18n:translate="">Ticket</h3>
-                  <div class="registration" tal:content="context/registration"></div>
+                  <div class="registration">
+                    <a tal:content="context/registration" tal:attributes="href context/registration"></a>
+                  </div>
                   <div class="prices">
                     <tal:block replace="structure python: context.prices.replace('\n', '<br />')"></tal:block>
                   </div>
