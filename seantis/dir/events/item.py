@@ -1,4 +1,5 @@
 import imghdr
+import magic
 from datetime import datetime
 from subprocess import Popen, PIPE
 
@@ -164,6 +165,14 @@ def validate_recurrence(value):
         if ix > 52: # one occurrence per week
             raise Invalid(_(u'You may not add more than 52 occurences'))
 
+# images and attachments are limited in size
+def check_filesize(value, size_in_mb, type):
+
+    if value.getSize() > size_in_mb * 1024**2:
+        raise Invalid(_(u'${type} bigger than ${max} Megabyte are not allowed',
+            mapping={'max': size_in_mb, 'type': type}
+        ))
+
 # Ensure that the uploaded image at least has an image header, a check
 # which is important because users can upload files anonymously
 @form.validator(field=IEventsDirectoryItem['image'])
@@ -174,13 +183,12 @@ def validate_image(value):
     if not imghdr.what(value.filename, value.data):
         raise Invalid(_(u'Unknown image format'))
 
+    check_filesize(value, 1, _(u'Images'))
+
 # Attachments are limited to certain filetypes
 mime_whitelist = {
     'application/pdf':_(u'PDF'),
 }
-
-# unix only currently (-> /user/bin/file)
-utils.assert_unix()
 
 @form.validator(field=IEventsDirectoryItem['attachment_1'])
 @form.validator(field=IEventsDirectoryItem['attachment_2'])
@@ -188,15 +196,15 @@ def validate_attachment(value):
     if not value:
         return
 
-    filecheck = Popen("/usr/bin/file -b --mime -", 
-        shell=True, stdout=PIPE, stdin=PIPE
-    ) 
-    filetype = filecheck.communicate(value.data[:1024])[0].strip().split(';')[0]
+    filetype = magic.from_buffer(value.data[:1024], mime=True)
 
     if not filetype in mime_whitelist:
-        raise Invalid(_(u'Unsupported Fileformat. Supported is ${formats}',
+        print filetype
+        raise Invalid(_(u'Unsupported fileformat. Supported is ${formats}',
             mapping={'formats': u','.join(sorted(mime_whitelist.values()))}
         ))
+
+    check_filesize(value, 10, _(u'Attachments'))
 
 # Ensure that the event date is corrent
 class EventValidator(validator.InvariantsValidator):
@@ -285,8 +293,8 @@ class View(core.View):
 
     def attachment_filename(self, attachment):
         filename = getattr(self.context, attachment).filename
-        if len(filename) > 30:
-            return filename[:30] + '...'
+        if len(filename) > 100:
+            return filename[:100] + '...'
         else:
             return filename
 

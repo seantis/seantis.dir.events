@@ -26,7 +26,7 @@
                       <tal:block content="context/title" />
                   </h2>
 
-                  <div class="eventdate"><span tal:content="python: view.human_date"></span> <span tal:content="python: view.human_daterange"></span></div>
+                  <div class="event-date"><span tal:content="python: view.human_date"></span> <span tal:content="python: view.human_daterange"></span></div>
                 </div>
 
                 <div class="event-image" tal:condition="context/image">
@@ -38,12 +38,11 @@
                 <div class="descriptions">
                   <div class="short" tal:content="context/short_description"></div>
                   <div class="long" tal:content="context/long_description"></div>
-                </div>
-
-                <div class="eventtagslist">
-                  <tal:block repeat="category python: context.categories()[:2]">
+                  <div class="eventtags-list">
+                    <tal:block repeat="category python: context.categories()[:2]">
                     <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
-                  </tal:block>
+                    </tal:block>
+                  </div>
                 </div>
 
                 <div style="clear: both;"></div>
@@ -81,7 +80,9 @@
                 <div class="ticket" tal:condition="python: any((context.registration, context.prices))">
                   <h3 i18n:translate="">Ticket</h3>
                   <div class="registration" tal:content="context/registration"></div>
-                  <div class="prices" tal:content="context/prices"></div>
+                  <div class="prices">
+                    <tal:block replace="structure python: context.prices.replace('\n', '<br />')"></tal:block>
+                  </div>
                 </div>
 
                 <div class="attachments" tal:condition="python: any((context.attachment_1, context.attachment_2))">

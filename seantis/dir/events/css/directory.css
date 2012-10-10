@@ -93,6 +93,10 @@
     float:left;   
 }
 
+.event-view .eventtags-list {
+    margin: 5px 0 20px 0;   
+}
+
 .timerange {
     float: right;
     color: #777;
@@ -108,7 +112,7 @@
 }
 
 .event-view .event-image {
-    margin: 0 10px 10px 15px;
+    margin: 0 10px 5px 20px;
 }
 
 .event-view {
@@ -125,7 +129,7 @@
     padding-left: 10px;
 }
 
-.eventdate {
+.event-date {
     color: #0083be;
     font-weight: bold;
     font-size: 1.3em;
@@ -133,24 +137,58 @@
     padding-bottom: 5px;
 }
 
-.eventtagslist {
-    margin: 10px 0;   
-}
-
 .descriptions .short {
-    font-weight: bold;
-    font-size: 1.1em;
-    color: #444   
+    font-size: 1.3em;
+    color: #444;
+    margin: 0 0 12px 0;
 }
 
 .descriptions .long {
-    color: #333;   
+    color: #333;
+
 }
 
-.descriptions, .event-details, .eventtagslist {
-    margin-left: 15px;
+.descriptions, .event-details {
+    margin-left: 20px;
 }
 
 .event-details h3 {   
     font-size: 1.1em;
+    background-color: #efefef;
+    color: #666;
+    font-weight: normal;
+    padding: 3px 10px;
+    box-shadow: 0 1px 2px #ccc;
+    margin-bottom: 5px;
+}
+
+.event-details > div {
+    margin-bottom: 10px;
+    border-radius: 3px;
+    padding-bottom: 5px; 
+    background-color: #fafafa;
+}
+
+.event-details > div > div {
+    padding-left: 10px;   
+}
+
+.event-details > div:last-child {
+    margin-bottom: 0;   
+}
+
+.location .locality, .organizer .name {
+    color: #0083be;   
+}
+
+.organizer .contact {
+    margin-top: 10px;
+}
+
+.attachments ul li {
+    list-style: none;
+}
+
+.attachments ul {
+    margin-left: 10px !important;
 }

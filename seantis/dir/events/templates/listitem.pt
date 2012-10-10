@@ -6,7 +6,7 @@
 
   <div class="directoryInfoText">
     <div class="events">
-        <div class="eventdate"><span tal:content="python: context.start.strftime('%d.%m.%Y')"></span></div>
+        <div class="event-date"><span tal:content="python: context.start.strftime('%d.%m.%Y')"></span></div>
         <h3><a 
             tal:attributes="href python: context.url(); id context/id" 
             tal:content="context/title">

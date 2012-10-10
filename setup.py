@@ -34,7 +34,8 @@ setup(name='seantis.dir.events',
           'collective.dexteritytextindexer',
           'seantis.dir.base',
           'zope.proxy',
-          'pytz'
+          'pytz',
+          'python-magic'
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
