@@ -3,16 +3,17 @@ import pytz
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta, MO, FR
 
+from plone.app.event.base import default_timezone
 from seantis.dir.events import _
 
 def eventrange():
     """ Returns the date range (start, end) in which the events are visible. """
-    now = datetime.utcnow()
+    now = default_now()
     this_morning = datetime(now.year, now.month, now.day)
 
     return (
-        to_utc(this_morning),
-        to_utc(datetime.utcnow() + timedelta(days=365*2))
+        this_morning,
+        this_morning + timedelta(days=365*2)
     )
 
 def overlaps(start, end, otherstart, otherend):
@@ -26,6 +27,14 @@ def overlaps(start, end, otherstart, otherend):
 
     return False
 
+def default_now():
+    """ Returns the current time using the default_timezone from 
+    plone.app.event. Said timezone is either set globally or per user.
+
+    """
+    utcnow = to_utc(datetime.utcnow())
+    return pytz.timezone(default_timezone()).normalize(utcnow)
+
 def to_utc(date):
     """ Converts date to utc, making it timezone aware if not already. """
     if not date.tzinfo:
@@ -34,7 +43,7 @@ def to_utc(date):
     return pytz.timezone('utc').normalize(date)
 
 def human_date(date, request, calendar_type='gregorian'):
-    now = to_utc(datetime.utcnow())
+    now = default_now()
 
     if now.date() == date.date():
         return _(u'Today')
@@ -54,7 +63,7 @@ def human_daterange(start, end):
     if (end - start).days < 1:
         return start.strftime('%H:%M - ') + end.strftime('%H:%M')
     else:
-        now = to_utc(datetime.utcnow())
+        now = default_now()
         if now.year == start.year:
             return start.strftime('%d.%m %H:%M - ') + end.strftime('%d.%m %H:%M')
         else:
@@ -101,7 +110,7 @@ def this_weekend(date):
 
     weekend_start += timedelta(hours=16)
     weekend_end += timedelta(microseconds=-1)
-     
+    
     return weekend_start, weekend_end
 
 def this_month(date):
@@ -121,8 +130,8 @@ def next_weekday(date, weekday):
 
 class DateRanges(object):
 
-    def __init__(self):
-        self.now = to_utc(datetime.utcnow())
+    def __init__(self, now=None):
+        self.now = now or default_now()
 
     @property
     def now(self):
