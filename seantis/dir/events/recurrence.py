@@ -5,8 +5,10 @@ from zope.proxy import ProxyBase
 from dateutil.rrule import rrulestr
 from urllib import urlencode
 
+from plone.event.utils import utcoffset_normalize, DSTADJUST
+
 from seantis.dir.events import dates
-from seantis.dir.events.dates import overlaps, to_utc
+from seantis.dir.events.dates import overlaps
 
 # plone.app.event creates occurrences using adapters, which seems a bit wasteful
 # to me. It also doesn't play too well with my interfaces (overridding either
@@ -160,6 +162,7 @@ def occurrences(item, min_date, max_date):
     rrule = rrulestr(item.recurrence, dtstart=item.local_start, tzinfos=get_timezone)
 
     for start in rrule.between(min_date, max_date, inc=True):
+        start = utcoffset_normalize(start, dstmode=DSTADJUST)
         result.append(Occurrence(item, start, start + duration))
 
     return result
