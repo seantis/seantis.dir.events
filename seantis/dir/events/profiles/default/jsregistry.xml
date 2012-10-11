@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<object name="portal_javascripts" meta_type="JavaScripts Registry">
+
+  <javascript
+      cacheable="True"
+      compression="safe"
+      cookable="False"
+      enabled="True"
+      id="++resource++seantis.dir.events.javascript/overlay.js"
+      inline="False"
+      expression="python: 'seantis.dir.events' in object.portal_type"
+      />
+
+</object>

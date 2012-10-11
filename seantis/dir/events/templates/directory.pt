@@ -42,7 +42,9 @@
                     <div class="directoryInfoText">
                       
                       <div class="event-image" tal:condition="item/image">
-                        <img tal:replace="structure item/@@images/image/tile" />
+                        <a tal:attributes="href string:${item/absolute_url}/@@images/image">
+                          <img tal:replace="structure item/@@images/image/tile" />
+                        </a>
                       </div>
 
                       <h3><a
