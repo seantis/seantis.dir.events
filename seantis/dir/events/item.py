@@ -13,6 +13,7 @@ from plone.namedfile.field import NamedImage, NamedFile
 from plone.directives import form
 from plone.memoize import view
 from plone.app.event.dx.behaviors import IEventRecurrence
+from plone.app.event.ical import construct_calendar
 from dateutil.rrule import rrulestr
 
 from z3c.form import util, validator
@@ -251,8 +252,37 @@ class View(core.View):
     grok.context(IEventsDirectoryItem)
     grok.require('zope2.View')
 
-    template = grok.PageTemplateFile('templates/item.pt')
     hide_search_viewlet = True
+
+    template = None
+    _template = grok.PageTemplateFile('templates/item.pt')
+
+    @property
+    def is_ical_export(self):
+        return self.request.get('type') == 'ical'
+
+    def render(self):
+        if not self.is_ical_export:
+            return self._template.render(self)
+        else:
+            calendar = construct_calendar(self.context.parent(), [self.context])
+
+            if self.request.get('only_this') == 'true':
+                for component in calendar.subcomponents:
+                    if 'RRULE' in component:
+                        del component['RRULE']
+
+            name = '%s.ics' % self.context.getId()
+            self.request.RESPONSE.setHeader('Content-Type', 'text/calendar')
+            self.request.RESPONSE.setHeader('Content-Disposition',
+                'attachment; filename="%s"' % name)
+            self.request.RESPONSE.write(calendar.to_ical())
+
+    def ical_url(self, only_this):
+        url = self.context.absolute_url() + '?type=ical'
+        if only_this:
+            url += '&only_this=true'
+        return url
 
     @property
     def is_recurring(self):

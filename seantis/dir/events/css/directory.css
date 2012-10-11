@@ -54,6 +54,10 @@
     border-width: 1px 1px 1px 10px !important;
 }
 
+#content .directoryDates .ical-links a:hover {
+    border-color: #75ad0a !important;
+}
+
 .directoryDates a.selected {
     font-weight: bold;
 }
@@ -195,6 +199,10 @@
     background-color: #fafafa;
 }
 
+.ical-links {
+     margin-top: 20px;   
+}
+
 .event-details > div > div {
     padding-left: 10px;   
 }
@@ -211,10 +219,10 @@
     margin-top: 10px;
 }
 
-.attachments ul li {
+.attachments ul li, .calendars ul li {
     list-style: none;
 }
 
-.attachments ul {
+.attachments ul, .calendars ul {
     margin-left: 10px !important;
 }

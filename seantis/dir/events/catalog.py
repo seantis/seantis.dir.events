@@ -1,5 +1,7 @@
 from five import grok
 
+from plone.app.event.ical import construct_calendar
+
 from seantis.dir.base.catalog import DirectoryCatalog
 from seantis.dir.base.interfaces import IDirectoryCatalog
 
@@ -47,3 +49,13 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     def search(self, text):
         real = super(EventsDirectoryCatalog, self).search(text)
         return sorted(self.spawn(real), key=self.sortkey())
+
+    def calendar(self, search=None, filter=None):
+        if search:
+            items = super(EventsDirectoryCatalog, self).search(search)
+        elif filter:
+            items = super(EventsDirectoryCatalog, self).filter(filter)
+        else:
+            items = super(EventsDirectoryCatalog, self).items()
+
+        return construct_calendar(self.directory, items)

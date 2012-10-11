@@ -47,13 +47,40 @@ class EventsDirectoryView(directory.View):
     grok.context(IEventsDirectory)
     grok.require('zope2.View')
 
-    template = grok.PageTemplateFile('templates/directory.pt')
+    template = None
+    _template = grok.PageTemplateFile('templates/directory.pt')
+
+    @property
+    def is_ical_export(self):
+        return self.request.get('type') == 'ical'
 
     def get_last_daterange(self):
         return session.get_session(self.context, 'daterange') or 'this_month'
 
     def set_last_daterange(self, method):
         session.set_session(self.context, 'daterange', method)
+
+    def render(self):
+        if not self.is_ical_export:
+            return self._template.render(self)
+        else:
+            if 'search' in self.request.keys():
+                calendar = self.catalog.calendar(
+                    search=self.request.get('searchtext')
+                )
+            elif 'filter' in self.request.keys():
+                calendar = self.catalog.calendar(
+                    filter=self.get_filter_terms()
+                )
+            else:
+                calendar = self.catalog.calendar()
+
+
+            name = '%s.ics' % self.context.getId()
+            self.request.RESPONSE.setHeader('Content-Type', 'text/calendar')
+            self.request.RESPONSE.setHeader('Content-Disposition',
+                'attachment; filename="%s"' % name)
+            self.request.RESPONSE.write(calendar.to_ical())
 
     def update(self, **kwargs):
         daterange = self.request.get('range', self.get_last_daterange())
@@ -66,7 +93,8 @@ class EventsDirectoryView(directory.View):
 
         self.catalog.daterange = daterange
 
-        super(EventsDirectoryView, self).update(**kwargs)
+        if not self.is_ical_export:
+            super(EventsDirectoryView, self).update(**kwargs)
 
     @property
     def selected_daterange(self):
@@ -96,3 +124,33 @@ class EventsDirectoryView(directory.View):
             result[group[0]] = [i for i in group[1]]
             
         return result
+
+    def ical_url(self, for_all):
+        url = self.daterange_url('this_year') + '&type=ical'
+        
+        if for_all:
+            return url
+        
+        action, param = self.primary_action()
+
+        if action not in (self.search, self.filter):
+            return ''
+
+        if action == self.search:
+            if param:
+                return url + '&search=true&searchtext=%s' % param
+            else:
+                return ''
+
+        if action == self.filter:
+            terms = dict([(k,v) for k, v in param.items() if v != '!empty'])
+            
+            if not terms:
+                return ''
+
+            url += '&filter=true'
+            
+            for item in terms.items():
+                url += '&%s=%s' % item
+
+            return url
