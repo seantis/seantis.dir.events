@@ -1,5 +1,7 @@
 import imghdr
 import magic
+import pytz
+
 from datetime import datetime
 from subprocess import Popen, PIPE
 
@@ -220,7 +222,21 @@ validator.WidgetsValidatorDiscriminators(EventValidator,
 )
 
 class EventsDirectoryItem(item.DirectoryItem):
-    pass
+    
+    @property
+    def tz(self):
+        return pytz.timezone(self.timezone)
+
+    @property
+    def local_start(self):
+        return self.start.astimezone(self.tz)
+
+    @property
+    def local_end(self):
+        return self.end.astimezone(self.tz)
+
+    def as_occurrence(self):
+        return recurrence.Occurrence(self, self.start, self.end)
 
 class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.context(IEventsDirectoryItem)
@@ -254,22 +270,12 @@ class View(core.View):
             return None
 
     @property
-    def start(self):
-        occurrence = self.occurrence or self.context
-        return occurrence.start
-
-    @property
-    def end(self):
-        occurrence = self.occurrence or self.context
-        return occurrence.end
-
-    @property
     def human_date(self):
-        return dates.human_date(self.start, self.request)
+        return self.occurrence.human_date(self.request)
 
     @property
     def human_daterange(self):
-        return dates.human_daterange(self.start, self.end)
+        return self.occurrence.human_daterange()
 
     @property
     @view.memoize
@@ -278,11 +284,7 @@ class View(core.View):
         if date and self.is_recurring:
             return recurrence.pick_occurrence(self.context, self.date)
         else:
-            return None
-
-    @property
-    def occurrence_exists(self):
-        return self.occurrence and True or False
+            return self.context.as_occurrence()
 
     @property
     @view.memoize

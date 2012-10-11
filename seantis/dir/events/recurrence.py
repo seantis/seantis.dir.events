@@ -59,6 +59,9 @@ class Occurrence(ProxyBase):
         base += '?' in base and '&' or '?'
         return base + urlencode({'date': self._start.strftime('%Y-%m-%d')})
     
+    def human_date(self, request):
+        return dates.human_date(self.start.astimezone(self.tz), request)
+
     def human_daterange(self):
         # occurrences split to days all get the same date string
         if not self.recurrence and (self._end - self._start).days > 0:
@@ -68,8 +71,8 @@ class Occurrence(ProxyBase):
             start = self._start
             end = self._end
 
-        start = start.astimezone(timezone(self._wrapped.timezone))
-        end = end.astimezone(timezone(self._wrapped.timezone))
+        start = start.astimezone(self.tz)
+        end = end.astimezone(self.tz)
         
         return dates.human_daterange(start, end)
 
@@ -81,7 +84,7 @@ def pick_occurrence(item, start):
     """
 
     min_date = datetime(start.year, start.month, start.day, 
-        tzinfo=item.start.tzinfo
+        tzinfo=item.local_start.tzinfo
     )
     max_date = min_date + timedelta(days=1, microseconds=-1)
 
@@ -154,7 +157,7 @@ def occurrences(item, min_date, max_date):
             return item.timezone
     
     result = []
-    rrule = rrulestr(item.recurrence, dtstart=item.start, tzinfos=get_timezone)
+    rrule = rrulestr(item.recurrence, dtstart=item.local_start, tzinfos=get_timezone)
 
     for start in rrule.between(min_date, max_date, inc=True):
         result.append(Occurrence(item, start, start + duration))

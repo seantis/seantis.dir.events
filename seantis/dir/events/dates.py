@@ -42,7 +42,7 @@ def to_utc(date):
 
     return pytz.timezone('utc').normalize(date)
 
-def human_date(date, request, calendar_type='gregorian'):
+def human_date(date, request):
     now = default_now()
 
     if now.date() == date.date():
@@ -51,7 +51,7 @@ def human_date(date, request, calendar_type='gregorian'):
     if now.date() == (date.date() + timedelta(days=1)):
         return _(u'Tomorrow')
 
-    calendar = request.locale.dates.calendars[calendar_type]
+    calendar = request.locale.dates.calendars['gregorian']
     weekday = calendar.getDayNames()[date.weekday()]
 
     if now.year == date.year:
