@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-09-13 11:00+0000\n"
+"POT-Creation-Date: 2012-10-15 09:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,24 +17,70 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: seantis.dir.events\n"
 
-#: ./item.py:45
+#: ./item.py:177
+msgid "${type} bigger than ${max} Megabyte are not allowed"
+msgstr ""
+
+#: ./item.py:63
 msgid "Attachment 1"
 msgstr ""
 
-#: ./item.py:50
+#: ./item.py:68
 msgid "Attachment 2"
 msgstr ""
 
-#: ./item.py:104
+#: ./item.py:212
+#: ./templates/item.pt:91
+msgid "Attachments"
+msgstr ""
+
+#: ./templates/directory.pt:83
+msgid "Calendar for all events"
+msgstr ""
+
+#: ./templates/item.pt:106
+msgid "Calendar for all occurrences of this event"
+msgstr ""
+
+#: ./templates/directory.pt:86
+msgid "Calendar for events matching the current filter"
+msgstr ""
+
+#: ./templates/item.pt:114
+msgid "Calendar for this event"
+msgstr ""
+
+#: ./templates/item.pt:109
+msgid "Calendar for this occurrence only"
+msgstr ""
+
+#: ./templates/directory.pt:80
+#: ./templates/item.pt:103
+msgid "Calendars (iCal)"
+msgstr ""
+
+#: ./item.py:122
 msgid "Contact Email"
 msgstr ""
 
-#: ./item.py:98
+#: ./item.py:116
 msgid "Contact Name"
 msgstr ""
 
-#: ./item.py:110
+#: ./item.py:128
 msgid "Contact Phone"
+msgstr ""
+
+#: ./templates/directory.pt:74
+msgid "Date"
+msgstr ""
+
+#: ./dates.py:163
+msgid "Day after Tomorrow"
+msgstr ""
+
+#: ./item.py:219
+msgid "Event end before start"
 msgstr ""
 
 #: ./profiles/default/types/seantis.dir.events.directory.xml
@@ -45,63 +91,138 @@ msgstr ""
 msgid "Events Directory Item"
 msgstr ""
 
-#: ./item.py:68
+#: ./item.py:86
 msgid "Housenumber"
 msgstr ""
 
-#: ./directory.py:12
+#: ./directory.py:16
+#: ./item.py:58
 msgid "Image"
 msgstr ""
 
-#: ./item.py:56
-msgid "Locality"
-msgstr ""
-
-#: ./item.py:35
-msgid "Long Description"
-msgstr ""
-
-#: ./item.py:40
-msgid "Opening Hours"
-msgstr ""
-
-#: ./item.py:92
-msgid "Organizer"
-msgstr ""
-
-#: ./item.py:116
-msgid "Prices"
-msgstr ""
-
-#: ./item.py:29
-msgid "Short Description"
-msgstr ""
-
-#: ./item.py:62
-msgid "Street"
-msgstr ""
-
-#: ./item.py:23
-msgid "Submitter Email"
-msgstr ""
-
-#: ./item.py:18
-msgid "Submitter Name"
-msgstr ""
-
-#: ./item.py:122
-msgid "Tickets / Registration"
-msgstr ""
-
-#: ./item.py:80
-msgid "Town"
-msgstr ""
-
-#: ./item.py:86
-msgid "Website"
+#: ./item.py:191
+msgid "Images"
 msgstr ""
 
 #: ./item.py:74
+#: ./templates/item.pt:53
+msgid "Locality"
+msgstr ""
+
+#: ./item.py:53
+msgid "Long Description"
+msgstr ""
+
+#: ./dates.py:213
+msgid "Next Month"
+msgstr ""
+
+#: ./dates.py:193
+msgid "Next Week"
+msgstr ""
+
+#: ./dates.py:176
+msgid "Next Weekend"
+msgstr ""
+
+#: ./dates.py:230
+msgid "Next Year"
+msgstr ""
+
+#: ./templates/directory.pt:30
+msgid "No Events"
+msgstr ""
+
+#: ./item.py:110
+#: ./templates/item.pt:66
+msgid "Organizer"
+msgstr ""
+
+#: ./item.py:195
+msgid "PDF"
+msgstr ""
+
+#: ./item.py:134
+msgid "Prices"
+msgstr ""
+
+#: ./item.py:47
+msgid "Short Description"
+msgstr ""
+
+#: ./item.py:80
+msgid "Street"
+msgstr ""
+
+#: ./item.py:41
+msgid "Submitter Email"
+msgstr ""
+
+#: ./item.py:36
+msgid "Submitter Name"
+msgstr ""
+
+#: ./dates.py:208
+msgid "This Month"
+msgstr ""
+
+#: ./dates.py:185
+msgid "This Week"
+msgstr ""
+
+#: ./dates.py:170
+msgid "This Weekend"
+msgstr ""
+
+#: ./dates.py:221
+msgid "This Year"
+msgstr ""
+
+#: ./templates/item.pt:81
+msgid "Ticket"
+msgstr ""
+
+#: ./item.py:140
+msgid "Tickets / Registration"
+msgstr ""
+
+#: ./dates.py:49
+msgid "Today"
+msgstr ""
+
+#: ./dates.py:52
+msgid "Tomorrow"
+msgstr ""
+
+#: ./item.py:98
+msgid "Town"
+msgstr ""
+
+#: ./item.py:189
+msgid "Unknown image format"
+msgstr ""
+
+#: ./item.py:208
+msgid "Unsupported fileformat. Supported is ${formats}"
+msgstr ""
+
+#: ./item.py:104
+msgid "Website"
+msgstr ""
+
+#: ./directory.py:28
+msgid "What"
+msgstr ""
+
+#: ./directory.py:28
+msgid "Where"
+msgstr ""
+
+#: ./item.py:170
+msgid "You may not add more than ${max} occurences"
+msgstr ""
+
+#: ./item.py:92
 msgid "Zipcode"
 msgstr ""
 

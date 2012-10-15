@@ -163,10 +163,12 @@ def validate_recurrence(value):
     if not value:
         return
         
+    max_occurrences = 52 # one occurrence per week
     rrule = rrulestr(value)
     for ix, rule in enumerate(rrule):
-        if ix > 52: # one occurrence per week
-            raise Invalid(_(u'You may not add more than 52 occurences'))
+        if ix > max_occurrences:
+            raise Invalid(_(u'You may not add more than ${max} occurences',
+                mapping={'number': max_occurrences}))
 
 # images and attachments are limited in size
 def check_filesize(value, size_in_mb, type):
@@ -209,12 +211,12 @@ def validate_attachment(value):
 
     check_filesize(value, 10, _(u'Attachments'))
 
-# Ensure that the event date is corrent
+# Ensure that the event date is correct
 class EventValidator(validator.InvariantsValidator):
     def validateObject(self, obj):
         errors = super(EventValidator, self).validateObject(obj)
         if obj.start > obj.end:
-            errors += (Invalid(_(u'Event start before end')))
+            errors += (Invalid(_(u'Event end before start')))
     
         return errors
 

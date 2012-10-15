@@ -50,7 +50,7 @@
 
               <div class="event-details">
                 <div class="location" tal:condition="python: any((context.locality, context.street, context.housenumber, context.zipcode, context.town))">
-                  <h3 i18n:translate="">Location</h3>
+                  <h3 i18n:translate="">Locality</h3>
                   <div class="locality" tal:content="context/locality"></div>
                   <div class="street">
                     <span tal:content="context/street"></span>
