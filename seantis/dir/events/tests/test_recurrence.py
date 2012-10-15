@@ -1,3 +1,5 @@
+import pytz
+
 from collections import namedtuple
 from datetime import datetime, timedelta, date
 from dateutil.tz import tzutc
@@ -5,46 +7,58 @@ from dateutil.tz import tzutc
 from seantis.dir.events.tests import IntegrationTestCase
 from seantis.dir.events import recurrence
 
+class Item(object):
+    
+    def __init__(self, start, end, recurrence="", timezone=None):
+        self.timezone = timezone or 'Europe/Zurich'
+        self.start = start.replace(tzinfo=self.tz)
+        self.end = end.replace(tzinfo=self.tz)
+        
+        self.recurrence = recurrence
 
+    @property
+    def tz(self):
+        return pytz.timezone(self.timezone)
+
+    @property
+    def local_start(self):
+        return self.start.astimezone(self.tz)
+
+    @property
+    def local_end(self):
+        return self.end.astimezone(self.tz)
+
+    def as_occurrence(self):
+        return recurrence.Occurrence(self, self.start, self.end)
 
 class TestRecurrence(IntegrationTestCase):
 
     def test_occurrences(self):
-        Item = namedtuple('Item', ['recurrence', 'start', 'end'])
 
-        # timezones may be used. if they are, all dates are either timezone
-        # aware or timezone naive. No mixing
-        def timezone_occurrences(timezone):
-            item = Item("RRULE:FREQ=DAILY;COUNT=4", 
-                start=datetime(2012, 1, 1, 10, 0, tzinfo=timezone),
-                end=datetime(2012, 1, 1, 12, 0, tzinfo=timezone)
-            )
+        item = Item(
+            datetime(2012, 1, 1, 10, 0),
+            datetime(2012, 1, 1, 12, 0),
+            "RRULE:FREQ=DAILY;COUNT=4"
+        )
 
-            occurrences = recurrence.occurrences(item, 
-                min_date=datetime(2012, 1, 1, 0, 0, tzinfo=timezone),
-                max_date=datetime(2012, 12, 31, 0, 0, tzinfo=timezone)
-            )
+        occurrences = recurrence.occurrences(item, 
+            min_date=datetime(2012, 1, 1, 0, 0, tzinfo=item.tz),
+            max_date=datetime(2012, 12, 31, 0, 0, tzinfo=item.tz)
+        )
 
-            self.assertEqual(len(occurrences), 4)
-            
-            for occurrence in occurrences:
-                self.assertEqual(occurrence.recurrence, item.recurrence)
+        self.assertEqual(len(occurrences), 4)
+        
+        for occurrence in occurrences:
+            self.assertEqual(occurrence.recurrence, item.recurrence)
 
-            days = [o.start.day for o in occurrences]
-            self.assertEqual([1, 2, 3, 4], days)
-
-            return occurrences
-
-        for occurrence in timezone_occurrences(timezone=None):
-            self.assertEqual(occurrence.start.tzinfo, None)
-
-        for occurrence in timezone_occurrences(timezone=tzutc()):
-            self.assertEqual(occurrence.start.tzinfo, tzutc())
+        days = [o.start.day for o in occurrences]
+        self.assertEqual([1, 2, 3, 4], days)
 
         # test occurrences
-        item = Item("RRULE:FREQ=DAILY;COUNT=4",
-            start=datetime(2012, 1, 1, 10, 0),
-            end=datetime(2012, 1, 1, 12, 0)
+        item = Item(
+            datetime(2012, 1, 1, 10, 0),
+            datetime(2012, 1, 1, 12, 0),
+            "RRULE:FREQ=DAILY;COUNT=4"
         )
 
         occurrences = recurrence.occurrences(item,
@@ -69,28 +83,28 @@ class TestRecurrence(IntegrationTestCase):
 
         # occurrences should return an empty list in these cases
         occurrences = recurrence.occurrences(item,
-            min_date=datetime(2011, 1, 1),
-            max_date=datetime(2011, 1, 1)
+            min_date=datetime(2011, 1, 1, tzinfo=item.tz),
+            max_date=datetime(2011, 1, 1, tzinfo=item.tz)
         )
 
         self.assertEqual(occurrences, [])
 
-        non_recurrant = Item("", 
-            start=datetime(2012, 1, 1, 10, 0),
-            end=datetime(2012, 1, 1, 12, 0)
+        non_recurrant = Item( 
+            datetime(2012, 1, 1, 10, 0),
+            datetime(2012, 1, 1, 12, 0)
         )
 
         occurrences = recurrence.occurrences(non_recurrant,
-            min_date=datetime(2011, 1, 1),
-            max_date=datetime(2011, 1, 1)
+            min_date=datetime(2011, 1, 1, tzinfo=item.tz),
+            max_date=datetime(2011, 1, 1, tzinfo=item.tz)
         )
 
         self.assertEqual(occurrences, [])
 
         # non-recurring items are packed into a list
         occurrences = recurrence.occurrences(non_recurrant,
-            datetime(2012, 1, 1, 10, 0),
-            datetime(2012, 1, 1, 12, 0)
+            datetime(2012, 1, 1, 10, 0, tzinfo=item.tz),
+            datetime(2012, 1, 1, 12, 0, tzinfo=item.tz)
         )
 
         self.assertEqual(occurrences, [non_recurrant])
