@@ -35,7 +35,8 @@ setup(name='seantis.dir.events',
           'seantis.dir.base',
           'zope.proxy',
           'pytz',
-          'python-magic'
+          'python-magic',
+          'mock'
       ],
       entry_points="""
       [z3c.autoinclude.plugin]

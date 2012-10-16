@@ -1,18 +1,26 @@
-import pytz
+# -*- coding: utf-8 -*-
+
+import pytz, mock
 
 from collections import namedtuple
 from datetime import datetime, timedelta, date
-from dateutil.tz import tzutc
+
+from zope.publisher.browser import TestRequest
 
 from seantis.dir.events.tests import IntegrationTestCase
 from seantis.dir.events import recurrence
+from seantis.dir.events import dates
 
 class Item(object):
     
     def __init__(self, start, end, recurrence="", timezone=None):
         self.timezone = timezone or 'Europe/Zurich'
-        self.start = start.replace(tzinfo=self.tz)
-        self.end = end.replace(tzinfo=self.tz)
+        
+        start = self.tz.localize(start) if not start.tzinfo else start
+        end = self.tz.localize(end) if not end.tzinfo else end
+        
+        self.start = dates.to_utc(start)
+        self.end = dates.to_utc(end)
         
         self.recurrence = recurrence
 
@@ -22,11 +30,11 @@ class Item(object):
 
     @property
     def local_start(self):
-        return self.start.astimezone(self.tz)
+        return self.tz.normalize(self.start)
 
     @property
     def local_end(self):
-        return self.end.astimezone(self.tz)
+        return self.tz.normalize(self.end)
 
     def as_occurrence(self):
         return recurrence.Occurrence(self, self.start, self.end)
@@ -162,3 +170,50 @@ class TestRecurrence(IntegrationTestCase):
         self.assertEqual(splits[2].start.minute, 0)
         self.assertEqual(splits[2].start.second, 0)
         self.assertEqual(splits[2].end.hour, 20)
+
+    @mock.patch('seantis.dir.events.dates.default_timezone')
+    def test_cornercases(self, default_timezone):
+
+        default_timezone.return_value = 'Europe/Zurich'
+
+        # create an event that repeats every sunday at 7 in the morning
+        # over a period within which daylight savings time changes
+        item = Item(
+            datetime(2012, 10, 21, 7),
+            datetime(2012, 11, 4, 7),
+            "RRULE:FREQ=WEEKLY",
+            timezone='Europe/Zurich'
+        )
+
+        occurrences = recurrence.occurrences(
+            item, min_date=item.start, max_date=item.end
+        )
+
+        self.assertEqual(len(occurrences), 3)
+        self.assertEqual([o.local_start.hour for o in occurrences], [7]*3)
+        self.assertEqual([o.local_start.weekday() for o in occurrences], [6]*3)
+
+        # create an event that starts at 0:00 in a timezone other than
+        # utc and ensure that the resulting human date shows the
+        # correct weekday in the given timezone
+        start = dates.next_weekday(dates.default_now() + timedelta(days=7), "TU")
+        start = datetime(start.year, start.month, start.day, tzinfo=start.tzinfo)
+
+        item = Item(
+            start,            
+            start + timedelta(seconds=60*60*2), 
+            timezone='Europe/Zurich'
+        )
+
+        # behold, the Swiss German language
+        request = TestRequest()
+        request.locale.dates.calendars['gregorian'].getDayNames = mock.Mock(
+            return_value = [u'Mäntig', u'Zischtig', u'Mittwuch', u'Dunschtig', 
+                            u'Fritig', u'Samschtig', u'Sunntig']
+        )
+        human = item.as_occurrence().human_date(request)
+        self.assertTrue(u'Zischtig' in human)
+
+        # while we're at it
+        human = item.as_occurrence().human_daterange()
+        self.assertEqual(human, '00:00 - 02:00')

@@ -73,8 +73,8 @@ class Occurrence(ProxyBase):
             start = self._start
             end = self._end
 
-        start = start.astimezone(self.tz)
-        end = end.astimezone(self.tz)
+        start = self.tz.normalize(start)
+        end = self.tz.normalize(end)
         
         return dates.human_daterange(start, end)
 

@@ -232,11 +232,11 @@ class EventsDirectoryItem(item.DirectoryItem):
 
     @property
     def local_start(self):
-        return self.start.astimezone(self.tz)
+        return self.tz.normalize(self.start)
 
     @property
     def local_end(self):
-        return self.end.astimezone(self.tz)
+        return self.tz.normalize(self.end)
 
     def as_occurrence(self):
         return recurrence.Occurrence(self, self.start, self.end)
