@@ -62,11 +62,11 @@
                   </div>
                 </div>
 
-                <div class="organizer" tal:condition="python: any((context.organizer, context.website, context.contact_name, context.contact_email, context.contact_phone))">
+                <div class="organizer" tal:condition="python: any((context.organizer, context.event_url, context.contact_name, context.contact_email, context.contact_phone))">
                   <h3 i18n:translate="">Organizer</h3>
                   <div class="name" tal:content="context/organizer"></div>
-                  <div class="website" tal:condition="context/website">
-                    <a tal:content="context/website" tal:attributes="href context/website"></a>
+                  <div class="event_url" tal:condition="context/event_url">
+                    <a tal:content="context/event_url" tal:attributes="href context/event_url"></a>
                   </div>
                   <div class="contact">
                     <div class="name" tal:content="context/contact_name"></div>

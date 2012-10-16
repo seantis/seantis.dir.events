@@ -2,28 +2,28 @@ import imghdr
 import magic
 import pytz
 
-from datetime import datetime
-from subprocess import Popen, PIPE
-
 from five import grok
-from zope.schema import Text, TextLine, URI
-from zope.interface import Invalid
+
+from datetime import datetime
+from dateutil.rrule import rrulestr
+
 from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
 from plone.directives import form
 from plone.memoize import view
 from plone.app.event.dx.behaviors import IEventRecurrence
 from plone.app.event.ical import construct_calendar
-from dateutil.rrule import rrulestr
-
+from plone.event.interfaces import IICalendarEventComponent
+from plone.app.event.ical import ICalendarEventComponent
 from z3c.form import util, validator
+from zope.schema import Text, TextLine, URI
+from zope.interface import Invalid
 
 from seantis.dir.base import item
 from seantis.dir.base import core
 from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IFieldMapExtender, IDirectoryItem
 
-from seantis.dir.events import utils
 from seantis.dir.events import dates
 from seantis.dir.events import recurrence
 from seantis.dir.events.directory import IEventsDirectory
@@ -99,9 +99,9 @@ class IEventsDirectoryItem(IDirectoryItem):
         required=False
     )
 
-    searchable('website')
-    website = URI(
-        title=_(u'Website'),
+    searchable('event_url')
+    event_url = TextLine(
+        title=_(u'Event Website'),
         required=False
     )
 
@@ -137,7 +137,7 @@ class IEventsDirectoryItem(IDirectoryItem):
 
     searchable('registration')
     registration = URI(
-        title=_(u'Tickets / Registration'),
+        title=_(u'Tickets / Registration Website'),
         required=False
     )
 
@@ -150,8 +150,9 @@ IEventsDirectoryItem.setTaggedValue('seantis.dir.base.order',
      'IEventBasic.start', 'IEventBasic.end', 'IEventBasic.whole_day', 
      'IEventBasic.timezone', 'IEventRecurrence.recurrence', 
      'image','attachment_1', 'attachment_2', 'locality', 'street', 
-     'housenumber', 'zipcode', 'town', 'website', 'organizer', 'contact_name', 
-     'contact_email', 'contact_phone', 'prices', 'registration', '*'
+     'housenumber', 'zipcode', 'town', 'event_url', 'organizer', 
+     'contact_name', 'contact_email', 'contact_phone', 'prices', 
+     'registration', '*'
     ]
 )
 
@@ -332,6 +333,50 @@ class View(core.View):
         else:
             return filename
 
+class ICalendarEventItemComponent(ICalendarEventComponent, grok.Adapter):
+    """ Adds custom information to the default ical implementation. """
+    
+    grok.implements(IICalendarEventComponent)
+    grok.context(IEventsDirectoryItem)
+
+    def get_coordinates(self):
+
+        if not self.context.has_mapdata:
+            return None
+
+        coordinates = self.context.get_coordinates()
+
+        if not len(coordinates) == 2:
+            return None
+
+        if not (coordinates[0] or '').upper() == 'POINT':
+            return None
+
+        return coordinates[1]
+
+    def to_ical(self):
+        ical = ICalendarEventComponent.to_ical(self)
+        
+        coordinates = self.get_coordinates()
+        if coordinates:
+            ical.add('geo', coordinates)
+
+        # plone.app.event.ical does the following, but when I tried
+        # to use their interfaces for contact and location I got really
+        # weird problems that made me give up at some point out of fed-up-ness          
+        e = self.context
+
+        if e.locality:
+            ical.add('location', e.locality)
+
+        contact = [e.contact_name, e.contact_phone, e.contact_email, e.event_url]
+        contact = filter(lambda c: c, contact)
+
+        if contact:
+            ical.add('contact', u', '.join(contact))
+        
+        return ical
+
 class ExtendedDirectoryItemFieldMap(grok.Adapter):
     """Adapter extending the import/export fieldmap of seantis.dir.events.item."""
     grok.context(IEventsDirectory)
@@ -347,7 +392,7 @@ class ExtendedDirectoryItemFieldMap(grok.Adapter):
         extended = [
             "start", "end", "timezone", "whole_day", "recurrence",
             "short_description", "long_description", "locality", "street",
-            "housenumber", "zipcode", "town", "website", "organizer",
+            "housenumber", "zipcode", "town", "event_url", "organizer",
             "contact_name", "contact_email", "contact_phone", "prices",
             "registration", "submitter", "submitter_email"
         ]
