@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-10-15 09:41+0000\n"
+"POT-Creation-Date: 2012-10-16 14:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ./item.py:177
+#: ./item.py:178
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
@@ -26,7 +26,7 @@ msgstr "Anhang 1"
 msgid "Attachment 2"
 msgstr "Anhang 2"
 
-#: ./item.py:212
+#: ./item.py:213
 #: ./templates/item.pt:91
 msgid "Attachments"
 msgstr "Anhänge"
@@ -72,11 +72,15 @@ msgstr "Kontakt Telefon"
 msgid "Date"
 msgstr "Datum"
 
-#: ./dates.py:163
+#: ./dates.py:186
 msgid "Day after Tomorrow"
 msgstr "Übermorgen"
 
-#: ./item.py:219
+#: ./item.py:104
+msgid "Event Website"
+msgstr "Event Webseite"
+
+#: ./item.py:220
 msgid "Event end before start"
 msgstr "Event endet bevor er beginnt"
 
@@ -97,7 +101,7 @@ msgstr "Hausnummer"
 msgid "Image"
 msgstr "Bild"
 
-#: ./item.py:191
+#: ./item.py:192
 msgid "Images"
 msgstr "Bilder"
 
@@ -110,19 +114,19 @@ msgstr "Lokalität"
 msgid "Long Description"
 msgstr "Lange Beschreibung"
 
-#: ./dates.py:213
+#: ./dates.py:236
 msgid "Next Month"
 msgstr "Nächsten Monat"
 
-#: ./dates.py:193
+#: ./dates.py:216
 msgid "Next Week"
 msgstr "Nächste Woche"
 
-#: ./dates.py:176
+#: ./dates.py:199
 msgid "Next Weekend"
 msgstr "Nächstes Wochenende"
 
-#: ./dates.py:230
+#: ./dates.py:253
 msgid "Next Year"
 msgstr "Nächstes Jahr"
 
@@ -135,7 +139,7 @@ msgstr "Keine Events"
 msgid "Organizer"
 msgstr "Organisator"
 
-#: ./item.py:195
+#: ./item.py:196
 msgid "PDF"
 msgstr "PDF"
 
@@ -159,19 +163,19 @@ msgstr "Erfasser Email"
 msgid "Submitter Name"
 msgstr "Erfasser Name"
 
-#: ./dates.py:208
+#: ./dates.py:231
 msgid "This Month"
 msgstr "Diesen Monat"
 
-#: ./dates.py:185
+#: ./dates.py:208
 msgid "This Week"
 msgstr "Diese Woche"
 
-#: ./dates.py:170
+#: ./dates.py:193
 msgid "This Weekend"
 msgstr "Dieses Wochenende"
 
-#: ./dates.py:221
+#: ./dates.py:244
 msgid "This Year"
 msgstr "Dieses Jahr"
 
@@ -180,14 +184,14 @@ msgid "Ticket"
 msgstr "Ticket"
 
 #: ./item.py:140
-msgid "Tickets / Registration"
-msgstr "Tickets / Registration"
+msgid "Tickets / Registration Website"
+msgstr "Tickets- / Registrierungs-Website"
 
-#: ./dates.py:49
+#: ./dates.py:59
 msgid "Today"
 msgstr "Heute"
 
-#: ./dates.py:52
+#: ./dates.py:62
 msgid "Tomorrow"
 msgstr "Morgen"
 
@@ -195,17 +199,13 @@ msgstr "Morgen"
 msgid "Town"
 msgstr "Ort"
 
-#: ./item.py:189
+#: ./item.py:190
 msgid "Unknown image format"
 msgstr "Unbekanntes Bild-Format"
 
-#: ./item.py:208
+#: ./item.py:209
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
-
-#: ./item.py:104
-msgid "Website"
-msgstr "Webseite"
 
 #: ./directory.py:28
 msgid "What"
@@ -215,7 +215,11 @@ msgstr "Was"
 msgid "Where"
 msgstr "Wo"
 
-#: ./item.py:170
+#: ./dates.py:76
+msgid "Whole Day"
+msgstr "Ganztags"
+
+#: ./item.py:171
 msgid "You may not add more than ${max} occurences"
 msgstr "Sie dürfen nicht mehr als ${max} Wiederholungen erfassen"
 

@@ -42,6 +42,16 @@ def to_utc(date):
 
     return pytz.timezone('utc').normalize(date)
 
+def is_whole_day(start, end):
+    return all((
+        start.hour == 0,
+        start.minute == 0,
+        start.second == 0,
+        end.hour == 23,
+        end.minute == 59,
+        end.second == 59
+    ))
+
 def human_date(date, request):
     now = default_now()
 
@@ -60,11 +70,24 @@ def human_date(date, request):
         return weekday + ' ' + date.strftime('%d.%m.%Y')
 
 def human_daterange(start, end):
+   
+    if is_whole_day(start, end):
+        if (end - start).days < 1:
+            return _(u'Whole Day')
+        else:
+            if default_now().year == start.year:
+                return start.strftime('%d.%m - ') \
+                + end.strftime('%d.%m ') \
+                + _(u'Whole Day')
+            else:
+                return start.strftime('%d.%m.%Y - ') \
+                + end.strftime('%d.%m.%Y ') \
+                + _(u'Whole Day')
+
     if (end - start).days < 1:
         return start.strftime('%H:%M - ') + end.strftime('%H:%M')
     else:
-        now = default_now()
-        if now.year == start.year:
+        if default_now().year == start.year:
             return start.strftime('%d.%m %H:%M - ') + end.strftime('%d.%m %H:%M')
         else:
             return start.strftime('%d.%m.%Y %H:%M - ') + end.strftime('%d.%m.%Y %H:%M')
