@@ -13,11 +13,20 @@ from seantis.dir.events import dates
 
 class Item(object):
     
-    def __init__(self, start, end, recurrence="", timezone=None):
+    def __init__(self, start, end, recurrence="", timezone=None, whole_day=False):
         self.timezone = timezone or 'Europe/Zurich'
+
+        if whole_day:
+            start = datetime(start.year, start.month, start.day, tzinfo=start.tzinfo)
+            end = datetime(end.year, end.month, end.day, 23, 59, 59)
+
+        self.whole_day = whole_day
         
         start = self.tz.localize(start) if not start.tzinfo else start
         end = self.tz.localize(end) if not end.tzinfo else end
+
+        start = self.tz.normalize(start)
+        end = self.tz.normalize(end)
         
         self.start = dates.to_utc(start)
         self.end = dates.to_utc(end)
@@ -181,8 +190,27 @@ class TestRecurrence(IntegrationTestCase):
         self.assertEqual(splits[2].start.second, 0)
         self.assertEqual(splits[2].end.hour, 20)
 
+        # whole_day events
+
+        three_whole_days = Item(
+            datetime(2012, 1, 1),
+            datetime(2012, 1, 3),
+            timezone='utc',
+            whole_day=True
+        )
+
+        self.assertTrue(
+            dates.is_whole_day(three_whole_days.start, three_whole_days.end)
+        )
+
+        splits = list(recurrence.split_days(three_whole_days))
+        self.assertEqual(len(splits), 3)
+        self.assertEqual([1,2,3], [s.start.day for s in splits])
+        self.assertEqual([1,2,3], [s.end.day for s in splits])
+
     @mock.patch('seantis.dir.events.dates.default_timezone')
-    def test_cornercases(self, default_timezone):
+    @mock.patch('seantis.dir.events.dates.default_now')
+    def test_cornercases(self, default_now, default_timezone):
 
         default_timezone.return_value = 'Europe/Zurich'
 
@@ -206,13 +234,12 @@ class TestRecurrence(IntegrationTestCase):
         # create an event that starts at 0:00 in a timezone other than
         # utc and ensure that the resulting human date shows the
         # correct weekday in the given timezone
-        start = dates.next_weekday(dates.default_now() + timedelta(days=7), "TU")
-        start = datetime(start.year, start.month, start.day, tzinfo=start.tzinfo)
+        # to make it tricky, cross over daylight savings time
 
-        item = Item(
-            start,            
-            start + timedelta(seconds=60*60*2), 
-            timezone='Europe/Zurich'
+        default_now.return_value = datetime(2012, 10, 17, tzinfo=pytz.timezone('Europe/Zurich'))
+        
+        start = datetime(2012, 10, 30)
+        item = Item(start, start + timedelta(seconds=60*60*2), timezone='Europe/Zurich'
         )
 
         # behold, the Swiss German language
@@ -222,6 +249,7 @@ class TestRecurrence(IntegrationTestCase):
                             u'Fritig', u'Samschtig', u'Sunntig']
         )
         human = item.as_occurrence().human_date(request)
+        
         self.assertTrue(u'Zischtig' in human)
 
         # while we're at it

@@ -62,7 +62,7 @@ class Occurrence(ProxyBase):
         return base + urlencode({'date': self._start.strftime('%Y-%m-%d')})
     
     def human_date(self, request):
-        return dates.human_date(self.start.astimezone(self.tz), request)
+        return dates.human_date(self.local_start, request)
 
     def human_daterange(self):
         # occurrences split to days all get the same date string
@@ -108,26 +108,28 @@ def split_days(occurrence):
         yield occurrence
     else:
         for day in xrange(0, days+1):
-            duration = occurrence.end - occurrence.start
-
-            start = occurrence.start + timedelta(days=day)
-            end = start + duration
-
             first_day = day == 0
             last_day = day == days
 
             if first_day:
                 start = occurrence.start
             else:
-                start = datetime(start.year, start.month, start.day, 
-                    tzinfo=start.tzinfo
-                )
+                start = datetime(
+                    occurrence.start.year,
+                    occurrence.start.month,
+                    occurrence.start.day,
+                    tzinfo=occurrence.start.tzinfo
+                ) + timedelta(days=day)
 
             if last_day:
                 end = occurrence.end
             else:
-                end = datetime(end.year, end.month, end.day, tzinfo=end.tzinfo)
-                end += timedelta(days=1, microseconds=-1)
+                end = datetime(
+                    occurrence.start.year,
+                    occurrence.start.month,
+                    occurrence.start.day,
+                    tzinfo=occurrence.start.tzinfo
+                ) + timedelta(days=day+1, microseconds=-1)
 
             # if the given occurrence is already a proxy, don't double-wrap it
             if isinstance(occurrence, Occurrence):
