@@ -37,10 +37,17 @@ def default_now():
 
 def to_utc(date):
     """ Converts date to utc, making it timezone aware if not already. """
-    if not date.tzinfo:
-        date = pytz.timezone('utc').localize(date)
+    return as_timezone(date, 'utc')
 
-    return pytz.timezone('utc').normalize(date)
+def as_timezone(date, timezone):
+    """ Converts date to the given timezone, making it timezone aware if not
+    already. Use this instead of date.astimezone, since said function does
+    not account for daylight savings time. """
+    timezone = pytz.timezone(timezone)
+    if not date.tzinfo:
+        date = timezone.localize(date)
+
+    return timezone.normalize(date)
 
 def is_whole_day(start, end):
     return all((

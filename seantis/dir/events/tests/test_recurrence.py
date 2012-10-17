@@ -7,46 +7,30 @@ from datetime import datetime, timedelta, date
 
 from zope.publisher.browser import TestRequest
 
+from seantis.dir.events.item import EventsDirectoryItem
 from seantis.dir.events.tests import IntegrationTestCase
 from seantis.dir.events import recurrence
 from seantis.dir.events import dates
 
-class Item(object):
+class Item(object, EventsDirectoryItem):
     
-    def __init__(self, start, end, recurrence="", timezone=None, whole_day=False):
-        self.timezone = timezone or 'Europe/Zurich'
+    def __init__(self, start, end, recurrence="", timezone='Europe/Zurich', whole_day=False):
 
+        # if this is a whole day, the times are adjusted (this is what 
+        # plone.app.event would do on the dexterity type)
         if whole_day:
-            start = datetime(start.year, start.month, start.day, tzinfo=start.tzinfo)
+            start = datetime(start.year, start.month, start.day)
             end = datetime(end.year, end.month, end.day, 23, 59, 59)
-
-        self.whole_day = whole_day
         
-        start = self.tz.localize(start) if not start.tzinfo else start
-        end = self.tz.localize(end) if not end.tzinfo else end
-
-        start = self.tz.normalize(start)
-        end = self.tz.normalize(end)
-        
-        self.start = dates.to_utc(start)
-        self.end = dates.to_utc(end)
+        # the given date is implicitly of the given timezone, so enforce
+        # that and then convert to utc as this is what an EventItem actually
+        # stores.
+        self.start = dates.to_utc(dates.as_timezone(start, timezone))
+        self.end = dates.to_utc(dates.as_timezone(end, timezone))
         
         self.recurrence = recurrence
-
-    @property
-    def tz(self):
-        return pytz.timezone(self.timezone)
-
-    @property
-    def local_start(self):
-        return self.tz.normalize(self.start)
-
-    @property
-    def local_end(self):
-        return self.tz.normalize(self.end)
-
-    def as_occurrence(self):
-        return recurrence.Occurrence(self, self.start, self.end)
+        self.timezone = timezone
+        self.whole_day = whole_day
 
 class TestRecurrence(IntegrationTestCase):
 
