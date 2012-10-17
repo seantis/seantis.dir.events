@@ -118,9 +118,11 @@ class TestRecurrence(IntegrationTestCase):
         self.assertEqual(occurrences, [non_recurrant])
 
     def test_split_days(self):
-        Item = namedtuple("Item", ["start", "end"])
-
-        two_days = Item(datetime(2012, 1, 1, 10), datetime(2012, 1, 2, 20))
+        two_days = Item(
+            datetime(2012, 1, 1, 10), 
+            datetime(2012, 1, 2, 20),
+            timezone='utc'
+        )
 
         splits = list(recurrence.split_days(two_days))
         self.assertEqual(len(splits), 2)
@@ -136,7 +138,10 @@ class TestRecurrence(IntegrationTestCase):
         self.assertEqual(splits[1].end.hour, 20)
 
         # >= 24hours
-        one_day = Item(datetime(2012, 1, 1, 10), datetime(2012, 1, 2, 10))
+        one_day = Item(
+            datetime(2012, 1, 1, 10), datetime(2012, 1, 2, 10),
+            timezone='utc'
+        )
         splits = list(recurrence.split_days(one_day))
         
         self.assertEqual(len(splits), 2)
@@ -144,14 +149,19 @@ class TestRecurrence(IntegrationTestCase):
         # < 24 hours
         one_day = Item(
             datetime(2012, 1, 1, 10), 
-            datetime(2012, 1, 2, 10) - timedelta(microseconds=1)
+            datetime(2012, 1, 2, 10) - timedelta(microseconds=1),
+            timezone='utc'
         )
         splits = list(recurrence.split_days(one_day))
 
         self.assertEqual(len(splits), 1)
 
         # more days
-        three_days = Item(datetime(2012, 1, 1, 10), datetime(2012, 1, 3, 20))
+        three_days = Item(
+            datetime(2012, 1, 1, 10), 
+            datetime(2012, 1, 3, 20),
+            timezone='utc'
+        )
         splits = list(recurrence.split_days(three_days))
 
         self.assertEqual(len(splits), 3)
