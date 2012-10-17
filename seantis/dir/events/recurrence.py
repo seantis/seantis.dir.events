@@ -49,6 +49,22 @@ class Occurrence(ProxyBase):
     def local_end(self):
         return self.tz.normalize(self.end)
 
+    @property
+    def real_start(self):
+        return self._wrapped.start
+
+    @property
+    def real_end(self):
+        return self._wrapped.end
+
+    @property
+    def real_local_start(self):
+        return self.tz.normalize(self._wrapped.start)
+
+    @property
+    def real_local_end(self):
+        return self.tz.normalize(self._wrapped.end)
+
     def url(self):
         """ Adds the date of the occurrence to the result of absolute_url. This
         allows to distinguish between occurrences.
@@ -103,16 +119,34 @@ def pick_occurrence(item, start):
 
     return found and found[0] or None
 
+def split_days_count(start, end):
+    """ Returns 0 if the given daterange must be kept together and a number
+    of splits that need to be created if not.
+
+    If the event ends between 0:00 and 08:59 the new date is not counted as 
+    a new day. An event that goes through the night is not a two-day event.
+    
+    """
+
+    days = (end.date() - start.date()).days
+    
+    if days == 0:
+        return 0
+
+    if 0 <= end.hour and end.hour <= 8:
+        days -= 1
+
+    return days
+
 def split_days(occurrence):
     """ Iterates through a list of occurrences and splits the occurrences
     which span more than 24 hours into sub-occurrences. The idea is to
     have events that last multiple days display on each day separately.
 
     """
-    
     days = (occurrence.end - occurrence.start).days
 
-    if days == 0:
+    if not days:
         yield occurrence
     else:
         for day in xrange(0, days+1):

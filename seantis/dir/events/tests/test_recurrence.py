@@ -110,6 +110,25 @@ class TestRecurrence(IntegrationTestCase):
         self.assertEqual(occurrences, [non_recurrant])
 
     def test_split_days(self):
+        # split needed?
+
+        def assert_split(num, daterange):
+            start, end = daterange.split(' - ')
+            start = datetime.strptime('2012.' + start, '%Y.%d.%m %H:%M')
+            end = datetime.strptime('2012.' + end, '%Y.%d.%m %H:%M')
+            self.assertEqual(recurrence.split_days_count(start, end), num)
+
+        assert_split(0, "01.01 08:00 - 01.01 17:00")
+
+        assert_split(0, "01.01 16:00 - 02.01 02:00")
+        assert_split(0, "01.01 00:00 - 02.01 08:59")
+        
+        assert_split(1, "01.01 16:00 - 02.01 09:00")        
+        assert_split(1, "01.01 16:00 - 02.01 23:00")
+        assert_split(1, "01.01 00:00 - 02.01 23:00")
+
+        assert_split(2, "01.01 00:00 - 03.01 09:00")
+
         two_days = Item(
             datetime(2012, 1, 1, 10), 
             datetime(2012, 1, 2, 20),
@@ -174,7 +193,6 @@ class TestRecurrence(IntegrationTestCase):
         self.assertEqual(splits[2].end.hour, 20)
 
         # whole_day events
-
         three_whole_days = Item(
             datetime(2012, 1, 1),
             datetime(2012, 1, 3),
