@@ -60,7 +60,7 @@
                         </tal:block>
                       </div>
 
-                      <div class="timerange" tal:content="python: item.human_daterange()"></div>
+                      <div class="timerange" tal:content="python: item.human_daterange(view.request)"></div>
 
                       <div style="clear:both;"></div>
                     </div>

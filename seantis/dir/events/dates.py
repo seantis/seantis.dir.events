@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta, MO, FR
 
 from plone.app.event.base import default_timezone
+from seantis.dir.events import utils
 from seantis.dir.events import _
 
 def eventrange():
@@ -59,6 +60,25 @@ def is_whole_day(start, end):
         end.second == 59
     ))
 
+def split_days_count(start, end):
+    """ Returns 0 if the given daterange must be kept together and a number
+    of splits that need to be created if not.
+
+    If the event ends between 0:00 and 08:59 the new date is not counted as 
+    a new day. An event that goes through the night is not a two-day event.
+    
+    """
+
+    days = (end.date() - start.date()).days
+    
+    if days == 0:
+        return 0
+
+    if 0 <= end.hour and end.hour <= 8:
+        days -= 1
+
+    return days
+
 def human_date(date, request):
     now = default_now()
 
@@ -76,22 +96,22 @@ def human_date(date, request):
     else:
         return weekday + ' ' + date.strftime('%d.%m.%Y')
 
-def human_daterange(start, end):
-   
+def human_daterange(start, end, request):
+
     if is_whole_day(start, end):
-        if (end - start).days < 1:
-            return _(u'Whole Day')
+        if split_days_count(start, end) < 1:
+            return utils.translate(request, _(u'Whole Day'))
         else:
             if default_now().year == start.year:
                 return start.strftime('%d.%m - ') \
                 + end.strftime('%d.%m ') \
-                + _(u'Whole Day')
+                + utils.translate(request, _(u'Whole Day'))
             else:
                 return start.strftime('%d.%m.%Y - ') \
                 + end.strftime('%d.%m.%Y ') \
-                + _(u'Whole Day')
+                + utils.translate(request, _(u'Whole Day'))
 
-    if (end - start).days < 1:
+    if split_days_count(start, end) < 1:
         return start.strftime('%H:%M - ') + end.strftime('%H:%M')
     else:
         if default_now().year == start.year:

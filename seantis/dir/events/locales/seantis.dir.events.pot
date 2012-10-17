@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-10-16 14:42+0000\n"
+"POT-Creation-Date: 2012-10-17 14:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -75,7 +75,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: ./dates.py:186
+#: ./dates.py:212
 msgid "Day after Tomorrow"
 msgstr ""
 
@@ -117,19 +117,19 @@ msgstr ""
 msgid "Long Description"
 msgstr ""
 
-#: ./dates.py:236
+#: ./dates.py:263
 msgid "Next Month"
 msgstr ""
 
-#: ./dates.py:216
+#: ./dates.py:242
 msgid "Next Week"
 msgstr ""
 
-#: ./dates.py:199
+#: ./dates.py:225
 msgid "Next Weekend"
 msgstr ""
 
-#: ./dates.py:253
+#: ./dates.py:279
 msgid "Next Year"
 msgstr ""
 
@@ -166,19 +166,19 @@ msgstr ""
 msgid "Submitter Name"
 msgstr ""
 
-#: ./dates.py:231
+#: ./dates.py:257
 msgid "This Month"
 msgstr ""
 
-#: ./dates.py:208
+#: ./dates.py:234
 msgid "This Week"
 msgstr ""
 
-#: ./dates.py:193
+#: ./dates.py:219
 msgid "This Weekend"
 msgstr ""
 
-#: ./dates.py:244
+#: ./dates.py:271
 msgid "This Year"
 msgstr ""
 
@@ -190,11 +190,11 @@ msgstr ""
 msgid "Tickets / Registration Website"
 msgstr ""
 
-#: ./dates.py:59
+#: ./dates.py:85
 msgid "Today"
 msgstr ""
 
-#: ./dates.py:62
+#: ./dates.py:88
 msgid "Tomorrow"
 msgstr ""
 
@@ -218,7 +218,7 @@ msgstr ""
 msgid "Where"
 msgstr ""
 
-#: ./dates.py:76
+#: ./dates.py:102
 msgid "Whole Day"
 msgstr ""
 

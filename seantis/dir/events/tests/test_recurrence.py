@@ -116,7 +116,7 @@ class TestRecurrence(IntegrationTestCase):
             start, end = daterange.split(' - ')
             start = datetime.strptime('2012.' + start, '%Y.%d.%m %H:%M')
             end = datetime.strptime('2012.' + end, '%Y.%d.%m %H:%M')
-            self.assertEqual(recurrence.split_days_count(start, end), num)
+            self.assertEqual(dates.split_days_count(start, end), num)
 
         assert_split(0, "01.01 08:00 - 01.01 17:00")
 
@@ -148,49 +148,43 @@ class TestRecurrence(IntegrationTestCase):
         self.assertEqual(splits[1].start.second, 0)
         self.assertEqual(splits[1].end.hour, 20)
 
-        # >= 24hours
-        one_day = Item(
-            datetime(2012, 1, 1, 10), datetime(2012, 1, 2, 10),
-            timezone='utc'
-        )
-        splits = list(recurrence.split_days(one_day))
+        # one split
+        two_days = Item(datetime(2012, 1, 1, 10), datetime(2012, 1, 2, 10))
+        splits = list(recurrence.split_days(two_days))
         
         self.assertEqual(len(splits), 2)
 
-        # < 24 hours
-        one_day = Item(
-            datetime(2012, 1, 1, 10), 
-            datetime(2012, 1, 2, 10) - timedelta(microseconds=1),
-            timezone='utc'
-        )
+        two_days = Item(datetime(2012, 1, 1, 10), datetime(2012, 1, 2, 9))
+        splits = list(recurrence.split_days(two_days))
+        
+        self.assertEqual(len(splits), 2)        
+
+        # no split
+        one_day = Item(datetime(2012, 1, 1, 10), datetime(2012, 1, 2, 8))
         splits = list(recurrence.split_days(one_day))
 
         self.assertEqual(len(splits), 1)
 
         # more days
-        three_days = Item(
-            datetime(2012, 1, 1, 10), 
-            datetime(2012, 1, 3, 20),
-            timezone='utc'
-        )
+        three_days = Item(datetime(2012, 1, 1, 10), datetime(2012, 1, 3, 20))
         splits = list(recurrence.split_days(three_days))
 
         self.assertEqual(len(splits), 3)
 
-        self.assertEqual(splits[0].start.hour, 10)
-        self.assertEqual(splits[0].end.hour, 23)
-        self.assertEqual(splits[0].end.minute, 59)
-        self.assertEqual(splits[0].end.second, 59)
+        self.assertEqual(splits[0].local_start.hour, 10)
+        self.assertEqual(splits[0].local_end.hour, 23)
+        self.assertEqual(splits[0].local_end.minute, 59)
+        self.assertEqual(splits[0].local_end.second, 59)
 
-        self.assertEqual(splits[1].start.hour, 0)
-        self.assertEqual(splits[1].end.hour, 23)
-        self.assertEqual(splits[1].end.minute, 59)
-        self.assertEqual(splits[1].end.second, 59)
+        self.assertEqual(splits[1].local_start.hour, 0)
+        self.assertEqual(splits[1].local_end.hour, 23)
+        self.assertEqual(splits[1].local_end.minute, 59)
+        self.assertEqual(splits[1].local_end.second, 59)
 
-        self.assertEqual(splits[2].start.hour, 0)
-        self.assertEqual(splits[2].start.minute, 0)
-        self.assertEqual(splits[2].start.second, 0)
-        self.assertEqual(splits[2].end.hour, 20)
+        self.assertEqual(splits[2].local_start.hour, 0)
+        self.assertEqual(splits[2].local_start.minute, 0)
+        self.assertEqual(splits[2].local_start.second, 0)
+        self.assertEqual(splits[2].local_end.hour, 20)
 
         # whole_day events
         three_whole_days = Item(
@@ -254,5 +248,5 @@ class TestRecurrence(IntegrationTestCase):
         self.assertTrue(u'Zischtig' in human)
 
         # while we're at it
-        human = item.as_occurrence().human_daterange()
+        human = item.as_occurrence().human_daterange(request)
         self.assertEqual(human, '00:00 - 02:00')

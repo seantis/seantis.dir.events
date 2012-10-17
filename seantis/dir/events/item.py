@@ -308,7 +308,7 @@ class View(core.View):
 
     @property
     def human_daterange(self):
-        return self.occurrence.human_daterange()
+        return self.occurrence.human_daterange(self.request)
 
     @property
     @view.memoize

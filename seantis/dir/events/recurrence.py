@@ -23,14 +23,16 @@ from seantis.dir.events.dates import overlaps
 # ========================================================================
 class Occurrence(ProxyBase):
 
-    __slots__ = ('_wrapped', '_start', '_end')
+    __slots__ = ('_wrapped', '_start', '_end', '_unsplit_start', '_unsplit_end')
 
-    def __init__(self, item, start, end):
+    def __init__(self, item, start, end, unsplit_start=None, unsplit_end=None):
         self._wrapped = item
         self._start = start
         self._end = end
+        self._unsplit_start = unsplit_start
+        self._unsplit_end = unsplit_end
 
-    def __new__(cls, item, start, end):
+    def __new__(cls, item, *args, **kwargs):
         return ProxyBase.__new__(cls, item)
 
     @property
@@ -65,6 +67,14 @@ class Occurrence(ProxyBase):
     def real_local_end(self):
         return self.tz.normalize(self._wrapped.end)
 
+    @property
+    def unsplit_start(self):
+        return self._unsplit_start
+
+    @property
+    def unsplit_end(self):
+        return self._unsplit_end
+
     def url(self):
         """ Adds the date of the occurrence to the result of absolute_url. This
         allows to distinguish between occurrences.
@@ -88,19 +98,19 @@ class Occurrence(ProxyBase):
     def human_date(self, request):
         return dates.human_date(self.local_start, request)
 
-    def human_daterange(self):
+    def human_daterange(self, request):
         # occurrences split to days all get the same date string
-        if not self.recurrence and (self._end - self._start).days > 0:
-            start = self._wrapped.start
-            end = self._wrapped.end
+        if all((self.unsplit_start, self.unsplit_end)):
+            start = self.unsplit_start
+            end = self.unsplit_end
         else:
-            start = self._start
-            end = self._end
+            start = self.start
+            end = self.end
 
         start = self.tz.normalize(start)
         end = self.tz.normalize(end)
         
-        return dates.human_daterange(start, end)
+        return dates.human_daterange(start, end, request)
 
 
 def pick_occurrence(item, start):
@@ -119,32 +129,16 @@ def pick_occurrence(item, start):
 
     return found and found[0] or None
 
-def split_days_count(start, end):
-    """ Returns 0 if the given daterange must be kept together and a number
-    of splits that need to be created if not.
-
-    If the event ends between 0:00 and 08:59 the new date is not counted as 
-    a new day. An event that goes through the night is not a two-day event.
-    
-    """
-
-    days = (end.date() - start.date()).days
-    
-    if days == 0:
-        return 0
-
-    if 0 <= end.hour and end.hour <= 8:
-        days -= 1
-
-    return days
-
 def split_days(occurrence):
     """ Iterates through a list of occurrences and splits the occurrences
     which span more than 24 hours into sub-occurrences. The idea is to
     have events that last multiple days display on each day separately.
 
     """
-    days = (occurrence.end - occurrence.start).days
+    original_start = occurrence.local_start
+    original_end = occurrence.local_end
+
+    days = dates.split_days_count(original_start, original_end)
 
     if not days:
         yield occurrence
@@ -154,30 +148,36 @@ def split_days(occurrence):
             last_day = day == days
 
             if first_day:
-                start = occurrence.start
+                start = original_start
             else:
                 start = datetime(
-                    occurrence.start.year,
-                    occurrence.start.month,
-                    occurrence.start.day,
-                    tzinfo=occurrence.start.tzinfo
+                    original_start.year,
+                    original_start.month,
+                    original_start.day,
+                    tzinfo=original_start.tzinfo
                 ) + timedelta(days=day)
 
             if last_day:
-                end = occurrence.end
+                end = original_end
             else:
                 end = datetime(
-                    occurrence.start.year,
-                    occurrence.start.month,
-                    occurrence.start.day,
-                    tzinfo=occurrence.start.tzinfo
+                    original_start.year,
+                    original_start.month,
+                    original_start.day,
+                    tzinfo=original_start.tzinfo
                 ) + timedelta(days=day+1, microseconds=-1)
+
+            start, end = map(dates.to_utc, (start, end))
 
             # if the given occurrence is already a proxy, don't double-wrap it
             if isinstance(occurrence, Occurrence):
-                yield Occurrence(occurrence._wrapped, start, end)
+                yield Occurrence(occurrence._wrapped, 
+                    start, end, original_start, original_end
+                )
             else:
-                yield Occurrence(occurrence, start, end)
+                yield Occurrence(occurrence, 
+                    start, end, original_start, original_end
+                )
 
 def occurrences(item, min_date, max_date):
     """ Returns the occurrences for item between min and max date.
