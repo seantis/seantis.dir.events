@@ -230,12 +230,13 @@ class DateRanges(object):
     @property
     @daterange(_(u'This Month'))
     def this_month(self):
-        return this_month(self.now)
+        _, end_of_this_month = this_month(self.now)
+        return self.this_morning, end_of_this_month
 
     @property
     @daterange(_(u'Next Month'))
     def next_month(self):
-        prev_start, prev_end = this_month(self.now)
+        _, prev_end = this_month(self.now)
         month_start = prev_end + timedelta(microseconds=1)
 
         return this_month(month_start)
@@ -243,11 +244,10 @@ class DateRanges(object):
     @property
     @daterange(_(u'This Year'))
     def this_year(self):
-        start_of_year = datetime(self.now.year, 1, 1, tzinfo=self.now.tzinfo)
         end_of_year = datetime(self.now.year+1, 1, 1, tzinfo=self.now.tzinfo)
         end_of_year -= timedelta(microseconds=1)
 
-        return start_of_year, end_of_year
+        return self.this_morning, end_of_year
 
     @property
     @daterange(_(u'Next Year'))
