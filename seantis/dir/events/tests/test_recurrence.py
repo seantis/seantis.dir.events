@@ -2,7 +2,6 @@
 
 import pytz, mock
 
-from collections import namedtuple
 from datetime import datetime, timedelta, date
 
 from zope.publisher.browser import TestRequest
