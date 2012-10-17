@@ -58,7 +58,7 @@ def human_date(date, request):
     if now.date() == date.date():
         return _(u'Today')
 
-    if now.date() == (date.date() + timedelta(days=1)):
+    if now.date() + timedelta(days=1) == date.date():
         return _(u'Tomorrow')
 
     calendar = request.locale.dates.calendars['gregorian']

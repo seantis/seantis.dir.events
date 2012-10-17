@@ -41,6 +41,14 @@ class Occurrence(ProxyBase):
     def end(self):
         return self._end
 
+    @property
+    def local_start(self):
+        return self.tz.normalize(self.start)
+
+    @property
+    def local_end(self):
+        return self.tz.normalize(self.end)
+
     def url(self):
         """ Adds the date of the occurrence to the result of absolute_url. This
         allows to distinguish between occurrences.
