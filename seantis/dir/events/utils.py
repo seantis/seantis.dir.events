@@ -10,3 +10,11 @@ def get_current_language(request):
 def translate(request, text):
     lang = get_current_language(request)
     return i18n.translate(text, target_language=lang)
+
+def render_ical_response(request, context, calendar):
+    name = '%s.ics' % context.getId()
+    request.RESPONSE.setHeader('Content-Type', 'text/calendar')
+    request.RESPONSE.setHeader('Content-Disposition',
+        'attachment; filename="%s"' % name
+    )
+    request.RESPONSE.write(calendar.to_ical())

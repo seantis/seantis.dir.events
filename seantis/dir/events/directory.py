@@ -1,26 +1,14 @@
 from five import grok
-from plone.namedfile.field import NamedImage
 from itertools import groupby
 from collections import OrderedDict
 
 from seantis.dir.base import directory
 from seantis.dir.base import session
-from seantis.dir.base.interfaces import IDirectory
+
+from seantis.dir.events.interfaces import IEventsDirectory
 from seantis.dir.events import dates
+from seantis.dir.events import utils
 from seantis.dir.events import _
-
-class IEventsDirectory(IDirectory):
-    """Extends the seantis.dir.base.directory.IDirectory"""
-
-    image = NamedImage(
-            title=_(u'Image'),
-            required=False,
-            default=None
-        )
-
-IEventsDirectory.setTaggedValue('seantis.dir.base.omitted', 
-    ['cat1', 'cat2', 'cat3', 'cat4']
-)
 
 class EventsDirectory(directory.Directory):
     
@@ -52,15 +40,34 @@ class EventsDirectoryView(directory.View):
 
     @property
     def is_ical_export(self):
+        """ Returns true if the current request is an ical request. """
         return self.request.get('type') == 'ical'
 
     def get_last_daterange(self):
+        """ Returns the last selected daterange. """
         return session.get_session(self.context, 'daterange') or 'this_month'
 
     def set_last_daterange(self, method):
+        """ Store the last selected daterange on the session. """
         session.set_session(self.context, 'daterange', method)
 
+    @property
+    def selected_daterange(self):
+        return self.catalog.daterange
+
+    @property
+    def dateranges(self):
+        return dates.methods
+
+    def daterange_url(self, method):
+        return self.directory.absolute_url() + '?range=' + method
+
+    @property
+    def has_results(self):
+        return len(self.items) > 0
+
     def render(self):
+        """ Renders the ical if asked, or the usual template. """
         if not self.is_ical_export:
             return self._template.render(self)
         else:
@@ -75,12 +82,7 @@ class EventsDirectoryView(directory.View):
             else:
                 calendar = self.catalog.calendar()
 
-
-            name = '%s.ics' % self.context.getId()
-            self.request.RESPONSE.setHeader('Content-Type', 'text/calendar')
-            self.request.RESPONSE.setHeader('Content-Disposition',
-                'attachment; filename="%s"' % name)
-            self.request.RESPONSE.write(calendar.to_ical())
+            utils.render_ical_response(self.request, self.context, calendar)
 
     def update(self, **kwargs):
         daterange = self.request.get('range', self.get_last_daterange())
@@ -96,21 +98,8 @@ class EventsDirectoryView(directory.View):
         if not self.is_ical_export:
             super(EventsDirectoryView, self).update(**kwargs)
 
-    @property
-    def selected_daterange(self):
-        return self.catalog.daterange
-
-    def dateranges(self):
-        return dates.methods
-
-    def daterange_url(self, method):
-        return self.directory.absolute_url() + '?range=' + method
-
-    @property
-    def has_results(self):
-        return len(self.items) > 0
-
     def groups(self, items):
+        """ Returns the given items grouped by human_date. """
         def groupkey(item):
             date = item.human_date(self.request)
             return date
@@ -126,6 +115,7 @@ class EventsDirectoryView(directory.View):
         return result
 
     def ical_url(self, for_all):
+        """ Returns the ical url of the current view. """
         url = self.daterange_url('this_year') + '&type=ical'
         
         if for_all:
