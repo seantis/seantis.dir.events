@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-10-17 14:16+0000\n"
+"POT-Creation-Date: 2012-10-18 12:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,24 +17,24 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: seantis.dir.events\n"
 
-#: ./item.py:178
+#: ./interfaces.py:181
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
-#: ./item.py:63
+#: ./interfaces.py:63
 msgid "Attachment 1"
 msgstr ""
 
-#: ./item.py:68
+#: ./interfaces.py:68
 msgid "Attachment 2"
 msgstr ""
 
-#: ./item.py:213
+#: ./interfaces.py:216
 #: ./templates/item.pt:91
 msgid "Attachments"
 msgstr ""
 
-#: ./templates/directory.pt:83
+#: ./templates/directory.pt:40
 msgid "Calendar for all events"
 msgstr ""
 
@@ -42,7 +42,7 @@ msgstr ""
 msgid "Calendar for all occurrences of this event"
 msgstr ""
 
-#: ./templates/directory.pt:86
+#: ./templates/directory.pt:43
 msgid "Calendar for events matching the current filter"
 msgstr ""
 
@@ -54,36 +54,36 @@ msgstr ""
 msgid "Calendar for this occurrence only"
 msgstr ""
 
-#: ./templates/directory.pt:80
+#: ./templates/directory.pt:37
 #: ./templates/item.pt:103
 msgid "Calendars (iCal)"
 msgstr ""
 
-#: ./item.py:122
+#: ./interfaces.py:122
 msgid "Contact Email"
 msgstr ""
 
-#: ./item.py:116
+#: ./interfaces.py:116
 msgid "Contact Name"
 msgstr ""
 
-#: ./item.py:128
+#: ./interfaces.py:128
 msgid "Contact Phone"
 msgstr ""
 
-#: ./templates/directory.pt:74
+#: ./templates/directory.pt:31
 msgid "Date"
 msgstr ""
 
-#: ./dates.py:212
+#: ./dates.py:217
 msgid "Day after Tomorrow"
 msgstr ""
 
-#: ./item.py:104
+#: ./interfaces.py:104
 msgid "Event Website"
 msgstr ""
 
-#: ./item.py:220
+#: ./interfaces.py:223
 msgid "Event end before start"
 msgstr ""
 
@@ -95,90 +95,121 @@ msgstr ""
 msgid "Events Directory Item"
 msgstr ""
 
-#: ./item.py:86
+#: ./dates.py:230
+msgid "From 4pm next Friday until 12pm next Sunday"
+msgstr ""
+
+#: ./dates.py:224
+msgid "From 4pm this Friday until 12pm this Sunday"
+msgstr ""
+
+#: ./dates.py:247
+msgid "From next Monday until the following Sunday"
+msgstr ""
+
+#: ./dates.py:268
+msgid "From the beginning of next month until the end"
+msgstr ""
+
+#: ./dates.py:239
+msgid "From today until 12pm this Sunday"
+msgstr ""
+
+#: ./dates.py:262
+msgid "From today until the end of the month"
+msgstr ""
+
+#: ./dates.py:276
+msgid "From today until the end of this year"
+msgstr ""
+
+#: ./interfaces.py:86
 msgid "Housenumber"
 msgstr ""
 
-#: ./directory.py:16
-#: ./item.py:58
+#: ./interfaces.py:22
 msgid "Image"
 msgstr ""
 
-#: ./item.py:192
+#: ./interfaces.py:195
 msgid "Images"
 msgstr ""
 
-#: ./item.py:74
+#: ./interfaces.py:74
 #: ./templates/item.pt:53
 msgid "Locality"
 msgstr ""
 
-#: ./item.py:53
+#: ./interfaces.py:53
 msgid "Long Description"
 msgstr ""
 
-#: ./dates.py:263
+#: ./dates.py:268
 msgid "Next Month"
 msgstr ""
 
-#: ./dates.py:242
+#: ./dates.py:247
 msgid "Next Week"
 msgstr ""
 
-#: ./dates.py:225
+#: ./dates.py:230
 msgid "Next Weekend"
 msgstr ""
 
-#: ./dates.py:279
+#: ./dates.py:284
 msgid "Next Year"
 msgstr ""
 
-#: ./templates/directory.pt:30
+#: ./templates/directory.pt:50
 msgid "No Events"
 msgstr ""
 
-#: ./item.py:110
+#: ./interfaces.py:110
 #: ./templates/item.pt:66
 msgid "Organizer"
 msgstr ""
 
-#: ./item.py:196
+#: ./interfaces.py:199
 msgid "PDF"
 msgstr ""
 
-#: ./item.py:134
+#: ./interfaces.py:134
 msgid "Prices"
 msgstr ""
 
-#: ./item.py:47
+#: ./interfaces.py:47
 msgid "Short Description"
 msgstr ""
 
-#: ./item.py:80
+#: ./interfaces.py:80
 msgid "Street"
 msgstr ""
 
-#: ./item.py:41
+#: ./interfaces.py:41
 msgid "Submitter Email"
 msgstr ""
 
-#: ./item.py:36
+#: ./interfaces.py:36
 msgid "Submitter Name"
 msgstr ""
 
-#: ./dates.py:257
+#: ./dates.py:284
+msgid "The whole next year"
+msgstr ""
+
+#: ./dates.py:262
 msgid "This Month"
 msgstr ""
 
-#: ./dates.py:234
+#: ./dates.py:239
 msgid "This Week"
 msgstr ""
 
-#: ./dates.py:219
+#: ./dates.py:224
 msgid "This Weekend"
 msgstr ""
 
-#: ./dates.py:271
+#: ./dates.py:276
 msgid "This Year"
 msgstr ""
 
@@ -186,47 +217,47 @@ msgstr ""
 msgid "Ticket"
 msgstr ""
 
-#: ./item.py:140
+#: ./interfaces.py:140
 msgid "Tickets / Registration Website"
 msgstr ""
 
-#: ./dates.py:85
+#: ./dates.py:86
 msgid "Today"
 msgstr ""
 
-#: ./dates.py:88
+#: ./dates.py:89
 msgid "Tomorrow"
 msgstr ""
 
-#: ./item.py:98
+#: ./interfaces.py:98
 msgid "Town"
 msgstr ""
 
-#: ./item.py:190
+#: ./interfaces.py:193
 msgid "Unknown image format"
 msgstr ""
 
-#: ./item.py:209
+#: ./interfaces.py:212
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
-#: ./directory.py:28
+#: ./directory.py:16
 msgid "What"
 msgstr ""
 
-#: ./directory.py:28
+#: ./directory.py:16
 msgid "Where"
 msgstr ""
 
-#: ./dates.py:102
+#: ./dates.py:103
 msgid "Whole Day"
 msgstr ""
 
-#: ./item.py:171
+#: ./interfaces.py:174
 msgid "You may not add more than ${max} occurences"
 msgstr ""
 
-#: ./item.py:92
+#: ./interfaces.py:92
 msgid "Zipcode"
 msgstr ""
 

@@ -122,18 +122,22 @@ def human_daterange(start, end, request):
 methods = list()
 ranges = dict()
 labels = dict()
+tooltips = dict()
 
-def daterange(label):
+def daterange(label, tooltip=u''):
     """ Deocrator that, applied to DateRangeInfo methods, marks them
     as category methods for further processing. 
 
     """
-    def decorator(fn):
-        global methods, ranges, labels
+    tooltip = tooltip or label
 
-        methods.append((fn.__name__, label))
+    def decorator(fn):
+        global methods, ranges, labels, tooltips
+
+        methods.append((fn.__name__, label, tooltip))
         ranges[label] = fn.__name__
         labels[fn.__name__] = label
+        tooltips[fn.__name__] = tooltip
 
         return fn
 
@@ -217,13 +221,13 @@ class DateRanges(object):
         )
 
     @property
-    @daterange(_(u'This Weekend'))
+    @daterange(_(u'This Weekend'), _(u'From 4pm this Friday until 12pm this Sunday'))
     def this_weekend(self):
         # between friday at 4 and saturday midnight
         return this_weekend(self.now)
         
     @property
-    @daterange(_(u'Next Weekend'))
+    @daterange(_(u'Next Weekend'), _(u'From 4pm next Friday until 12pm next Sunday'))
     def next_weekend(self):
         weekend_start, weekend_end = this_weekend(self.now)
         weekend_start += timedelta(days=7)
@@ -232,7 +236,7 @@ class DateRanges(object):
         return weekend_start, weekend_end
 
     @property
-    @daterange(_(u'This Week'))
+    @daterange(_(u'This Week'), _(u'From today until 12pm this Sunday'))
     def this_week(self):
         # range between now and next sunday evening with
         # range contains at least two days (saturday until next sunday)
@@ -240,7 +244,7 @@ class DateRanges(object):
         return self.this_morning, end_of_week
 
     @property
-    @daterange(_(u'Next Week'))
+    @daterange(_(u'Next Week'), _(u'From next Monday until the following Sunday'))
     def next_week(self):
         # range between next sunday (as in self.is_this_week)
         # and the sunday after that
@@ -255,13 +259,13 @@ class DateRanges(object):
         return start_of_week, end_of_week
 
     @property
-    @daterange(_(u'This Month'))
+    @daterange(_(u'This Month'), _(u'From today until the end of the month'))
     def this_month(self):
         _, end_of_this_month = this_month(self.now)
         return self.this_morning, end_of_this_month
 
     @property
-    @daterange(_(u'Next Month'))
+    @daterange(_(u'Next Month'), _(u'From the beginning of next month until the end'))
     def next_month(self):
         _, prev_end = this_month(self.now)
         month_start = prev_end + timedelta(microseconds=1)
@@ -269,7 +273,7 @@ class DateRanges(object):
         return this_month(month_start)
 
     @property
-    @daterange(_(u'This Year'))
+    @daterange(_(u'This Year'), _(u'From today until the end of this year'))
     def this_year(self):
         end_of_year = datetime(self.now.year+1, 1, 1, tzinfo=self.now.tzinfo)
         end_of_year -= timedelta(microseconds=1)
@@ -277,7 +281,7 @@ class DateRanges(object):
         return self.this_morning, end_of_year
 
     @property
-    @daterange(_(u'Next Year'))
+    @daterange(_(u'Next Year'), _(u'The whole next year'))
     def next_year(self):
         start_of_year = datetime(self.now.year+1, 1, 1, tzinfo=self.now.tzinfo)
         end_of_year = datetime(self.now.year+2, 1, 1, tzinfo=self.now.tzinfo)
