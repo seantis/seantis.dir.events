@@ -66,7 +66,7 @@
                   <h3 i18n:translate="">Organizer</h3>
                   <div class="name" tal:content="context/organizer"></div>
                   <div class="event_url" tal:condition="context/event_url">
-                    <a tal:content="context/event_url" tal:attributes="href context/event_url"></a>
+                    <a i18n:translate="" tal:attributes="href context/event_url">Event Website</a>
                   </div>
                   <div class="contact">
                     <div class="name" tal:content="context/contact_name"></div>
@@ -80,7 +80,7 @@
                 <div class="ticket" tal:condition="python: any((context.registration, context.prices))">
                   <h3 i18n:translate="">Ticket</h3>
                   <div class="registration">
-                    <a tal:content="context/registration" tal:attributes="href context/registration"></a>
+                    <a tal:attributes="href context/registration" i18n:translate="">Ticket / Registration Website</a>
                   </div>
                   <div class="prices">
                     <tal:block replace="structure python: context.prices.replace('\n', '<br />')"></tal:block>

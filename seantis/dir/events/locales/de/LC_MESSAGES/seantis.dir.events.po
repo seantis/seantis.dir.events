@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-10-18 12:41+0000\n"
+"POT-Creation-Date: 2012-10-18 12:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,19 +33,19 @@ msgstr "Anhänge"
 
 #: ./templates/directory.pt:40
 msgid "Calendar for all events"
-msgstr "Kalender für alle Events"
+msgstr "Kalender für alle Veranstaltungen"
 
 #: ./templates/item.pt:106
 msgid "Calendar for all occurrences of this event"
-msgstr "Kalender für alle Wiederholungen dieses Events"
+msgstr "Kalender für alle Wiederholungen dieser Veranstaltung"
 
 #: ./templates/directory.pt:43
 msgid "Calendar for events matching the current filter"
-msgstr "Kalender für Events des aktuellen Filters"
+msgstr "Kalender für Veranstaltungen des aktuellen Filters"
 
 #: ./templates/item.pt:114
 msgid "Calendar for this event"
-msgstr "Kalender für diesen Event"
+msgstr "Kalender für diese Veranstaltung"
 
 #: ./templates/item.pt:109
 msgid "Calendar for this occurrence only"
@@ -77,20 +77,21 @@ msgid "Day after Tomorrow"
 msgstr "Übermorgen"
 
 #: ./interfaces.py:104
+#: ./templates/item.pt:69
 msgid "Event Website"
-msgstr "Event Webseite"
+msgstr "Veranstaltungs-Webseite"
 
 #: ./interfaces.py:223
 msgid "Event end before start"
-msgstr "Event endet bevor er beginnt"
+msgstr "Veranstaltung endet bevor sie beginnt"
 
 #: ./profiles/default/types/seantis.dir.events.directory.xml
 msgid "Events Directory"
-msgstr "Events Verzeichnis"
+msgstr "Veranstaltungs-Verzeichnis"
 
 #: ./profiles/default/types/seantis.dir.events.item.xml
 msgid "Events Directory Item"
-msgstr "Events Verzeichnis Eintrag"
+msgstr "Veranstaltungs-Verzeichnis Eintrag"
 
 #: ./dates.py:230
 msgid "From 4pm next Friday until 12pm next Sunday"
@@ -159,7 +160,7 @@ msgstr "Nächstes Jahr"
 
 #: ./templates/directory.pt:50
 msgid "No Events"
-msgstr "Keine Events"
+msgstr "Keine Veranstaltungen"
 
 #: ./interfaces.py:110
 #: ./templates/item.pt:66
@@ -215,8 +216,8 @@ msgid "Ticket"
 msgstr "Ticket"
 
 #: ./interfaces.py:140
-msgid "Tickets / Registration Website"
-msgstr "Tickets- / Registrierungs-Website"
+msgid "Ticket / Registration Website"
+msgstr "Ticket / Registrations Webseite"
 
 #: ./dates.py:86
 msgid "Today"

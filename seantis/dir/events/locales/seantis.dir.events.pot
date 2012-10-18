@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-10-18 12:41+0000\n"
+"POT-Creation-Date: 2012-10-18 12:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,6 +80,7 @@ msgid "Day after Tomorrow"
 msgstr ""
 
 #: ./interfaces.py:104
+#: ./templates/item.pt:69
 msgid "Event Website"
 msgstr ""
 
@@ -218,7 +219,7 @@ msgid "Ticket"
 msgstr ""
 
 #: ./interfaces.py:140
-msgid "Tickets / Registration Website"
+msgid "Ticket / Registration Website"
 msgstr ""
 
 #: ./dates.py:86

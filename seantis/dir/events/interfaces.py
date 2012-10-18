@@ -137,7 +137,7 @@ class IEventsDirectoryItem(IDirectoryItem):
 
     searchable('registration')
     registration = URI(
-        title=_(u'Tickets / Registration Website'),
+        title=_(u'Ticket / Registration Website'),
         required=False
     )
 
