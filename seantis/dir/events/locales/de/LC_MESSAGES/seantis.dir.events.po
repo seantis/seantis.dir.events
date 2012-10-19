@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-10-18 12:52+0000\n"
+"POT-Creation-Date: 2012-10-19 09:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,19 +14,19 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ./interfaces.py:181
+#: ./interfaces.py:186
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
-#: ./interfaces.py:63
+#: ./interfaces.py:68
 msgid "Attachment 1"
 msgstr "Anhang 1"
 
-#: ./interfaces.py:68
+#: ./interfaces.py:73
 msgid "Attachment 2"
 msgstr "Anhang 2"
 
-#: ./interfaces.py:216
+#: ./interfaces.py:221
 #: ./templates/item.pt:91
 msgid "Attachments"
 msgstr "Anhänge"
@@ -56,15 +56,15 @@ msgstr "Kalender nur für diese Wiederholung"
 msgid "Calendars (iCal)"
 msgstr "Kalender (iCal)"
 
-#: ./interfaces.py:122
+#: ./interfaces.py:127
 msgid "Contact Email"
 msgstr "Kontakt Email"
 
-#: ./interfaces.py:116
+#: ./interfaces.py:121
 msgid "Contact Name"
 msgstr "Kontakt Name"
 
-#: ./interfaces.py:128
+#: ./interfaces.py:133
 msgid "Contact Phone"
 msgstr "Kontakt Telefon"
 
@@ -76,12 +76,12 @@ msgstr "Datum"
 msgid "Day after Tomorrow"
 msgstr "Übermorgen"
 
-#: ./interfaces.py:104
+#: ./interfaces.py:109
 #: ./templates/item.pt:69
 msgid "Event Website"
 msgstr "Veranstaltungs-Webseite"
 
-#: ./interfaces.py:223
+#: ./interfaces.py:228
 msgid "Event end before start"
 msgstr "Veranstaltung endet bevor sie beginnt"
 
@@ -121,7 +121,7 @@ msgstr "Von Heute bis Monatsende"
 msgid "From today until the end of this year"
 msgstr "Von Heute bis Jahresende"
 
-#: ./interfaces.py:86
+#: ./interfaces.py:91
 msgid "Housenumber"
 msgstr "Hausnummer"
 
@@ -129,16 +129,16 @@ msgstr "Hausnummer"
 msgid "Image"
 msgstr "Bild"
 
-#: ./interfaces.py:195
+#: ./interfaces.py:200
 msgid "Images"
 msgstr "Bilder"
 
-#: ./interfaces.py:74
+#: ./interfaces.py:79
 #: ./templates/item.pt:53
 msgid "Locality"
 msgstr "Lokalität"
 
-#: ./interfaces.py:53
+#: ./interfaces.py:58
 msgid "Long Description"
 msgstr "Lange Beschreibung"
 
@@ -162,34 +162,42 @@ msgstr "Nächstes Jahr"
 msgid "No Events"
 msgstr "Keine Veranstaltungen"
 
-#: ./interfaces.py:110
+#: ./interfaces.py:115
 #: ./templates/item.pt:66
 msgid "Organizer"
 msgstr "Organisator"
 
-#: ./interfaces.py:199
+#: ./interfaces.py:204
 msgid "PDF"
 msgstr "PDF"
 
-#: ./interfaces.py:134
+#: ./interfaces.py:139
 msgid "Prices"
 msgstr "Preise"
 
-#: ./interfaces.py:47
+#: ./interfaces.py:52
 msgid "Short Description"
 msgstr "Kurzbeschrieb"
 
-#: ./interfaces.py:80
+#: ./interfaces.py:85
 msgid "Street"
 msgstr "Strasse"
 
-#: ./interfaces.py:41
+#: ./interfaces.py:46
 msgid "Submitter Email"
 msgstr "Erfasser Email"
 
-#: ./interfaces.py:36
+#: ./interfaces.py:41
 msgid "Submitter Name"
 msgstr "Erfasser Name"
+
+#: ./interfaces.py:33
+msgid "Suggested Values for the What-Category"
+msgstr "Vorgeschlagene Werte für die Was-Kategorie"
+
+#: ./interfaces.py:34
+msgid "Suggested Values for the Where-Category"
+msgstr "Vorgeschlagene Werte für die Wo-Kategorie"
 
 #: ./dates.py:284
 msgid "The whole next year"
@@ -215,7 +223,8 @@ msgstr "Dieses Jahr"
 msgid "Ticket"
 msgstr "Ticket"
 
-#: ./interfaces.py:140
+#: ./interfaces.py:145
+#: ./templates/item.pt:83
 msgid "Ticket / Registration Website"
 msgstr "Ticket / Registrations Webseite"
 
@@ -227,23 +236,23 @@ msgstr "Heute"
 msgid "Tomorrow"
 msgstr "Morgen"
 
-#: ./interfaces.py:98
+#: ./interfaces.py:103
 msgid "Town"
 msgstr "Ort"
 
-#: ./interfaces.py:193
+#: ./interfaces.py:198
 msgid "Unknown image format"
 msgstr "Unbekanntes Bild-Format"
 
-#: ./interfaces.py:212
+#: ./interfaces.py:217
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 
-#: ./directory.py:16
+#: ./directory.py:23
 msgid "What"
 msgstr "Was"
 
-#: ./directory.py:16
+#: ./directory.py:23
 msgid "Where"
 msgstr "Wo"
 
@@ -251,11 +260,11 @@ msgstr "Wo"
 msgid "Whole Day"
 msgstr "Ganztags"
 
-#: ./interfaces.py:174
+#: ./interfaces.py:179
 msgid "You may not add more than ${max} occurences"
 msgstr "Sie dürfen nicht mehr als ${max} Wiederholungen erfassen"
 
-#: ./interfaces.py:92
+#: ./interfaces.py:97
 msgid "Zipcode"
 msgstr "PLZ"
 

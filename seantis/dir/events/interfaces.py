@@ -26,8 +26,13 @@ class IEventsDirectory(IDirectory):
 
 # Hide all categories as they are predefined
 IEventsDirectory.setTaggedValue('seantis.dir.base.omitted', 
-    ['cat1', 'cat2', 'cat3', 'cat4']
+    ['cat1', 'cat2', 'cat3', 'cat4', 'cat3_suggestions', 'cat4_suggestions']
 )
+
+IEventsDirectory.setTaggedValue('seantis.dir.base.labels', { 
+    'cat1_suggestions': _("Suggested Values for the What-Category"),
+    'cat2_suggestions': _("Suggested Values for the Where-Category"),
+})
 
 class IEventsDirectoryItem(IDirectoryItem):
     """Extends the seantis.dir.IDirectoryItem."""
