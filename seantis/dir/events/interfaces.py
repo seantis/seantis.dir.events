@@ -8,7 +8,7 @@ from plone.namedfile.field import NamedImage, NamedFile
 from plone.directives import form
 from plone.app.event.dx.behaviors import IEventRecurrence
 from z3c.form import util, validator
-from zope.schema import Text, TextLine, URI
+from zope.schema import Text, TextLine, URI, List
 from zope.interface import Invalid
 
 from seantis.dir.base.schemafields import Email
@@ -22,6 +22,16 @@ class IEventsDirectory(IDirectory):
             title=_(u'Image'),
             required=False,
             default=None
+        )
+
+    locality_suggestions = List(
+            title=_(u'Suggested Values for the Locality'),
+            description=_(
+                u'Will be shown as a list to choose from in the '
+                u'anonymous submission form.'
+            ),
+            required=False,
+            value_type=TextLine()
         )
 
 # Hide all categories as they are predefined
