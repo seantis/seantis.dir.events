@@ -219,7 +219,7 @@ class TestRecurrence(IntegrationTestCase):
         )
 
         occurrences = recurrence.occurrences(
-            item, min_date=item.start, max_date=item.end
+            item, min_date=item.local_start, max_date=item.local_end
         )
 
         self.assertEqual(len(occurrences), 3)

@@ -1,6 +1,13 @@
 from five import grok
 from itertools import groupby
 from collections import OrderedDict
+from pytz import timezone
+
+from datetime import datetime
+from datetime import date as datetime_date
+from urllib import urlopen
+from icalendar import Calendar
+from plone.dexterity.utils import createContent, addContentToContainer
 
 from seantis.dir.base import directory
 from seantis.dir.base import session
@@ -144,3 +151,89 @@ class EventsDirectoryView(directory.View):
                 url += '&%s=%s' % item
 
             return url
+
+class ImportIcsView(grok.View):
+
+    grok.name('import-ics')
+    grok.context(IEventsDirectory)
+    grok.require('cmf.ManagePortal')
+
+    messages = []
+
+    @property
+    def url(self):
+        return self.request.get('url', '').replace('webcal://', 'https://')
+
+    def say(self, text):
+        self.messages.append(text)
+        return '<br>'.join(self.messages)
+
+    def read_ical(self):
+        return urlopen(self.url).read()
+
+    def valid_event(self, component):
+        if component.name != 'VEVENT':
+            return False
+
+        required_fields = ('dtstart', 'dtend')
+
+        for req in required_fields:
+            if not req in component:
+                return False
+
+        return True
+
+    def events(self, calendar):
+        current_timezone = 'utc'
+        for component in calendar.subcomponents:
+            if component.name == 'VTIMEZONE':
+                current_timezone = unicode(component['TZID'])
+
+            if self.valid_event(component):
+                component.timezone = current_timezone
+                yield component
+
+    def daterange(self, event):
+        start = event['dtstart'].dt
+        end = event['dtend'].dt
+
+        if isinstance(start, datetime_date): 
+            start = datetime(start.year, start.month, start.day, tzinfo=timezone(event.timezone))
+
+        if isinstance(end, datetime_date):
+            end = datetime(end.year, end.month, end.day, 23, 59, 59, tzinfo=timezone(event.timezone))
+
+        return start, end
+
+    def render(self):
+        if not self.url:
+            return self.say('No url given')
+
+        calendar = Calendar.from_ical(self.read_ical())
+        self.say('loaded %s' % self.url)
+
+        events = list(self.events(calendar))
+        self.say('found %i events' % len(events))
+
+        for event in events:
+
+            params = dict()
+            params['title'] = unicode(event.get('summary', 'No Title'))
+            params['short_description']= unicode(
+                event.get('description', 'No Description')
+            )
+
+            params['start'], params['end'] = self.daterange(event)
+            
+            params['timezone'] = event.timezone
+            params['whole_day'] = False
+            params['recurrence'] = event.get('rrule', '')
+
+            if params['recurrence']:
+                params['recurrence'] = 'RRULE:' + params['recurrence'].to_ical()
+
+            addContentToContainer(self.context, createContent(
+                'seantis.dir.events.item', **params
+            ))
+            
+        return self.say('events successfully imported')
