@@ -49,7 +49,7 @@ class IEventsDirectoryItem(IDirectoryItem):
 
     submitter = TextLine(
         title=_(u'Submitter Name'),
-        required=False
+        required=False,
     )
 
     submitter_email = Email(
@@ -60,7 +60,9 @@ class IEventsDirectoryItem(IDirectoryItem):
     searchable('short_description')
     short_description = Text(
         title=_(u'Short Description'),
-        required=True
+        description=_(u'Up to 140 characters'),
+        required=True,
+        max_length=140
     )
 
     searchable('long_description')
