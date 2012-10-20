@@ -3,8 +3,11 @@ from five import grok
 from plone.directives import form
 from plone.z3cform.fieldsets import extensible
 
+from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
+
 from z3c.form import field, group
 from plone.formwidget.recurrence.z3cform.widget import RecurrenceWidget, ParameterizedWidgetFactory
+from collective.z3cform.mapwidget.widget import MapFieldWidget
 
 from plone.app.event.dx.behaviors import (
     IEventBasic,
@@ -12,6 +15,7 @@ from plone.app.event.dx.behaviors import (
 )
 
 from seantis.dir.events.interfaces import (
+    ICoordinates,
     IEventsDirectory, 
     IEventsDirectoryItem
 )
@@ -32,7 +36,8 @@ class GeneralGroup(group.Group):
 
 class LocationGroup(group.Group):
     label = _(u'Location')
-    fields = field.Fields(IEventsDirectoryItem).select(
+    fields = field.Fields(ICoordinates).select('coordinates')
+    fields += field.Fields(IEventsDirectoryItem).select(
         'locality', 'street', 'housenumber', 'zipcode', 'town'
     )
 
@@ -48,6 +53,8 @@ class EventSubmissionForm(EventBaseForm):
     grok.name('submit-event')
     grok.require('seantis.dir.events.SubmitEvents')
     grok.context(IEventsDirectory)
+
+    template = ViewPageTemplateFile('templates/form.pt')
 
     groups = (GeneralGroup, LocationGroup, InformationGroup)
     enable_form_tabbing = True
@@ -65,3 +72,6 @@ class EventSubmissionForm(EventBaseForm):
         recurrence.widgetFactory = ParameterizedWidgetFactory(
             RecurrenceWidget, start_field='start'
         )
+        
+        coordinates = self.groups[1].fields['coordinates']
+        coordinates.widgetFactory = MapFieldWidget

@@ -15,6 +15,13 @@ from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IDirectory, IDirectoryItem
 from seantis.dir.events import _
 
+class ICoordinates(form.Schema):
+
+    coordinates = TextLine(
+        title=_(u'Coordinates'),
+        required=False,
+    )
+
 class IEventsDirectory(IDirectory):
     """Extends the seantis.dir.base.directory.IDirectory"""
 

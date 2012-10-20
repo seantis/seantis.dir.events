@@ -1,5 +1,10 @@
 /* seantis.dir.events */
 
+/* hide the coordinates field on the event submission form */
+#form-widgets-coordinates {
+    display: none;
+}
+
 .directoryMarker {
     right: 0;
 }
