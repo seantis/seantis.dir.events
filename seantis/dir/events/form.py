@@ -4,6 +4,7 @@ from plone.directives import form
 from plone.z3cform.fieldsets import extensible
 
 from z3c.form import field, group
+from plone.formwidget.recurrence.z3cform.widget import RecurrenceWidget, ParameterizedWidgetFactory
 
 from plone.app.event.dx.behaviors import (
     IEventBasic,
@@ -18,7 +19,7 @@ from seantis.dir.events.interfaces import (
 from seantis.dir.events import _
 
 # I don't even..
-class EventBaseForm(extensible.ExtensibleForm, form.AddForm, group.GroupForm):
+class EventBaseForm(extensible.ExtensibleForm, form.AddForm):
     grok.baseclass()
 
 class GeneralGroup(group.Group):
@@ -55,3 +56,12 @@ class EventSubmissionForm(EventBaseForm):
     description = _(
         u'Send us your events and we will publish them on this website'
     )
+
+    def updateFields(self):
+        super(EventSubmissionForm, self).updateFields()
+
+        # apply the recurrence widget
+        recurrence = self.groups[0].fields['recurrence']
+        recurrence.widgetFactory = ParameterizedWidgetFactory(
+            RecurrenceWidget, start_field='start'
+        )
