@@ -27,7 +27,7 @@ class EventBaseForm(extensible.ExtensibleForm, form.AddForm):
     grok.baseclass()
 
 class GeneralGroup(group.Group):
-    label = _(u'General')
+    label = _(u'Event')
     fields = field.Fields(IEventsDirectoryItem).select(
         'title', 'short_description', 'long_description'
     )

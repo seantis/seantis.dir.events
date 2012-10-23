@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-10-20 07:47+0000\n"
+"POT-Creation-Date: 2012-10-20 14:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,19 +14,19 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ./interfaces.py:198
+#: ./interfaces.py:205
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
-#: ./interfaces.py:80
+#: ./interfaces.py:87
 msgid "Attachment 1"
 msgstr "Anhang 1"
 
-#: ./interfaces.py:85
+#: ./interfaces.py:92
 msgid "Attachment 2"
 msgstr "Anhang 2"
 
-#: ./interfaces.py:233
+#: ./interfaces.py:240
 #: ./templates/item.pt:91
 msgid "Attachments"
 msgstr "Anhänge"
@@ -56,17 +56,21 @@ msgstr "Kalender nur für diese Wiederholung"
 msgid "Calendars (iCal)"
 msgstr "Kalender (iCal)"
 
-#: ./interfaces.py:139
+#: ./interfaces.py:146
 msgid "Contact Email"
 msgstr "Kontakt Email"
 
-#: ./interfaces.py:133
+#: ./interfaces.py:140
 msgid "Contact Name"
 msgstr "Kontakt Name"
 
-#: ./interfaces.py:145
+#: ./interfaces.py:152
 msgid "Contact Phone"
 msgstr "Kontakt Telefon"
+
+#: ./interfaces.py:21
+msgid "Coordinates"
+msgstr "Koordinaten"
 
 #: ./templates/directory.pt:31
 msgid "Date"
@@ -76,12 +80,20 @@ msgstr "Datum"
 msgid "Day after Tomorrow"
 msgstr "Übermorgen"
 
-#: ./interfaces.py:121
+#: ./form.py:30
+msgid "Event"
+msgstr "Veranstaltung"
+
+#: ./form.py:62
+msgid "Event Submission Form"
+msgstr "Veranstaltung Melden"
+
+#: ./interfaces.py:128
 #: ./templates/item.pt:69
 msgid "Event Website"
 msgstr "Veranstaltungs-Webseite"
 
-#: ./interfaces.py:240
+#: ./interfaces.py:247
 msgid "Event end before start"
 msgstr "Veranstaltung endet bevor sie beginnt"
 
@@ -121,24 +133,32 @@ msgstr "Von Heute bis Monatsende"
 msgid "From today until the end of this year"
 msgstr "Von Heute bis Jahresende"
 
-#: ./interfaces.py:103
+#: ./interfaces.py:110
 msgid "Housenumber"
 msgstr "Hausnummer"
 
-#: ./interfaces.py:22
+#: ./interfaces.py:29
 msgid "Image"
 msgstr "Bild"
 
-#: ./interfaces.py:212
+#: ./interfaces.py:219
 msgid "Images"
 msgstr "Bilder"
 
-#: ./interfaces.py:91
+#: ./form.py:45
+msgid "Information"
+msgstr "Informationen"
+
+#: ./interfaces.py:98
 #: ./templates/item.pt:53
 msgid "Locality"
 msgstr "Lokalität"
 
-#: ./interfaces.py:70
+#: ./form.py:38
+msgid "Location"
+msgstr "Ort"
+
+#: ./interfaces.py:77
 msgid "Long Description"
 msgstr "Lange Beschreibung"
 
@@ -162,44 +182,48 @@ msgstr "Nächstes Jahr"
 msgid "No Events"
 msgstr "Keine Veranstaltungen"
 
-#: ./interfaces.py:127
+#: ./interfaces.py:134
 #: ./templates/item.pt:66
 msgid "Organizer"
 msgstr "Organisator"
 
-#: ./interfaces.py:216
+#: ./interfaces.py:223
 msgid "PDF"
 msgstr "PDF"
 
-#: ./interfaces.py:151
+#: ./interfaces.py:158
 msgid "Prices"
 msgstr "Preise"
 
-#: ./interfaces.py:62
+#: ./form.py:63
+msgid "Send us your events and we will publish them on this website"
+msgstr "Senden Sie uns Ihre Veranstaltungen und wir veröffentlichen diese auf der Webseite"
+
+#: ./interfaces.py:69
 msgid "Short Description"
 msgstr "Kurzbeschrieb"
 
-#: ./interfaces.py:97
+#: ./interfaces.py:104
 msgid "Street"
 msgstr "Strasse"
 
-#: ./interfaces.py:56
+#: ./interfaces.py:63
 msgid "Submitter Email"
 msgstr "Erfasser Email"
 
-#: ./interfaces.py:51
+#: ./interfaces.py:58
 msgid "Submitter Name"
 msgstr "Erfasser Name"
 
-#: ./interfaces.py:28
+#: ./interfaces.py:35
 msgid "Suggested Values for the Locality"
 msgstr "Vorgeschlagene Werte für die Lokalität"
 
-#: ./interfaces.py:43
+#: ./interfaces.py:50
 msgid "Suggested Values for the What-Category"
 msgstr "Vorgeschlagene Werte für die Was-Kategorie"
 
-#: ./interfaces.py:44
+#: ./interfaces.py:51
 msgid "Suggested Values for the Where-Category"
 msgstr "Vorgeschlagene Werte für die Wo-Kategorie"
 
@@ -227,7 +251,7 @@ msgstr "Dieses Jahr"
 msgid "Ticket"
 msgstr "Ticket"
 
-#: ./interfaces.py:157
+#: ./interfaces.py:164
 #: ./templates/item.pt:83
 msgid "Ticket / Registration Website"
 msgstr "Ticket / Registrations Webseite"
@@ -240,19 +264,19 @@ msgstr "Heute"
 msgid "Tomorrow"
 msgstr "Morgen"
 
-#: ./interfaces.py:115
+#: ./interfaces.py:122
 msgid "Town"
 msgstr "Ort"
 
-#: ./interfaces.py:210
+#: ./interfaces.py:217
 msgid "Unknown image format"
 msgstr "Unbekanntes Bild-Format"
 
-#: ./interfaces.py:229
+#: ./interfaces.py:236
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 
-#: ./interfaces.py:63
+#: ./interfaces.py:70
 msgid "Up to 140 characters"
 msgstr "Bis zu 140 Zeichen"
 
@@ -268,15 +292,15 @@ msgstr "Wo"
 msgid "Whole Day"
 msgstr "Ganztags"
 
-#: ./interfaces.py:29
+#: ./interfaces.py:36
 msgid "Will be shown as a list to choose from in the anonymous submission form."
 msgstr "Wird als Liste im anonymen Erfassungsformular angezeigt"
 
-#: ./interfaces.py:191
+#: ./interfaces.py:198
 msgid "You may not add more than ${max} occurences"
 msgstr "Sie dürfen nicht mehr als ${max} Wiederholungen erfassen"
 
-#: ./interfaces.py:109
+#: ./interfaces.py:116
 msgid "Zipcode"
 msgstr "PLZ"
 
