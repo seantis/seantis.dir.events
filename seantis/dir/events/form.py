@@ -1,11 +1,18 @@
+# -- coding: utf-8 --
+
 from five import grok
 
 from plone.directives import form
 from plone.z3cform.fieldsets import extensible
 
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
+from zope.schema import Choice
+from zope.schema.interfaces import IContextSourceBinder
+from zope.schema.vocabulary import SimpleVocabulary
 
 from z3c.form import field, group
+from z3c.form.browser.checkbox import CheckBoxFieldWidget
+from z3c.form.browser.radio import RadioFieldWidget
 from plone.formwidget.recurrence.z3cform.widget import RecurrenceWidget, ParameterizedWidgetFactory
 from collective.z3cform.mapwidget.widget import MapFieldWidget
 
@@ -29,10 +36,19 @@ class EventBaseForm(extensible.ExtensibleForm, form.AddForm):
 class GeneralGroup(group.Group):
     label = _(u'Event')
     fields = field.Fields(IEventsDirectoryItem).select(
-        'title', 'short_description', 'long_description'
+        'title', 'short_description', 'long_description', 'cat1', 'cat2'
     )
     fields += field.Fields(IEventBasic).select('start', 'end', 'whole_day')
     fields += field.Fields(IEventRecurrence).select('recurrence')
+
+    def updateWidgets(self):
+        super(GeneralGroup, self).updateWidgets()
+
+        labels = self.context.labels()
+        widgets = [w for w in self.widgets if w in labels]
+        
+        for widget in widgets:
+            self.widgets[widget].label = labels[widget]
 
 class LocationGroup(group.Group):
     label = _(u'Location')
@@ -48,6 +64,21 @@ class InformationGroup(group.Group):
         'contact_phone', 'prices', 'event_url', 'registration',
         'image', 'attachment_1', 'attachment_2'
     )
+
+def available_categories(context, category):
+
+    @grok.provider(IContextSourceBinder)
+    def get_categories(ctx):
+        terms = []
+
+        encode = lambda s: s.encode('utf-8')
+
+        for i, value in enumerate(context.suggested_values(category)):
+            terms.append(SimpleVocabulary.createTerm(encode(value), hash(value), value))
+
+        return SimpleVocabulary(terms)
+
+    return get_categories
 
 class EventSubmissionForm(EventBaseForm):
     grok.name('submit-event')
@@ -75,3 +106,17 @@ class EventSubmissionForm(EventBaseForm):
         
         coordinates = self.groups[1].fields['coordinates']
         coordinates.widgetFactory = MapFieldWidget
+
+        categories = (
+            self.groups[0].fields['cat1'],
+            self.groups[0].fields['cat2']
+        )
+
+        for category in categories:
+            category.field.description = u''
+            category.field.value_type = Choice(
+                source=available_categories(self.context, category.__name__)
+            )
+        
+        categories[0].widgetFactory = CheckBoxFieldWidget
+        categories[1].widgetFactory = RadioFieldWidget
