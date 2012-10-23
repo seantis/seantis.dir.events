@@ -16,7 +16,7 @@
 
     <div tal:replace="structure provider:plone.abovecontenttitle" />
 
-        <a tal:attributes="href python: context.absolute_url() + '?reset=true'"><h1 class="documentFirstHeading" tal:content="context/title" /></a>
+    <a tal:attributes="href python: context.absolute_url() + '?reset=true'"><h1 class="documentFirstHeading" tal:content="context/title" /></a>
 
     <div tal:replace="structure provider:plone.belowcontenttitle" />
     <div tal:replace="structure provider:plone.abovecontentbody" />
@@ -82,7 +82,7 @@
 
                       <div class="timerange" tal:content="python: item.human_daterange(view.request)"></div>
 
-                      <div style="clear:both;"></div>
+                      <div class="visualClear"></div>
                     </div>
                   </div>
                 </div>
@@ -90,14 +90,19 @@
               </tal:block>
             </div>
 
-            <metal:use use-macro="context/@@seantis-dir-macros/macros/map">
-            </metal:use>
+            <div class="event-sidebar">
+              <metal:use use-macro="context/@@seantis-dir-macros/macros/map">
+              </metal:use>
+              <div class="your-event">
+                <p i18n:translate="">Dou you have an event to share?</p>
+                <a i18n:translate="" tal:attributes="href python: context.absolute_url() + '/submit-event'">Submit Your Event</a>
+              </div>
+            </div>
 
             <div class="visualClear"></div>
         </div>
 
     <div tal:replace="structure provider:plone.belowcontentbody" />
-
         <tal:block define="batch view/batch">
             <div metal:use-macro="here/batch_macros/macros/navigation" />
         </tal:block>

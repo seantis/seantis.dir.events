@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-10-20 14:15+0000\n"
+"POT-Creation-Date: 2012-10-23 13:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,6 +79,10 @@ msgstr "Datum"
 #: ./dates.py:217
 msgid "Day after Tomorrow"
 msgstr "Übermorgen"
+
+#: ./templates/directory.pt:97
+msgid "Dou you have an event to share?"
+msgstr "Sie organisieren eine Veranstaltung?"
 
 #: ./form.py:30
 msgid "Event"
@@ -206,6 +210,10 @@ msgstr "Kurzbeschrieb"
 #: ./interfaces.py:104
 msgid "Street"
 msgstr "Strasse"
+
+#: ./templates/directory.pt:98
+msgid "Submit Your Event"
+msgstr "Veranstaltung Melden"
 
 #: ./interfaces.py:63
 msgid "Submitter Email"

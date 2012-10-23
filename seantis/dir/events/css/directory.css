@@ -24,7 +24,7 @@
     margin-right: 3%;
 }
 
-#directoryResultMap {
+.event-sidebar {
     float: left;
     width: 38.8%;
     min-width: 300px;
@@ -154,7 +154,7 @@
          width: auto;   
      }
      
-     #directoryResultMap {
+     .event-sidebar {
          float: none;
          width: 96.1%;
          margin-top: 25px;
@@ -234,4 +234,31 @@
 
 .attachments ul, .calendars ul {
     margin-left: 10px !important;
+}
+
+.your-event {
+    margin: 20px 0 0 0;
+    padding: 15px 20px 20px 20px;
+    border: 1px solid #ffe799;
+    background-color: #fffee1;
+    border-radius: 2px;
+}
+
+.your-event p {
+    font-size: 1.1em;   
+    line-height: 1.4em;
+    color: #777;
+}
+
+.your-event a {
+    border: none !important;
+    text-align: right;
+    width: 100% !important;
+    display: block;
+    font-size: 1.8em;
+    color: #0085be !important;
+}
+
+.your-event a:before {
+    content: "► ";   
 }

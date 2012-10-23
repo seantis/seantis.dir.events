@@ -118,7 +118,9 @@
             </div>
             </div>
 
-            <metal:use use-macro="context/@@seantis-dir-macros/macros/map"></metal:use>
+            <div class="event-sidebar">
+              <metal:use use-macro="context/@@seantis-dir-macros/macros/map"></metal:use>
+            </div>
 
             <div style="clear: both;"></div>
         </div>
