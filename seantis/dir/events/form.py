@@ -73,7 +73,7 @@ def available_categories(context, category):
 
         encode = lambda s: s.encode('utf-8')
 
-        for i, value in enumerate(context.suggested_values(category)):
+        for value in context.suggested_values(category):
             terms.append(SimpleVocabulary.createTerm(encode(value), hash(value), value))
 
         return SimpleVocabulary(terms)

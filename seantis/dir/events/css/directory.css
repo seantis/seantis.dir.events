@@ -1,3 +1,4 @@
+}
 /* seantis.dir.events */
 
 /* hide the coordinates field on the event submission form */
@@ -236,11 +237,13 @@
     margin-left: 10px !important;
 }
 
+/* submit your own event box */
+
 .your-event {
     margin: 20px 0 0 0;
     padding: 15px 20px 20px 20px;
-    border: 1px solid #ffe799;
-    background-color: #fffee1;
+    border: 1px solid #ccc;
+    border-width: 1px 1px 1px 10px;
     border-radius: 2px;
 }
 
