@@ -1,4 +1,3 @@
-}
 /* seantis.dir.events */
 
 /* hide the coordinates field on the event submission form */
@@ -264,4 +263,19 @@
 
 .your-event a:before {
     content: "► ";   
+}
+
+/* submit your own event form */
+
+.event-submit-form #form-widgets-coordinates {
+    display: none;
+}
+
+.event-submit-form #geoshapemap {
+    height: 400px;  
+}
+
+.event-submit-form .geocoder-wrapper label {
+    font-weight: normal;
+    color: #777;
 }

@@ -86,10 +86,10 @@ class GeneralGroup(group.Group):
 
 class LocationGroup(group.Group):
     label = _(u'Location')
-    fields = field.Fields(ICoordinates).select('coordinates')
-    fields += field.Fields(IEventsDirectoryItem).select(
+    fields = field.Fields(IEventsDirectoryItem).select(
         'locality', 'street', 'housenumber', 'zipcode', 'town'
     )
+    fields += field.Fields(ICoordinates).select('coordinates')
 
     def updateFields(self):
         coordinates = self.fields['coordinates']
