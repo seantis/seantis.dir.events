@@ -94,7 +94,6 @@ class LocationGroup(group.Group):
     def updateFields(self):
         coordinates = self.fields['coordinates']
         coordinates.widgetFactory = MapFieldWidget
-        coordinates.mode = 'hidden'
 
     def updateWidgets(self):
         self.updateFields()
