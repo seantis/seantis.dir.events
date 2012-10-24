@@ -41,7 +41,26 @@ class GeneralGroup(group.Group):
     fields += field.Fields(IEventBasic).select('start', 'end', 'whole_day')
     fields += field.Fields(IEventRecurrence).select('recurrence')
 
+    def updateFields(self):
+        recurrence = self.fields['recurrence']
+        recurrence.widgetFactory = ParameterizedWidgetFactory(
+            RecurrenceWidget, start_field='start'
+        )
+
+        categories = (self.fields['cat1'], self.fields['cat2'])
+
+        for category in categories:
+            category.field.description = u''
+            category.field.value_type = Choice(
+                source=self.available_categories(self.context, category.__name__)
+            )
+        
+        categories[0].widgetFactory = CheckBoxFieldWidget
+        categories[1].widgetFactory = RadioFieldWidget
+
     def updateWidgets(self):
+        self.updateFields()
+
         super(GeneralGroup, self).updateWidgets()
 
         labels = self.context.labels()
@@ -50,12 +69,36 @@ class GeneralGroup(group.Group):
         for widget in widgets:
             self.widgets[widget].label = labels[widget]
 
+    def available_categories(self, context, category):
+
+        @grok.provider(IContextSourceBinder)
+        def get_categories(ctx):
+            terms = []
+
+            encode = lambda s: s.encode('utf-8')
+
+            for value in context.suggested_values(category):
+                terms.append(SimpleVocabulary.createTerm(encode(value), hash(value), value))
+
+            return SimpleVocabulary(terms)
+
+        return get_categories
+
 class LocationGroup(group.Group):
     label = _(u'Location')
     fields = field.Fields(ICoordinates).select('coordinates')
     fields += field.Fields(IEventsDirectoryItem).select(
         'locality', 'street', 'housenumber', 'zipcode', 'town'
     )
+
+    def updateFields(self):
+        coordinates = self.fields['coordinates']
+        coordinates.widgetFactory = MapFieldWidget
+        coordinates.mode = 'hidden'
+
+    def updateWidgets(self):
+        self.updateFields()
+        super(LocationGroup, self).updateWidgets()
 
 class InformationGroup(group.Group):
     label = _(u'Information')
@@ -64,21 +107,6 @@ class InformationGroup(group.Group):
         'contact_phone', 'prices', 'event_url', 'registration',
         'image', 'attachment_1', 'attachment_2'
     )
-
-def available_categories(context, category):
-
-    @grok.provider(IContextSourceBinder)
-    def get_categories(ctx):
-        terms = []
-
-        encode = lambda s: s.encode('utf-8')
-
-        for value in context.suggested_values(category):
-            terms.append(SimpleVocabulary.createTerm(encode(value), hash(value), value))
-
-        return SimpleVocabulary(terms)
-
-    return get_categories
 
 class EventSubmissionForm(EventBaseForm):
     grok.name('submit-event')
@@ -94,29 +122,3 @@ class EventSubmissionForm(EventBaseForm):
     description = _(
         u'Send us your events and we will publish them on this website'
     )
-
-    def updateFields(self):
-        super(EventSubmissionForm, self).updateFields()
-
-        # apply the recurrence widget
-        recurrence = self.groups[0].fields['recurrence']
-        recurrence.widgetFactory = ParameterizedWidgetFactory(
-            RecurrenceWidget, start_field='start'
-        )
-        
-        coordinates = self.groups[1].fields['coordinates']
-        coordinates.widgetFactory = MapFieldWidget
-
-        categories = (
-            self.groups[0].fields['cat1'],
-            self.groups[0].fields['cat2']
-        )
-
-        for category in categories:
-            category.field.description = u''
-            category.field.value_type = Choice(
-                source=available_categories(self.context, category.__name__)
-            )
-        
-        categories[0].widgetFactory = CheckBoxFieldWidget
-        categories[1].widgetFactory = RadioFieldWidget
