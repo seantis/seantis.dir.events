@@ -1,23 +1,28 @@
 # -- coding: utf-8 --
 
+from copy import copy
 from five import grok
+from collections import OrderedDict
 
 from plone.directives import form
 from plone.z3cform.fieldsets import extensible
+from plone.dexterity.utils import createContent, addContentToContainer
+from plone.formwidget.recurrence.z3cform.widget import (
+    RecurrenceWidget, ParameterizedWidgetFactory
+)
 
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 from zope.schema import Choice
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 
-from plone.dexterity.utils import createContent, addContentToContainer
 from z3c.form import field, group
-from z3c.form import form as z3cform
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.browser.radio import RadioFieldWidget
-from plone.formwidget.recurrence.z3cform.widget import RecurrenceWidget, ParameterizedWidgetFactory
+
 from collective.z3cform.mapwidget.widget import MapFieldWidget
 
+from plone.app.event.base import default_timezone
 from plone.app.event.dx.behaviors import (
     IEventBasic,
     IEventRecurrence
@@ -29,28 +34,77 @@ from seantis.dir.events.interfaces import (
     IEventsDirectoryItem
 )
 
-from plone.app.event.base import default_timezone
-
-from plone.dexterity.interfaces import IDexterityFTI
-from Acquisition import aq_inner, aq_base
-from Acquisition.interfaces import IAcquirer
-
-from zope.component import getUtility, createObject
 from seantis.dir.events import _
 
 # I don't even..
 class EventBaseForm(extensible.ExtensibleForm, form.AddForm):
     grok.baseclass()
 
-class GeneralGroup(group.Group):
+class EventBaseGroup(group.Group):
+    
+    group_fields = {}
+    dynamic_fields = []
+
+    _cached_fields = []
+
+    @property
+    def fields(self):
+        """ Returns the fields defined in group_fields, making sure that
+        dynamic fields are shallow copied before they are touched. 
+        
+        Dynamic fields in this context are fields whose schame properties
+        are changed on the fly and it is important that they are copied
+        since these changes otherwise leak through to other forms. 
+
+        """
+
+        if self._cached_fields:
+            return self._cached_fields
+
+        result = None
+
+        for interface, fields in self.group_fields.items():
+            if result == None:
+                result = field.Fields(interface).select(*fields)
+            else:
+                result += field.Fields(interface).select(*fields)
+
+        for f in self.dynamic_fields:
+            if f in result:
+                result[f].field = copy(result[f].field)
+
+        self._cached_fields = result
+        return result
+
+    def updateWidgets(self):
+        self.update_dynamic_fields()
+        super(EventBaseGroup, self).updateWidgets()
+        self.update_widgets()
+
+    def update_dynamic_fields(self):
+        """ Called when it's time to update the dynamic fields. """
+
+    def update_widgets(self):
+        """ Called when it's time to make changes to the widgets. """
+
+class GeneralGroup(EventBaseGroup):
+    
     label = _(u'Event')
-    fields = field.Fields(IEventsDirectoryItem).select(
+    
+    dynamic_fields = ('recurrence', 'cat1', 'cat2')
+    
+    group_fields = OrderedDict()
+    group_fields[IEventsDirectoryItem] = (
         'title', 'short_description', 'long_description', 'cat1', 'cat2'
     )
-    fields += field.Fields(IEventBasic).select('start', 'end', 'whole_day')
-    fields += field.Fields(IEventRecurrence).select('recurrence')
+    group_fields[IEventBasic] = (
+        'start', 'end', 'whole_day'
+    )
+    group_fields[IEventRecurrence] = (
+        'recurrence',
+    )
 
-    def updateFields(self):
+    def update_dynamic_fields(self):
         recurrence = self.fields['recurrence']
         recurrence.widgetFactory = ParameterizedWidgetFactory(
             RecurrenceWidget, start_field='start'
@@ -67,10 +121,8 @@ class GeneralGroup(group.Group):
         categories[0].widgetFactory = CheckBoxFieldWidget
         categories[1].widgetFactory = RadioFieldWidget
 
-    def updateWidgets(self):
-        self.updateFields()
-        super(GeneralGroup, self).updateWidgets()
-
+    def update_widgets(self):
+        # update labels of categories
         labels = self.context.labels()
         widgets = [w for w in self.widgets if w in labels]
         
@@ -92,22 +144,24 @@ class GeneralGroup(group.Group):
 
         return get_categories
 
-class LocationGroup(group.Group):
+class LocationGroup(EventBaseGroup):
+    
     label = _(u'Location')
-    fields = field.Fields(IEventsDirectoryItem).select(
+    
+    dynamic_fields = ('coordinates', )
+    group_fields = OrderedDict() 
+    group_fields[IEventsDirectoryItem] = (
         'locality', 'street', 'housenumber', 'zipcode', 'town'
     )
-    fields += field.Fields(ICoordinates).select('coordinates')
+    group_fields[ICoordinates] = (
+        'coordinates',
+    )
 
-    def updateFields(self):
+    def update_dynamic_fields(self):
         coordinates = self.fields['coordinates']
         coordinates.widgetFactory = MapFieldWidget
 
-    def updateWidgets(self):
-        self.updateFields()
-        super(LocationGroup, self).updateWidgets()
-
-class InformationGroup(group.Group):
+class InformationGroup(EventBaseGroup):
     label = _(u'Information')
     fields = field.Fields(IEventsDirectoryItem).select(
         'organizer', 'contact_name', 'contact_email',
