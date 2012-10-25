@@ -19,7 +19,7 @@ from zope.schema import Choice, TextLine
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 
-from z3c.form import field, group
+from z3c.form import field, group, button
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.browser.radio import RadioFieldWidget
 
@@ -45,15 +45,17 @@ class IPreview(form.Schema):
 
 class DetailPreviewWidget(widget.Widget):
 
+    preview = None
+
     def render(self):
-        return '<i>render</i>'
+        return '<i>preview: %s</i>' % str(self.preview and self.preview.title or u'none')
 
     def update(self):
         super(DetailPreviewWidget, self).update()
         self.form.parentForm.subscribe_to_preview(self.on_preview_update)
 
     def on_preview_update(self, preview):
-        pass
+        self.preview = preview
 
 def DetailPreviewFieldWidget(field, request):
     """IFieldWidget factory for MapWidget."""
@@ -232,7 +234,13 @@ class EventSubmissionForm(EventBaseForm):
     def add(self, obj):
         addContentToContainer(aq_inner(self.context), obj)
 
-    def preview(self, data):
+    def preview(self):
+        data, errors = self.extractData(setErrors=False)
+
+        safe_get = lambda key: data.get(key)
+        if None in map(safe_get, ('title', 'start', 'end')):
+            return
+
         obj = self.create(data)
 
         # without this zope will segfault when calling __repr__
@@ -242,11 +250,12 @@ class EventSubmissionForm(EventBaseForm):
         return obj
 
     def update(self):
+        self.add_actions()
+
         super(EventSubmissionForm, self).update()
 
-        data, errors = self.extractData(setErrors=False)
-        if not errors:
-            self.trigger_preview(self.preview(data))
+        if self.preview():
+            self.trigger_preview(self.preview())
 
     def subscribe_to_preview(self, callback):
         self.preview_subscribers[callback.__name__] = callback
@@ -254,3 +263,19 @@ class EventSubmissionForm(EventBaseForm):
     def trigger_preview(self, preview):
         for callback in self.preview_subscribers.values():
             callback(preview)
+
+    def handle_preview(self, action):
+        if self.preview():
+            self.status = _(u'Preview updated')
+        else:
+            self.status = _(u'Preview not possible yet')
+    
+    def add_actions(self):
+        # there's buttton.buttonAndHandler which does the same
+        # but removes all default buttons first
+
+        preview = button.Button("preview", title=_(u'Preview'))
+        self.buttons += button.Buttons(preview)
+
+        handler = button.Handler(preview, self.__class__.handle_preview)
+        self.handlers.addHandler(preview, handler)
