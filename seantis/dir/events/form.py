@@ -42,41 +42,6 @@ from seantis.dir.events import utils
 from seantis.dir.events import _
 from z3c.form import widget
 
-class IPreview(form.Schema):
-    detail = TextLine(required=False)
-
-class DetailPreviewWidget(widget.Widget):
-
-    preview = None
-    directory = None
-    _template = ViewPageTemplateFile('templates/previewdetail.pt')
-
-    def render(self):
-        if not self.preview:
-            msg = utils.translate(self.request, _(
-                u'No preview available yet. Please fill out more information first.'
-            ))
-            return u'<div>%s</div>' % msg
-
-        self.directory = aq_inner(self.context)
-        self.preview.parent = lambda *args, **kwargs: self.directory
-        self.preview.image = None
-        self.preview.attachment_1 = None
-        self.preview.attachment_2 = None
-
-        return self._template(self)
-
-    def update(self):
-        super(DetailPreviewWidget, self).update()
-        self.form.parentForm.subscribe_to_preview(self.on_preview_update)
-
-    def on_preview_update(self, preview):
-        self.preview = preview
-
-def DetailPreviewFieldWidget(field, request):
-    """IFieldWidget factory for MapWidget."""
-    return widget.FieldWidget(field, DetailPreviewWidget(request))
-
 # I don't even..
 class EventBaseForm(extensible.ExtensibleForm, form.AddForm):
     grok.baseclass()
@@ -210,17 +175,6 @@ class InformationGroup(EventBaseGroup):
         'image', 'attachment_1', 'attachment_2'
     )
 
-class PreviewGroup(EventBaseGroup):
-    
-    label = _(u'Preview')
-
-    dynamic_fields = ('detail', )
-    group_fields = OrderedDict()
-    group_fields[IPreview] = ('detail', )
-
-    def update_dynamic_fields(self):
-        self.fields['detail'].widgetFactory = DetailPreviewFieldWidget
-
 class EventSubmissionForm(EventBaseForm):
     grok.name('submit-event')
     grok.require('seantis.dir.events.SubmitEvents')
@@ -228,7 +182,7 @@ class EventSubmissionForm(EventBaseForm):
 
     template = ViewPageTemplateFile('templates/form.pt')
 
-    groups = (GeneralGroup, LocationGroup, InformationGroup, PreviewGroup)
+    groups = (GeneralGroup, LocationGroup, InformationGroup)
     enable_form_tabbing = True
 
     label = _(u'Event Submission Form')
@@ -249,49 +203,3 @@ class EventSubmissionForm(EventBaseForm):
 
     def add(self, obj):
         addContentToContainer(aq_inner(self.context), obj)
-
-    def preview(self):
-        data, errors = self.extractData(setErrors=False)
-
-        safe_get = lambda key: data.get(key)
-        if None in map(safe_get, ('title', 'start', 'end')):
-            return
-
-        obj = self.create(data)
-
-        # without this zope will segfault when calling __repr__
-        # yes, segfault. like it's the 90s or something
-        obj.id = 'dummy'
-        
-        return obj
-
-    def update(self):
-        self.add_actions()
-
-        super(EventSubmissionForm, self).update()
-
-        if self.preview():
-            self.trigger_preview(self.preview())
-
-    def subscribe_to_preview(self, callback):
-        self.preview_subscribers[callback.__name__] = callback
-
-    def trigger_preview(self, preview):
-        for callback in self.preview_subscribers.values():
-            callback(preview)
-
-    def handle_preview(self, action):
-        if self.preview():
-            self.status = _(u'Preview updated')
-        else:
-            self.status = _(u'Preview not possible yet')
-    
-    def add_actions(self):
-        # there's buttton.buttonAndHandler which does the same
-        # but removes all default buttons first
-
-        preview = button.Button("preview", title=_(u'Preview'))
-        self.buttons += button.Buttons(preview)
-
-        handler = button.Handler(preview, self.__class__.handle_preview)
-        self.handlers.addHandler(preview, handler)
