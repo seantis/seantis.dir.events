@@ -18,6 +18,7 @@ from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 from zope.schema import Choice, TextLine
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
+from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
 from z3c.form import field, group, button
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
@@ -37,6 +38,7 @@ from seantis.dir.events.interfaces import (
     IEventsDirectoryItem
 )
 
+from seantis.dir.events import utils
 from seantis.dir.events import _
 from z3c.form import widget
 
@@ -46,9 +48,23 @@ class IPreview(form.Schema):
 class DetailPreviewWidget(widget.Widget):
 
     preview = None
+    directory = None
+    _template = ViewPageTemplateFile('templates/previewdetail.pt')
 
     def render(self):
-        return '<i>preview: %s</i>' % str(self.preview and self.preview.title or u'none')
+        if not self.preview:
+            msg = utils.translate(self.request, _(
+                u'No preview available yet. Please fill out more information first.'
+            ))
+            return u'<div>%s</div>' % msg
+
+        self.directory = aq_inner(self.context)
+        self.preview.parent = lambda *args, **kwargs: self.directory
+        self.preview.image = None
+        self.preview.attachment_1 = None
+        self.preview.attachment_2 = None
+
+        return self._template(self)
 
     def update(self):
         super(DetailPreviewWidget, self).update()
