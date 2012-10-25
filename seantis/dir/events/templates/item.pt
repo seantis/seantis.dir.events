@@ -19,110 +19,114 @@
         <div tal:replace="structure provider:plone.abovecontentbody" />
         
         <div id="directoryDetails" class="events">
-            <div class="event-view">
-              <div class="event-head">
-                <div class="event-title">
-                  <h2>
-                      <tal:block content="context/title" />
-                  </h2>
+          
+          <div class="event-view">
+            <div class="event-head">
+              <div class="event-title">
+                <h2>
+                  <tal:block content="context/title" />
+                </h2>
 
-                  <div class="event-date"><span tal:content="python: view.human_date"></span> <span tal:content="python: view.human_daterange"></span></div>
+                <div class="event-date">
+                  <span tal:content="python: view.human_date"></span> <span tal:content="python: view.human_daterange"></span>
                 </div>
-
-                <div class="event-image" tal:condition="context/image">
-                  <a tal:attributes="href string:${context/absolute_url}/@@images/image">
-                    <img tal:replace="structure context/@@images/image/mini" />
-                  </a>
-                </div>
-
-                <div class="descriptions">
-                  <div class="short" tal:content="context/short_description"></div>
-                  <div class="long" tal:content="context/long_description"></div>
-                  <div class="eventtags-list">
-                    <tal:block repeat="category python: context.categories()[:2]">
-                    <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
-                    </tal:block>
-                  </div>
-                </div>
-
-                <div style="clear: both;"></div>
               </div>
 
-              <div class="event-details">
-                <div class="location" tal:condition="python: any((context.locality, context.street, context.housenumber, context.zipcode, context.town))">
-                  <h3 i18n:translate="">Locality</h3>
-                  <div class="locality" tal:content="context/locality"></div>
-                  <div class="street">
-                    <span tal:content="context/street"></span>
-                    <span tal:content="context/housenumber"></span>
-                  </div>
-                  <div class="town">
-                    <span tal:content="context/zipcode"></span>
-                    <span tal:content="context/town"></span>
-                  </div>
-                </div>
+              <div class="event-image" tal:condition="context/image">
+                <a tal:attributes="href string:${context/absolute_url}/@@images/image">
+                  <img tal:replace="structure context/@@images/image/mini" />
+                </a>
+              </div>
 
-                <div class="organizer" tal:condition="python: any((context.organizer, context.event_url, context.contact_name, context.contact_email, context.contact_phone))">
-                  <h3 i18n:translate="">Organizer</h3>
-                  <div class="name" tal:content="context/organizer"></div>
-                  <div class="event_url" tal:condition="context/event_url">
-                    <a i18n:translate="" tal:attributes="href context/event_url">Event Website</a>
-                  </div>
-                  <div class="contact">
-                    <div class="name" tal:content="context/contact_name"></div>
-                    <div class="email" tal:condition="context/contact_email">
-                      <a tal:content="context/contact_email" tal:attributes="href python: 'mailto:' + context.contact_email"></a>
-                    </div>
-                    <div class="phone" tal:content="context/contact_phone"></div>
-                  </div>
+              <div class="descriptions">
+                <div class="short" tal:content="context/short_description"></div>
+                <div class="long" tal:content="context/long_description"></div>
+                <div class="eventtags-list">
+                  <tal:block repeat="category python: context.categories()[:2]">
+                    <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
+                  </tal:block>
                 </div>
+              </div>
 
-                <div class="ticket" tal:condition="python: any((context.registration, context.prices))">
-                  <h3 i18n:translate="">Ticket</h3>
-                  <div class="registration">
-                    <a tal:attributes="href context/registration" i18n:translate="">Ticket / Registration Website</a>
-                  </div>
-                  <div class="prices">
-                    <tal:block replace="structure python: context.prices.replace('\n', '<br />')"></tal:block>
-                  </div>
-                </div>
-
-                <div class="attachments" tal:condition="python: any((context.attachment_1, context.attachment_2))">
-                  <h3 i18n:translate="">Attachments</h3>
-                  <ul>
-                    <li tal:condition="context/attachment_1">
-                      <a class="attachment" tal:attributes="href string:${context/absolute_url}/@@download/attachment_1; title context/attachment_1/filename" tal:content="python: view.attachment_filename('attachment_1')"></a>
-                    </li>
-                    <li tal:condition="context/attachment_2">
-                      <a class="attachment" tal:attributes="href string:${context/absolute_url}/@@download/attachment_2; title context/attachment_2/filename" tal:content="python: view.attachment_filename('attachment_2')"></a>
-                    </li>
-                  </ul>
-                </div>
-
-                <div class="calendars">
-                  <h3 i18n:translate="">Calendars (iCal)</h3>
-                  <ul tal:condition="python: view.is_recurring">
-                    <li>
-                      <a tal:attributes="href python: view.ical_url(only_this=False)" i18n:translate="">Calendar for all occurrences of this event</a>
-                    </li>
-                    <li>
-                      <a tal:attributes="href python: view.ical_url(only_this=True)" i18n:translate="">Calendar for this occurrence only</a>
-                    </li>
-                  </ul>
-                  <ul tal:condition="python: not view.is_recurring">
-                    <li>
-                      <a tal:attributes="href python: view.ical_url(only_this=False)" i18n:translate="">Calendar for this event</a>
-                    </li>
-                  </ul>
-                </div>
-            </div>
+              <div class="visualClear"></div>
             </div>
 
-            <div class="event-sidebar">
-              <metal:use use-macro="context/@@seantis-dir-macros/macros/map"></metal:use>
-            </div>
+            <div class="event-details">
+              <div class="location" tal:condition="python: any((context.locality, context.street, context.housenumber, context.zipcode, context.town))">
+                <h3 i18n:translate="">Locality</h3>
+                <div class="locality" tal:content="context/locality"></div>
+                <div class="street">
+                  <span tal:content="context/street"></span>
+                  <span tal:content="context/housenumber"></span>
+                </div>
+                <div class="town">
+                  <span tal:content="context/zipcode"></span>
+                  <span tal:content="context/town"></span>
+                </div>
+              </div>
 
-            <div style="clear: both;"></div>
+              <div class="organizer" tal:condition="python: any((context.organizer, context.event_url, context.contact_name, context.contact_email, context.contact_phone))">
+                <h3 i18n:translate="">Organizer</h3>
+                <div class="name" tal:content="context/organizer"></div>
+                <div class="event_url" tal:condition="context/event_url">
+                  <a i18n:translate="" tal:attributes="href context/event_url">Event Website</a>
+                </div>
+                <div class="contact">
+                  <div class="name" tal:content="context/contact_name"></div>
+                  <div class="email" tal:condition="context/contact_email">
+                    <a tal:content="context/contact_email" tal:attributes="href python: 'mailto:' + context.contact_email"></a>
+                  </div>
+                  <div class="phone" tal:content="context/contact_phone"></div>
+                </div>
+              </div>
+
+              <div class="ticket" tal:condition="python: any((context.registration, context.prices))">
+                <h3 i18n:translate="">Ticket</h3>
+                <div class="registration">
+                  <a tal:attributes="href context/registration" i18n:translate="">Ticket / Registration Website</a>
+                </div>
+                <div class="prices">
+                  <tal:block replace="structure python: context.prices.replace('\n', '<br />')"></tal:block>
+                </div>
+              </div>
+
+              <div class="attachments" tal:condition="python: any((context.attachment_1, context.attachment_2))">
+                <h3 i18n:translate="">Attachments</h3>
+                <ul>
+                  <li tal:condition="context/attachment_1">
+                    <a class="attachment" tal:attributes="href string:${context/absolute_url}/@@download/attachment_1; title context/attachment_1/filename" tal:content="python: view.attachment_filename('attachment_1')"></a>
+                  </li>
+                  <li tal:condition="context/attachment_2">
+                    <a class="attachment" tal:attributes="href string:${context/absolute_url}/@@download/attachment_2; title context/attachment_2/filename" tal:content="python: view.attachment_filename('attachment_2')"></a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="calendars">
+                <h3 i18n:translate="">Calendars (iCal)</h3>
+                <ul tal:condition="python: view.is_recurring">
+                  <li>
+                    <a tal:attributes="href python: view.ical_url(only_this=False)" i18n:translate="">Calendar for all occurrences of this event</a>
+                  </li>
+                  <li>
+                    <a tal:attributes="href python: view.ical_url(only_this=True)" i18n:translate="">Calendar for this occurrence only</a>
+                  </li>
+                </ul>
+                <ul tal:condition="python: not view.is_recurring">
+                  <li>
+                    <a tal:attributes="href python: view.ical_url(only_this=False)" i18n:translate="">Calendar for this event</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="event-sidebar">
+            <metal:use use-macro="context/@@seantis-dir-macros/macros/map"></metal:use>
+          </div>
+
+          <div class="visualClear"></div>
+          
         </div>
 
         <div tal:replace="structure provider:plone.belowcontentbody" />
