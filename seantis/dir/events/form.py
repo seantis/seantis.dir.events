@@ -4,6 +4,9 @@ from copy import copy
 from five import grok
 from collections import OrderedDict
 
+from Acquisition import aq_inner, aq_base
+from Acquisition.interfaces import IAcquirer
+
 from plone.directives import form
 from plone.z3cform.fieldsets import extensible
 from plone.dexterity.utils import createContent, addContentToContainer
@@ -12,7 +15,7 @@ from plone.formwidget.recurrence.z3cform.widget import (
 )
 
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
-from zope.schema import Choice
+from zope.schema import Choice, TextLine
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 
@@ -35,6 +38,26 @@ from seantis.dir.events.interfaces import (
 )
 
 from seantis.dir.events import _
+from z3c.form import widget
+
+class IPreview(form.Schema):
+    detail = TextLine(required=False)
+
+class DetailPreviewWidget(widget.Widget):
+
+    def render(self):
+        return '<i>render</i>'
+
+    def update(self):
+        super(DetailPreviewWidget, self).update()
+        self.form.parentForm.subscribe_to_preview(self.on_preview_update)
+
+    def on_preview_update(self, preview):
+        pass
+
+def DetailPreviewFieldWidget(field, request):
+    """IFieldWidget factory for MapWidget."""
+    return widget.FieldWidget(field, DetailPreviewWidget(request))
 
 # I don't even..
 class EventBaseForm(extensible.ExtensibleForm, form.AddForm):
@@ -169,6 +192,17 @@ class InformationGroup(EventBaseGroup):
         'image', 'attachment_1', 'attachment_2'
     )
 
+class PreviewGroup(EventBaseGroup):
+    
+    label = _(u'Preview')
+
+    dynamic_fields = ('detail', )
+    group_fields = OrderedDict()
+    group_fields[IPreview] = ('detail', )
+
+    def update_dynamic_fields(self):
+        self.fields['detail'].widgetFactory = DetailPreviewFieldWidget
+
 class EventSubmissionForm(EventBaseForm):
     grok.name('submit-event')
     grok.require('seantis.dir.events.SubmitEvents')
@@ -176,7 +210,7 @@ class EventSubmissionForm(EventBaseForm):
 
     template = ViewPageTemplateFile('templates/form.pt')
 
-    groups = (GeneralGroup, LocationGroup, InformationGroup)
+    groups = (GeneralGroup, LocationGroup, InformationGroup, PreviewGroup)
     enable_form_tabbing = True
 
     label = _(u'Event Submission Form')
@@ -184,10 +218,39 @@ class EventSubmissionForm(EventBaseForm):
         u'Send us your events and we will publish them on this website'
     )
 
+    preview_subscribers = dict()
+
     def create(self, data):
         data['timezone'] = default_timezone()
-        return createContent('seantis.dir.events.item', **data)
+        content = createContent('seantis.dir.events.item', **data)
+
+        if IAcquirer.providedBy(content):
+            content = content.__of__(aq_inner(self.context))
+
+        return aq_base(content)
 
     def add(self, obj):
-        addContentToContainer(self.context, obj)
+        addContentToContainer(aq_inner(self.context), obj)
 
+    def preview(self, data):
+        obj = self.create(data)
+
+        # without this zope will segfault when calling __repr__
+        # yes, segfault. like it's the 90s or something
+        obj.id = 'dummy'
+        
+        return obj
+
+    def update(self):
+        super(EventSubmissionForm, self).update()
+
+        data, errors = self.extractData(setErrors=False)
+        if not errors:
+            self.trigger_preview(self.preview(data))
+
+    def subscribe_to_preview(self, callback):
+        self.preview_subscribers[callback.__name__] = callback
+
+    def trigger_preview(self, preview):
+        for callback in self.preview_subscribers.values():
+            callback(preview)
