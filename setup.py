@@ -30,16 +30,15 @@ setup(name='seantis.dir.events',
           'plone.app.event',
           'plone.app.dexterity',
           'collective.autopermission',
+          'collective.testcaselayer',
           'collective.dexteritytextindexer',
           'collective.z3cform.mapwidget',
           'seantis.dir.base',
           'zope.proxy',
           'pytz',
           'python-magic',
+          'mock'
       ],
-      extras_require={
-          "test":['mock', 'collective.testcaselayer']
-      },
       entry_points="""
       [z3c.autoinclude.plugin]
       target = plone
