@@ -5,6 +5,10 @@ To learn more about seantis.dir.base visit [https://github.com/seantis/seantis.d
 
 seantis.dir.events builds on seantis.dir.base, adding information about upcoming events
 
+# Build Status
+
+[![Build Status](https://secure.travis-ci.org/seantis/seantis.dir.events.png)](http://travis-ci.org/seantis/seantis.dir.events)
+
 # Dependencies
 
 seantis.dir.events relies on Plone 4.2+ with dexterity and seantis.dir.base:
