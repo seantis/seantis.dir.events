@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<object name="portal_workflow" meta_type="Plone Workflow Tool">
+    <object name="events_workflow" meta_type="Workflow"/>
+    <bindings>
+        <type type_id="seantis.dir.events.item">
+            <bound-workflow workflow_id="events_workflow" />
+        </type>
+    </bindings>
+</object>

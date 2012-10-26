@@ -18,7 +18,7 @@
 
     <permission
         id="seantis.dir.events.SubmitEvents"
-        title="seantis.dir.events Submit Events"
+        title="seantis.dir.events: Submit Events"
     />
 
     <!-- Grok the package to initialise schema interfaces and content classes -->

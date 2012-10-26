@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<dc-workflow xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+             i18n:domain="seantis.dir.events"
+             workflow_id="events_workflow" 
+             title="seantis.dir.events workflow" 
+             description="" 
+             state_variable="review_state" 
+             initial_state="preview" 
+             manager_bypass="False"
+             i18n:attributes="title; description">
+
+    <state state_id="archived" title="Archived" i18n:attributes="title">
+        <exit-transition transition_id="publish" />
+    </state>
+ 
+    <state state_id="preview" title="Previewed" i18n:attributes="title">
+        <exit-transition transition_id="submit" />
+    </state>
+ 
+    <state state_id="published" title="Published" i18n:attributes="title">
+        <exit-transition transition_id="archive" />
+    </state>
+ 
+    <state state_id="submitted" title="Submitted" i18n:attributes="title">
+        <exit-transition transition_id="publish" />
+    </state>
+ 
+    <transition transition_id="archive" title="Archive Event" new_state="archived" trigger="USER" before_script="" after_script="" i18n:attributes="title">
+        <guard>
+            <guard-permission>Review portal content</guard-permission>
+        </guard>
+    </transition>
+ 
+    <transition transition_id="publish" title="Publish Event" new_state="published" trigger="USER" before_script="" after_script="" i18n:attributes="title">
+        <action url="%(content_url)s/content_status_modify?workflow_action=publish" category="workflow" icon="" i18n:translate="">Publish</action>
+        <guard>
+            <guard-permission>Review portal content</guard-permission>
+        </guard>
+    </transition>
+
+    <transition transition_id="submit" title="Submit Event" new_state="submitted" trigger="USER" before_script="" after_script="" i18n:attributes="title">
+        <action url="%(content_url)s/content_status_modify?workflow_action=submit" category="workflow" icon="" i18n:translate="">Submit</action>
+        <guard></guard>
+    </transition>
+
+</dc-workflow>

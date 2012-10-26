@@ -15,12 +15,11 @@ from plone.formwidget.recurrence.z3cform.widget import (
 )
 
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
-from zope.schema import Choice, TextLine
+from zope.schema import Choice
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
-from zope.browserpage.viewpagetemplatefile import ViewPageTemplateFile
 
-from z3c.form import field, group, button
+from z3c.form import field, group
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.browser.radio import RadioFieldWidget
 
@@ -38,9 +37,7 @@ from seantis.dir.events.interfaces import (
     IEventsDirectoryItem
 )
 
-from seantis.dir.events import utils
 from seantis.dir.events import _
-from z3c.form import widget
 
 # I don't even..
 class EventBaseForm(extensible.ExtensibleForm, form.AddForm):

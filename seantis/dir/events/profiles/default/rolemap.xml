@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
 <rolemap>
-    <roles>
-        <!-- <role name="Event-Manager"/> -->
-    </roles>
     <permissions>
         <permission name="seantis.dir.events: Submit Events" acquire="True">
             <role name="Anonymous" />
