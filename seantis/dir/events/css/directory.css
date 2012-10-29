@@ -279,3 +279,15 @@
     font-weight: normal;
     color: #777;
 }
+
+.event-state-preview {
+    background-color: lightblue;
+}
+
+.event-state-submitted {
+    background-color: orange;
+}
+
+.event-state-archived {
+    background-color: grey;
+}

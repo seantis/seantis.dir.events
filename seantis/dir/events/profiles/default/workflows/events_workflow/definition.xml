@@ -12,20 +12,6 @@
     <permission>View</permission>
     <permission>Modify portal content</permission>
 
-    <state state_id="archived" title="Archived" i18n:attributes="title">
-        <exit-transition transition_id="publish" />
-
-        <permission-map name="View" acquired="False">
-            <permission-role>Manager</permission-role>
-            <permission-role>Reviewer</permission-role>
-        </permission-map>
-
-        <permission-map name="Modify portal content" acquired="False">
-            <permission-role>Manager</permission-role>
-            <permission-role>Reviewer</permission-role>
-        </permission-map>
-    </state>
- 
     <state state_id="preview" title="Previewed" i18n:attributes="title">
         <exit-transition transition_id="submit" />
 
@@ -37,20 +23,7 @@
             <permission-role>Owner</permission-role>
         </permission-map>
     </state>
- 
-    <state state_id="published" title="Published" i18n:attributes="title">
-        <exit-transition transition_id="archive" />
 
-        <permission-map name="View" acquired="True">
-            <permission-role>Anonymous</permission-role>
-        </permission-map>
-
-        <permission-map name="Modify portal content" acquired="False">
-            <permission-role>Manager</permission-role>
-            <permission-role>Reviewer</permission-role>
-        </permission-map>
-    </state>
- 
     <state state_id="submitted" title="Submitted" i18n:attributes="title">
         <exit-transition transition_id="publish" />
 
@@ -64,10 +37,38 @@
             <permission-role>Reviewer</permission-role>
         </permission-map>
     </state>
- 
-    <transition transition_id="archive" title="Archive Event" new_state="archived" trigger="USER" before_script="" after_script="" i18n:attributes="title">
+
+    <state state_id="published" title="Published" i18n:attributes="title">
+        <exit-transition transition_id="archive" />
+
+        <permission-map name="View" acquired="True">
+            <permission-role>Anonymous</permission-role>
+        </permission-map>
+
+        <permission-map name="Modify portal content" acquired="False">
+            <permission-role>Manager</permission-role>
+            <permission-role>Reviewer</permission-role>
+        </permission-map>
+    </state>
+
+    <state state_id="archived" title="Archived" i18n:attributes="title">
+        <exit-transition transition_id="publish" />
+
+        <permission-map name="View" acquired="False">
+            <permission-role>Manager</permission-role>
+            <permission-role>Reviewer</permission-role>
+        </permission-map>
+
+        <permission-map name="Modify portal content" acquired="False">
+            <permission-role>Manager</permission-role>
+            <permission-role>Reviewer</permission-role>
+        </permission-map>
+    </state>
+
+    <transition transition_id="submit" title="Submit Event" new_state="submitted" trigger="USER" before_script="" after_script="" i18n:attributes="title">
+        <action url="%(content_url)s/content_status_modify?workflow_action=submit" category="workflow" icon="" i18n:translate="">Submit</action>
         <guard>
-            <guard-permission>Review portal content</guard-permission>
+            <guard-permission>View</guard-permission>
         </guard>
     </transition>
  
@@ -78,9 +79,10 @@
         </guard>
     </transition>
 
-    <transition transition_id="submit" title="Submit Event" new_state="submitted" trigger="USER" before_script="" after_script="" i18n:attributes="title">
-        <action url="%(content_url)s/content_status_modify?workflow_action=submit" category="workflow" icon="" i18n:translate="">Submit</action>
-        <guard></guard>
+    <transition transition_id="archive" title="Archive Event" new_state="archived" trigger="USER" before_script="" after_script="" i18n:attributes="title">
+        <guard>
+            <guard-permission>Review portal content</guard-permission>
+        </guard>
     </transition>
 
 </dc-workflow>

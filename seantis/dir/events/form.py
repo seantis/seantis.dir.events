@@ -199,4 +199,7 @@ class EventSubmissionForm(EventBaseForm):
         return aq_base(content)
 
     def add(self, obj):
-        addContentToContainer(aq_inner(self.context), obj)
+        # not checking the contrains means two things
+        # * impossible content types could theoretically added
+        # * anonymous users can post events
+        addContentToContainer(aq_inner(self.context), obj, checkConstraints=False)

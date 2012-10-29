@@ -1,3 +1,5 @@
+from Products.CMFCore.utils import getToolByName
+
 from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
 from zope import i18n
@@ -18,3 +20,6 @@ def render_ical_response(request, context, calendar):
         'attachment; filename="%s"' % name
     )
     request.RESPONSE.write(calendar.to_ical())
+
+def workflow_tool():
+    return getToolByName(getSite(), "portal_workflow")

@@ -34,6 +34,10 @@ class EventsDirectoryItem(item.DirectoryItem):
     def as_occurrence(self):
         return recurrence.Occurrence(self, self.start, self.end)
 
+    @property
+    def state(self):
+        return utils.workflow_tool().getInfoFor(self, 'review_state')
+
 class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.context(IEventsDirectoryItem)
     grok.name('seantis.dir.events.item.detail')

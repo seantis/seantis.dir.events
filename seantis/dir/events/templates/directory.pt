@@ -56,7 +56,7 @@
               <tal:block repeat="group python: groups.items()">
                 <div class="eventgroup-title" tal:content="python: group[0]"></div>
                 <div class="eventgroup">
-                  <div class="directoryResult event" tal:repeat="item python: group[1]" tal:attributes="id item/id">
+                  <div class="directoryResult event" tal:repeat="item python: group[1]" tal:attributes="id item/id; class python: 'event-state-%s' % item.state">
                     <metal:use use-macro="context/@@seantis-dir-macros/macros/map-marker"></metal:use>
 
                     <div class="directoryInfoText">

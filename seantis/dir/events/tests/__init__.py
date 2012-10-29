@@ -48,9 +48,6 @@ class IntegrationTestCase(unittest.TestCase):
     def workflow(self):
         return getToolByName(self.portal, "portal_workflow")
 
-    def review_state(self, obj):
-        return self.workflow.getInfoFor(obj, 'review_state')
-
     def do_action(self, obj, action):
         self.workflow.doActionFor(obj, action)
 
