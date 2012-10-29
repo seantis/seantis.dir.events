@@ -49,6 +49,9 @@ class IntegrationTestCase(unittest.TestCase):
     def review_state(self, obj):
         return self.workflow.getInfoFor(obj, 'review_state')
 
+    def do_action(self, obj, action):
+        self.workflow.doActionFor(obj, action)
+
     def create_event(self, **kw):
         """ Create an event in self.directory. By default, test-user must
         be logged in or the creation will be unauthorized. 
