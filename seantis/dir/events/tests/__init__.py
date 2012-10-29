@@ -2,10 +2,12 @@ import unittest2 as unittest
 
 from datetime import datetime, timedelta
 
+from AccessControl import getSecurityManager
 from plone.testing import z2
 from plone.dexterity.utils import createContentInContainer
 from plone.app import testing
 from Products.CMFCore.utils import getToolByName
+from Products.CMFCore import permissions
 
 from zope.component.hooks import getSite
 
@@ -71,3 +73,9 @@ class IntegrationTestCase(unittest.TestCase):
         return createContentInContainer(
             self.directory, 'seantis.dir.events.item', **kw
         )
+
+    def has_permission(self, obj, permission):
+        return bool(getSecurityManager().checkPermission(permission, obj))
+
+    def may_view(self, obj):
+        return self.has_permission(obj, permissions.View)

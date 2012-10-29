@@ -43,3 +43,13 @@ class TestDateRanges(IntegrationTestCase):
         self.do_action(event, 'archive')
 
         self.assertRaises(WorkflowException, action, ['submit'])
+
+    def test_workflow_permissions(self):
+
+        self.login_testuser()
+        event = self.create_event()
+
+        self.assertTrue(self.may_view(event))
+
+        self.logout()
+        self.assertFalse(self.may_view(event))
