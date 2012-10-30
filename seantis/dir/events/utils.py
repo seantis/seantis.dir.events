@@ -5,7 +5,7 @@ from zope.component.hooks import getSite
 from zope import i18n
 
 def get_current_language(request):
-    """Returns the current language"""
+    """ Returns the current language """
     portal_state = getMultiAdapter((getSite(), request), name=u'plone_portal_state')
     return portal_state.language()
 

@@ -15,6 +15,7 @@ from seantis.dir.base.interfaces import IFieldMapExtender
 from seantis.dir.events import dates
 from seantis.dir.events import recurrence
 from seantis.dir.events import utils
+from seantis.dir.events.token import verify_token
 from seantis.dir.events.interfaces import IEventsDirectory, IEventsDirectoryItem
 
 class EventsDirectoryItem(item.DirectoryItem):
@@ -56,6 +57,11 @@ class View(core.View):
 
     template = None
     _template = grok.PageTemplateFile('templates/item.pt')
+
+    def update(self):
+        verify_token(self.context, self.request)
+
+        super(View, self).update()
 
     @property
     def is_ical_export(self):

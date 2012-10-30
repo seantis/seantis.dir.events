@@ -33,11 +33,12 @@ from plone.app.event.dx.behaviors import (
 )
 
 from seantis.dir.events.interfaces import (
-    ICoordinates,
+    ITokenAccess,
     IEventsDirectory, 
-    IEventsDirectoryItem
+    IEventsDirectoryItem,
 )
 
+from seantis.dir.events.token import verify_token, apply_token
 from seantis.dir.events import utils
 from seantis.dir.events import _
 
@@ -173,7 +174,7 @@ class InformationGroup(EventBaseGroup):
 class EventSubmissionForm(extensible.ExtensibleForm):
     
     grok.baseclass()
-    grok.require('seantis.dir.events.SubmitEvents')
+    grok.require('zope2.View')
 
     template = ViewPageTemplateFile('templates/form.pt')
 
@@ -202,7 +203,6 @@ class EventSubmissionForm(extensible.ExtensibleForm):
         else:
             IGeoManager(content).removeCoordinates()
 
-
 class EventSubmissionAddForm(EventSubmissionForm, form.AddForm):
     grok.context(IEventsDirectory)
     grok.name('submit-event')
@@ -226,11 +226,18 @@ class EventSubmissionAddForm(EventSubmissionForm, form.AddForm):
         # * impossible content types could theoretically added
         # * anonymous users can post events
         content = addContentToContainer(aq_inner(self.context), obj, checkConstraints=False)
+        
         self.apply_coordinates(content)
+        
+        apply_token(content)
 
 class EventSubmissionEditForm(EventSubmissionForm, form.EditForm):
     grok.context(IEventsDirectoryItem)
     grok.name('edit-event')
+
+    def update(self, *args, **kwargs):
+        verify_token(self.context, self.request)
+        super(EventSubmissionEditForm, self).update(*args, **kwargs)
 
     def applyChanges(self, data):
         self.prepare_coordinates(data)

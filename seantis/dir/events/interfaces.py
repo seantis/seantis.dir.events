@@ -9,18 +9,25 @@ from plone.directives import form
 from plone.app.event.dx.behaviors import IEventRecurrence
 from z3c.form import util, validator
 from zope.schema import Text, TextLine, URI
-from zope.interface import Invalid
+from zope.interface import Invalid, Interface, Attribute
 
 from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IDirectory, IDirectoryItem
 from seantis.dir.events import _
 
-class ICoordinates(form.Schema):
+class ITokenAccess(Interface):
 
-    coordinates = TextLine(
-        title=_(u'Coordinates'),
-        required=False,
-    )
+    def attach_token(self, token=None):
+        "Optionally create and store the access token."
+
+    def has_access(self, request):
+        "Return true if the given request has access on the context"
+
+    def store_on_session(self):
+        "Manually stores the current token on the user's session"
+
+    def retrieve_from_session(self):
+        "Return the current token from the user's session"
 
 class IEventsDirectory(IDirectory):
     """Extends the seantis.dir.base.directory.IDirectory"""

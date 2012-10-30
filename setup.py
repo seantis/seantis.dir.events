@@ -38,7 +38,8 @@ setup(name='seantis.dir.events',
           'zope.proxy',
           'pytz',
           'python-magic',
-          'mock'
+          'mock',
+          'M2Crypto'
       ],
       entry_points="""
       [z3c.autoinclude.plugin]

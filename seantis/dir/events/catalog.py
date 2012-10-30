@@ -3,7 +3,7 @@ from five import grok
 from plone.app.event.ical import construct_calendar
 
 from seantis.dir.base.catalog import DirectoryCatalog
-from seantis.dir.base.interfaces import IDirectoryCatalog
+from seantis.dir.base.interfaces import IDirectoryCatalog, IDirectoryItemBase
 
 from seantis.dir.events import dates
 from seantis.dir.events import recurrence
@@ -29,6 +29,14 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     def sortkey(self):
         return lambda i: i.start
+
+    def query(self, **kwargs):
+        results = self.catalog(path={'query': self.path, 'depth': 1},
+            object_provides=IDirectoryItemBase.__identifier__,
+            review_state=('submitted', 'published'),
+            **kwargs
+        )
+        return results
 
     def spawn(self, realitems):
         start, end = getattr(dates.DateRanges(), self._daterange)
