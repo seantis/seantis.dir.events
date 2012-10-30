@@ -22,7 +22,6 @@
         </permission-map>
 
         <permission-map name="Modify portal content" acquired="False">
-            <permission-role>Anonymous</permission-role>
             <permission-role>Manager</permission-role>
             <permission-role>Reviewer</permission-role>
         </permission-map>
