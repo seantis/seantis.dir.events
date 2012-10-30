@@ -24,6 +24,7 @@ from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.browser.radio import RadioFieldWidget
 
 from collective.z3cform.mapwidget.widget import MapFieldWidget
+from collective.geo.contentlocations.interfaces import IGeoManager
 
 from plone.app.event.base import default_timezone
 from plone.app.event.dx.behaviors import (
@@ -37,11 +38,8 @@ from seantis.dir.events.interfaces import (
     IEventsDirectoryItem
 )
 
+from seantis.dir.events import utils
 from seantis.dir.events import _
-
-# I don't even..
-class EventBaseForm(extensible.ExtensibleForm, form.AddForm):
-    grok.baseclass()
 
 class EventBaseGroup(group.Group):
     
@@ -151,17 +149,17 @@ class LocationGroup(EventBaseGroup):
     
     label = _(u'Location')
     
-    dynamic_fields = ('coordinates', )
+    dynamic_fields = ('wkt', )
     group_fields = OrderedDict() 
     group_fields[IEventsDirectoryItem] = (
         'locality', 'street', 'housenumber', 'zipcode', 'town'
     )
-    group_fields[ICoordinates] = (
-        'coordinates',
+    group_fields[IGeoManager] = (
+        'wkt',
     )
 
     def update_dynamic_fields(self):
-        coordinates = self.fields['coordinates']
+        coordinates = self.fields['wkt']
         coordinates.widgetFactory = MapFieldWidget
 
 class InformationGroup(EventBaseGroup):
@@ -172,10 +170,10 @@ class InformationGroup(EventBaseGroup):
         'image', 'attachment_1', 'attachment_2'
     )
 
-class EventSubmissionForm(EventBaseForm):
-    grok.name('submit-event')
+class EventSubmissionForm(extensible.ExtensibleForm):
+    
+    grok.baseclass()
     grok.require('seantis.dir.events.SubmitEvents')
-    grok.context(IEventsDirectory)
 
     template = ViewPageTemplateFile('templates/form.pt')
 
@@ -187,8 +185,28 @@ class EventSubmissionForm(EventBaseForm):
         u'Send us your events and we will publish them on this website'
     )
 
+    coordinates = None
+
+    def prepare_coordinates(self, data):
+        self.coordinates = utils.verify_wkt(data['wkt']).__geo_interface__
+        del data['wkt']
+
+    def apply_coordinates(self, content):
+        c = self.coordinates
+        IGeoManager(content).setCoordinates(c['type'], c['coordinates'])
+
+
+class EventSubmissionAddForm(EventSubmissionForm, form.AddForm):
+    grok.context(IEventsDirectory)
+    grok.name('submit-event')
+
+    coordinates = None
+
     def create(self, data):
         data['timezone'] = default_timezone()
+        
+        self.prepare_coordinates(data)
+
         content = createContent('seantis.dir.events.item', **data)
 
         if IAcquirer.providedBy(content):
@@ -200,4 +218,15 @@ class EventSubmissionForm(EventBaseForm):
         # not checking the contrains means two things
         # * impossible content types could theoretically added
         # * anonymous users can post events
-        addContentToContainer(aq_inner(self.context), obj, checkConstraints=False)
+        content = addContentToContainer(aq_inner(self.context), obj, checkConstraints=False)
+        self.apply_coordinates(content)
+
+class EventSubmissionEditForm(EventSubmissionForm, form.EditForm):
+    grok.context(IEventsDirectoryItem)
+    grok.name('edit-event')
+
+    def applyChanges(self, data):
+        self.prepare_coordinates(data)
+        self.apply_coordinates(self.getContent())
+
+        super(EventSubmissionEditForm, self).applyChanges(data)

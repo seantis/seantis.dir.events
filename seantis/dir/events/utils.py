@@ -23,3 +23,12 @@ def render_ical_response(request, context, calendar):
 
 def workflow_tool():
     return getToolByName(getSite(), "portal_workflow")
+
+def verify_wkt(data):
+    try:
+        from shapely import wkt
+        geom = wkt.loads(data)
+    except ImportError:
+        from pygeoif.geometry import from_wkt
+        geom = from_wkt(data)
+    return geom
