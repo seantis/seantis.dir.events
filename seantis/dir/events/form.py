@@ -188,12 +188,19 @@ class EventSubmissionForm(extensible.ExtensibleForm):
     coordinates = None
 
     def prepare_coordinates(self, data):
-        self.coordinates = utils.verify_wkt(data['wkt']).__geo_interface__
+        if data.get('wkt'):
+            self.coordinates = utils.verify_wkt(data['wkt']).__geo_interface__
+        else:
+            self.coordinates = None
+
         del data['wkt']
 
     def apply_coordinates(self, content):
         c = self.coordinates
-        IGeoManager(content).setCoordinates(c['type'], c['coordinates'])
+        if c:
+            IGeoManager(content).setCoordinates(c['type'], c['coordinates'])
+        else:
+            IGeoManager(content).removeCoordinates()
 
 
 class EventSubmissionAddForm(EventSubmissionForm, form.AddForm):
