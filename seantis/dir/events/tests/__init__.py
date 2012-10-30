@@ -1,8 +1,8 @@
 import unittest2 as unittest
-
 from datetime import datetime, timedelta
 
 from AccessControl import getSecurityManager
+from AccessControl.unauthorized import Unauthorized
 from plone.testing import z2
 from plone.dexterity.utils import createContentInContainer
 from plone.app import testing
@@ -11,7 +11,7 @@ from Products.CMFCore import permissions
 
 from zope.component.hooks import getSite
 
-from seantis.dir.events.tests.layer import INTEGRATION_TESTING
+from seantis.dir.events.tests.layer import INTEGRATION_TESTING, FUNCTIONAL_TESTING
 
 class IntegrationTestCase(unittest.TestCase):
     
@@ -76,3 +76,68 @@ class IntegrationTestCase(unittest.TestCase):
 
     def may_view(self, obj):
         return self.has_permission(obj, permissions.View)
+
+from plone.testing.z2 import Browser
+
+class BetterBrowser(Browser):
+
+    portal = None
+
+    def login(self, user, password):
+        self.open(self.portal.absolute_url() + "/login_form")
+        self.getControl(name='__ac_name').value = user
+        self.getControl(name='__ac_password').value = password
+        self.getControl(name='submit').click()
+
+        assert 'logout' in self.contents
+
+    def logout(self):
+        self.open(self.portal.absolute_url() + "/logout")
+
+        assert 'logged out' in self.contents
+
+    def login_admin(self):
+        self.login('admin', 'secret') 
+
+    def login_testuser(self):
+        self.login('test-user', 'secret')
+
+    def assert_unauthorized(self, url):
+        self.portal.error_log._ignored_exceptions = ()
+        self.portal.acl_users.credentials_cookie_auth.login_path = ""
+
+        exception = None
+        try:
+            self.open(url)
+        except Unauthorized, e:
+            exception = e
+
+        assert exception is not None
+
+class FunctionalTestCase(IntegrationTestCase):
+
+    layer = FUNCTIONAL_TESTING
+
+    def setUp(self):
+        self.app = self.layer['app']
+        self.portal = self.layer['portal']
+    
+    def new_browser(self):
+        browser = BetterBrowser(self.app)
+        browser.portal = self.portal
+        browser.handleErrors = False
+
+        self.portal.error_log._ignored_exceptions = ()
+
+        def raising(self, info):
+            import traceback
+            traceback.print_tb(info[2])
+            print info[1]
+
+        from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
+        SiteErrorLog.raising = raising
+
+        return browser
+
+    def tearDown(self):
+        pass
