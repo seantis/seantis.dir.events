@@ -187,8 +187,6 @@ class EventSubmissionForm(EventBaseForm):
         u'Send us your events and we will publish them on this website'
     )
 
-    preview_subscribers = dict()
-
     def create(self, data):
         data['timezone'] = default_timezone()
         content = createContent('seantis.dir.events.item', **data)
