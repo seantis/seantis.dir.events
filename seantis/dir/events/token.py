@@ -22,9 +22,8 @@ class TokenAccess(grok.Adapter):
 
     def has_access(self, request):
 
-        assert hasattr(self.context, 'access_token')
-
-        print self.context.access_token
+        if not hasattr(self.context, 'access_token'):
+            return False
 
         request_token = request.get('token', 'missing')
         request_token = request_token.replace('-', '')
@@ -43,6 +42,15 @@ class TokenAccess(grok.Adapter):
     def retrieve_from_session(self):
         return get_session(self.context, 'events-access-token') or 'missing'
 
+    def remove_from_session(self):
+        set_session(self.context, 'events-access-token', None)
+
+    def clear_token(self):
+        if hasattr(self.context, 'access_token'):
+            del self.context.access_token
+        
+        self.remove_from_session()
+
 def apply_token(context):
     token_access = getAdapter(context, ITokenAccess)
     token_access.attach_token()
@@ -55,3 +63,7 @@ def verify_token(context, request):
     
     if not token_access.has_access(request):
         raise Unauthorized()
+
+def clear_token(context):
+    token_access = getAdapter(context, ITokenAccess)
+    token_access.clear_token()

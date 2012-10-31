@@ -29,6 +29,12 @@ class ITokenAccess(Interface):
     def retrieve_from_session(self):
         "Return the current token from the user's session"
 
+    def remove_from_session(self):
+        "Remove the current token from the user's session"
+
+    def clear_token(self):
+        "Remove the token from context and session."
+
 class IEventsDirectory(IDirectory):
     """Extends the seantis.dir.base.directory.IDirectory"""
 

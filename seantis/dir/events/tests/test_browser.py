@@ -35,18 +35,20 @@ class BrowserTestCase(FunctionalTestCase):
         fourchan.getControl(name='form.widgets.title').value = 'Stammtisch'
         fourchan.getControl(name='form.widgets.short_description').value = 'Socializing Yo'
         
-        fourchan.getControl('Save').click()
+        fourchan.getControl('Preview Event').click()
 
         # we should've been redirected at this point
         self.assertTrue(fourchan.url.endswith('veranstaltungen'))
 
         # and we should be able to open the view
-        fourchan.open(fourchan.url + '/stammtisch')
+        viewurl = fourchan.url + '/stammtisch'
+        fourchan.open(viewurl)
 
         # and make changes to the item
+        editurl = viewurl + '/edit-event'
         fourchan.open(fourchan.url + '/edit-event')
         fourchan.getControl(name='form.widgets.short_description').value = 'Serious Business'
-        fourchan.getControl('Save').click()
+        fourchan.getControl('Update Event Preview').click()
 
         self.assertFalse('edit-event' in fourchan.url)
         self.assertTrue('Serious Business' in fourchan.contents)
@@ -63,3 +65,11 @@ class BrowserTestCase(FunctionalTestCase):
 
         # not event the admin at this point (not sure about that one yet)
         browser.assert_unauthorized(baseurl + '/veranstaltungen/stammtisch')
+
+        # if the user decides to cancel the event before submitting it, he
+        # loses the right to access the event (will be cleaned up by cronjob)
+        fourchan.open(editurl)
+        fourchan.getControl('Cancel Event Submission').click()
+
+        fourchan.assert_unauthorized(viewurl)
+        fourchan.assert_unauthorized(editurl)

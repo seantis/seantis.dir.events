@@ -14,12 +14,15 @@ from plone.formwidget.recurrence.z3cform.widget import (
     RecurrenceWidget, ParameterizedWidgetFactory
 )
 
+from Products.statusmessages.interfaces import IStatusMessage
+
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 from zope.schema import Choice
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
+from zope.component.interfaces import ComponentLookupError
 
-from z3c.form import field, group
+from z3c.form import field, group, button
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.browser.radio import RadioFieldWidget
 
@@ -33,12 +36,11 @@ from plone.app.event.dx.behaviors import (
 )
 
 from seantis.dir.events.interfaces import (
-    ITokenAccess,
     IEventsDirectory, 
     IEventsDirectoryItem,
 )
 
-from seantis.dir.events.token import verify_token, apply_token
+from seantis.dir.events.token import verify_token, apply_token, clear_token
 from seantis.dir.events import utils
 from seantis.dir.events import _
 
@@ -188,6 +190,10 @@ class EventSubmissionForm(extensible.ExtensibleForm):
 
     coordinates = None
 
+    @property
+    def directory(self):
+        raise NotImplementedError
+
     def prepare_coordinates(self, data):
         if data.get('wkt'):
             self.coordinates = utils.verify_wkt(data['wkt']).__geo_interface__
@@ -203,11 +209,24 @@ class EventSubmissionForm(extensible.ExtensibleForm):
         else:
             IGeoManager(content).removeCoordinates()
 
+    def handle_cancel(self):
+        try:
+            clear_token(self.context)
+        except ComponentLookupError:
+            pass
+        IStatusMessage(self.request).add(_(u"Event submission cancelled"), "info")
+        self.request.response.redirect(self.directory.absolute_url())
+
 class EventSubmissionAddForm(EventSubmissionForm, form.AddForm):
     grok.context(IEventsDirectory)
     grok.name('submit-event')
 
     coordinates = None
+    content = None
+
+    @property
+    def directory(self):
+        return self.context
 
     def create(self, data):
         data['timezone'] = default_timezone()
@@ -225,15 +244,39 @@ class EventSubmissionAddForm(EventSubmissionForm, form.AddForm):
         # not checking the contrains means two things
         # * impossible content types could theoretically added
         # * anonymous users can post events
-        content = addContentToContainer(aq_inner(self.context), obj, checkConstraints=False)
+        self.content = addContentToContainer(
+            aq_inner(self.context), obj, checkConstraints=False
+        )
+
+        self.apply_coordinates(self.content)
+        apply_token(self.content)
+
+    @button.buttonAndHandler(_('Preview Event'), name='save')
+    def handleAdd(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        obj = self.createAndAdd(data)
         
-        self.apply_coordinates(content)
-        
-        apply_token(content)
+        if obj is not None:
+            self._finishedAdd = True
+            IStatusMessage(self.request).addStatusMessage(
+                _(u"Preview created"), "info"
+            )
+
+    @button.buttonAndHandler(_(u'Cancel Event Submission'), name='cancel')
+    def handleCancel(self, action):
+        self.handle_cancel()
 
 class EventSubmissionEditForm(EventSubmissionForm, form.EditForm):
     grok.context(IEventsDirectoryItem)
     grok.name('edit-event')
+
+    @property
+    def directory(self):
+        return self.context.aq_parent
 
     def update(self, *args, **kwargs):
         verify_token(self.context, self.request)
@@ -243,4 +286,24 @@ class EventSubmissionEditForm(EventSubmissionForm, form.EditForm):
         self.prepare_coordinates(data)
         self.apply_coordinates(self.getContent())
 
-        super(EventSubmissionEditForm, self).applyChanges(data)
+        return super(EventSubmissionEditForm, self).applyChanges(data)
+
+    @button.buttonAndHandler(_('Update Event Preview'), name='save')
+    def handleApply(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+        
+        changes = self.applyChanges(data)
+
+        if changes:
+            IStatusMessage(self.request).add(_(u"Preview updated"), "info")
+        else:
+            IStatusMessage(self.request).add(_(u"No changes made"), "info")
+
+        self.request.response.redirect(self.context.absolute_url())
+
+    @button.buttonAndHandler(_(u'Cancel Event Submission'), name='cancel')
+    def handleCancel(self, action):
+        self.handle_cancel()
