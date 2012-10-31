@@ -289,8 +289,8 @@ class EventSubmissionAddForm(EventSubmissionForm, form.AddForm):
         if preview_url:
             IStatusMessage(self.request).add(_(u"""
                 You are trying to create a new event even though you are still
-                working on an old event. Unfortunately we have to get rid
-                of your changes and redirect you to the event you are already
+                working on an old event. Unfortunately we were unable to store
+                your changes and have to redirect you to the event you are already
                 previewing. Plese use the "Change Event" button on the
                 preview to change your event."""), "warning")
 
