@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="seantis.dir.events"
+>
+
+<body>
+
+<metal:main fill-slot="main">
+<tal:main-macro metal:define-macro="main">
+        
+<h1 class="documentFirstHeading" tal:content="view/label | nothing" />
+
+<div class="event-submit-help">
+    <p i18n:translate="">
+        You are almost done! Please have a look a the previews below. If they are
+        to your liking, press "Submit Event" to complete your request.
+    </p>
+    <p i18n:translate="">
+        If you find things to change, click on "change event" to adjust your request
+        before sending it to us.
+    </p>
+
+    <tal:comment replace="nothing">
+        Use javascript because we do want a button (uniformity) but cannot rely on form-submit
+        working (because browsers strip the query string on form submit)
+    </tal:comment>
+
+    <input id="change-event" name="change-event" type="submit" tal:attributes="onclick python: view.onclick_url(view.edit_url); data-url python: view.edit_url" i18n:attributes="value" value="Change Event" />
+    <br/>
+    <br/>
+</div>
+
+<div class="event-submit-form">
+    <metal:block use-macro="context/@@ploneform-macros/titlelessform" />
+</div>
+
+</tal:main-macro>
+</metal:main>
+</body>
+</html>

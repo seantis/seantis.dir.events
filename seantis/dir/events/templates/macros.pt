@@ -25,6 +25,8 @@
             <h2>
               <tal:block content="o/title" />
             </h2>
+
+            <div class="event-date"><span tal:content="python: o.human_date(request)"></span> <span tal:content="python: o.human_daterange(request)"></span></div>
           </div>
 
           <div class="event-image" tal:condition="o/image">

@@ -3,6 +3,8 @@ from datetime import datetime
 
 from five import grok
 
+from Products.CMFCore.utils import getToolByName
+
 from plone.memoize import view
 from plone.app.event.ical import construct_calendar
 from plone.event.interfaces import IICalendarEventComponent
@@ -38,6 +40,21 @@ class EventsDirectoryItem(item.DirectoryItem):
     @property
     def state(self):
         return utils.workflow_tool().getInfoFor(self, 'review_state')
+
+    def do_action(self, action):
+        workflowTool = getToolByName(self, "portal_workflow")
+        workflowTool.doActionFor(self, action)
+
+    def submit(self):
+        self.do_action("submit")
+
+    def publish(self):
+        self.do_action("publish")
+
+    def archive(self):
+        self.do_action("archive")
+        
+        
 
 class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.context(IEventsDirectoryItem)

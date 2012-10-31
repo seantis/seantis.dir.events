@@ -67,3 +67,11 @@ def verify_token(context, request):
 def clear_token(context):
     token_access = getAdapter(context, ITokenAccess)
     token_access.clear_token()
+
+def append_token(context, url):
+    if not hasattr(context, 'access_token'):
+        return url
+
+    querychar = '?' if '?' not in url else '&'
+
+    return url + querychar + 'token=' + context.access_token

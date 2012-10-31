@@ -17,12 +17,12 @@ from plone.formwidget.recurrence.z3cform.widget import (
 from Products.statusmessages.interfaces import IStatusMessage
 
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
-from zope.schema import Choice
+from zope.schema import Choice, TextLine
 from zope.schema.interfaces import IContextSourceBinder
 from zope.schema.vocabulary import SimpleVocabulary
 from zope.component.interfaces import ComponentLookupError
 
-from z3c.form import field, group, button
+from z3c.form import field, group, button, widget
 from z3c.form.browser.checkbox import CheckBoxFieldWidget
 from z3c.form.browser.radio import RadioFieldWidget
 
@@ -40,7 +40,10 @@ from seantis.dir.events.interfaces import (
     IEventsDirectoryItem,
 )
 
-from seantis.dir.events.token import verify_token, apply_token, clear_token
+from seantis.dir.events.token import (
+    verify_token, apply_token, clear_token, append_token
+)
+
 from seantis.dir.events import utils
 from seantis.dir.events import _
 
@@ -266,6 +269,12 @@ class EventSubmissionAddForm(EventSubmissionForm, form.AddForm):
                 _(u"Preview created"), "info"
             )
 
+            preview_url = self.context.absolute_url() + '/' + obj.id
+            preview_url += '/preview-event'
+            preview_url = append_token(obj, preview_url)
+
+            self.request.response.redirect(preview_url)
+
     @button.buttonAndHandler(_(u'Cancel Event Submission'), name='cancel')
     def handleCancel(self, action):
         self.handle_cancel()
@@ -276,7 +285,7 @@ class EventSubmissionEditForm(EventSubmissionForm, form.EditForm):
 
     @property
     def directory(self):
-        return self.context.aq_parent
+        return self.context.directory
 
     def update(self, *args, **kwargs):
         verify_token(self.context, self.request)
@@ -302,7 +311,71 @@ class EventSubmissionEditForm(EventSubmissionForm, form.EditForm):
         else:
             IStatusMessage(self.request).add(_(u"No changes made"), "info")
 
-        self.request.response.redirect(self.context.absolute_url())
+        preview_url = self.context.absolute_url() + '/preview-event'
+        self.request.response.redirect(append_token(self.context, preview_url))
+
+    @button.buttonAndHandler(_(u'Cancel Event Submission'), name='cancel')
+    def handleCancel(self, action):
+        self.handle_cancel()
+
+class IPreview(form.Schema):
+    title = TextLine(required=False)
+
+class DetailPreviewWidget(widget.Widget):
+
+    _template = ViewPageTemplateFile('templates/previewdetail.pt')
+
+    def render(self):
+        self.directory = self.context.parent()
+        return self._template(self)
+
+def DetailPreviewFieldWidget(field, request):
+    """IFieldWidget factory for MapWidget."""
+    return widget.FieldWidget(field, DetailPreviewWidget(request))
+
+class PreviewGroup(EventBaseGroup):
+    
+    label = _(u'Detail Preview')
+
+    dynamic_fields = ('title', )
+
+    group_fields = OrderedDict()
+    group_fields[IPreview] = ('title', )
+
+    def update_dynamic_fields(self):
+        self.fields['title'].widgetFactory = DetailPreviewFieldWidget
+
+class PreviewForm(EventSubmissionForm, form.AddForm):
+    grok.context(IEventsDirectoryItem)
+    grok.name('preview-event')
+
+    groups = (PreviewGroup, )
+    template = ViewPageTemplateFile('templates/previewform.pt')
+
+    label = _(u'Event Submission Preview')
+    description = u''
+
+    @property
+    def directory(self):
+        return self.context.aq_parent
+
+    @property
+    def edit_url(self):
+        return append_token(self.context, self.context.absolute_url() + '/edit-event')
+
+    def onclick_url(self, url):
+        return "location.href='%s';" % url
+
+    def update(self, *args, **kwargs):
+        verify_token(self.context, self.request)
+        super(PreviewForm, self).update(*args, **kwargs)
+
+    @button.buttonAndHandler(_('Submit Event'), name='save')
+    def handleSubmit(self, action):
+        clear_token(self.context)
+        self.context.submit()
+        IStatusMessage(self.request).add(_(u"Event submitted"), "info")
+        self.request.response.redirect(self.directory.absolute_url())
 
     @button.buttonAndHandler(_(u'Cancel Event Submission'), name='cancel')
     def handleCancel(self, action):

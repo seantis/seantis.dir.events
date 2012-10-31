@@ -106,13 +106,19 @@ class BetterBrowser(Browser):
         self.portal.error_log._ignored_exceptions = ()
         self.portal.acl_users.credentials_cookie_auth.login_path = ""
 
-        exception = None
+        unauthorized = False
         try:
             self.open(url)
-        except Unauthorized, e:
-            exception = e
+        except Exception, e:
 
-        assert exception is not None
+            # zope does not always raise unathorized exceptions with the correct
+            # class signature, so we need to do this thing:
+            unauthorized = e.__repr__().startswith('Unauthorized')
+            
+            if not unauthorized:
+                raise
+
+        assert unauthorized
 
 class FunctionalTestCase(IntegrationTestCase):
 

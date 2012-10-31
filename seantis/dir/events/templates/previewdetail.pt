@@ -5,7 +5,7 @@
       i18n:domain="seantis.dir.events"
       tal:omit-tag="" lang="en" xml:lang="en">
   <tal:block define="
-    occurrence python: view.preview;
+    occurrence python: view.context.as_occurrence();
     is_preview python: True;
   ">
     <metal:use use-macro="view/directory/@@seantis-dir-events-macros/macros/event-detail"></metal:use>
