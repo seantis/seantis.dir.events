@@ -102,23 +102,29 @@ class BetterBrowser(Browser):
     def login_testuser(self):
         self.login('test-user', 'secret')
 
-    def assert_unauthorized(self, url):
+    def assert_http_exception(self, url, exception):
         self.portal.error_log._ignored_exceptions = ()
         self.portal.acl_users.credentials_cookie_auth.login_path = ""
 
-        unauthorized = False
+        expected = False
         try:
             self.open(url)
         except Exception, e:
 
             # zope does not always raise unathorized exceptions with the correct
             # class signature, so we need to do this thing:
-            unauthorized = e.__repr__().startswith('Unauthorized')
+            expected = e.__repr__().startswith(exception)
             
-            if not unauthorized:
+            if not expected:
                 raise
 
-        assert unauthorized
+        assert expected
+
+    def assert_unauthorized(self, url):
+        self.assert_http_exception(url, 'Unauthorized')
+
+    def assert_notfound(self, url):
+        self.assert_http_exception(url, 'NotFound')
 
 class FunctionalTestCase(IntegrationTestCase):
 

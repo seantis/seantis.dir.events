@@ -73,20 +73,20 @@ class BrowserTestCase(FunctionalTestCase):
 
         # other anonymous users may not access the view or the preview
         google_robot = self.new_browser()
-        google_robot.assert_unauthorized(baseurl + '/veranstaltungen/stammtisch')
-        google_robot.assert_unauthorized(baseurl + '/veranstaltungen/stammtisch/preview-event')
+        google_robot.assert_notfound(baseurl + '/veranstaltungen/stammtisch')
+        google_robot.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview-event')
 
         # not event the admin at this point (not sure about that one yet)
-        browser.assert_unauthorized(baseurl + '/veranstaltungen/stammtisch')
-        browser.assert_unauthorized(baseurl + '/veranstaltungen/stammtisch/preview-event')
+        browser.assert_notfound(baseurl + '/veranstaltungen/stammtisch')
+        browser.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview-event')
 
         # if the user decides to cancel the event before submitting it, he
         # loses the right to access the event (will be cleaned up by cronjob)
         fourchan.getControl('Cancel Event Submission').click()
 
-        fourchan.assert_unauthorized(baseurl + '/veranstaltungen/stammtisch')
-        fourchan.assert_unauthorized(baseurl + '/veranstaltungen/stammtisch/preview-event')
-        fourchan.assert_unauthorized(baseurl + '/veranstaltungen/stammtisch/edit-event')
+        fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch')
+        fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview-event')
+        fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch/edit-event')
 
         # since we cancelled we must now create a new event to
         # test the submission process
@@ -107,5 +107,6 @@ class BrowserTestCase(FunctionalTestCase):
         browser.open(baseurl + '/veranstaltungen')
         self.assertTrue('YOLO' in browser.contents)
 
-        # the user may no longer access the event at this point
+        # the user may no longer access the event at this point, though
+        # it is no longer an inexistant resource
         new.assert_unauthorized(baseurl + '/veranstaltungen/submitted-event')

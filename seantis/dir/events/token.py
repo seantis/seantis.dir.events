@@ -6,6 +6,8 @@ from zope.component import getAdapter
 
 from M2Crypto.m2 import rand_bytes
 
+from zExceptions import NotFound
+
 from seantis.dir.base.session import get_session, set_session
 from seantis.dir.events.interfaces import ITokenAccess, IEventsDirectoryItem
 
@@ -62,7 +64,7 @@ def verify_token(context, request):
     token_access = getAdapter(context, ITokenAccess)
     
     if not token_access.has_access(request):
-        raise Unauthorized()
+        raise NotFound()
 
 def clear_token(context):
     token_access = getAdapter(context, ITokenAccess)
