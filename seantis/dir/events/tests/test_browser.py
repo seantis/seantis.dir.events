@@ -52,7 +52,7 @@ class BrowserTestCase(FunctionalTestCase):
         # in preview, a redirect should happen
         oldurl = fourchan.url
 
-        fourchan.open(baseurl + '/veranstaltungen/submit-event')
+        fourchan.open(baseurl + '/veranstaltungen/@@submit-event')
         fourchan.getControl(name='form.widgets.title').value = 'New'
         fourchan.getControl(name='form.widgets.short_description').value = 'New'
         
@@ -105,7 +105,7 @@ class BrowserTestCase(FunctionalTestCase):
         # since we cancelled we must now create a new event to
         # test the submission process
         new = self.new_browser()
-        new.open(baseurl + '/veranstaltungen/submit-event')
+        new.open(baseurl + '/veranstaltungen/@@submit-event')
 
         new.getControl(name='form.widgets.title').value = "Submitted Event"
         new.getControl(name='form.widgets.short_description').value = "YOLO"

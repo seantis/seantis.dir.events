@@ -95,7 +95,7 @@
               </metal:use>
               <div class="your-event">
                 <p i18n:translate="">Dou you have an event to share?</p>
-                <a i18n:translate="" tal:attributes="href python: context.absolute_url() + '/submit-event'">Submit Your Event</a>
+                <a i18n:translate="" tal:attributes="href python: context.absolute_url() + '/@@submit-event'">Submit Your Event</a>
               </div>
             </div>
 
