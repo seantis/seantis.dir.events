@@ -23,15 +23,6 @@ class ITokenAccess(Interface):
     def has_access(self, request):
         "Return true if the given request has access on the context"
 
-    def store_on_session(self):
-        "Manually stores the current token on the user's session"
-
-    def retrieve_from_session(self):
-        "Return the current token from the user's session"
-
-    def remove_from_session(self):
-        "Remove the current token from the user's session"
-
     def clear_token(self):
         "Remove the token from context and session."
 

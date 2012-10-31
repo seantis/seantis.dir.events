@@ -48,6 +48,20 @@ class BrowserTestCase(FunctionalTestCase):
         # the preview should contain the entered information
         self.assertTrue('Socializing Yo' in fourchan.contents)
 
+        # if the user tries to submit another event while this one is still
+        # in preview, a redirect should happen
+        oldurl = fourchan.url
+
+        fourchan.open(baseurl + '/veranstaltungen/submit-event')
+        fourchan.getControl(name='form.widgets.title').value = 'New'
+        fourchan.getControl(name='form.widgets.short_description').value = 'New'
+        
+        fourchan.getControl('Preview Event').click()
+
+        self.assertTrue('You are trying to create a new event' in fourchan.contents)
+
+        fourchan.open(oldurl)
+
         # there's a change-event button which can't be found by getControl
         # which contains onclick javascript code as well as a data attribute
         # with the url of the button

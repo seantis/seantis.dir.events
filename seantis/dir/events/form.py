@@ -41,7 +41,7 @@ from seantis.dir.events.interfaces import (
 )
 
 from seantis.dir.events.token import (
-    verify_token, apply_token, clear_token, append_token
+    verify_token, apply_token, clear_token, append_token, event_by_token
 )
 
 from seantis.dir.events import utils
@@ -254,11 +254,47 @@ class EventSubmissionAddForm(EventSubmissionForm, form.AddForm):
         self.apply_coordinates(self.content)
         apply_token(self.content)
 
+    def show_preview(self):
+        """Return the url to the edit form if the user should be redirected
+        there. Otherwise return None.
+
+        The user should be redirected if he has a token in his session and
+        there's an object that belongs to that token. This should
+        take care of some instances of hitting the back button and ending
+        up in the wrong form after submitting the initial draft.
+
+        However, not every browser will call again (though they should
+        since onbeforeunload is used), so in some cases this is a problem.
+
+        """
+
+        event = event_by_token(self.directory)
+        if event:
+            return append_token(event, event.absolute_url() + '/preview-event')
+        else:
+            return None
+
     @button.buttonAndHandler(_('Preview Event'), name='save')
     def handleAdd(self, action):
         data, errors = self.extractData()
         if errors:
             self.status = self.formErrorsMessage
+            return
+
+        # the user is probably on the wrong form in this case
+        # unfortunately there's not a whole lot we can do except 
+        # to inform the user. reposting the data to the other form
+        # would be the only possiblity and I just feel too dirty doing it
+        preview_url = self.show_preview()
+        if preview_url:
+            IStatusMessage(self.request).add(_(u"""
+                You are trying to create a new event even though you are still
+                working on an old event. Unfortunately we have to get rid
+                of your changes and redirect you to the event you are already
+                previewing. Plese use the "Change Event" button on the
+                preview to change your event."""), "warning")
+
+            self.request.response.redirect(preview_url)
             return
 
         obj = self.createAndAdd(data)

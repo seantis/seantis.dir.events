@@ -1,12 +1,13 @@
 from uuid import UUID
 from five import grok
 
-from AccessControl.unauthorized import Unauthorized
+from zope.component.hooks import getSite
 from zope.component import getAdapter
+from zExceptions import NotFound
 
 from M2Crypto.m2 import rand_bytes
 
-from zExceptions import NotFound
+from Products.CMFCore.utils import getToolByName
 
 from seantis.dir.base.session import get_session, set_session
 from seantis.dir.events.interfaces import ITokenAccess, IEventsDirectoryItem
@@ -20,7 +21,7 @@ class TokenAccess(grok.Adapter):
         assert token != 'missing'
 
         self.context.access_token = token or UUID(bytes=rand_bytes(16)).hex
-        self.store_on_session()
+        store_on_session(self.context)
 
     def has_access(self, request):
 
@@ -31,27 +32,27 @@ class TokenAccess(grok.Adapter):
         request_token = request_token.replace('-', '')
 
         if request_token == self.context.access_token:
-            self.store_on_session()
+            store_on_session(self.context)
             return True
 
-        session_token = self.retrieve_from_session()
+        session_token = retrieve_from_session()
         return session_token == self.context.access_token
-
-    def store_on_session(self):
-        assert self.context.access_token
-        set_session(self.context, 'events-access-token', self.context.access_token)
-
-    def retrieve_from_session(self):
-        return get_session(self.context, 'events-access-token') or 'missing'
-
-    def remove_from_session(self):
-        set_session(self.context, 'events-access-token', None)
 
     def clear_token(self):
         if hasattr(self.context, 'access_token'):
             del self.context.access_token
         
-        self.remove_from_session()
+        remove_from_session()
+
+def store_on_session(context):
+    assert context.access_token
+    set_session(getSite(), 'events-access-token', context.access_token)
+
+def retrieve_from_session():
+    return get_session(getSite(), 'events-access-token') or 'missing'
+
+def remove_from_session():
+    set_session(getSite(), 'events-access-token', None)
 
 def apply_token(context):
     token_access = getAdapter(context, ITokenAccess)
@@ -77,3 +78,29 @@ def append_token(context, url):
     querychar = '?' if '?' not in url else '&'
 
     return url + querychar + 'token=' + context.access_token
+
+def event_by_token(directory, token=None):
+
+    token = token or retrieve_from_session()
+
+    if token == 'missing':
+        return None
+
+    catalog = getToolByName(directory, 'portal_catalog')
+    path = '/'.join(directory.getPhysicalPath())
+
+    results = catalog(path={'query': path, 'depth': 1},
+        object_provides=IEventsDirectoryItem.__identifier__,
+        review_state='preview',
+    )
+
+    for result in results:
+        obj =result.getObject()
+
+        if not hasattr(obj, 'access_token'):
+            continue
+
+        if obj.access_token == token:
+            return obj
+
+    return None
