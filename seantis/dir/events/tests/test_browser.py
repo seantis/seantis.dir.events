@@ -1,5 +1,3 @@
-import re
-
 from seantis.dir.events.tests import FunctionalTestCase
 
 class BrowserTestCase(FunctionalTestCase):
@@ -62,17 +60,16 @@ class BrowserTestCase(FunctionalTestCase):
 
         fourchan.open(oldurl)
 
-        # there's a change-event button which can't be found by getControl
-        # which contains onclick javascript code as well as a data attribute
-        # with the url of the button
+        # there's a change-event button which submits a GET request to
+        # the edit form using the token in the request
 
-        edit_url = re.search('data-url="(.*?)"', fourchan.contents).groups()[0]
-        self.assertTrue('edit-event' in edit_url)
+        fourchan.getControl('Change Event').click()
+        self.assertTrue('token=' in fourchan.url)
+        self.assertTrue('edit-event' in fourchan.url)
 
-        # we should be able to go back to the edit form, change some things
+        # we should be able to change some things
         # and come back to the url to find those changes
 
-        fourchan.open(edit_url)
         fourchan.getControl(name='form.widgets.short_description').value = 'Serious Business'
         fourchan.getControl('Update Event Preview').click()
 

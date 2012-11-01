@@ -28,21 +28,29 @@ class TokenAccess(grok.Adapter):
         if not hasattr(self.context, 'access_token'):
             return False
 
-        request_token = request.get('token', 'missing')
-        request_token = request_token.replace('-', '')
-
-        if request_token == self.context.access_token:
+        token = current_token(request)
+        if token == self.context.access_token:
             store_on_session(self.context)
             return True
 
-        session_token = retrieve_from_session()
-        return session_token == self.context.access_token
+        return False
 
     def clear_token(self):
         if hasattr(self.context, 'access_token'):
             del self.context.access_token
         
         remove_from_session()
+
+def current_token(request):
+    token = request.get('token', 'missing')
+
+    if token == 'missing':
+        try:
+            token = retrieve_from_session()
+        except AttributeError:
+            pass
+
+    return token.replace('-', '')
 
 def store_on_session(context):
     assert context.access_token

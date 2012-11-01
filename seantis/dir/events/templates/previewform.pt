@@ -23,14 +23,10 @@
         before sending it to us.
     </p>
 
-    <tal:comment replace="nothing">
-        Use javascript because we do want a button (uniformity) but cannot rely on form-submit
-        working (because browsers strip the query string on form submit)
-    </tal:comment>
-
-    <input id="change-event" name="change-event" type="submit" tal:attributes="onclick python: view.onclick_url(view.edit_url); data-url python: view.edit_url" i18n:attributes="value" value="Change Event" />
-    <br/>
-    <br/>
+    <form class="change-event" method="get" tal:attributes="action python: context.absolute_url() + '/edit-event'">
+      <input id="token" name="token" type="hidden" tal:attributes="value view/current_token" />
+      <input id="change-event" type="submit" i18n:attributes="value" value="Change Event" />
+    </form>
 </div>
 
 <div class="event-submit-form">

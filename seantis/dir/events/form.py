@@ -41,7 +41,7 @@ from seantis.dir.events.interfaces import (
 )
 
 from seantis.dir.events.token import (
-    verify_token, apply_token, clear_token, append_token, event_by_token
+    verify_token, apply_token, clear_token, append_token, event_by_token, current_token
 )
 
 from seantis.dir.events import utils
@@ -321,7 +321,7 @@ class EventSubmissionEditForm(EventSubmissionForm, form.EditForm):
 
     @property
     def directory(self):
-        return self.context.directory
+        return self.context.parent()
 
     def update(self, *args, **kwargs):
         verify_token(self.context, self.request)
@@ -393,14 +393,10 @@ class PreviewForm(EventSubmissionForm, form.AddForm):
 
     @property
     def directory(self):
-        return self.context.aq_parent
+        return self.context.parent()
 
-    @property
-    def edit_url(self):
-        return append_token(self.context, self.context.absolute_url() + '/edit-event')
-
-    def onclick_url(self, url):
-        return "location.href='%s';" % url
+    def current_token(self):
+        return current_token(self.request)
 
     def update(self, *args, **kwargs):
         verify_token(self.context, self.request)
