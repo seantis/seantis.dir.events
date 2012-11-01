@@ -1,0 +1,13 @@
+<div xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      i18n:domain="seantis.dir.events"
+      tal:omit-tag="" lang="en" xml:lang="en">
+  <tal:block define="
+    groups python: view.occurrence_groups;
+    is_preview python: True;
+  ">
+    <metal:use use-macro="view/directory/@@seantis-dir-events-macros/macros/event-list"></metal:use>
+  </tal:block>
+</div>

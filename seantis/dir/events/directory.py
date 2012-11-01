@@ -13,6 +13,7 @@ from seantis.dir.base import directory
 from seantis.dir.base import session
 
 from seantis.dir.events.interfaces import IEventsDirectory
+from seantis.dir.events.recurrence import grouped_occurrences
 from seantis.dir.events import dates
 from seantis.dir.events import utils
 from seantis.dir.events import _
@@ -106,20 +107,8 @@ class EventsDirectoryView(directory.View):
             super(EventsDirectoryView, self).update(**kwargs)
 
     def groups(self, items):
-        """ Returns the given items grouped by human_date. """
-        def groupkey(item):
-            date = item.human_date(self.request)
-            return date
-
-        groups = groupby(items, groupkey)
-        
-        # Zope Page Templates don't know how to handle generators :-|
-        result = OrderedDict()
-
-        for group in groups:
-            result[group[0]] = [i for i in group[1]]
-            
-        return result
+        """ Returns the given occurrences grouped by human_date. """
+        return grouped_occurrences(items, self.request)
 
     def ical_url(self, for_all):
         """ Returns the ical url of the current view. """

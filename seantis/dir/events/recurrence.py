@@ -1,8 +1,8 @@
-from pytz import timezone
+from itertools import groupby
+from collections import OrderedDict
 from datetime import datetime, timedelta
 
 from zope.proxy import ProxyBase
-from dateutil.rrule import rrulestr
 from urllib import urlencode
 
 from plone.event.recurrence import recurrence_sequence_ical
@@ -113,6 +113,22 @@ class Occurrence(ProxyBase):
         
         return dates.human_daterange(start, end, request)
 
+def grouped_occurrences(occurrences, request):
+    """ Returns the given occurrences grouped by human_date. """
+    
+    def groupkey(item):
+        date = item.human_date(request)
+        return date
+
+    groups = groupby(occurrences, groupkey)
+    
+    # Zope Page Templates don't know how to handle generators :-|
+    result = OrderedDict()
+
+    for group in groups:
+        result[group[0]] = [i for i in group[1]]
+        
+    return result
 
 def pick_occurrence(item, start):
     """ Returns the occurrence at startdate. This suffices because two

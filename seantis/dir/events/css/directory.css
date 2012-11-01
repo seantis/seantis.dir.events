@@ -280,14 +280,14 @@
     color: #777;
 }
 
-.event-state-preview {
-    background-color: lightblue;
-}
-
 .event-state-submitted {
-    background-color: orange;
+    background-color: #eee;
 }
 
 .event-state-archived {
     background-color: grey;
+}
+
+form.change-event {
+    margin-bottom: 20px;   
 }

@@ -47,7 +47,8 @@ from seantis.dir.events.token import (
     verify_token, apply_token, clear_token, append_token, event_by_token, current_token
 )
 
-from seantis.dir.events import utils
+from seantis.dir.events import utils, dates
+from seantis.dir.events.recurrence import occurrences, grouped_occurrences
 from seantis.dir.events import _
 
 class EventBaseGroup(group.Group):
@@ -424,9 +425,25 @@ class DetailPreviewWidget(widget.Widget):
         self.directory = self.context.parent()
         return self._template(self)
 
+class ListPreviewWidget(DetailPreviewWidget):
+
+    _template = ViewPageTemplateFile('templates/previewlist.pt')
+    show_map = False
+
+    @property
+    def occurrence_groups(self):
+        dr = dates.DateRanges()
+        start, end = dr.this_year[0], dr.next_year[1]
+        result = grouped_occurrences(occurrences(self.context, start, end), self.request)
+        return result
+
 def DetailPreviewFieldWidget(field, request):
     """IFieldWidget factory for MapWidget."""
     return widget.FieldWidget(field, DetailPreviewWidget(request))
+
+def ListPreviewFieldWidget(field, request):
+    """IFieldWidget factory for MapWidget."""
+    return widget.FieldWidget(field, ListPreviewWidget(request))
 
 class PreviewGroup(EventBaseGroup):
     
@@ -440,11 +457,18 @@ class PreviewGroup(EventBaseGroup):
     def update_dynamic_fields(self):
         self.fields['title'].widgetFactory = DetailPreviewFieldWidget
 
+class ListPreviewGroup(PreviewGroup):
+    
+    label = _(u'List Preview')
+
+    def update_dynamic_fields(self):
+        self.fields['title'].widgetFactory = ListPreviewFieldWidget
+
 class PreviewForm(EventSubmissionForm, form.AddForm):
     grok.context(IEventsDirectoryItem)
     grok.name('preview')
 
-    groups = (PreviewGroup, )
+    groups = (PreviewGroup, ListPreviewGroup)
     template = ViewPageTemplateFile('templates/previewform.pt')
 
     label = _(u'Event Submission Preview')

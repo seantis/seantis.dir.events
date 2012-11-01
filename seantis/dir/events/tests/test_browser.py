@@ -2,15 +2,16 @@ from seantis.dir.events.tests import FunctionalTestCase
 
 class BrowserTestCase(FunctionalTestCase):
 
-    def test_event_submission(self):
-        
-        baseurl = self.portal.absolute_url()
+    def setUp(self):
+        super(BrowserTestCase, self).setUp()
+
+        self.baseurl = self.portal.absolute_url()
 
         browser = self.new_browser()
         browser.login_admin()
 
         # create an events directory
-        browser.open(baseurl + '/++add++seantis.dir.events.directory')
+        browser.open(self.baseurl + '/++add++seantis.dir.events.directory')
         
         browser.getControl('Name').value = 'Veranstaltungen'
         browser.getControl('Save').click()
@@ -20,6 +21,62 @@ class BrowserTestCase(FunctionalTestCase):
         # the directory needs to be published for the anonymous
         # user to submit events
         browser.open(browser.url + '/../content_status_modify?workflow_action=publish')
+
+        self.admin_browser = browser
+
+    def test_preview(self):
+        
+        baseurl = self.baseurl
+
+        # anonymous browser
+        fourchan = self.new_browser()
+        fourchan.open(baseurl + '/veranstaltungen/@@submit')
+
+        self.assertTrue('Send us your events' in fourchan.contents)
+
+        # create a recurring event
+        fourchan.getControl(name='form.widgets.title').value = 'Recurring'
+        fourchan.getControl(name='form.widgets.short_description').value = 'Every Day'
+        fourchan.getControl(name='form.widgets.locality').value = 'at home'
+
+        fourchan.getControl(
+            name='form.widgets.recurrence'
+        ).value = 'RRULE:FREQ=DAILY;COUNT=7'
+
+        fourchan.getControl('Preview Event').click()
+
+        # expect all fields to be shown and the recurrence resulting in
+        # a number of events in the list
+
+        self.assertTrue('Recurring' in fourchan.contents)
+        self.assertTrue('Every Day' in fourchan.contents)
+        self.assertTrue('at home' in fourchan.contents)
+        self.assertEqual(fourchan.contents.count('"eventgroup"'), 7)
+
+        # update the recurrence and check back
+        fourchan.getControl('Change Event').click()
+
+        fourchan.getControl(
+            name='form.widgets.recurrence'
+        ).value = 'RRULE:FREQ=DAILY;COUNT=52'
+
+        fourchan.getControl('Update Event Preview').click()
+
+        self.assertEqual(fourchan.contents.count('"eventgroup"'), 52)
+
+        # remove the recurrence, ensuring that one event remains
+        fourchan.getControl('Change Event').click()
+
+        fourchan.getControl(name='form.widgets.recurrence').value = ''
+        fourchan.getControl('Update Event Preview').click()
+
+        self.assertEqual(fourchan.contents.count('"eventgroup"'), 1)
+
+
+    def test_event_submission(self):
+        
+        browser = self.admin_browser
+        baseurl = self.baseurl
 
         # get a browser for anonymous
         fourchan = self.new_browser()

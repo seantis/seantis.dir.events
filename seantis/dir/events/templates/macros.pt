@@ -9,11 +9,56 @@
 
   <body>
 
-    <metal:define define-macro="event-test">
-      <div class="event-view">
-        <b tal:content="python: id(occurrence)"></b>
+    <tal:comment replace="nothing">
+      Event Detail View Macro for both view and preview
+    </tal:comment>
+
+    <metal:define define-macro="event-list">
+      <div id="directoryResultList">
+        <tal:block repeat="group python: groups.items()">
+          <div class="eventgroup-title" tal:content="python: group[0]"></div>
+          <div class="eventgroup">
+            <div tal:repeat="item python: group[1]" tal:attributes="id item/id; class python: 'directoryResult event event-state-%s' % item.state">
+              <metal:use use-macro="context/@@seantis-dir-macros/macros/map-marker"></metal:use>
+
+              <div class="directoryInfoText">
+                
+                <div class="event-image" tal:condition="item/image">
+                  <a tal:attributes="href string:${item/absolute_url}/@@images/image">
+                    <img tal:replace="structure item/@@images/image/tile" />
+                  </a>
+                </div>
+
+                <h3><a
+                  tal:attributes="href python: item.url()" 
+                  tal:content="item/title">
+                </a></h3>
+
+                <div class="short" tal:content="item/short_description"></div>
+                  
+                <div class="eventtags-list">
+                  <tal:block repeat="category python: item.categories()[:2]">
+                      <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
+                  </tal:block>
+                </div>
+
+                <div class="timerange" tal:content="python: item.human_daterange(request)"></div>
+
+                <div class="visualClear"></div>
+              </div>
+            </div>
+          </div>
+          
+        </tal:block>
       </div>
     </metal:define>
+
+    <tal:comment replace="nothing">
+      Event Detail View Macro for both view and preview.
+
+      Expects a recurrence.Occurrence with the name 'occurrence' and a variable
+      indicating if the current view is a preview with the name 'is_preview'.
+    </tal:comment>
 
     <metal:define define-macro="event-detail">
       <div tal:define="
