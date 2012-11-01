@@ -38,7 +38,7 @@ class BrowserTestCase(FunctionalTestCase):
         fourchan.getControl('Preview Event').click()
 
         # previewing an event should send us to the preview view
-        self.assertTrue('preview-event' in fourchan.url)
+        self.assertTrue('preview' in fourchan.url)
 
         # a token should have been added to the url
         self.assertTrue('token=' in fourchan.url)
@@ -47,25 +47,26 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('Socializing Yo' in fourchan.contents)
 
         # if the user tries to submit another event while this one is still
-        # in preview, a redirect should happen
+        # in preview, the existing event is loaded (the form is turned into an edit form)
         oldurl = fourchan.url
 
-        fourchan.open(baseurl + '/veranstaltungen/@@submit-event')
-        fourchan.getControl(name='form.widgets.title').value = 'New'
-        fourchan.getControl(name='form.widgets.short_description').value = 'New'
-        
-        fourchan.getControl('Preview Event').click()
-
-        self.assertTrue('You are trying to create a new event' in fourchan.contents)
+        fourchan.open(baseurl + '/veranstaltungen/@@submit')
+        self.assertEqual(
+            fourchan.getControl(name='form.widgets.title').value,
+            'Stammtisch'
+        )
+        self.assertEqual(
+            fourchan.getControl(name='form.widgets.short_description').value,
+            'Socializing Yo'
+        )
 
         fourchan.open(oldurl)
 
         # there's a change-event button which submits a GET request to
-        # the edit form using the token in the request
-
+        # the submit form using the token in the request
         fourchan.getControl('Change Event').click()
-        self.assertTrue('token=' in fourchan.url)
-        self.assertTrue('edit-event' in fourchan.url)
+        self.assertTrue('submit?token=' in fourchan.url)
+        self.assertFalse(fourchan.url.endswith('?token='))
 
         # we should be able to change some things
         # and come back to the url to find those changes
@@ -74,7 +75,7 @@ class BrowserTestCase(FunctionalTestCase):
         fourchan.getControl('Update Event Preview').click()
 
         self.assertTrue('Serious Business' in fourchan.contents)
-        self.assertTrue('preview-event' in fourchan.url)
+        self.assertTrue('preview' in fourchan.url)
 
         # at the same time this event in preview is invisble in the list
         # even for administrators
@@ -85,24 +86,27 @@ class BrowserTestCase(FunctionalTestCase):
         # other anonymous users may not access the view or the preview
         google_robot = self.new_browser()
         google_robot.assert_notfound(baseurl + '/veranstaltungen/stammtisch')
-        google_robot.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview-event')
+        google_robot.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview')
 
         # not event the admin at this point (not sure about that one yet)
         browser.assert_notfound(baseurl + '/veranstaltungen/stammtisch')
-        browser.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview-event')
+        browser.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview')
 
         # if the user decides to cancel the event before submitting it, he
         # loses the right to access the event (will be cleaned up by cronjob)
         fourchan.getControl('Cancel Event Submission').click()
 
         fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch')
-        fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview-event')
+        fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview')
         fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch/edit-event')
 
         # since we cancelled we must now create a new event to
         # test the submission process
         new = self.new_browser()
-        new.open(baseurl + '/veranstaltungen/@@submit-event')
+        new.open(baseurl + '/veranstaltungen/@@submit')
+
+        self.assertEqual(new.getControl(name='form.widgets.title').value, '')
+        self.assertEqual(new.getControl(name='form.widgets.short_description').value, '')
 
         new.getControl(name='form.widgets.title').value = "Submitted Event"
         new.getControl(name='form.widgets.short_description').value = "YOLO"

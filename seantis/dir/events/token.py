@@ -87,10 +87,8 @@ def append_token(context, url):
 
     return url + querychar + 'token=' + context.access_token
 
-def event_by_token(directory, token=None):
-
-    token = token or retrieve_from_session()
-
+def event_by_token(directory, token):
+    
     if token == 'missing':
         return None
 

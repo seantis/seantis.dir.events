@@ -16,6 +16,9 @@ from plone.formwidget.recurrence.z3cform.widget import (
 
 from Products.statusmessages.interfaces import IStatusMessage
 
+import zope.event
+import zope.lifecycleevent
+
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 from zope.schema import Choice, TextLine
 from zope.schema.interfaces import IContextSourceBinder
@@ -177,10 +180,10 @@ class InformationGroup(EventBaseGroup):
     )
 
 class EventSubmissionForm(extensible.ExtensibleForm):
-    
+
     grok.baseclass()
     grok.require('zope2.View')
-
+    
     template = ViewPageTemplateFile('templates/form.pt')
 
     groups = (GeneralGroup, LocationGroup, InformationGroup)
@@ -193,9 +196,8 @@ class EventSubmissionForm(extensible.ExtensibleForm):
 
     coordinates = None
 
-    @property
     def directory(self):
-        raise NotImplementedError
+        return self.context
 
     def prepare_coordinates(self, data):
         if data.get('wkt'):
@@ -220,16 +222,167 @@ class EventSubmissionForm(extensible.ExtensibleForm):
         IStatusMessage(self.request).add(_(u"Event submission cancelled"), "info")
         self.request.response.redirect(self.directory.absolute_url())
 
-class EventSubmissionAddForm(EventSubmissionForm, form.AddForm):
-    grok.context(IEventsDirectory)
-    grok.name('submit-event')
 
-    coordinates = None
-    content = None
+class EventSubmitForm(extensible.ExtensibleForm, form.Form):
+    """Event submission form mainly targeted at anonymous users.
+
+    This form combines add- and edit-form functionality to streamline
+    the user's experience. The idea is that this form and the
+    PreviewForm below work in tandem:
+
+    1. User opens directory/submit and enters an event (add-form)
+    2. User saves result and is directed to directory/event/preview
+    3. User changes his mind and clicks the back button
+    4. User resubmits the form (which is now an edit-form)
+
+    This can go back and forth providing a tight feedback-loop.
+    If an edit form is thrown into the mix, the back button cannot
+    work correctly because it will lead the user to the add form
+    even if he really means to edit.
+
+    The form is an edit-form if the user has a token in the session which
+    machtes an existing event in preview state.
+
+    The form is an add-form if the user does not have a token or it does
+    not exist in the database. 
+
+    If the user clicks 'cancel' the token is thrown away, leaving
+    an event in limbo. This will be cleaned up by a cron job.
+
+    """
+    
+    grok.name('submit')
+    grok.require('zope2.View')
+    grok.context(IEventsDirectory)
+
+    template = ViewPageTemplateFile('templates/form.pt')
+
+    groups = (GeneralGroup, LocationGroup, InformationGroup)
+    enable_form_tabbing = True
+
+    label = _(u'Event Submission Form')
+    description = _(u'Send us your events and we will publish them')
+
+    # if true, render() will return nothing
+    empty_body = False
+
+    def __init__(self, context, request):
+        super(EventSubmitForm, self).__init__(context, request)
+
+        # do not show the edit/action bar
+        self.request['disable_border'] = True
+
+    def update(self):
+        self.setup_form()
+        super(EventSubmitForm, self).update()
+
+    def render(self):
+        if self.empty_body:
+            return ''
+
+        return super(EventSubmitForm, self).render()
+
+    def redirect(self, url):
+        self.empty_body = True
+        self.request.response.redirect(url)
+
+    def message(self, message, type="info"):
+        IStatusMessage(self.request).add(message, type)
 
     @property
     def directory(self):
         return self.context
+
+    def form_type(self):
+        self.event = event_by_token(self.directory, current_token(self.request))
+        return self.event and 'editform' or 'addform'
+
+    def setup_form(self):
+        self.buttons = button.Buttons()
+        self.handlers = button.Handlers()
+
+        if self.form_type() == 'addform':
+            preview = button.Button(title=_(u'Preview Event'), name='save')
+            self.buttons += button.Buttons(preview)
+
+            preview_handler = button.Handler(preview, self.__class__.handle_preview)
+            self.handlers.addHandler(preview, preview_handler)
+
+            self.ignoreContext = True
+            self.ignoreReadonly = True
+        else:
+            update = button.Button(title=_(u'Update Event Preview'), name='save')
+            self.buttons += button.Buttons(update)
+
+            update_handler = button.Handler(update, self.__class__.handle_update)
+            self.handlers.addHandler(update, update_handler)
+
+            self.context = self.event
+
+        cancel = button.Button(title=_(u'Cancel Event Submission'), name='cancel')
+        self.buttons += button.Buttons(cancel)
+
+        cancel_handler = button.Handler(cancel, self.__class__.handle_cancel)
+        self.handlers.addHandler(cancel, cancel_handler)
+
+    def prepare_coordinates(self, data):
+        """ The coordinates need to be verified and converted. First they are
+        converted and kept out of the item creation process. Later they
+        are added to the object once that exists. 
+
+        """
+        if data.get('wkt'):
+            self.coordinates = utils.verify_wkt(data['wkt']).__geo_interface__
+        else:
+            self.coordinates = None
+
+        del data['wkt']
+
+    def apply_coordinates(self, content):
+        c = self.coordinates
+        if c:
+            IGeoManager(content).setCoordinates(c['type'], c['coordinates'])
+        else:
+            IGeoManager(content).removeCoordinates()
+
+    def handle_preview(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        obj = self.create_and_add(data)
+        if obj is not None:
+            url = self.context.absolute_url() + '/' + obj.id + '/preview'
+            self.redirect(append_token(obj, url))
+
+    def handle_update(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        self.prepare_coordinates(data)
+        self.apply_coordinates(self.getContent())
+
+        changes = self.applyChanges(data)
+        
+        if changes:
+            self.message(_(u'Event Preview Updated'))
+        else:
+            self.message(_(u'No changes were applied'))
+
+        url = self.context.absolute_url() + '/preview'
+        self.redirect(append_token(self.context, url))
+
+    def handle_cancel(self, action):
+        try:
+            clear_token(self.context)
+        except ComponentLookupError:
+            pass
+
+        self.message(_(u"Event submission cancelled"))
+        self.redirect(self.directory.absolute_url())
 
     def create(self, data):
         data['timezone'] = default_timezone()
@@ -254,105 +407,11 @@ class EventSubmissionAddForm(EventSubmissionForm, form.AddForm):
         self.apply_coordinates(self.content)
         apply_token(self.content)
 
-    def show_preview(self):
-        """Return the url to the edit form if the user should be redirected
-        there. Otherwise return None.
-
-        The user should be redirected if he has a token in his session and
-        there's an object that belongs to that token. This should
-        take care of some instances of hitting the back button and ending
-        up in the wrong form after submitting the initial draft.
-
-        However, not every browser will call again (though they should
-        since onbeforeunload is used), so in some cases this is a problem.
-
-        """
-
-        event = event_by_token(self.directory)
-        if event:
-            return append_token(event, event.absolute_url() + '/preview-event')
-        else:
-            return None
-
-    @button.buttonAndHandler(_('Preview Event'), name='save')
-    def handleAdd(self, action):
-        data, errors = self.extractData()
-        if errors:
-            self.status = self.formErrorsMessage
-            return
-
-        # the user is probably on the wrong form in this case
-        # unfortunately there's not a whole lot we can do except 
-        # to inform the user. reposting the data to the other form
-        # would be the only possiblity and I just feel too dirty doing it
-        preview_url = self.show_preview()
-        if preview_url:
-            IStatusMessage(self.request).add(_(u"""
-                You are trying to create a new event even though you are still
-                working on an old event. Unfortunately we were unable to store
-                your changes and have to redirect you to the event you are already
-                previewing. Plese use the "Change Event" button on the
-                preview to change your event."""), "warning")
-
-            self.request.response.redirect(preview_url)
-            return
-
-        obj = self.createAndAdd(data)
-        
-        if obj is not None:
-            self._finishedAdd = True
-            IStatusMessage(self.request).addStatusMessage(
-                _(u"Preview created"), "info"
-            )
-
-            preview_url = self.context.absolute_url() + '/' + obj.id
-            preview_url += '/preview-event'
-            preview_url = append_token(obj, preview_url)
-
-            self.request.response.redirect(preview_url)
-
-    @button.buttonAndHandler(_(u'Cancel Event Submission'), name='cancel')
-    def handleCancel(self, action):
-        self.handle_cancel()
-
-class EventSubmissionEditForm(EventSubmissionForm, form.EditForm):
-    grok.context(IEventsDirectoryItem)
-    grok.name('edit-event')
-
-    @property
-    def directory(self):
-        return self.context.parent()
-
-    def update(self, *args, **kwargs):
-        verify_token(self.context, self.request)
-        super(EventSubmissionEditForm, self).update(*args, **kwargs)
-
-    def applyChanges(self, data):
-        self.prepare_coordinates(data)
-        self.apply_coordinates(self.getContent())
-
-        return super(EventSubmissionEditForm, self).applyChanges(data)
-
-    @button.buttonAndHandler(_('Update Event Preview'), name='save')
-    def handleApply(self, action):
-        data, errors = self.extractData()
-        if errors:
-            self.status = self.formErrorsMessage
-            return
-        
-        changes = self.applyChanges(data)
-
-        if changes:
-            IStatusMessage(self.request).add(_(u"Preview updated"), "info")
-        else:
-            IStatusMessage(self.request).add(_(u"No changes made"), "info")
-
-        preview_url = self.context.absolute_url() + '/preview-event'
-        self.request.response.redirect(append_token(self.context, preview_url))
-
-    @button.buttonAndHandler(_(u'Cancel Event Submission'), name='cancel')
-    def handleCancel(self, action):
-        self.handle_cancel()
+    def create_and_add(self, data):
+        obj = self.create(data)
+        zope.event.notify(zope.lifecycleevent.ObjectCreatedEvent(obj))
+        self.add(obj)
+        return obj
 
 class IPreview(form.Schema):
     title = TextLine(required=False)
@@ -383,7 +442,7 @@ class PreviewGroup(EventBaseGroup):
 
 class PreviewForm(EventSubmissionForm, form.AddForm):
     grok.context(IEventsDirectoryItem)
-    grok.name('preview-event')
+    grok.name('preview')
 
     groups = (PreviewGroup, )
     template = ViewPageTemplateFile('templates/previewform.pt')

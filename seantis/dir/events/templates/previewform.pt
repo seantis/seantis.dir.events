@@ -23,7 +23,7 @@
         before sending it to us.
     </p>
 
-    <form class="change-event" method="get" tal:attributes="action python: context.absolute_url() + '/edit-event'">
+    <form class="change-event" method="get" tal:attributes="action python: context.parent().absolute_url() + '/@@submit'">
       <input id="token" name="token" type="hidden" tal:attributes="value view/current_token" />
       <input id="change-event" type="submit" i18n:attributes="value" value="Change Event" />
     </form>
