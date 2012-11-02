@@ -72,7 +72,6 @@ class BrowserTestCase(FunctionalTestCase):
 
         self.assertEqual(fourchan.contents.count('"eventgroup"'), 1)
 
-
     def test_event_submission(self):
         
         browser = self.admin_browser
@@ -176,9 +175,34 @@ class BrowserTestCase(FunctionalTestCase):
 
         # until the anonymous user submits the event
         new.getControl('Submit Event').click()
+
+        # at this point we 'forgot' to fill in the submitter info so we have at
+        # it again and fix that
+        new.getControl(name='form.widgets.submitter').value = 'John Doe'
+        new.getControl(name='form.widgets.submitter_email').value = 'john.doe@example.com'
+
+        new.getControl('Submit Event').click()
+
         browser.open(baseurl + '/veranstaltungen')
         self.assertTrue('YOLO' in browser.contents)
 
         # the user may no longer access the event at this point, though
         # it is no longer an inexistant resource
         new.assert_unauthorized(baseurl + '/veranstaltungen/submitted-event')
+
+        # the admin should be able to see the submitter's name and email
+        browser.open(baseurl + '/veranstaltungen/submitted-event')
+        self.assertTrue('John Doe' in browser.contents)
+        self.assertTrue('john.doe@example.com' in browser.contents)
+
+        # once we publish it and open in another browser this information is
+        # hidden from the public eye
+        url = browser.url
+        browser.open(baseurl + '/veranstaltungen/submitted-event/content_status_modify?workflow_action=publish')
+
+        public = self.new_browser()
+        public.open(url)
+
+        self.assertTrue('YOLO' in public.contents)
+        self.assertFalse('John Doe' in public.contents)
+        self.assertFalse('john.doe@example.com' in public.contents)

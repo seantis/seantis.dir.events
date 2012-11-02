@@ -291,3 +291,15 @@
 form.change-event {
     margin-bottom: 20px;   
 }
+
+/* on the event preview form the submitter group is always shown at the bottom */
+.event-preview-form #fieldset-2 {
+    display: block !important;
+    border: 1px solid #ccc !important;
+    padding-top: 14px;
+    background-color: #efefef;
+}
+
+.event-preview-form .lastFormTab {
+    display: none !important;   
+}

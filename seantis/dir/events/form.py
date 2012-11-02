@@ -464,11 +464,24 @@ class ListPreviewGroup(PreviewGroup):
     def update_dynamic_fields(self):
         self.fields['title'].widgetFactory = ListPreviewFieldWidget
 
+class SubmitterGroup(EventBaseGroup):
+
+    label = _(u'Submitter')
+
+    dynamic_fields = ('submitter', 'submitter_email')
+
+    group_fields = OrderedDict()
+    group_fields[IEventsDirectoryItem] = ('submitter', 'submitter_email')
+
+    def update_dynamic_fields(self):
+        self.fields['submitter'].field.required = True
+        self.fields['submitter_email'].field.required = True
+
 class PreviewForm(EventSubmissionForm, form.AddForm):
     grok.context(IEventsDirectoryItem)
     grok.name('preview')
 
-    groups = (PreviewGroup, ListPreviewGroup)
+    groups = (PreviewGroup, ListPreviewGroup, SubmitterGroup)
     template = ViewPageTemplateFile('templates/previewform.pt')
 
     label = _(u'Event Submission Preview')
@@ -487,6 +500,14 @@ class PreviewForm(EventSubmissionForm, form.AddForm):
 
     @button.buttonAndHandler(_('Submit Event'), name='save')
     def handleSubmit(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        self.context.submitter = data['submitter']
+        self.context.submitter_email = data['submitter_email']
+
         clear_token(self.context)
         self.context.submit()
         IStatusMessage(self.request).add(_(u"Event submitted"), "info")

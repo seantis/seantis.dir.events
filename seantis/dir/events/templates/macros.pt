@@ -160,6 +160,14 @@
               </li>
             </ul>
           </div>
+
+          <tal:block condition="python: not is_preview">
+            <div class="submitter" tal:condition="python: view.show_submitter">
+              <h3 i18n:translate="">Submitter</h3>
+              <div class="name" tal:content="o/submitter"></div>
+              <div class="email" tal:condition="o/submitter_email"><a tal:attributes="href python: 'mailto:' + o.submitter_email" tal:content="o/submitter_email"></a></div>
+            </div>
+          </tal:block>
         </div>
       </div>
     </metal:define>

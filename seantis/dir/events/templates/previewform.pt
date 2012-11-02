@@ -16,11 +16,11 @@
 <div class="event-submit-help">
     <p i18n:translate="">
         You are almost done! Please have a look a the previews below. If they are
-        to your liking, press "Submit Event" to complete your request.
+        to your liking, enter your information and press "Submit Event" to complete your request.
     </p>
     <p i18n:translate="">
         If you find things to change, click on "change event" to adjust your request
-        before sending it to us.
+        before proceeding.
     </p>
 
     <form class="change-event" method="get" tal:attributes="action python: context.parent().absolute_url() + '/@@submit'">
@@ -29,7 +29,7 @@
     </form>
 </div>
 
-<div class="event-submit-form">
+<div class="event-preview-form">
     <metal:block use-macro="context/@@ploneform-macros/titlelessform" />
 </div>
 

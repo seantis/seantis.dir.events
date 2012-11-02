@@ -20,6 +20,11 @@ from seantis.dir.events import utils
 from seantis.dir.events.token import verify_token
 from seantis.dir.events.interfaces import IEventsDirectory, IEventsDirectoryItem
 
+from AccessControl import getSecurityManager
+from AccessControl import Unauthorized
+
+from Products.CMFCore import permissions
+
 class EventsDirectoryItem(item.DirectoryItem):
     
     @property
@@ -148,6 +153,19 @@ class View(core.View):
             return filename[:100] + '...'
         else:
             return filename
+
+    @property
+    def show_submitter(self):
+        # if the information not present, do not show
+        if not all((self.context.submitter, self.context.submitter_email)):
+            return False
+
+        # someone who may open the edit view can see the submitter there,
+        # so we can display it on the detail view in this case
+        return getSecurityManager().checkPermission(
+            permissions.ModifyPortalContent, self.context
+        )
+
 
 class ICalendarEventItemComponent(ICalendarEventComponent, grok.Adapter):
     """ Adds custom information to the default ical implementation. """
