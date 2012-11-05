@@ -44,6 +44,14 @@
 
                 <div class="timerange" tal:content="python: item.human_daterange(request)"></div>
 
+                <div class="event-workflow" tal:condition="python: not is_preview and view.manage_workflow(item)">
+                  <div class="event-state" tal:content="python: item.state"></div>
+                  <div class="event-actions">
+                    <tal:block repeat="action python: item.list_actions()">
+                      <a tal:attributes="href action/url" tal:content="action/name"></a>
+                    </tal:block>
+                  </div>
+                </div>
                 <div class="visualClear"></div>
               </div>
             </div>

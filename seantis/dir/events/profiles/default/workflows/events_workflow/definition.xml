@@ -91,6 +91,7 @@
     </transition>
 
     <transition transition_id="archive" title="Archive Event" new_state="archived" trigger="USER" before_script="" after_script="" i18n:attributes="title">
+        <action url="%(content_url)s/content_status_modify?workflow_action=archive" category="workflow" icon="" i18n:translate="">Archive</action>
         <guard>
             <guard-permission>Review portal content</guard-permission>
         </guard>

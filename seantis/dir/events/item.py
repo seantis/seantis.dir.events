@@ -21,12 +21,12 @@ from seantis.dir.events.token import verify_token
 from seantis.dir.events.interfaces import IEventsDirectory, IEventsDirectoryItem
 
 from AccessControl import getSecurityManager
-from AccessControl import Unauthorized
-
 from Products.CMFCore import permissions
 
 class EventsDirectoryItem(item.DirectoryItem):
     
+    actions_order = ['submit', 'publish', 'deny', 'archive']
+
     @property
     def tz(self):
         return pytz.timezone(self.timezone)
@@ -50,6 +50,12 @@ class EventsDirectoryItem(item.DirectoryItem):
         workflowTool = getToolByName(self, "portal_workflow")
         workflowTool.doActionFor(self, action)
 
+    def list_actions(self):
+        sortkey = lambda a: self.actions_order.index(a['id'])
+
+        workflowTool = getToolByName(self, "portal_workflow")
+        return sorted(workflowTool.listActions(object=self), key=sortkey)
+
     def submit(self):
         self.do_action("submit")
 
@@ -59,8 +65,6 @@ class EventsDirectoryItem(item.DirectoryItem):
     def archive(self):
         self.do_action("archive")
         
-        
-
 class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.context(IEventsDirectoryItem)
     grok.name('seantis.dir.events.item.detail')
@@ -165,7 +169,6 @@ class View(core.View):
         return getSecurityManager().checkPermission(
             permissions.ModifyPortalContent, self.context
         )
-
 
 class ICalendarEventItemComponent(ICalendarEventComponent, grok.Adapter):
     """ Adds custom information to the default ical implementation. """

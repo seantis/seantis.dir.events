@@ -45,7 +45,6 @@ class TestDateRanges(IntegrationTestCase):
         self.assertRaises(WorkflowException, action, ['submit'])
 
         # try denying an event (skipping the publication)
-
         event = self.create_event()
     
         event.do_action('submit')
