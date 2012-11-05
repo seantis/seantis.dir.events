@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-03 08:41+0000\n"
+"POT-Creation-Date: 2012-11-05 10:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,10 @@ msgstr ""
 
 #: ./interfaces.py:199
 msgid "${type} bigger than ${max} Megabyte are not allowed"
+msgstr ""
+
+#: ./profiles/default/workflows/events_workflow/definition.xml
+msgid "Archive"
 msgstr ""
 
 #: ./profiles/default/workflows/events_workflow/definition.xml
@@ -38,7 +42,7 @@ msgid "Attachment 2"
 msgstr ""
 
 #: ./interfaces.py:234
-#: ./templates/macros.pt:136
+#: ./templates/macros.pt:144
 msgid "Attachments"
 msgstr ""
 
@@ -46,7 +50,7 @@ msgstr ""
 msgid "Calendar for all events"
 msgstr ""
 
-#: ./templates/macros.pt:151
+#: ./templates/macros.pt:159
 msgid "Calendar for all occurrences of this event"
 msgstr ""
 
@@ -54,16 +58,16 @@ msgstr ""
 msgid "Calendar for events matching the current filter"
 msgstr ""
 
-#: ./templates/macros.pt:159
+#: ./templates/macros.pt:167
 msgid "Calendar for this event"
 msgstr ""
 
-#: ./templates/macros.pt:154
+#: ./templates/macros.pt:162
 msgid "Calendar for this occurrence only"
 msgstr ""
 
 #: ./templates/directory.pt:37
-#: ./templates/macros.pt:148
+#: ./templates/macros.pt:156
 msgid "Calendars (iCal)"
 msgstr ""
 
@@ -95,6 +99,10 @@ msgstr ""
 msgid "Day after Tomorrow"
 msgstr ""
 
+#: ./profiles/default/workflows/events_workflow/definition.xml
+msgid "Deny Publication"
+msgstr ""
+
 #: ./form.py:450
 msgid "Detail Preview"
 msgstr ""
@@ -120,7 +128,7 @@ msgid "Event Submission Preview"
 msgstr ""
 
 #: ./interfaces.py:122
-#: ./templates/macros.pt:114
+#: ./templates/macros.pt:122
 msgid "Event Website"
 msgstr ""
 
@@ -197,7 +205,7 @@ msgid "List Preview"
 msgstr ""
 
 #: ./interfaces.py:92
-#: ./templates/macros.pt:98
+#: ./templates/macros.pt:106
 msgid "Locality"
 msgstr ""
 
@@ -234,7 +242,7 @@ msgid "No changes were applied"
 msgstr ""
 
 #: ./interfaces.py:128
-#: ./templates/macros.pt:111
+#: ./templates/macros.pt:119
 msgid "Organizer"
 msgstr ""
 
@@ -300,7 +308,7 @@ msgid "Submitted"
 msgstr ""
 
 #: ./form.py:469
-#: ./templates/macros.pt:166
+#: ./templates/macros.pt:174
 msgid "Submitter"
 msgstr ""
 
@@ -340,12 +348,12 @@ msgstr ""
 msgid "This Year"
 msgstr ""
 
-#: ./templates/macros.pt:126
+#: ./templates/macros.pt:134
 msgid "Ticket"
 msgstr ""
 
 #: ./interfaces.py:158
-#: ./templates/macros.pt:128
+#: ./templates/macros.pt:136
 msgid "Ticket / Registration Website"
 msgstr ""
 
@@ -377,11 +385,11 @@ msgstr ""
 msgid "Update Event Preview"
 msgstr ""
 
-#: ./directory.py:24
+#: ./directory.py:27
 msgid "What"
 msgstr ""
 
-#: ./directory.py:24
+#: ./directory.py:27
 msgid "Where"
 msgstr ""
 

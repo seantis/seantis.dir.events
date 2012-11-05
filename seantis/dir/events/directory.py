@@ -1,6 +1,4 @@
 from five import grok
-from itertools import groupby
-from collections import OrderedDict
 from pytz import timezone
 
 from datetime import datetime
@@ -17,9 +15,6 @@ from seantis.dir.events.recurrence import grouped_occurrences
 from seantis.dir.events import dates
 from seantis.dir.events import utils
 from seantis.dir.events import _
-
-from AccessControl import getSecurityManager
-from Products.CMFCore import permissions
 
 class EventsDirectory(directory.Directory):
     
@@ -112,12 +107,6 @@ class EventsDirectoryView(directory.View):
     def groups(self, items):
         """ Returns the given occurrences grouped by human_date. """
         return grouped_occurrences(items, self.request)
-
-    def manage_workflow(self, item):
-        "Return true if the current user may manage the workflow of this item."
-        return getSecurityManager().checkPermission(
-            permissions.ModifyPortalContent, item
-        )
 
     def ical_url(self, for_all):
         """ Returns the ical url of the current view. """
