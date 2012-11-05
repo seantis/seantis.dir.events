@@ -328,11 +328,10 @@ form.change-event {
 .event-workflow .event-state {
     float: left;   
     text-align: left;
-    background-color: white;
-    border: 1px solid #bbb;
+    background-color: #eee;
     padding: 0 4px;
     border-radius: 2px;
-    color: #666;
+    color: #888;
 }
 
 .event-actions a {
