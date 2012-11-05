@@ -13,33 +13,43 @@ class TestDateRanges(IntegrationTestCase):
         self.assertEqual(event.state, 'preview')
 
         # go through the states
-        self.do_action(event, 'submit')
+        event.do_action('submit')
         self.assertEqual(event.state, 'submitted')
 
-        self.do_action(event, 'publish')
+        event.do_action('publish')
         self.assertEqual(event.state, 'published')
 
-        self.do_action(event, 'archive')
+        event.do_action('archive')
         self.assertEqual(event.state, 'archived')
 
-        self.do_action(event, 'publish')
+        event.do_action('publish')
         self.assertEqual(event.state, 'published')
 
         # try some impossible changes
         event = self.create_event()
-        action = lambda a: self.do_action(event, a)
+        action = lambda a: event.do_action(a)
 
         self.assertRaises(WorkflowException, action, ['publish'])
         self.assertRaises(WorkflowException, action, ['archive'])
 
-        self.do_action(event, 'submit')
+        event.do_action('submit')
 
         self.assertRaises(WorkflowException, action, ['archive'])        
 
-        self.do_action(event, 'publish')
+        event.do_action('publish')
 
         self.assertRaises(WorkflowException, action, ['submit'])
 
-        self.do_action(event, 'archive')
+        event.do_action('archive')
 
         self.assertRaises(WorkflowException, action, ['submit'])
+
+        # try denying an event (skipping the publication)
+
+        event = self.create_event()
+    
+        event.do_action('submit')
+        self.assertEqual(event.state, 'submitted')
+
+        event.do_action('deny')
+        self.assertEqual(event.state, 'archived')

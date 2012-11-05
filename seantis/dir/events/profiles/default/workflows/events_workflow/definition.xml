@@ -29,6 +29,7 @@
 
     <state state_id="submitted" title="Submitted" i18n:attributes="title">
         <exit-transition transition_id="publish" />
+        <exit-transition transition_id="deny" />
 
         <permission-map name="View" acquired="False">
             <permission-role>Manager</permission-role>
@@ -77,6 +78,13 @@
  
     <transition transition_id="publish" title="Publish Event" new_state="published" trigger="USER" before_script="" after_script="" i18n:attributes="title">
         <action url="%(content_url)s/content_status_modify?workflow_action=publish" category="workflow" icon="" i18n:translate="">Publish</action>
+        <guard>
+            <guard-permission>Review portal content</guard-permission>
+        </guard>
+    </transition>
+
+    <transition transition_id="deny" title="Deny Publication" new_state="archived" trigger="USER" before_script="" after_script="" i18n:attributes="title">
+        <action url="%(content_url)s/content_status_modify?workflow_action=deny" category="workflow" icon="" i18n:translate="">Deny Publication</action>
         <guard>
             <guard-permission>Review portal content</guard-permission>
         </guard>
