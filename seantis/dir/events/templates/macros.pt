@@ -45,10 +45,10 @@
                 <div class="timerange" tal:content="python: item.human_daterange(request)"></div>
 
                 <div class="event-workflow" tal:define="actions python: item.list_actions()" tal:condition="python: not is_preview and actions">
-                  <div class="event-state" tal:content="python: item.state"></div>
+                  <div class="event-state" tal:content="python: view.translate(item.state.title())"></div>
                   <div class="event-actions">
                     <tal:block repeat="action python: item.list_actions()">
-                      <a tal:attributes="href action/url" tal:content="action/name"></a>
+                      <a tal:attributes="href action/url" tal:content="python: view.translate(action['name'])"></a>
                     </tal:block>
                   </div>
                 </div>

@@ -11,7 +11,7 @@ def get_current_language(request):
 
 def translate(request, text):
     lang = get_current_language(request)
-    return i18n.translate(text, target_language=lang)
+    return i18n.translate(text, target_language=lang, domain='seantis.dir.events')
 
 def render_ical_response(request, context, calendar):
     name = '%s.ics' % context.getId()

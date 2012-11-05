@@ -98,7 +98,7 @@ msgstr "Übermorgen"
 
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Deny Publication"
-msgstr "Veröffentlichung Ablehnen"
+msgstr "Ablehnen"
 
 #: ./form.py:450
 msgid "Detail Preview"

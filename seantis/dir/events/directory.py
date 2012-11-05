@@ -108,6 +108,9 @@ class EventsDirectoryView(directory.View):
         """ Returns the given occurrences grouped by human_date. """
         return grouped_occurrences(items, self.request)
 
+    def translate(self, text):
+        return utils.translate(self.request, text)
+
     def ical_url(self, for_all):
         """ Returns the ical url of the current view. """
         url = self.daterange_url('this_year') + '&type=ical'
