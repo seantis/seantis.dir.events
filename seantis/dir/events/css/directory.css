@@ -24,6 +24,10 @@
     margin-right: 3%;
 }
 
+.directoryResult {
+    padding-right: 10px;   
+}
+
 .event-sidebar {
     float: left;
     width: 38.8%;

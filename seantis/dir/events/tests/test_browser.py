@@ -24,6 +24,86 @@ class BrowserTestCase(FunctionalTestCase):
 
         self.admin_browser = browser
 
+    def tearDown(self):
+        self.admin_browser.open(self.baseurl + '/veranstaltungen/delete_confirmation')
+        self.admin_browser.getControl('Delete').click()
+        self.admin_browser.assert_notfound(self.baseurl + '/veranstaltungen')
+
+    def test_workflow(self):
+
+        baseurl = self.baseurl
+
+        # anonymous browser
+        fourchan = self.new_browser()
+        fourchan.open(baseurl + '/veranstaltungen/@@submit')
+
+        self.assertTrue('Send us your events' in fourchan.contents)
+
+        # create some event
+        def create_event():
+            fourchan.getControl(name='form.widgets.title').value = 'Party'
+            fourchan.getControl(name='form.widgets.short_description').value = 'Some Party'
+            
+            fourchan.getControl('Preview Event').click()
+
+            fourchan.getControl(name='form.widgets.submitter').value = 'John Doe'
+            fourchan.getControl(name='form.widgets.submitter_email').value = 'john.doe@example.com'
+
+            fourchan.getControl('Submit Event').click()
+
+        create_event()
+
+        # the event is now invisible to the anonymous user in the directory
+        fourchan.open(baseurl + '/veranstaltungen')
+        self.assertFalse('Some Party' in fourchan.contents)
+
+        # it is however visible to the admin
+        browser = self.admin_browser
+        browser.open(fourchan.url)
+
+        self.assertTrue('Some Party' in browser.contents)
+
+        # who now has the chance to either deny or publish the event
+        self.assertTrue('Publish' in browser.contents)
+        self.assertTrue('Deny Publication' in browser.contents)
+        self.assertTrue('Submitted' in browser.contents)
+
+        # let's deny
+        browser.getLink('Deny Publication').click()
+
+        # the event should now be invisible to both admin and anonymous
+        browser.open(baseurl + '/veranstaltungen')
+        self.assertFalse('Some Party' in browser.contents)
+
+        fourchan.open(browser.url)
+        self.assertFalse('Some Party' in browser.contents)
+
+        # let's repeat, but publish this time
+        fourchan.open(baseurl + '/veranstaltungen/@@submit')
+        create_event()
+
+        browser.open(baseurl + '/veranstaltungen')
+        browser.getLink('Publish').click()
+
+        # this should've led to a state change
+        browser.open(baseurl + '/veranstaltungen')
+        self.assertTrue('Some Party' in browser.contents)
+        self.assertTrue('Archive' in browser.contents)
+
+        fourchan.open(browser.url)
+        self.assertTrue('Some Party' in fourchan.contents)
+        self.assertFalse('Archive' in fourchan.contents)
+
+        # archiving the event should hide it again
+        browser.getLink('Archive').click()
+        browser.open(baseurl + '/veranstaltungen')
+
+        self.assertFalse('Some Party' in browser.contents)
+
+        fourchan.open(browser.url)
+        self.assertFalse('SomeParty' in browser.contents)
+
+
     def test_preview(self):
         
         baseurl = self.baseurl
