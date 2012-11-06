@@ -67,6 +67,10 @@
     border-color: #75ad0a !important;
 }
 
+.directoryDates .admin-filter a.selected, #content .directoryDates .admin-filter a:hover {
+    border-color: #de7700 !important;
+}
+
 .directoryDates a.selected {
     font-weight: bold;
 }
@@ -212,7 +216,7 @@
     background-color: #fafafa;
 }
 
-.ical-links {
+.admin-filter, .ical-links {
      margin-top: 20px;   
 }
 

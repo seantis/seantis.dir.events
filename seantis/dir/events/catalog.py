@@ -16,6 +16,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     def __init__(self, *args, **kwargs):
         self._daterange = 'this_week'
+        self._state = 'published'
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
 
     @property
@@ -27,13 +28,22 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         assert dates.is_valid_daterange(range), "invalid date range %s" % range
         self._daterange = range
 
+    @property
+    def state(self):
+        return self._state
+
+    @state.setter
+    def state(self, state):
+        assert state in ('submitted', 'published')
+        self._state = state
+
     def sortkey(self):
         return lambda i: i.start
 
     def query(self, **kwargs):
         results = self.catalog(path={'query': self.path, 'depth': 1},
             object_provides=IDirectoryItemBase.__identifier__,
-            review_state=('submitted', 'published'),
+            review_state=(self._state,),
             **kwargs
         )
         return results

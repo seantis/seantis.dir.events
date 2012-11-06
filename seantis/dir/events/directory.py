@@ -16,6 +16,9 @@ from seantis.dir.events import dates
 from seantis.dir.events import utils
 from seantis.dir.events import _
 
+from AccessControl import getSecurityManager
+from Products.CMFCore import permissions
+
 class EventsDirectory(directory.Directory):
     
     def labels(self):
@@ -56,6 +59,14 @@ class EventsDirectoryView(directory.View):
     def set_last_daterange(self, method):
         """ Store the last selected daterange on the session. """
         session.set_session(self.context, 'daterange', method)
+
+    def get_last_state(self):
+        """ Returns the last selected event state. """
+        return session.get_session(self.context, 'state') or 'published'
+
+    def set_last_state(self, method):
+        """ Store the last selected event state on the session. """
+        session.set_session(self.context, 'state', method)
 
     @property
     def selected_daterange(self):
@@ -99,6 +110,16 @@ class EventsDirectoryView(directory.View):
         else:
             self.set_last_daterange(daterange)
 
+        state = self.request.get('state', self.get_last_state())
+
+        if not self.show_state_filters or state not in (
+            'submitted', 'published'
+        ):
+            state = 'published'
+        else:
+            self.set_last_state(state)
+
+        self.catalog.state = state
         self.catalog.daterange = daterange
 
         if not self.is_ical_export:
@@ -110,6 +131,26 @@ class EventsDirectoryView(directory.View):
 
     def translate(self, text):
         return utils.translate(self.request, text)
+
+    @property
+    def show_state_filters(self):
+        return getSecurityManager().checkPermission(
+            permissions.ReviewPortalContent, self.context
+        )
+
+    @property
+    def selected_state(self):
+        return self.catalog.state
+
+    def state_filter_list(self):
+        
+        return [
+            ('submitted', _(u'Submitted')),
+            ('published', _(u'Published')),
+        ]
+
+    def state_url(self, method):
+        return self.directory.absolute_url() + '?state=' + method
 
     def ical_url(self, for_all):
         """ Returns the ical url of the current view. """

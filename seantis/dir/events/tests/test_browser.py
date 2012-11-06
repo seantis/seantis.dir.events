@@ -54,7 +54,7 @@ class BrowserTestCase(FunctionalTestCase):
         create_event()
 
         # the event is now invisible to the anonymous user in the directory
-        fourchan.open(baseurl + '/veranstaltungen')
+        fourchan.open(baseurl + '/veranstaltungen?state=submitted')
         self.assertFalse('Some Party' in fourchan.contents)
 
         # it is however visible to the admin
@@ -63,7 +63,13 @@ class BrowserTestCase(FunctionalTestCase):
 
         self.assertTrue('Some Party' in browser.contents)
 
+        # unless the admin filters it out
+        browser.open(baseurl + '/veranstaltungen?state=published')
+
+        self.assertFalse('Some Party' in browser.contents)
+
         # who now has the chance to either deny or publish the event
+        browser.open(baseurl + '/veranstaltungen?state=submitted')
         self.assertTrue('Publish' in browser.contents)
         self.assertTrue('Deny Publication' in browser.contents)
         self.assertTrue('Submitted' in browser.contents)
@@ -82,11 +88,11 @@ class BrowserTestCase(FunctionalTestCase):
         fourchan.open(baseurl + '/veranstaltungen/@@submit')
         create_event()
 
-        browser.open(baseurl + '/veranstaltungen')
-        browser.getLink('Publish').click()
+        browser.open(baseurl + '/veranstaltungen?state=submitted')
+        browser.getLink('Publish', index=1).click()
 
         # this should've led to a state change
-        browser.open(baseurl + '/veranstaltungen')
+        browser.open(baseurl + '/veranstaltungen?state=published')
         self.assertTrue('Some Party' in browser.contents)
         self.assertTrue('Archive' in browser.contents)
 
@@ -250,7 +256,7 @@ class BrowserTestCase(FunctionalTestCase):
         new.getControl('Preview Event').click()
 
         # at this point the event is invisble to the admin
-        browser.open(baseurl + '/veranstaltungen')
+        browser.open(baseurl + '/veranstaltungen?state=submitted')
         self.assertFalse('YOLO' in browser.contents)
 
         # until the anonymous user submits the event
@@ -263,7 +269,7 @@ class BrowserTestCase(FunctionalTestCase):
 
         new.getControl('Submit Event').click()
 
-        browser.open(baseurl + '/veranstaltungen')
+        browser.open(baseurl + '/veranstaltungen?state=submitted')
         self.assertTrue('YOLO' in browser.contents)
 
         # the user may no longer access the event at this point, though
