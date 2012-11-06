@@ -26,6 +26,11 @@ class ITokenAccess(Interface):
     def clear_token(self):
         "Remove the token from context and session."
 
+class IActionGuard(Interface):
+
+    def allow_action(self, action):
+        "Return true if the given workflow_events action is allowed"
+
 class IEventsDirectory(IDirectory):
     """Extends the seantis.dir.base.directory.IDirectory"""
 

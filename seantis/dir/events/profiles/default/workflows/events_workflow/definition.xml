@@ -73,6 +73,7 @@
         <action url="%(content_url)s/content_status_modify?workflow_action=submit" category="workflow" icon="" i18n:translate="">Submit</action>
         <guard>
             <guard-permission>View</guard-permission>
+            <guard-expression>python: here.allow_action('submit')</guard-expression>
         </guard>
     </transition>
  
@@ -80,6 +81,7 @@
         <action url="%(content_url)s/content_status_modify?workflow_action=publish" category="workflow" icon="" i18n:translate="">Publish</action>
         <guard>
             <guard-permission>Review portal content</guard-permission>
+            <guard-expression>python: here.allow_action('publish')</guard-expression>
         </guard>
     </transition>
 
@@ -87,6 +89,7 @@
         <action url="%(content_url)s/content_status_modify?workflow_action=deny" category="workflow" icon="" i18n:translate="">Deny Publication</action>
         <guard>
             <guard-permission>Review portal content</guard-permission>
+            <guard-expression>python: here.allow_action('deny')</guard-expression>
         </guard>
     </transition>
 
@@ -94,6 +97,7 @@
         <action url="%(content_url)s/content_status_modify?workflow_action=archive" category="workflow" icon="" i18n:translate="">Archive</action>
         <guard>
             <guard-permission>Review portal content</guard-permission>
+            <guard-expression>python: here.allow_action('archive')</guard-expression>
         </guard>
     </transition>
 

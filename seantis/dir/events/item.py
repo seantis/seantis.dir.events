@@ -12,13 +12,15 @@ from plone.app.event.ical import ICalendarEventComponent
 
 from seantis.dir.base import item
 from seantis.dir.base import core
-from seantis.dir.base.interfaces import IFieldMapExtender
+from seantis.dir.base.interfaces import IFieldMapExtender, IDirectoryItemBase
 
 from seantis.dir.events import dates
 from seantis.dir.events import recurrence
 from seantis.dir.events import utils
 from seantis.dir.events.token import verify_token
-from seantis.dir.events.interfaces import IEventsDirectory, IEventsDirectoryItem
+from seantis.dir.events.interfaces import (
+    IActionGuard, IEventsDirectory, IEventsDirectoryItem
+)
 
 from AccessControl import getSecurityManager
 from Products.CMFCore import permissions
@@ -44,17 +46,34 @@ class EventsDirectoryItem(item.DirectoryItem):
 
     @property
     def state(self):
+        """ Return the workflow state. """
         return utils.workflow_tool().getInfoFor(self, 'review_state')
-
-    def do_action(self, action):
-        workflowTool = getToolByName(self, "portal_workflow")
-        workflowTool.doActionFor(self, action)
 
     def list_actions(self):
         sortkey = lambda a: self.actions_order.index(a['id'])
 
         workflowTool = getToolByName(self, "portal_workflow")
         return sorted(workflowTool.listActions(object=self), key=sortkey)
+
+    def allow_action(self, action):
+        """ Return true if the given action is allowed. This is not a 
+        wrapper for the transition guards of the event workflow. Instead
+        it is called *by* the transition guards.
+
+        This allows a number of people to work together on an event website
+        with every person having its own group of events which he or she is
+        responsible for. 
+
+        There's no actual implementation of that in seantis.dir.events
+        but client specific packages like izug.seantis.dir.events may
+        use a custom adapter to implement such a thing.
+        """
+        return IActionGuard(self).allow_action(action)
+
+    def do_action(self, action):
+        """ Execute the given action. """
+        workflowTool = getToolByName(self, "portal_workflow")
+        workflowTool.doActionFor(self, action)
 
     def submit(self):
         self.do_action("submit")
@@ -64,6 +83,14 @@ class EventsDirectoryItem(item.DirectoryItem):
 
     def archive(self):
         self.do_action("archive")
+
+class DefaultActionGuard(grok.Adapter):
+
+    grok.context(IDirectoryItemBase)
+    grok.implements(IActionGuard)
+
+    def allow_action(self, action):
+        return True
         
 class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.context(IEventsDirectoryItem)
