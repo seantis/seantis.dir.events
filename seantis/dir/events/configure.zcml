@@ -37,7 +37,7 @@
     <genericsetup:registerProfile
         name="default"
         title="seantis.dir.events"
-        description="events Directory"
+        description="Events Directory"
         directory="profiles/default"
         provides="Products.GenericSetup.interfaces.EXTENSION"
         for="Products.CMFPlone.interfaces.IPloneSiteRoot" 
