@@ -169,6 +169,14 @@
             </ul>
           </div>
 
+          <tal:block condition="python: not is_preview and o.recurrence">
+            <div class="recurring">
+              <h3 i18n:translate="">Recurring Event</h3>
+              <div class="recurrence-help" i18n:translate="">This is a recurring event</div>
+              <div class="recurrence-link"><a tal:attributes="href python: view.recurrence_url(o)" i18n:translate="">Show all occurrences</a></div>
+            </div>
+          </tal:block>
+
           <tal:block condition="python: not is_preview">
             <div class="submitter" tal:condition="python: view.show_submitter">
               <h3 i18n:translate="">Submitter</h3>

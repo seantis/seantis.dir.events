@@ -288,3 +288,8 @@ class DateRanges(object):
         end_of_year -= timedelta(microseconds=1)
 
         return start_of_year, end_of_year
+
+    @property
+    @daterange(_(u'This and Next Year'), _(u'From today until the end of next year'))
+    def this_and_next_year(self):
+        return self.this_year[0], self.next_year[1]

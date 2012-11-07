@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-07 06:56+0000\n"
+"POT-Creation-Date: 2012-11-07 07:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -169,6 +169,10 @@ msgstr "Vom nächsten Monatsbeginn bis Monatsende"
 msgid "From today until 12pm this Sunday"
 msgstr "Von Heute bis Sonntag Nacht"
 
+#: ./dates.py:293
+msgid "From today until the end of next year"
+msgstr "Von Heute bis Ende nächstes Jahr"
+
 #: ./dates.py:262
 msgid "From today until the end of the month"
 msgstr "Von Heute bis Monatsende"
@@ -272,6 +276,10 @@ msgstr "Veranstaltung Veröffentlichen"
 msgid "Published"
 msgstr "Veröffentlicht"
 
+#: ./templates/macros.pt:174
+msgid "Recurring Event"
+msgstr "Wiederholende Veranstaltung"
+
 #: ./form.py:265
 msgid "Send us your events and we will publish them"
 msgstr "Senden Sie uns Ihre Veransteltungen und wir werden sie veröffentlichen"
@@ -283,6 +291,10 @@ msgstr "Senden Sie uns Ihre Veranstaltungen und wir veröffentlichen diese auf d
 #: ./interfaces.py:68
 msgid "Short Description"
 msgstr "Kurzbeschrieb"
+
+#: ./templates/macros.pt:176
+msgid "Show all occurrences"
+msgstr "Alle Wiederholungen anzeigen"
 
 #: ./templates/directory.pt:37
 msgid "State"
@@ -311,7 +323,7 @@ msgid "Submitted"
 msgstr "Gemeldet"
 
 #: ./form.py:469
-#: ./templates/macros.pt:174
+#: ./templates/macros.pt:182
 msgid "Submitter"
 msgstr "Erfasser"
 
@@ -350,6 +362,14 @@ msgstr "Dieses Wochenende"
 #: ./dates.py:276
 msgid "This Year"
 msgstr "Dieses Jahr"
+
+#: ./dates.py:293
+msgid "This and Next Year"
+msgstr "Dieses und nächstes Jahr"
+
+#: ./templates/macros.pt:175
+msgid "This is a recurring event"
+msgstr "Dies ist eine sich wiederholende Veranstaltung"
 
 #: ./templates/macros.pt:134
 msgid "Ticket"

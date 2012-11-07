@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-07 06:56+0000\n"
+"POT-Creation-Date: 2012-11-07 07:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -172,6 +172,10 @@ msgstr ""
 msgid "From today until 12pm this Sunday"
 msgstr ""
 
+#: ./dates.py:293
+msgid "From today until the end of next year"
+msgstr ""
+
 #: ./dates.py:262
 msgid "From today until the end of the month"
 msgstr ""
@@ -275,6 +279,10 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
+#: ./templates/macros.pt:174
+msgid "Recurring Event"
+msgstr ""
+
 #: ./form.py:265
 msgid "Send us your events and we will publish them"
 msgstr ""
@@ -285,6 +293,10 @@ msgstr ""
 
 #: ./interfaces.py:68
 msgid "Short Description"
+msgstr ""
+
+#: ./templates/macros.pt:176
+msgid "Show all occurrences"
 msgstr ""
 
 #: ./templates/directory.pt:37
@@ -314,7 +326,7 @@ msgid "Submitted"
 msgstr ""
 
 #: ./form.py:469
-#: ./templates/macros.pt:174
+#: ./templates/macros.pt:182
 msgid "Submitter"
 msgstr ""
 
@@ -352,6 +364,14 @@ msgstr ""
 
 #: ./dates.py:276
 msgid "This Year"
+msgstr ""
+
+#: ./dates.py:293
+msgid "This and Next Year"
+msgstr ""
+
+#: ./templates/macros.pt:175
+msgid "This is a recurring event"
 msgstr ""
 
 #: ./templates/macros.pt:134

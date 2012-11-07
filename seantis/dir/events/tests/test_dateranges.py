@@ -55,10 +55,12 @@ class TestDateRanges(IntegrationTestCase):
         self.assertFalse(overlaps('today'))
         self.assertFalse(overlaps('this_year'))
         self.assertTrue(overlaps('next_year'))
+        self.assertTrue(overlaps('this_and_next_year'))
 
         dateranges.now = datetime(2012, 1, 1, 12, 0)
         self.assertTrue(overlaps('today'))
         self.assertTrue(overlaps('this_year'))
+        self.assertTrue(overlaps('this_and_next_year'))
 
         dateranges.now = datetime(2011, 12, 31, 12, 0) # saturday
         self.assertFalse(overlaps('today'))

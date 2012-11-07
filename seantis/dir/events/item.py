@@ -1,4 +1,6 @@
 import pytz
+import urllib
+
 from datetime import datetime
 
 from five import grok
@@ -142,6 +144,11 @@ class View(core.View):
     @property
     def is_recurring(self):
         return self.context.recurrence and True or False
+
+    def recurrence_url(self, event):
+        baseurl = self.context.parent().absolute_url()
+        baseurl += '?range=this_and_next_year&search=true&searchtext=%s'
+        return baseurl % urllib.quote(event.short_description.encode('utf-8'))
 
     @property
     def date(self):
