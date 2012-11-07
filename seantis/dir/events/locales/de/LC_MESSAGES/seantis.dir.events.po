@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-05 10:59+0000\n"
+"POT-Creation-Date: 2012-11-07 06:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ./interfaces.py:199
+#: ./interfaces.py:204
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
@@ -30,20 +30,20 @@ msgstr "Veranstaltung Archivieren"
 msgid "Archived"
 msgstr "Archiviert"
 
-#: ./interfaces.py:81
+#: ./interfaces.py:86
 msgid "Attachment 1"
 msgstr "Anhang 1"
 
-#: ./interfaces.py:86
+#: ./interfaces.py:91
 msgid "Attachment 2"
 msgstr "Anhang 2"
 
-#: ./interfaces.py:234
+#: ./interfaces.py:239
 #: ./templates/macros.pt:144
 msgid "Attachments"
 msgstr "Anhänge"
 
-#: ./templates/directory.pt:40
+#: ./templates/directory.pt:47
 msgid "Calendar for all events"
 msgstr "Kalender für alle Veranstaltungen"
 
@@ -51,7 +51,7 @@ msgstr "Kalender für alle Veranstaltungen"
 msgid "Calendar for all occurrences of this event"
 msgstr "Kalender für alle Wiederholungen dieser Veranstaltung"
 
-#: ./templates/directory.pt:43
+#: ./templates/directory.pt:50
 msgid "Calendar for events matching the current filter"
 msgstr "Kalender für Veranstaltungen des aktuellen Filters"
 
@@ -63,7 +63,7 @@ msgstr "Kalender für diese Veranstaltung"
 msgid "Calendar for this occurrence only"
 msgstr "Kalender nur für diese Wiederholung"
 
-#: ./templates/directory.pt:37
+#: ./templates/directory.pt:44
 #: ./templates/macros.pt:156
 msgid "Calendars (iCal)"
 msgstr "Kalender (iCal)"
@@ -76,15 +76,15 @@ msgstr "Veranstaltungs-Meldung Abbrechen"
 msgid "Change Event"
 msgstr "Veranstaltung Bearbeiten"
 
-#: ./interfaces.py:140
+#: ./interfaces.py:145
 msgid "Contact Email"
 msgstr "Kontakt Email"
 
-#: ./interfaces.py:134
+#: ./interfaces.py:139
 msgid "Contact Name"
 msgstr "Kontakt Name"
 
-#: ./interfaces.py:146
+#: ./interfaces.py:151
 msgid "Contact Phone"
 msgstr "Kontakt Telefon"
 
@@ -104,7 +104,7 @@ msgstr "Ablehnen"
 msgid "Detail Preview"
 msgstr "Details-Vorschau"
 
-#: ./templates/directory.pt:64
+#: ./templates/directory.pt:71
 msgid "Dou you have an event to share?"
 msgstr "Sie organisieren eine Veranstaltung?"
 
@@ -124,12 +124,12 @@ msgstr "Veranstaltung Melden"
 msgid "Event Submission Preview"
 msgstr "Veranstaltungs Vorschau"
 
-#: ./interfaces.py:122
+#: ./interfaces.py:127
 #: ./templates/macros.pt:122
 msgid "Event Website"
 msgstr "Veranstaltungs-Webseite"
 
-#: ./interfaces.py:241
+#: ./interfaces.py:246
 msgid "Event end before start"
 msgstr "Veranstaltung endet bevor sie beginnt"
 
@@ -177,7 +177,7 @@ msgstr "Von Heute bis Monatsende"
 msgid "From today until the end of this year"
 msgstr "Von Heute bis Jahresende"
 
-#: ./interfaces.py:104
+#: ./interfaces.py:109
 msgid "Housenumber"
 msgstr "Hausnummer"
 
@@ -185,11 +185,11 @@ msgstr "Hausnummer"
 msgid "If you find things to change, click on &#34;change event&#34; to adjust your request before proceeding."
 msgstr "Wenn Sie noch Änderungen vornehmen möchten, klicken Sie auf &#34;Veranstaltung Bearbeiten&#34; bevor Sie weiterfahren."
 
-#: ./interfaces.py:33
+#: ./interfaces.py:38
 msgid "Image"
 msgstr "Bild"
 
-#: ./interfaces.py:213
+#: ./interfaces.py:218
 msgid "Images"
 msgstr "Bilder"
 
@@ -201,7 +201,7 @@ msgstr "Informationen"
 msgid "List Preview"
 msgstr "Listen-Vorschau"
 
-#: ./interfaces.py:92
+#: ./interfaces.py:97
 #: ./templates/macros.pt:106
 msgid "Locality"
 msgstr "Lokalität"
@@ -210,7 +210,7 @@ msgstr "Lokalität"
 msgid "Location"
 msgstr "Ort"
 
-#: ./interfaces.py:71
+#: ./interfaces.py:76
 msgid "Long Description"
 msgstr "Lange Beschreibung"
 
@@ -230,7 +230,7 @@ msgstr "Nächstes Wochenende"
 msgid "Next Year"
 msgstr "Nächstes Jahr"
 
-#: ./templates/directory.pt:50
+#: ./templates/directory.pt:57
 msgid "No Events"
 msgstr "Keine Veranstaltungen"
 
@@ -238,12 +238,12 @@ msgstr "Keine Veranstaltungen"
 msgid "No changes were applied"
 msgstr "Keine Änderungen"
 
-#: ./interfaces.py:128
+#: ./interfaces.py:133
 #: ./templates/macros.pt:119
 msgid "Organizer"
 msgstr "Organisator"
 
-#: ./interfaces.py:217
+#: ./interfaces.py:222
 msgid "PDF"
 msgstr "PDF"
 
@@ -255,7 +255,7 @@ msgstr "Veranstaltungs-Vorschau"
 msgid "Previewed"
 msgstr "Vorgeschaut"
 
-#: ./interfaces.py:152
+#: ./interfaces.py:157
 msgid "Prices"
 msgstr "Preise"
 
@@ -267,6 +267,7 @@ msgstr "Veröffentlichen"
 msgid "Publish Event"
 msgstr "Veranstaltung Veröffentlichen"
 
+#: ./directory.py:149
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Published"
 msgstr "Veröffentlicht"
@@ -279,11 +280,15 @@ msgstr "Senden Sie uns Ihre Veransteltungen und wir werden sie veröffentlichen"
 msgid "Send us your events and we will publish them on this website"
 msgstr "Senden Sie uns Ihre Veranstaltungen und wir veröffentlichen diese auf der Webseite"
 
-#: ./interfaces.py:63
+#: ./interfaces.py:68
 msgid "Short Description"
 msgstr "Kurzbeschrieb"
 
-#: ./interfaces.py:98
+#: ./templates/directory.pt:37
+msgid "State"
+msgstr "Status"
+
+#: ./interfaces.py:103
 msgid "Street"
 msgstr "Strasse"
 
@@ -296,10 +301,11 @@ msgstr "Melden"
 msgid "Submit Event"
 msgstr "Veranstaltung Melden"
 
-#: ./templates/directory.pt:65
+#: ./templates/directory.pt:72
 msgid "Submit Your Event"
 msgstr "Veranstaltung Melden"
 
+#: ./directory.py:148
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Submitted"
 msgstr "Gemeldet"
@@ -309,19 +315,19 @@ msgstr "Gemeldet"
 msgid "Submitter"
 msgstr "Erfasser"
 
-#: ./interfaces.py:57
+#: ./interfaces.py:62
 msgid "Submitter Email"
 msgstr "Erfasser Email"
 
-#: ./interfaces.py:52
+#: ./interfaces.py:57
 msgid "Submitter Name"
 msgstr "Erfasser Name"
 
-#: ./interfaces.py:44
+#: ./interfaces.py:49
 msgid "Suggested Values for the What-Category"
 msgstr "Vorgeschlagene Werte für die Was-Kategorie"
 
-#: ./interfaces.py:45
+#: ./interfaces.py:50
 msgid "Suggested Values for the Where-Category"
 msgstr "Vorgeschlagene Werte für die Wo-Kategorie"
 
@@ -349,7 +355,7 @@ msgstr "Dieses Jahr"
 msgid "Ticket"
 msgstr "Ticket"
 
-#: ./interfaces.py:158
+#: ./interfaces.py:163
 #: ./templates/macros.pt:136
 msgid "Ticket / Registration Website"
 msgstr "Ticket / Registrations Webseite"
@@ -362,19 +368,19 @@ msgstr "Heute"
 msgid "Tomorrow"
 msgstr "Morgen"
 
-#: ./interfaces.py:116
+#: ./interfaces.py:121
 msgid "Town"
 msgstr "Ort"
 
-#: ./interfaces.py:211
+#: ./interfaces.py:216
 msgid "Unknown image format"
 msgstr "Unbekanntes Bild-Format"
 
-#: ./interfaces.py:230
+#: ./interfaces.py:235
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 
-#: ./interfaces.py:64
+#: ./interfaces.py:69
 msgid "Up to 140 characters"
 msgstr "Bis zu 140 Zeichen"
 
@@ -382,11 +388,11 @@ msgstr "Bis zu 140 Zeichen"
 msgid "Update Event Preview"
 msgstr "Veranstaltungs-Vorschau Aktualisieren"
 
-#: ./directory.py:27
+#: ./directory.py:25
 msgid "What"
 msgstr "Was"
 
-#: ./directory.py:27
+#: ./directory.py:25
 msgid "Where"
 msgstr "Wo"
 
@@ -398,11 +404,11 @@ msgstr "Ganztags"
 msgid "You are almost done! Please have a look a the previews below. If they are to your liking, enter your information and press &#34;Submit Event&#34; to complete your request."
 msgstr "Sie sind schon fast fertig! Bitte sehen Sie sich die Vorschau unten an. Wenn diese Ihren Vorstellungen entspricht, geben Sie noch Ihren Namen und Ihre EMail Adresse an und klicken Sie auf &#34;Veranstaltung Melden&#34;."
 
-#: ./interfaces.py:192
+#: ./interfaces.py:197
 msgid "You may not add more than ${max} occurences"
 msgstr "Sie dürfen nicht mehr als ${max} Wiederholungen erfassen"
 
-#: ./interfaces.py:110
+#: ./interfaces.py:115
 msgid "Zipcode"
 msgstr "PLZ"
 

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-05 10:59+0000\n"
+"POT-Creation-Date: 2012-11-07 06:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: seantis.dir.events\n"
 
-#: ./interfaces.py:199
+#: ./interfaces.py:204
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
@@ -33,20 +33,20 @@ msgstr ""
 msgid "Archived"
 msgstr ""
 
-#: ./interfaces.py:81
+#: ./interfaces.py:86
 msgid "Attachment 1"
 msgstr ""
 
-#: ./interfaces.py:86
+#: ./interfaces.py:91
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:234
+#: ./interfaces.py:239
 #: ./templates/macros.pt:144
 msgid "Attachments"
 msgstr ""
 
-#: ./templates/directory.pt:40
+#: ./templates/directory.pt:47
 msgid "Calendar for all events"
 msgstr ""
 
@@ -54,7 +54,7 @@ msgstr ""
 msgid "Calendar for all occurrences of this event"
 msgstr ""
 
-#: ./templates/directory.pt:43
+#: ./templates/directory.pt:50
 msgid "Calendar for events matching the current filter"
 msgstr ""
 
@@ -66,7 +66,7 @@ msgstr ""
 msgid "Calendar for this occurrence only"
 msgstr ""
 
-#: ./templates/directory.pt:37
+#: ./templates/directory.pt:44
 #: ./templates/macros.pt:156
 msgid "Calendars (iCal)"
 msgstr ""
@@ -79,15 +79,15 @@ msgstr ""
 msgid "Change Event"
 msgstr ""
 
-#: ./interfaces.py:140
+#: ./interfaces.py:145
 msgid "Contact Email"
 msgstr ""
 
-#: ./interfaces.py:134
+#: ./interfaces.py:139
 msgid "Contact Name"
 msgstr ""
 
-#: ./interfaces.py:146
+#: ./interfaces.py:151
 msgid "Contact Phone"
 msgstr ""
 
@@ -107,7 +107,7 @@ msgstr ""
 msgid "Detail Preview"
 msgstr ""
 
-#: ./templates/directory.pt:64
+#: ./templates/directory.pt:71
 msgid "Dou you have an event to share?"
 msgstr ""
 
@@ -127,12 +127,12 @@ msgstr ""
 msgid "Event Submission Preview"
 msgstr ""
 
-#: ./interfaces.py:122
+#: ./interfaces.py:127
 #: ./templates/macros.pt:122
 msgid "Event Website"
 msgstr ""
 
-#: ./interfaces.py:241
+#: ./interfaces.py:246
 msgid "Event end before start"
 msgstr ""
 
@@ -180,7 +180,7 @@ msgstr ""
 msgid "From today until the end of this year"
 msgstr ""
 
-#: ./interfaces.py:104
+#: ./interfaces.py:109
 msgid "Housenumber"
 msgstr ""
 
@@ -188,11 +188,11 @@ msgstr ""
 msgid "If you find things to change, click on &#34;change event&#34; to adjust your request before proceeding."
 msgstr ""
 
-#: ./interfaces.py:33
+#: ./interfaces.py:38
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:213
+#: ./interfaces.py:218
 msgid "Images"
 msgstr ""
 
@@ -204,7 +204,7 @@ msgstr ""
 msgid "List Preview"
 msgstr ""
 
-#: ./interfaces.py:92
+#: ./interfaces.py:97
 #: ./templates/macros.pt:106
 msgid "Locality"
 msgstr ""
@@ -213,7 +213,7 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
-#: ./interfaces.py:71
+#: ./interfaces.py:76
 msgid "Long Description"
 msgstr ""
 
@@ -233,7 +233,7 @@ msgstr ""
 msgid "Next Year"
 msgstr ""
 
-#: ./templates/directory.pt:50
+#: ./templates/directory.pt:57
 msgid "No Events"
 msgstr ""
 
@@ -241,12 +241,12 @@ msgstr ""
 msgid "No changes were applied"
 msgstr ""
 
-#: ./interfaces.py:128
+#: ./interfaces.py:133
 #: ./templates/macros.pt:119
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:217
+#: ./interfaces.py:222
 msgid "PDF"
 msgstr ""
 
@@ -258,7 +258,7 @@ msgstr ""
 msgid "Previewed"
 msgstr ""
 
-#: ./interfaces.py:152
+#: ./interfaces.py:157
 msgid "Prices"
 msgstr ""
 
@@ -270,6 +270,7 @@ msgstr ""
 msgid "Publish Event"
 msgstr ""
 
+#: ./directory.py:149
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Published"
 msgstr ""
@@ -282,11 +283,15 @@ msgstr ""
 msgid "Send us your events and we will publish them on this website"
 msgstr ""
 
-#: ./interfaces.py:63
+#: ./interfaces.py:68
 msgid "Short Description"
 msgstr ""
 
-#: ./interfaces.py:98
+#: ./templates/directory.pt:37
+msgid "State"
+msgstr ""
+
+#: ./interfaces.py:103
 msgid "Street"
 msgstr ""
 
@@ -299,10 +304,11 @@ msgstr ""
 msgid "Submit Event"
 msgstr ""
 
-#: ./templates/directory.pt:65
+#: ./templates/directory.pt:72
 msgid "Submit Your Event"
 msgstr ""
 
+#: ./directory.py:148
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Submitted"
 msgstr ""
@@ -312,19 +318,19 @@ msgstr ""
 msgid "Submitter"
 msgstr ""
 
-#: ./interfaces.py:57
+#: ./interfaces.py:62
 msgid "Submitter Email"
 msgstr ""
 
-#: ./interfaces.py:52
+#: ./interfaces.py:57
 msgid "Submitter Name"
 msgstr ""
 
-#: ./interfaces.py:44
+#: ./interfaces.py:49
 msgid "Suggested Values for the What-Category"
 msgstr ""
 
-#: ./interfaces.py:45
+#: ./interfaces.py:50
 msgid "Suggested Values for the Where-Category"
 msgstr ""
 
@@ -352,7 +358,7 @@ msgstr ""
 msgid "Ticket"
 msgstr ""
 
-#: ./interfaces.py:158
+#: ./interfaces.py:163
 #: ./templates/macros.pt:136
 msgid "Ticket / Registration Website"
 msgstr ""
@@ -365,19 +371,19 @@ msgstr ""
 msgid "Tomorrow"
 msgstr ""
 
-#: ./interfaces.py:116
+#: ./interfaces.py:121
 msgid "Town"
 msgstr ""
 
-#: ./interfaces.py:211
+#: ./interfaces.py:216
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:230
+#: ./interfaces.py:235
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
-#: ./interfaces.py:64
+#: ./interfaces.py:69
 msgid "Up to 140 characters"
 msgstr ""
 
@@ -385,11 +391,11 @@ msgstr ""
 msgid "Update Event Preview"
 msgstr ""
 
-#: ./directory.py:27
+#: ./directory.py:25
 msgid "What"
 msgstr ""
 
-#: ./directory.py:27
+#: ./directory.py:25
 msgid "Where"
 msgstr ""
 
@@ -401,11 +407,11 @@ msgstr ""
 msgid "You are almost done! Please have a look a the previews below. If they are to your liking, enter your information and press &#34;Submit Event&#34; to complete your request."
 msgstr ""
 
-#: ./interfaces.py:192
+#: ./interfaces.py:197
 msgid "You may not add more than ${max} occurences"
 msgstr ""
 
-#: ./interfaces.py:110
+#: ./interfaces.py:115
 msgid "Zipcode"
 msgstr ""
 
