@@ -5,16 +5,17 @@
     display: none;
 }
 
+/* right align the directory marker */
 .directoryMarker {
     right: 0;
 }
 
-#directoryInfo {
-    margin-top: 22px;   
+.directoryResult {
+    padding-right: 10px;   
 }
 
-#content .groupSelection h3 * {
-    color: #75AD0A !important;
+#directoryInfo {
+    margin-top: 22px;   
 }
 
 #directoryResultList {
@@ -24,65 +25,68 @@
     margin-right: 3%;
 }
 
-.directoryResult {
-    padding-right: 10px;   
-}
-
 .event-sidebar {
     float: left;
     width: 38.8%;
     min-width: 300px;
 }
 
-.directoryDates {
+/* highlight the event title when hovering over a marker */
+#content .groupSelection h3 * {
+    color: #75AD0A !important;
+}
+
+/* event navigation on the left */
+.event-navigation {
     float: left;
     width: 15%;
     min-width: 100px;
     margin: 0 3% 0 0;
 }
 
-.directoryDates h3 {
-   font-size: 14px;  
-   padding: 4px 0 4px 10px;
-   margin: 0 0 3px 0;
-   border: 1px solid #afafaf;
-   border-width: 1px 1px 1px 10px;
+.event-navigation > div {
+    margin-bottom: 20px;   
 }
 
-.directoryDates a {
+.event-navigation h3 {
+   font-size: 1.3em;  
+    margin-bottom: 10px
+
+}
+
+.event-navigation a {
     display: block;
     border: 1px solid #efefef !important;
     border-width: 1px 1px 1px 10px !important;
     padding: 5px;
 }
 
-.directoryDates a.selected, 
-#content .directoryDates a:hover {
+.event-navigation a.selected {
+    font-weight: bold;
+}
+
+.event-navigation a.selected, 
+#content .event-navigation a:hover {
     color: black !important;
     border: 1px solid #0083be !important;
     border-width: 1px 1px 1px 10px !important;
 }
 
-#content .directoryDates .ical-links a:hover {
-    border-color: #75ad0a !important;
-}
-
-.directoryDates .admin-filter a.selected, #content .directoryDates .admin-filter a:hover {
+.event-navigation-admin a.selected, 
+#content .event-navigation-admin a:hover {
     border-color: #de7700 !important;
 }
 
-.directoryDates a.selected {
-    font-weight: bold;
+#content .event-navigation-ical a:hover {
+    border-color: #75ad0a !important;
 }
 
-#content .directoryDates ul {
+#content .event-navigation ul {
     list-style-type: none;
+    margin: 0;
 }
 
-#content .directoryDates ul li {
-    margin-left: -25px;
-}
-
+/* event list display */
 .eventgroup-title {
     font-weight: bold;
     color: white;
@@ -156,7 +160,7 @@
          clear: both;   
      }
      
-     .directoryDates {
+     .event-navigation {
          float: none;
          clear:both;
          width: auto;   
