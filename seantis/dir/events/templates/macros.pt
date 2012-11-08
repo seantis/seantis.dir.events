@@ -29,12 +29,14 @@
                   </a>
                 </div>
 
-                <h3><a
-                  tal:attributes="href python: item.url()" 
-                  tal:content="item/title">
-                </a></h3>
+                <div class="event-text">
+                  <h3><a
+                    tal:attributes="href python: item.url()" 
+                    tal:content="item/title">
+                  </a></h3>
 
-                <div class="short" tal:content="item/short_description"></div>
+                  <div class="short" tal:content="item/short_description"></div>
+                </div>
                   
                 <div class="eventtags-list">
                   <tal:block repeat="category python: item.categories()[:2]">
