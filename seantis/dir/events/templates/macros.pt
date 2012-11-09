@@ -119,7 +119,7 @@
             <div class="event_url" tal:condition="o/event_url">
               <a i18n:translate="" tal:attributes="href o/event_url">Event Website</a>
             </div>
-            <div class="contact">
+            <div class="contact" tal:condition="python: any((o.contact_name, o.contact_email))">
               <div class="name" tal:content="o/contact_name"></div>
               <div class="email" tal:condition="o/contact_email">
                 <a tal:content="o/contact_email" tal:attributes="href python: 'mailto:' + o.contact_email"></a>
