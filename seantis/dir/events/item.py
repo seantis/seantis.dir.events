@@ -185,13 +185,6 @@ class View(core.View):
         
         return recurrence.occurrences(self.context, min_date, max_date)
 
-    def attachment_filename(self, attachment):
-        filename = getattr(self.context, attachment).filename
-        if len(filename) > 100:
-            return filename[:100] + '...'
-        else:
-            return filename
-
     @property
     def show_submitter(self):
         # if the information not present, do not show
