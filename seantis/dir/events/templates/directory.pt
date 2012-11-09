@@ -25,7 +25,7 @@
             <div tal:replace="structure provider:seantis.dir.base.directory.viewletmanager"/>
         </tal:block>
 
-        <div id="directoryInfo" tal:define="groups python: view.groups(view.batch);">
+        <div id="directoryInfo" class="responsive-events" tal:define="groups python: view.groups(view.batch);">
           
             <div class="event-navigation">
               <div class="event-navigation-dates">

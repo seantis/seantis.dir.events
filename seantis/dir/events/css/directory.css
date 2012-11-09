@@ -145,29 +145,33 @@ a.event-navigation-link.selected,
 }
 
 @media all and (max-width: 790px) {
-     .event-view {
-         float: none;
-         width: auto;   
-     }
-     
-     #directoryResultList {
-         float: none;
-         width: auto;
-         clear: both;   
-     }
-     
-     .event-navigation {
-         float: none;
-         clear:both;
-         width: auto;   
-     }
-     
-     .event-sidebar {
-         float: none;
-         width: 96.1%;
-         margin-top: 25px;
-         clear:both;
-     }
+
+    /* disable responsive design by removing .responseive-events from the views */
+
+    /* the missing space is no accident*/
+    .responsive-events.event-view {
+        float: none;
+        width: auto;   
+    }
+
+    .responsive-events #directoryResultList {
+        float: none;
+        width: auto;
+        clear: both;   
+    }
+
+    .responsive-events .event-navigation {
+        float: none;
+        clear:both;
+        width: auto;   
+    }
+
+    .responsive-events .event-sidebar {
+        float: none;
+        width: 96.1%;
+        margin-top: 25px;
+        clear:both;
+    }
 }
 
 .event-title {

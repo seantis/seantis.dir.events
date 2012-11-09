@@ -74,7 +74,7 @@
       <div tal:define="
         o python: occurrence;
         is_recurring python: o.recurrence and True or False;
-      " class="event-view">
+      " class="event-view responsive-events">
         <div class="event-head">
           <div class="event-title">
             <div class="event-date"><span tal:content="python: o.human_date(request)"></span> <span tal:content="python: o.human_daterange(request)"></span></div>
