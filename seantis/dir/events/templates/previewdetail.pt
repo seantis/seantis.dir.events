@@ -8,6 +8,7 @@
     occurrence python: view.context.as_occurrence();
     is_preview python: True;
   ">
+    <h1 class="documentFirstHeading" tal:content="context/title" />
     <metal:use use-macro="view/directory/@@seantis-dir-events-macros/macros/event-detail"></metal:use>
   </tal:block>
 </div>

@@ -1,7 +1,7 @@
 /* seantis.dir.events */
 
 /* hide the coordinates field on the event submission form */
-#form-widgets-coordinates, #form-widgets-wkt {
+#form-widgets-coordinates {
     display: none;
 }
 
@@ -174,6 +174,8 @@ a.event-navigation-link.selected,
     border: 1px solid #0083be;   
     border-width: 0 0 0 10px;
     padding-left: 10px;
+    margin-top: 10px;
+    padding-top: 5px;
 }
 
 .event-date {

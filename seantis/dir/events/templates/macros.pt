@@ -77,10 +77,6 @@
       " class="event-view">
         <div class="event-head">
           <div class="event-title">
-            <h2>
-              <tal:block content="o/title" />
-            </h2>
-
             <div class="event-date"><span tal:content="python: o.human_date(request)"></span> <span tal:content="python: o.human_daterange(request)"></span></div>
           </div>
 

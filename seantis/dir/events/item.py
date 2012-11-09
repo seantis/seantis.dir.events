@@ -108,7 +108,7 @@ class View(core.View):
     grok.require('zope2.View')
 
     # don't show the search viewlet the item's view
-    hide_search_viewlet = True
+    hide_search_viewlet = False
 
     template = None
     _template = grok.PageTemplateFile('templates/item.pt')
