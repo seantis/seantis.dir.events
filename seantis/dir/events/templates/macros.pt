@@ -130,7 +130,7 @@
 
           <div class="ticket" tal:condition="python: any((o.registration, o.prices))">
             <h3 i18n:translate="">Ticket</h3>
-            <div class="registration">
+            <div class="registration" tal:condition="o/registration">
               <a tal:attributes="href o/registration" i18n:translate="">Ticket / Registration Website</a>
             </div>
             <div class="prices">
