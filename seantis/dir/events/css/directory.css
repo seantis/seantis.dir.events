@@ -95,22 +95,26 @@ a.event-navigation-link.selected,
     border-top: none;
 }
 
-.eventtags {
+#content .eventgroup .eventtag {
     font-size: 0.9em;
-    line-height: 11px;
-    margin-top: 4px;
+    line-height: 1.9em;
     background-color: #ddd;
     display: inline;
-    padding: 1px 4px;
+    margin: 0;
+
+    color: black;
+    font-weight: normal;
+    padding: 1px 4px !important;
     border-radius: 2px;
+
 }
 
-.eventtags-list {
+.eventtags {
     width: 50%;
     float:left;   
 }
 
-.event-view .eventtags-list {
+.event-view .eventtags {
     margin: 15px 0 20px 0;   
 }
 

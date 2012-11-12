@@ -86,6 +86,30 @@ class EventsDirectoryItem(item.DirectoryItem):
     def archive(self):
         self.do_action("archive")
 
+    def eventtags(self):
+        """ Return a list of tuples containing the event tag value
+        (category value) in position 0 and the link to the related
+        filter in position 1. 
+
+        The results are sorted by value (position 0).
+        """
+
+        categories = dict()
+        categories['cat1'] = self.keywords(categories=('cat1', ))
+        categories['cat2'] = self.keywords(categories=('cat2', ))
+
+        baseurl = self.parent().absolute_url() + '?filter=true&%s=%s'
+
+        tags = list()
+        for key, categories in categories.items():
+            for tag in categories:
+                tags.append((
+                    tag.strip().replace(' ', '&nbsp;'), 
+                    baseurl % (key, urllib.quote(tag))
+                ))
+
+        return sorted(tags, key=lambda t: t[0])
+
 class DefaultActionGuard(grok.Adapter):
 
     grok.context(IDirectoryItemBase)

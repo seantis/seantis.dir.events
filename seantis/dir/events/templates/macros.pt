@@ -38,9 +38,9 @@
                   <div class="short" tal:content="item/short_description"></div>
                 </div>
                   
-                <div class="eventtags-list">
-                  <tal:block repeat="category python: item.categories()[:2]">
-                      <div class="eventtags" tal:condition="python: category[2]" tal:content="python: ', '.join(category[2])"></div>
+                <div class="eventtags">
+                  <tal:block repeat="tag python: item.eventtags()">
+                    <a class="eventtag" tal:attributes="href python: tag[1]"><tal:block replace="structure python: tag[0]"></tal:block></a>
                   </tal:block>
                 </div>
 
