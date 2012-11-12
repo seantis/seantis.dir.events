@@ -15,7 +15,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     grok.provides(IDirectoryCatalog)
 
     def __init__(self, *args, **kwargs):
-        self._daterange = 'this_week'
+        self._daterange = dates.default_daterange
         self._state = 'published'
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
 

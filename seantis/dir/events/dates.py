@@ -7,6 +7,8 @@ from plone.app.event.base import default_timezone
 from seantis.dir.events import utils
 from seantis.dir.events import _
 
+default_daterange = 'this_year'
+
 def eventrange():
     """ Returns the date range (start, end) in which the events are visible. """
     now = default_now()

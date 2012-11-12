@@ -54,7 +54,8 @@ class EventsDirectoryView(directory.View):
 
     def get_last_daterange(self):
         """ Returns the last selected daterange. """
-        return session.get_session(self.context, 'daterange') or 'this_week'
+        return session.get_session(self.context, 'daterange') \
+        or dates.default_daterange
 
     def set_last_daterange(self, method):
         """ Store the last selected daterange on the session. """
