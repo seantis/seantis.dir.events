@@ -95,13 +95,14 @@ a.event-navigation-link.selected,
     border-top: none;
 }
 
-#content .eventgroup .eventtag {
+#content .eventgroup .eventtag,
+#content .event-view .eventtag {
     font-size: 0.9em;
     line-height: 1.9em;
     background-color: #ddd;
     display: inline;
     margin: 0;
-
+    text-decoration: none;
     color: black;
     font-weight: normal;
     padding: 1px 4px !important;
