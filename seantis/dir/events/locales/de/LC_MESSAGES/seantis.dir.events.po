@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-12 09:50+0000\n"
+"POT-Creation-Date: 2012-11-12 16:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,7 +28,7 @@ msgstr "Archivieren"
 
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Archive Event"
-msgstr "Veranstaltung Archivieren"
+msgstr "Veranstaltung archivieren"
 
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Archived"
@@ -72,13 +72,13 @@ msgstr "Kalender nur für diese Wiederholung"
 msgid "Calendars (iCal)"
 msgstr "Kalender (iCal)"
 
-#: ./form.py:333
+#: ./form.py:325
 msgid "Cancel Event Submission"
-msgstr "Veranstaltungs-Meldung Abbrechen"
+msgstr "Abbrechen"
 
 #: ./templates/previewform.pt:28
 msgid "Change Event"
-msgstr "Veranstaltung Bearbeiten"
+msgstr "Veranstaltung bearbeiten"
 
 #: ./interfaces.py:145
 msgid "Contact Email"
@@ -104,7 +104,7 @@ msgstr "Übermorgen"
 msgid "Deny Publication"
 msgstr "Ablehnen"
 
-#: ./form.py:460
+#: ./form.py:495
 msgid "Detail Preview"
 msgstr "Details-Vorschau"
 
@@ -116,17 +116,21 @@ msgstr "Sie organisieren eine Veranstaltung?"
 msgid "Event"
 msgstr "Veranstaltung"
 
-#: ./form.py:382
+#: ./form.py:374
 msgid "Event Preview Updated"
 msgstr "Veranstaltungs Vorschau Aktualisiert"
 
+#: ./form.py:455
+msgid "Event Saved"
+msgstr "Veranstaltung gespeichert"
+
 #: ./form.py:193
 msgid "Event Submission Form"
-msgstr "Veranstaltung Melden"
+msgstr "Veranstaltung melden"
 
-#: ./form.py:497
+#: ./form.py:532
 msgid "Event Submission Preview"
-msgstr "Veranstaltungs Vorschau"
+msgstr "Veranstaltungs-Vorschau"
 
 #: ./interfaces.py:127
 #: ./templates/macros.pt:120
@@ -141,9 +145,17 @@ msgstr "Veranstaltung endet bevor sie beginnt"
 msgid "Event submission cancelled"
 msgstr "Veranstaltungs-Meldung abgebrochen"
 
-#: ./form.py:523
+#: ./form.py:558
 msgid "Event submitted"
 msgstr "Veranstaltung gemeldet"
+
+#: ./item.py:145
+msgid "Event was archived"
+msgstr "Die Veranstaltung wurde archiviert"
+
+#: ./item.py:144
+msgid "Event was published"
+msgstr "Die Veranstaltung wurde veröffentlicht"
 
 #: ./profiles/default/types/seantis.dir.events.directory.xml
 msgid "Events Directory"
@@ -205,7 +217,7 @@ msgstr "Bilder"
 msgid "Information"
 msgstr "Informationen"
 
-#: ./form.py:472
+#: ./form.py:507
 msgid "List Preview"
 msgstr "Listen-Vorschau"
 
@@ -242,7 +254,7 @@ msgstr "Nächstes Jahr"
 msgid "No Events"
 msgstr "Keine Veranstaltungen"
 
-#: ./form.py:384
+#: ./form.py:376
 msgid "No changes were applied"
 msgstr "Keine Änderungen"
 
@@ -255,7 +267,7 @@ msgstr "Organisator"
 msgid "PDF"
 msgstr "PDF"
 
-#: ./form.py:316
+#: ./form.py:308
 msgid "Preview Event"
 msgstr "Veranstaltungs-Vorschau"
 
@@ -267,13 +279,17 @@ msgstr "Vorgeschaut"
 msgid "Prices"
 msgstr "Preise"
 
+#: ./item.py:146
+msgid "Publication of event was denied"
+msgstr "Die Veranstaltung wurde abgelehnt"
+
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Publish"
 msgstr "Veröffentlichen"
 
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Publish Event"
-msgstr "Veranstaltung Veröffentlichen"
+msgstr "Veranstaltung veröffentlichen"
 
 #: ./directory.py:164
 #: ./profiles/default/workflows/events_workflow/definition.xml
@@ -284,7 +300,11 @@ msgstr "Veröffentlicht"
 msgid "Recurring Event"
 msgstr "Wiederholende Veranstaltung"
 
-#: ./form.py:265
+#: ./form.py:429
+msgid "Save Event"
+msgstr "Veranstaltung speichern"
+
+#: ./form.py:264
 msgid "Send us your events and we will publish them"
 msgstr "Senden Sie uns Ihre Veransteltungen und wir werden sie veröffentlichen"
 
@@ -312,21 +332,21 @@ msgstr "Strasse"
 msgid "Submit"
 msgstr "Melden"
 
-#: ./form.py:511
+#: ./form.py:546
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Submit Event"
-msgstr "Veranstaltung Melden"
+msgstr "Veranstaltung melden"
 
 #: ./templates/directory.pt:73
 msgid "Submit Your Event"
-msgstr "Veranstaltung Melden"
+msgstr "Veranstaltung melden"
 
 #: ./directory.py:163
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Submitted"
 msgstr "Gemeldet"
 
-#: ./form.py:479
+#: ./form.py:514
 #: ./templates/macros.pt:180
 msgid "Submitter"
 msgstr "Erfasser"
@@ -408,7 +428,7 @@ msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 msgid "Up to 140 characters"
 msgstr "Bis zu 140 Zeichen"
 
-#: ./form.py:325
+#: ./form.py:317
 msgid "Update Event Preview"
 msgstr "Veranstaltungs-Vorschau Aktualisieren"
 

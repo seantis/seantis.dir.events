@@ -6,6 +6,7 @@ from datetime import datetime
 from five import grok
 
 from Products.CMFCore.utils import getToolByName
+from Products.statusmessages.interfaces import IStatusMessage
 
 from plone.memoize import view
 from plone.app.event.ical import construct_calendar
@@ -16,6 +17,7 @@ from seantis.dir.base import item
 from seantis.dir.base import core
 from seantis.dir.base.interfaces import IFieldMapExtender, IDirectoryItemBase
 
+from seantis.dir.events import _
 from seantis.dir.events import dates
 from seantis.dir.events import recurrence
 from seantis.dir.events import utils
@@ -50,6 +52,10 @@ class EventsDirectoryItem(item.DirectoryItem):
     def state(self):
         """ Return the workflow state. """
         return utils.workflow_tool().getInfoFor(self, 'review_state')
+
+    def action_url(self, action):
+        baseurl = self.absolute_url() + '/do-action?action=%s' 
+        return baseurl % action['id']
 
     def list_actions(self):
         sortkey = lambda a: self.actions_order.index(a['id'])
@@ -125,6 +131,30 @@ class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.viewletmanager(item.DirectoryItemViewletManager)
 
     template = grok.PageTemplateFile('templates/listitem.pt')
+
+class DoActionView(grok.View):
+    """ Pretty much like modify_content_status, but with
+    better messages and redirection to the directory. """
+
+    grok.name('do-action')
+    grok.context(IEventsDirectoryItem)
+    grok.require('cmf.ReviewPortalContent')
+
+    messages = {
+        'publish': _(u'Event was published'),
+        'archive': _(u'Event was archived'),
+        'deny': _(u'Publication of event was denied'),
+    }
+
+    def render(self):
+        action = self.request.get('action')
+        assert action in self.messages
+
+        IStatusMessage(self.request).add(self.messages[action], "info")
+        self.context.do_action(action)
+        self.request.response.redirect(self.context.parent().absolute_url())
+
+        return ""
 
 class View(core.View):
     """Default view of a seantis.dir.events item."""

@@ -63,7 +63,7 @@ class EventsDirectoryView(directory.View):
 
     def get_last_state(self):
         """ Returns the last selected event state. """
-        return session.get_session(self.context, 'state') or 'published'
+        return session.get_session(self.context, 'state') or 'all'
 
     def set_last_state(self, method):
         """ Store the last selected event state on the session. """

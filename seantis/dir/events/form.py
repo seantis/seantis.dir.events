@@ -426,7 +426,7 @@ class EventEditForm(EventSubmitForm):
         self.buttons = button.Buttons()
         self.handlers = button.Handlers()
 
-        save = button.Button(title=_(u'Save Event Preview'), name='save')
+        save = button.Button(title=_(u'Save Event'), name='save')
         self.buttons += button.Buttons(save)
 
         save_handler = button.Handler(save, self.__class__.handle_save)
