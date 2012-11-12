@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <rolemap>
     <permissions>
-        <permission name="seantis.dir.events: Submit Events" acquire="True">
+        <permission name="Request review" acquire="True">
             <role name="Anonymous" />
         </permission>
     </permissions>

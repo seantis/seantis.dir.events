@@ -297,3 +297,35 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('YOLO' in public.contents)
         self.assertFalse('John Doe' in public.contents)
         self.assertFalse('john.doe@example.com' in public.contents)
+
+    def test_default_forms(self):
+
+        # admins use the submit / preview forms for adding / editing
+        # as well so we don't have to support two different form types
+        # the following code tests that
+
+        baseurl = self.baseurl
+        browser = self.admin_browser
+
+        browser.open(baseurl + '/veranstaltungen/++add++seantis.dir.events.item')
+        self.assertTrue('Send us your events' in browser.contents)
+
+        browser.getControl(name='form.widgets.title').value = 'Add Test'
+        browser.getControl(name='form.widgets.short_description').value = 'Add Test Description'
+        browser.getControl('Preview Event').click()
+
+        self.assertTrue('Add Test Description' in browser.contents)
+
+        browser.getControl('Submit Event').click()
+
+        self.assertTrue('Add Test Description' in browser.contents)
+        self.assertTrue('Veranstaltungen' in browser.contents)
+
+        browser.open(baseurl + '/veranstaltungen/add-test/edit')
+        self.assertTrue('Send us your events' in browser.contents)
+
+        browser.getControl(name='form.widgets.short_description').value = 'Changed Test Description'
+        browser.getControl('Save Event').click()
+
+        self.assertTrue('Changed Test Description' in browser.contents)
+        self.assertFalse('preview' in browser.url)

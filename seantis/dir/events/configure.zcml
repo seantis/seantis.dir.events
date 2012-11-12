@@ -16,11 +16,6 @@
     <!-- Include configuration for dependencies listed in setup.py -->
     <includeDependencies package="." />
 
-    <permission
-        id="seantis.dir.events.SubmitEvents"
-        title="seantis.dir.events: Submit Events"
-    />
-
     <!-- Grok the package to initialise schema interfaces and content classes -->
     <grok:grok package="." />
 
@@ -32,6 +27,16 @@
     <browser:resourceDirectory
         name="seantis.dir.events.javascript"
         directory="js"/>
+
+    <!-- Change add view -->
+    <adapter
+        for="Products.CMFCore.interfaces.IFolderish
+             Products.CMFDefault.interfaces.ICMFDefaultSkin
+             plone.dexterity.interfaces.IDexterityFTI"
+        provides="zope.publisher.interfaces.browser.IBrowserPage"
+        factory=".form.EventSubmitForm"
+        name="seantis.dir.events.item"
+        />
 
     <!-- Register an extension profile to make the product installable -->
     <genericsetup:registerProfile

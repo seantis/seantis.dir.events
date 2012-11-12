@@ -223,7 +223,6 @@ class EventSubmissionForm(extensible.ExtensibleForm):
         IStatusMessage(self.request).add(_(u"Event submission cancelled"), "info")
         self.request.response.redirect(self.directory.absolute_url())
 
-
 class EventSubmitForm(extensible.ExtensibleForm, form.Form):
     """Event submission form mainly targeted at anonymous users.
 
@@ -253,7 +252,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form):
     """
     
     grok.name('submit')
-    grok.require('zope2.View')
+    grok.require('cmf.RequestReview')
     grok.context(IEventsDirectory)
 
     template = ViewPageTemplateFile('templates/form.pt')
@@ -267,11 +266,14 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form):
     # if true, render() will return nothing
     empty_body = False
 
-    def __init__(self, context, request):
+    def __init__(self, context, request, fti=None):
         super(EventSubmitForm, self).__init__(context, request)
 
         # do not show the edit/action bar
         self.request['disable_border'] = True
+
+    def __of__(self, context):
+        return self
 
     def update(self):
         self.setup_form()
@@ -413,6 +415,49 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form):
         zope.event.notify(zope.lifecycleevent.ObjectCreatedEvent(obj))
         self.add(obj)
         return obj
+
+class EventEditForm(EventSubmitForm):
+
+    grok.name('edit')
+    grok.require('cmf.ModifyPortalContent')
+    grok.context(IEventsDirectoryItem)
+
+    def setup_form(self):
+        self.buttons = button.Buttons()
+        self.handlers = button.Handlers()
+
+        save = button.Button(title=_(u'Save Event Preview'), name='save')
+        self.buttons += button.Buttons(save)
+
+        save_handler = button.Handler(save, self.__class__.handle_save)
+        self.handlers.addHandler(save, save_handler)
+
+        self.event = self.context
+
+        cancel = button.Button(title=_(u'Cancel Event Submission'), name='cancel')
+        self.buttons += button.Buttons(cancel)
+
+        cancel_handler = button.Handler(cancel, self.__class__.handle_cancel)
+        self.handlers.addHandler(cancel, cancel_handler)
+
+    def handle_save(self, action):
+        data, errors = self.extractData()
+        if errors:
+            self.status = self.formErrorsMessage
+            return
+
+        self.prepare_coordinates(data)
+        self.apply_coordinates(self.getContent())
+
+        changes = self.applyChanges(data)
+        
+        if changes:
+            self.message(_(u'Event Saved'))
+        else:
+            self.message(_(u'No changes were applied'))
+
+        url = self.context.absolute_url()
+        self.redirect(append_token(self.context, url))
 
 class IPreview(form.Schema):
     title = TextLine(required=False)
