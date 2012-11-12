@@ -69,6 +69,20 @@ class EventsDirectoryView(directory.View):
         """ Store the last selected event state on the session. """
         session.set_session(self.context, 'state', method)
 
+    def get_states(self, state):
+        if state == 'submitted':
+            return ('submitted', )
+        if state == 'all':
+            return ('published', 'submitted')
+
+        return ('published', )
+
+    def get_state(self, states):
+        if 'submitted' in states and 'published' in states:
+            return 'all'
+
+        return states[0]
+
     @property
     def selected_daterange(self):
         return self.catalog.daterange
@@ -114,13 +128,13 @@ class EventsDirectoryView(directory.View):
         state = self.request.get('state', self.get_last_state())
 
         if not self.show_state_filters or state not in (
-            'submitted', 'published'
+            'submitted', 'published', 'all'
         ):
-            state = 'published'
+            state = 'all'
         else:
             self.set_last_state(state)
 
-        self.catalog.state = state
+        self.catalog.states = self.get_states(state)
         self.catalog.daterange = daterange
 
         if not self.is_ical_export:
@@ -141,13 +155,14 @@ class EventsDirectoryView(directory.View):
 
     @property
     def selected_state(self):
-        return self.catalog.state
+        return self.get_state(self.catalog.states)
 
     def state_filter_list(self):
         
         return [
             ('submitted', _(u'Submitted')),
             ('published', _(u'Published')),
+            ('all', _(u'All'))
         ]
 
     def state_url(self, method):

@@ -16,7 +16,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     def __init__(self, *args, **kwargs):
         self._daterange = dates.default_daterange
-        self._state = 'published'
+        self._states = ('submitted', 'published')
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
 
     @property
@@ -29,13 +29,18 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         self._daterange = range
 
     @property
-    def state(self):
-        return self._state
+    def states(self):
+        return self._states
 
-    @state.setter
-    def state(self, state):
-        assert state in ('submitted', 'published')
-        self._state = state
+    @states.setter
+    def states(self, states):
+        for state in states:
+            # as an added security measure it is not yet possible to
+            # query for previewed events as they should only be availble
+            # to the user with the right token (see form.py)
+            assert state in ('submitted', 'published', 'archived')
+        
+        self._states = states
 
     def sortkey(self):
         return lambda i: i.start
@@ -43,7 +48,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     def query(self, **kwargs):
         results = self.catalog(path={'query': self.path, 'depth': 1},
             object_provides=IDirectoryItemBase.__identifier__,
-            review_state=(self._state,),
+            review_state=self._states,
             **kwargs
         )
         return results

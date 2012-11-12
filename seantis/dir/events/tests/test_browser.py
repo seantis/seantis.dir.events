@@ -59,7 +59,12 @@ class BrowserTestCase(FunctionalTestCase):
 
         # it is however visible to the admin
         browser = self.admin_browser
-        browser.open(fourchan.url)
+        browser.open(baseurl + '/veranstaltungen?state=submitted')
+
+        self.assertTrue('Some Party' in browser.contents)
+
+        browser = self.admin_browser
+        browser.open(baseurl + '/veranstaltungen?state=all')
 
         self.assertTrue('Some Party' in browser.contents)
 

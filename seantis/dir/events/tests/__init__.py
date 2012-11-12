@@ -1,8 +1,10 @@
+import os
 import unittest2 as unittest
+
 from datetime import datetime, timedelta
+from tempfile import NamedTemporaryFile
 
 from AccessControl import getSecurityManager
-from AccessControl.unauthorized import Unauthorized
 from plone.testing import z2
 from plone.dexterity.utils import createContentInContainer
 from plone.app import testing
@@ -125,6 +127,15 @@ class BetterBrowser(Browser):
 
     def assert_notfound(self, url):
         self.assert_http_exception(url, 'NotFound')
+
+    def show_in_browser(self):
+        """ Opens the current contents in the default system browser """
+        tempfile = NamedTemporaryFile(delete=False) 
+        tempfile.write(self.contents)
+        tempfile.close()
+
+        os.rename(tempfile.name, tempfile.name+'.html')
+        os.system("open "+tempfile.name+'.html');
 
 class FunctionalTestCase(IntegrationTestCase):
 
