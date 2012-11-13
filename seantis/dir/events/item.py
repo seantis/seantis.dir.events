@@ -109,6 +109,9 @@ class EventsDirectoryItem(item.DirectoryItem):
         tags = list()
         for key, categories in categories.items():
             for tag in categories:
+                if not tag:
+                    continue
+                    
                 tags.append((
                     tag.strip().replace(' ', '&nbsp;'), 
                     baseurl % (key, urllib.quote(tag))

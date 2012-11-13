@@ -212,6 +212,7 @@ class ImportIcsView(grok.View):
         return self.request.get('url', '').replace('webcal://', 'https://')
 
     def say(self, text):
+        print text
         self.messages.append(text)
         return '<br>'.join(self.messages)
 
@@ -279,8 +280,11 @@ class ImportIcsView(grok.View):
             if params['recurrence']:
                 params['recurrence'] = 'RRULE:' + params['recurrence'].to_ical()
 
-            addContentToContainer(self.context, createContent(
+            content = addContentToContainer(self.context, createContent(
                 'seantis.dir.events.item', **params
             ))
+
+            content.submit()
+            content.publish()
             
         return self.say('events successfully imported')
