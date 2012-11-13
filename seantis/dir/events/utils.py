@@ -1,3 +1,6 @@
+import functools
+import time
+
 from Products.CMFCore.utils import getToolByName
 
 from zope.component import getMultiAdapter
@@ -32,3 +35,17 @@ def verify_wkt(data):
         from pygeoif.geometry import from_wkt
         geom = from_wkt(data)
     return geom
+
+def profile(fn):
+    """ Naive profiling of a function.. on unix systems only. """
+
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        start = time.time()
+
+        result = fn(*args, **kwargs)
+        print fn.__name__, 'took', (time.time() - start) * 1000, 'ms'
+
+        return result
+
+    return wrapper
