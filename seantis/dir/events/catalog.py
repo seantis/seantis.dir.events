@@ -1,6 +1,7 @@
 from five import grok
 
 from plone.app.event.ical import construct_calendar
+from plone.memoize import instance
 
 from seantis.dir.base.catalog import DirectoryCatalog
 from seantis.dir.base.interfaces import IDirectoryCatalog, IDirectoryItemBase
@@ -24,6 +25,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         return self._daterange
 
     @daterange.setter
+    @instance.clearafter
     def daterange(self, range):
         assert dates.is_valid_daterange(range), "invalid date range %s" % range
         self._daterange = range
@@ -33,6 +35,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         return self._states
 
     @states.setter
+    @instance.clearafter
     def states(self, states):
         for state in states:
             # as an added security measure it is not yet possible to
@@ -46,9 +49,12 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         return lambda i: i.start
 
     def query(self, **kwargs):
+        start, end = getattr(dates.DateRanges(), self._daterange)
+
         results = self.catalog(path={'query': self.path, 'depth': 1},
             object_provides=IDirectoryItemBase.__identifier__,
             review_state=self._states,
+            eventrange={'query':(start, end)},
             **kwargs
         )
         return results
@@ -61,6 +67,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
                 for split in recurrence.split_days(occurrence):
                     yield split
 
+    @instance.memoize
     def items(self):
         real = super(EventsDirectoryCatalog, self).items()
         return sorted(self.spawn(real), key=self.sortkey())
@@ -69,6 +76,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         real = super(EventsDirectoryCatalog, self).filter(term)
         return sorted(self.spawn(real), key=self.sortkey())
 
+    @instance.memoize
     def search(self, text):
         real = super(EventsDirectoryCatalog, self).search(text)
         return sorted(self.spawn(real), key=self.sortkey())
