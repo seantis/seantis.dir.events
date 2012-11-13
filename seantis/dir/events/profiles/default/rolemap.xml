@@ -3,6 +3,7 @@
     <permissions>
         <permission name="Request review" acquire="True">
             <role name="Anonymous" />
+            <role name="Authenticated" />
         </permission>
     </permissions>
 </rolemap>
