@@ -149,7 +149,7 @@ class GeneralGroup(EventBaseGroup):
             encode = lambda s: s.encode('utf-8')
 
             for value in context.suggested_values(category):
-                terms.append(SimpleVocabulary.createTerm(encode(value), hash(value), value))
+                terms.append(SimpleVocabulary.createTerm(value, hash(value), value))
 
             return SimpleVocabulary(terms)
 

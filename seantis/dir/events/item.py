@@ -114,7 +114,7 @@ class EventsDirectoryItem(item.DirectoryItem):
                     
                 tags.append((
                     tag.strip().replace(' ', '&nbsp;'), 
-                    baseurl % (key, urllib.quote(tag))
+                    baseurl % (key, urllib.quote(tag.encode('utf-8')))
                 ))
 
         return sorted(tags, key=lambda t: t[0])
