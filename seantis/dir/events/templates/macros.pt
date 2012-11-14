@@ -142,10 +142,10 @@
             <h3 i18n:translate="">Attachments</h3>
             <ul>
               <li tal:condition="o/attachment_1">
-                <a class="attachment" tal:attributes="href string:${o/absolute_url}/@@download/attachment_1; title o/attachment_1/filename" i18n:translate>Attachment 1</a>
+                <a class="attachment" tal:attributes="href string:${o/absolute_url}/@@download/attachment_1; title o/attachment_1/filename" tal:content="python: o.attachment_filename('attachment_1')">>Attachment 1</a>
               </li>
               <li tal:condition="o/attachment_2">
-                <a class="attachment" tal:attributes="href string:${o/absolute_url}/@@download/attachment_2; title o/attachment_2/filename" i18n:translate>Attachment 2</a>
+                <a class="attachment" tal:attributes="href string:${o/absolute_url}/@@download/attachment_2; title o/attachment_2/filename" tal:content="python: o.attachment_filename('attachment_2')">Attachment 2</a>
               </li>
             </ul>
           </div>

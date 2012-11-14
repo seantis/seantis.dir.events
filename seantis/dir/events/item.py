@@ -92,6 +92,14 @@ class EventsDirectoryItem(item.DirectoryItem):
     def archive(self):
         self.do_action("archive")
 
+    def attachment_filename(self, attachment):
+        filename = getattr(self, attachment).filename
+
+        if len(filename) > 100:
+            return filename[:100] + '...'
+        else:
+            return filename
+
     def eventtags(self):
         """ Return a list of tuples containing the event tag value
         (category value) in position 0 and the link to the related
