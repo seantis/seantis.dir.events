@@ -55,8 +55,7 @@
               </div>
             </div>
 
-            <div id="directoryResultList" class="no-results" i18n:translate="" tal:condition="python: not view.has_results">
-              No Events
+            <div id="directoryResultList" class="no-results" i18n:translate="" tal:condition="python: not view.has_results" tal:content="view/no_events_helptext">
             </div>
             
             <tal:block define="

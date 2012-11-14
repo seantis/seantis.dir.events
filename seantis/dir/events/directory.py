@@ -84,6 +84,13 @@ class EventsDirectoryView(directory.View):
         return states[0]
 
     @property
+    def no_events_helptext(self):
+        if 'published' not in self.catalog.states:
+            return _(u'No events for the current state')
+        else:
+            return _(u'No events for the current daterange')
+
+    @property
     def selected_daterange(self):
         return self.catalog.daterange
 
