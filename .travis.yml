@@ -11,6 +11,7 @@ install:
 # https://github.com/rentalita/salt/commit/5dac55a75e8b717e25d37e06a6ee7491254bb5ac
 # once this breaks, maybe we can detect running under travis so we can mock m2crypto
 before_install:
+
     - sudo apt-get update && sudo apt-get install swig
     - pip install http://dl.dropbox.com/u/174789/m2crypto-0.20.1.tar.gz
 script: bin/test -s seantis.dir
