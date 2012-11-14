@@ -18,7 +18,7 @@ def translate(request, text):
 
 def render_ical_response(request, context, calendar):
     name = '%s.ics' % context.getId()
-    request.RESPONSE.setHeader('Content-Type', 'text/calendar')
+    request.RESPONSE.setHeader('Content-Type', 'text/calendar; charset=UTF-8')
     request.RESPONSE.setHeader('Content-Disposition',
         'attachment; filename="%s"' % name
     )
