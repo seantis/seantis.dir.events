@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-12 16:13+0000\n"
+"POT-Creation-Date: 2012-11-14 13:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
-#: ./directory.py:165
+#: ./directory.py:172
 msgid "All"
 msgstr ""
 
@@ -111,7 +111,7 @@ msgstr ""
 msgid "Detail Preview"
 msgstr ""
 
-#: ./templates/directory.pt:72
+#: ./templates/directory.pt:71
 msgid "Dou you have an event to share?"
 msgstr ""
 
@@ -152,11 +152,11 @@ msgstr ""
 msgid "Event submitted"
 msgstr ""
 
-#: ./item.py:145
+#: ./item.py:156
 msgid "Event was archived"
 msgstr ""
 
-#: ./item.py:144
+#: ./item.py:155
 msgid "Event was published"
 msgstr ""
 
@@ -253,12 +253,16 @@ msgstr ""
 msgid "Next Year"
 msgstr ""
 
-#: ./templates/directory.pt:58
-msgid "No Events"
-msgstr ""
-
 #: ./form.py:376
 msgid "No changes were applied"
+msgstr ""
+
+#: ./directory.py:91
+msgid "No events for the current daterange"
+msgstr ""
+
+#: ./directory.py:89
+msgid "No events for the current state"
 msgstr ""
 
 #: ./interfaces.py:133
@@ -282,7 +286,7 @@ msgstr ""
 msgid "Prices"
 msgstr ""
 
-#: ./item.py:146
+#: ./item.py:157
 msgid "Publication of event was denied"
 msgstr ""
 
@@ -294,7 +298,7 @@ msgstr ""
 msgid "Publish Event"
 msgstr ""
 
-#: ./directory.py:164
+#: ./directory.py:171
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Published"
 msgstr ""
@@ -340,11 +344,11 @@ msgstr ""
 msgid "Submit Event"
 msgstr ""
 
-#: ./templates/directory.pt:73
+#: ./templates/directory.pt:72
 msgid "Submit Your Event"
 msgstr ""
 
-#: ./directory.py:163
+#: ./directory.py:170
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Submitted"
 msgstr ""

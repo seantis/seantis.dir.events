@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-12 16:13+0000\n"
+"POT-Creation-Date: 2012-11-14 13:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
-#: ./directory.py:165
+#: ./directory.py:172
 msgid "All"
 msgstr "Alle"
 
@@ -108,7 +108,7 @@ msgstr "Ablehnen"
 msgid "Detail Preview"
 msgstr "Details-Vorschau"
 
-#: ./templates/directory.pt:72
+#: ./templates/directory.pt:71
 msgid "Dou you have an event to share?"
 msgstr "Sie organisieren eine Veranstaltung?"
 
@@ -149,11 +149,11 @@ msgstr "Veranstaltungs-Meldung abgebrochen"
 msgid "Event submitted"
 msgstr "Veranstaltung gemeldet"
 
-#: ./item.py:145
+#: ./item.py:156
 msgid "Event was archived"
 msgstr "Die Veranstaltung wurde archiviert"
 
-#: ./item.py:144
+#: ./item.py:155
 msgid "Event was published"
 msgstr "Die Veranstaltung wurde veröffentlicht"
 
@@ -250,13 +250,17 @@ msgstr "Nächstes Wochenende"
 msgid "Next Year"
 msgstr "Nächstes Jahr"
 
-#: ./templates/directory.pt:58
-msgid "No Events"
-msgstr "Keine Veranstaltungen"
-
 #: ./form.py:376
 msgid "No changes were applied"
 msgstr "Keine Änderungen"
+
+#: ./directory.py:91
+msgid "No events for the current daterange"
+msgstr "Keine Veranstaltungen für das gewählte Datum"
+
+#: ./directory.py:89
+msgid "No events for the current state"
+msgstr "Keine Veranstaltungen für den gewählten Status"
 
 #: ./interfaces.py:133
 #: ./templates/macros.pt:117
@@ -279,7 +283,7 @@ msgstr "Vorgeschaut"
 msgid "Prices"
 msgstr "Preise"
 
-#: ./item.py:146
+#: ./item.py:157
 msgid "Publication of event was denied"
 msgstr "Die Veranstaltung wurde abgelehnt"
 
@@ -291,7 +295,7 @@ msgstr "Veröffentlichen"
 msgid "Publish Event"
 msgstr "Veranstaltung veröffentlichen"
 
-#: ./directory.py:164
+#: ./directory.py:171
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Published"
 msgstr "Veröffentlicht"
@@ -337,11 +341,11 @@ msgstr "Melden"
 msgid "Submit Event"
 msgstr "Veranstaltung melden"
 
-#: ./templates/directory.pt:73
+#: ./templates/directory.pt:72
 msgid "Submit Your Event"
 msgstr "Veranstaltung melden"
 
-#: ./directory.py:163
+#: ./directory.py:170
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Submitted"
 msgstr "Gemeldet"
