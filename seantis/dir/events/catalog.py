@@ -54,7 +54,6 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         results = self.catalog(path={'query': self.path, 'depth': 1},
             object_provides=IDirectoryItemBase.__identifier__,
             review_state=self._states,
-            eventrange={'query':(start, end)},
             **kwargs
         )
         return results
@@ -73,6 +72,11 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         return sorted(self.spawn(real), key=self.sortkey())
 
     def filter(self, term):
+        nonempty_terms = [t for t in term.values() if t != u'!empty']
+
+        if len(nonempty_terms) == 0:
+            return self.items()
+        
         real = super(EventsDirectoryCatalog, self).filter(term)
         return sorted(self.spawn(real), key=self.sortkey())
 
