@@ -154,15 +154,15 @@
             <h3 i18n:translate="">Calendars (iCal)</h3>
             <ul tal:condition="is_recurring">
               <li>
-                <a tal:attributes="href python: view.ical_url(only_this=False)" i18n:translate="">Calendar for all occurrences of this event</a>
+                <a tal:attributes="href python: view.ical_url(only_this=False)" i18n:translate="">Calendar export for all occurrences of this event</a>
               </li>
               <li>
-                <a tal:attributes="href python: view.ical_url(only_this=True)" i18n:translate="">Calendar for this occurrence only</a>
+                <a tal:attributes="href python: view.ical_url(only_this=True)" i18n:translate="">Calendar export for this occurrence only</a>
               </li>
             </ul>
             <ul tal:condition="python: not view.is_recurring">
               <li>
-                <a tal:attributes="href python: view.ical_url(only_this=False)" i18n:translate="">Calendar for this event</a>
+                <a tal:attributes="href python: view.ical_url(only_this=False)" i18n:translate="">Calendar export for this event</a>
               </li>
             </ul>
           </div>

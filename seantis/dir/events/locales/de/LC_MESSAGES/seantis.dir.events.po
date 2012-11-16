@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-16 09:28+0000\n"
+"POT-Creation-Date: 2012-11-16 10:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,24 +52,24 @@ msgid "Attachments"
 msgstr "Anhänge"
 
 #: ./templates/directory.pt:49
-msgid "Calendar for all events"
-msgstr "Kalender für alle Veranstaltungen"
+msgid "Calendar export for all events"
+msgstr "Kalender Export für alle Veranstaltungen"
 
 #: ./templates/macros.pt:157
-msgid "Calendar for all occurrences of this event"
-msgstr "Kalender für alle Wiederholungen dieser Veranstaltung"
+msgid "Calendar export for all occurrences of this event"
+msgstr "Kalender Export für alle Wiederholungen dieser Veranstaltung"
 
 #: ./templates/directory.pt:52
-msgid "Calendar for events matching the current filter"
-msgstr "Kalender für Veranstaltungen des aktuellen Filters"
+msgid "Calendar export for events matching the current filter"
+msgstr "Kalender Export für alle Veranstaltungen des aktuellen Filters"
 
 #: ./templates/macros.pt:165
-msgid "Calendar for this event"
-msgstr "Kalender für diese Veranstaltung"
+msgid "Calendar export for this event"
+msgstr "Kalender Export für diese Veranstaltung"
 
 #: ./templates/macros.pt:160
-msgid "Calendar for this occurrence only"
-msgstr "Kalender nur für diese Wiederholung"
+msgid "Calendar export for this occurrence only"
+msgstr "Kalender Export nur für diese Wiederholung"
 
 #: ./templates/directory.pt:46
 #: ./templates/macros.pt:154
@@ -96,7 +96,7 @@ msgstr "Kontakt Name"
 msgid "Contact Phone"
 msgstr "Kontakt Telefon"
 
-#: ./templates/directory.pt:32
+#: ./templates/directory.pt:39
 msgid "Date"
 msgstr "Datum"
 
@@ -328,7 +328,7 @@ msgstr "Kurzbeschrieb"
 msgid "Show all occurrences"
 msgstr "Alle Wiederholungen anzeigen"
 
-#: ./templates/directory.pt:39
+#: ./templates/directory.pt:32
 msgid "State"
 msgstr "Status"
 

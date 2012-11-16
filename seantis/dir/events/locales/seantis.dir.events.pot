@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-16 09:28+0000\n"
+"POT-Creation-Date: 2012-11-16 10:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,23 +55,23 @@ msgid "Attachments"
 msgstr ""
 
 #: ./templates/directory.pt:49
-msgid "Calendar for all events"
+msgid "Calendar export for all events"
 msgstr ""
 
 #: ./templates/macros.pt:157
-msgid "Calendar for all occurrences of this event"
+msgid "Calendar export for all occurrences of this event"
 msgstr ""
 
 #: ./templates/directory.pt:52
-msgid "Calendar for events matching the current filter"
+msgid "Calendar export for events matching the current filter"
 msgstr ""
 
 #: ./templates/macros.pt:165
-msgid "Calendar for this event"
+msgid "Calendar export for this event"
 msgstr ""
 
 #: ./templates/macros.pt:160
-msgid "Calendar for this occurrence only"
+msgid "Calendar export for this occurrence only"
 msgstr ""
 
 #: ./templates/directory.pt:46
@@ -99,7 +99,7 @@ msgstr ""
 msgid "Contact Phone"
 msgstr ""
 
-#: ./templates/directory.pt:32
+#: ./templates/directory.pt:39
 msgid "Date"
 msgstr ""
 
@@ -331,7 +331,7 @@ msgstr ""
 msgid "Show all occurrences"
 msgstr ""
 
-#: ./templates/directory.pt:39
+#: ./templates/directory.pt:32
 msgid "State"
 msgstr ""
 
