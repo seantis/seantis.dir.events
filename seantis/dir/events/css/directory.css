@@ -307,6 +307,15 @@ form.change-event {
     margin-bottom: 20px;   
 }
 
+.event-submit-form .olControlNavigationItemInactive,
+.event-submit-form .olControlNavigationItemActive,
+.event-submit-form .olControlDrawFeaturePathItemInactive,
+.event-submit-form .olControlDrawFeaturePathItemActive,
+.event-submit-form .olControlDrawFeaturePolygonItemInactive,
+.event-submit-form .olControlDrawFeaturePolygonItemActive {
+    display: none;   
+}
+
 /* event states */
 
 .event-state-submitted {
