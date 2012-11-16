@@ -140,13 +140,13 @@ class GeneralGroup(EventBaseGroup):
         for widget in widgets:
             self.widgets[widget].label = labels[widget]
 
+        self.widgets['title'].label = _(u'Title of event')
+
     def available_categories(self, context, category):
 
         @grok.provider(IContextSourceBinder)
         def get_categories(ctx):
             terms = []
-
-            encode = lambda s: s.encode('utf-8')
 
             for value in context.suggested_values(category):
                 terms.append(SimpleVocabulary.createTerm(value, hash(value), value))

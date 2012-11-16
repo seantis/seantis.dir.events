@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-16 11:15+0000\n"
+"POT-Creation-Date: 2012-11-16 11:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -415,6 +415,10 @@ msgstr "Ticket"
 #: ./templates/macros.pt:134
 msgid "Ticket / Registration Website"
 msgstr "Ticket / Registrations Webseite"
+
+#: ./form.py:143
+msgid "Title of event"
+msgstr "Titel der Veranstaltung"
 
 #: ./dates.py:88
 msgid "Today"
