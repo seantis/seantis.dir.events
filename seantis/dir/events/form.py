@@ -168,6 +168,9 @@ class LocationGroup(EventBaseGroup):
         'wkt',
     )
 
+    def update_widgets(self):
+        self.widgets['wkt'].label = _(u'Coordinates')
+
     def update_dynamic_fields(self):
         coordinates = self.fields['wkt']
         coordinates.widgetFactory = MapFieldWidget

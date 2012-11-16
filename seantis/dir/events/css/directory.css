@@ -316,6 +316,10 @@ form.change-event {
     display: none;   
 }
 
+.event-submit-form #formfield-form-widgets-wkt .formHelp {
+    display: none;   
+}
+
 /* event states */
 
 .event-state-submitted {
