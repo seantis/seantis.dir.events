@@ -166,8 +166,11 @@ class EventsDirectoryView(directory.View):
 
     def state_filter_list(self):
         
+        submitted = utils.translate(self.request, _(u'Submitted'))
+        submitted += u' (%i)' % self.catalog.submitted_count
+
         return [
-            ('submitted', _(u'Submitted')),
+            ('submitted', submitted),
             ('published', _(u'Published')),
             ('all', _(u'All'))
         ]
