@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-14 13:41+0000\n"
+"POT-Creation-Date: 2012-11-16 09:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,10 @@ msgstr ""
 "Language-Name: English\n"
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: seantis.dir.events\n"
+
+#: ./templates/form.pt:15
+msgid "${chars} characters left"
+msgstr ""
 
 #: ./interfaces.py:204
 msgid "${type} bigger than ${max} Megabyte are not allowed"
