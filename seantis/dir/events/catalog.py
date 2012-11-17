@@ -5,11 +5,11 @@ from plone.app.event.ical import construct_calendar
 from plone.memoize import instance
 
 from seantis.dir.base.catalog import DirectoryCatalog
-from seantis.dir.base.interfaces import IDirectoryCatalog, IDirectoryItemBase
+from seantis.dir.base.interfaces import IDirectoryCatalog
 
 from seantis.dir.events import dates
 from seantis.dir.events import recurrence
-from seantis.dir.events.directory import IEventsDirectory
+from seantis.dir.events.interfaces import IEventsDirectory, IEventsDirectoryItem
 
 class EventsDirectoryCatalog(DirectoryCatalog):
 
@@ -30,7 +30,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         """
         
         results = self.catalog(path={'query': self.path, 'depth': 1},
-            object_provides=IDirectoryItemBase.__identifier__,
+            object_provides=IEventsDirectoryItem.__identifier__,
             review_state=('submitted', )
         )
 
@@ -75,17 +75,16 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         return lambda i: i.start
 
     def query(self, **kwargs):
-        start, end = getattr(dates.DateRanges(), self._daterange)
-
         results = self.catalog(path={'query': self.path, 'depth': 1},
-            object_provides=IDirectoryItemBase.__identifier__,
+            object_provides=IEventsDirectoryItem.__identifier__,
             review_state=self._states,
             **kwargs
         )
         return results
 
-    def spawn(self, realitems):
-        start, end = getattr(dates.DateRanges(), self._daterange)
+    def spawn(self, realitems, start=None, end=None):
+        if not all((start, end)):
+            start, end = getattr(dates.DateRanges(), self._daterange)
 
         for item in realitems:
             for occurrence in recurrence.occurrences(item, start, end):

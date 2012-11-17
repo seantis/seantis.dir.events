@@ -14,6 +14,7 @@ from seantis.dir.events.interfaces import IEventsDirectory
 from seantis.dir.events.recurrence import grouped_occurrences
 from seantis.dir.events import dates
 from seantis.dir.events import utils
+from seantis.dir.events import maintenance
 from seantis.dir.events import _
 
 from AccessControl import getSecurityManager
@@ -208,6 +209,16 @@ class EventsDirectoryView(directory.View):
                 url += '&%s=%s' % item
 
             return url
+
+class CleanupView(grok.View):
+
+    grok.name('cleanup')
+    grok.context(IEventsDirectory)
+    grok.require('zope2.View')
+
+    def render(self):
+        maintenance.cleanup_directory(self.context)
+        return u''
 
 class ImportIcsView(grok.View):
 

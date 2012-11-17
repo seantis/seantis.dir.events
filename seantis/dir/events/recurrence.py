@@ -1,6 +1,7 @@
 from itertools import groupby
 from collections import OrderedDict
 from datetime import datetime, timedelta
+from dateutil.rrule import rrule
 
 from zope.proxy import ProxyBase
 from urllib import urlencode
@@ -222,3 +223,9 @@ def occurrences(item, min_date, max_date):
         result.append(Occurrence(item, start, start + duration))
 
     return result
+
+def has_future_occurrences(item, reference_date):
+    if not item.recurrence:
+        return reference_date <= item.start
+
+    return bool(rrule(item.recurrence).after(reference_date, inc=False))
