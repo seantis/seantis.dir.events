@@ -193,7 +193,6 @@ class EventSubmissionForm(extensible.ExtensibleForm):
     template = ViewPageTemplateFile('templates/form.pt')
 
     groups = (GeneralGroup, LocationGroup, InformationGroup)
-    enable_form_tabbing = True
 
     label = _(u'Event Submission Form')
     description = _(
@@ -263,7 +262,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form):
     template = ViewPageTemplateFile('templates/form.pt')
 
     groups = (GeneralGroup, LocationGroup, InformationGroup)
-    enable_form_tabbing = True
+    enable_form_tabbing = False
 
     label = _(u'Event Submission Form')
     description = _(u'Send us your events and we will publish them')
@@ -533,6 +532,8 @@ class PreviewForm(EventSubmissionForm, form.AddForm):
 
     groups = (PreviewGroup, ListPreviewGroup, SubmitterGroup)
     template = ViewPageTemplateFile('templates/previewform.pt')
+
+    enable_form_tabbing = True
 
     label = _(u'Event Submission Preview')
     description = u''
