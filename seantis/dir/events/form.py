@@ -130,7 +130,9 @@ class GeneralGroup(EventBaseGroup):
             )
         
         categories[0].widgetFactory = CheckBoxFieldWidget
+        categories[0].field.required = True
         categories[1].widgetFactory = RadioFieldWidget
+        categories[1].field.required = True
 
     def update_widgets(self):
         # update labels of categories

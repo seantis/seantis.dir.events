@@ -15,6 +15,8 @@ class BrowserTestCase(FunctionalTestCase):
         browser.open(self.baseurl + '/++add++seantis.dir.events.directory')
         
         browser.getControl('Name').value = 'Veranstaltungen'
+        browser.getControl(name='form.widgets.cat1_suggestions').value = "Category1"
+        browser.getControl(name='form.widgets.cat2_suggestions').value = "Category2"
         browser.getControl('Save').click()
 
         self.assertTrue('Veranstaltungen' in browser.contents)
@@ -44,6 +46,10 @@ class BrowserTestCase(FunctionalTestCase):
         def create_event():
             fourchan.getControl(name='form.widgets.title').value = 'Party'
             fourchan.getControl(name='form.widgets.short_description').value = 'Some Party'
+            fourchan.getControl(name='form.widgets.short_description').value = 'Some Party'
+
+            fourchan.getControl('Category1').selected = True
+            fourchan.getControl('Category2').selected = True
             
             fourchan.getControl('Preview Event').click()
 
@@ -130,6 +136,9 @@ class BrowserTestCase(FunctionalTestCase):
         fourchan.getControl(name='form.widgets.title').value = 'Recurring'
         fourchan.getControl(name='form.widgets.short_description').value = 'Every Day'
         fourchan.getControl(name='form.widgets.locality').value = 'at home'
+        
+        fourchan.getControl('Category1').selected = True
+        fourchan.getControl('Category2').selected = True
 
         fourchan.getControl(
             name='form.widgets.recurrence'
@@ -182,6 +191,9 @@ class BrowserTestCase(FunctionalTestCase):
 
         fourchan.getControl(name='form.widgets.title').value = 'Stammtisch'
         fourchan.getControl(name='form.widgets.short_description').value = 'Socializing Yo'
+
+        fourchan.getControl('Category1').selected = True
+        fourchan.getControl('Category2').selected = True
         
         fourchan.getControl('Preview Event').click()
 
@@ -256,6 +268,9 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertEqual(new.getControl(name='form.widgets.title').value, '')
         self.assertEqual(new.getControl(name='form.widgets.short_description').value, '')
 
+        new.getControl('Category1').selected = True
+        new.getControl('Category2').selected = True
+
         new.getControl(name='form.widgets.title').value = "Submitted Event"
         new.getControl(name='form.widgets.short_description').value = "YOLO"
 
@@ -313,6 +328,10 @@ class BrowserTestCase(FunctionalTestCase):
 
         browser.getControl(name='form.widgets.title').value = 'Add Test'
         browser.getControl(name='form.widgets.short_description').value = 'Add Test Description'
+
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
+
         browser.getControl('Preview Event').click()
 
         self.assertTrue('Add Test Description' in browser.contents)
@@ -342,6 +361,9 @@ class BrowserTestCase(FunctionalTestCase):
         browser.getControl(name='form.widgets.title').value = 'Recurring'
         browser.getControl(name='form.widgets.short_description').value = 'Add Test Description'
         browser.getControl(name='form.widgets.recurrence').value = 'RRULE:FREQ=DAILY;COUNT=7'
+
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
         
         browser.getControl('Preview Event').click()
         browser.getControl('Submit Event').click()

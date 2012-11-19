@@ -197,6 +197,20 @@ def validate_recurrence(value):
             raise Invalid(_(u'You may not add more than ${max} occurences',
                 mapping={'number': max_occurrences}))
 
+# force the user to select at least one value for each category
+@form.validator(field=IEventsDirectoryItem['cat1'])
+@form.validator(field=IEventsDirectoryItem['cat2'])
+def validate_category(value):
+    if not value:
+        raise Invalid(_(u'Please choose at least one category'))
+
+# to enforce the last rule, categories must exist
+@form.validator(field=IEventsDirectory['cat1_suggestions'])
+@form.validator(field=IEventsDirectory['cat2_suggestions'])
+def validate_suggestion(value):
+    if not value:
+        raise Invalid(_(u'Please enter at least one suggestion'))
+
 # images and attachments are limited in size
 def check_filesize(value, size_in_mb, type):
 
