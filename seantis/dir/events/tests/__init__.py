@@ -62,7 +62,8 @@ class IntegrationTestCase(unittest.TestCase):
         defaults = {
             'start': datetime.today(),
             'end': datetime.today() + timedelta(seconds=60*60),
-            'timezone': 'Europe/Zurich'
+            'timezone': 'Europe/Zurich',
+            'recurrence': ''
         }
 
         for attr in defaults:
@@ -72,7 +73,7 @@ class IntegrationTestCase(unittest.TestCase):
         return createContentInContainer(
             self.directory, 'seantis.dir.events.item', **kw
         )
-
+        
     def has_permission(self, obj, permission):
         return bool(getSecurityManager().checkPermission(permission, obj))
 

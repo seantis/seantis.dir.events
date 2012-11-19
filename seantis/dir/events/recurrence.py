@@ -1,13 +1,13 @@
 from itertools import groupby
 from collections import OrderedDict
 from datetime import datetime, timedelta
-from dateutil.rrule import rrule
+from dateutil.rrule import rrulestr
 
 from zope.proxy import ProxyBase
 from urllib import urlencode
 
 from plone.event.recurrence import recurrence_sequence_ical
-from plone.event.utils import utcoffset_normalize, DSTADJUST
+from plone.event.utils import utcoffset_normalize, DSTADJUST, tzdel
 
 from seantis.dir.events import dates
 from seantis.dir.events.dates import overlaps
@@ -228,4 +228,6 @@ def has_future_occurrences(item, reference_date):
     if not item.recurrence:
         return reference_date <= item.start
 
-    return bool(rrule(item.recurrence).after(reference_date, inc=False))
+    rrule = rrulestr(item.recurrence, dtstart=item.start, ignoretz=True)
+
+    return bool(rrule.after(reference_date, inc=False))
