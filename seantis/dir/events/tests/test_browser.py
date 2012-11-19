@@ -1,3 +1,4 @@
+from datetime import datetime
 from seantis.dir.events.tests import FunctionalTestCase
 
 class BrowserTestCase(FunctionalTestCase):
@@ -329,3 +330,32 @@ class BrowserTestCase(FunctionalTestCase):
 
         self.assertTrue('Changed Test Description' in browser.contents)
         self.assertFalse('preview' in browser.url)
+
+    def test_recurrence(self):
+
+        baseurl = self.baseurl
+        browser = self.admin_browser
+
+        browser.open(baseurl + '/veranstaltungen/++add++seantis.dir.events.item')
+        self.assertTrue('Send us your events' in browser.contents)
+
+        browser.getControl(name='form.widgets.title').value = 'Recurring'
+        browser.getControl(name='form.widgets.short_description').value = 'Add Test Description'
+        browser.getControl(name='form.widgets.recurrence').value = 'RRULE:FREQ=DAILY;COUNT=7'
+        
+        browser.getControl('Preview Event').click()
+        browser.getControl('Submit Event').click()
+
+        # take the last occurrence
+        first_url = browser.getLink('Recurring', index=0).url
+        link = browser.getLink('Recurring', index=6)
+        year, month, day = map(int, link.url[len(link.url)-10:].split('-'))
+
+        # and ensure that the date is correct in the detail view
+        link.click()
+
+        self.assertFalse('Today' in browser.contents)
+        self.assertTrue('%i.%i' % (day, month) in browser.contents)
+
+        browser.open(first_url)
+        self.assertTrue('Today' in browser.contents)

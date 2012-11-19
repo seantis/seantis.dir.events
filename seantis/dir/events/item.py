@@ -191,19 +191,20 @@ class View(core.View):
         if not self.is_ical_export:
             return self._template.render(self)
         else:
-            calendar = construct_calendar(self.context.parent(), [self.context])
-
-            if self.request.get('only_this') == 'true':
+            if self.date:
+                calendar = construct_calendar(self.context.parent(), [self.occurrence])
                 for component in calendar.subcomponents:
                     if 'RRULE' in component:
                         del component['RRULE']
+            else:
+                calendar = construct_calendar(self.context.parent(), [self.context])
 
             utils.render_ical_response(self.request, self.context, calendar)
 
     def ical_url(self, only_this):
         url = self.context.absolute_url() + '?type=ical'
         if only_this:
-            url += '&only_this=true'
+            url += '&date=' + self.request.get('date')
         return url
 
     @property

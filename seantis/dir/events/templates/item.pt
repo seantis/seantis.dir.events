@@ -24,7 +24,7 @@
         <div id="directoryDetails" class="events">
           
           <tal:block define="
-            occurrence python: context.as_occurrence();
+            occurrence python: view.occurrence;
             is_preview python: False;
           ">
             <metal:use use-macro="context/parent/@@seantis-dir-events-macros/macros/event-detail"></metal:use>
