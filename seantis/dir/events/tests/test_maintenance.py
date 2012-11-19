@@ -27,7 +27,7 @@ class TestMaintenance(IntegrationTestCase):
         self.assertEqual(run(), [])
 
         preview.modification_date = DateTime(
-            datetime.utcnow() - timedelta(days=7, microseconds=1)
+            datetime.utcnow() - timedelta(days=2, microseconds=1)
         )
         preview.reindexObject(idxs=['modified'])
 

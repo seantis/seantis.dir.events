@@ -4,6 +4,7 @@ from logging import getLogger
 log = getLogger('seantis.dir.events')
 
 from seantis.dir.base.interfaces import IDirectoryCatalog
+
 from seantis.dir.events.dates import to_utc
 from seantis.dir.events.interfaces import IEventsDirectoryItem
 from seantis.dir.events.recurrence import has_future_occurrences
@@ -15,7 +16,7 @@ def remove_stale_previews(directory, dryrun=False):
 
     log.info('searching for stale previews')
 
-    past = to_utc(datetime.utcnow() - timedelta(days=7))
+    past = to_utc(datetime.utcnow() - timedelta(days=2))
     stale_previews = query(
         path={'query': directory.getPhysicalPath(), 'depth': 2},
         object_provides=IEventsDirectoryItem.__identifier__,
@@ -100,12 +101,15 @@ def remove_archived_events(directory, dryrun=False):
 
     return archived_events
 
-def cleanup_directory(directory):
+def cleanup_directory(directory, dryrun=True):
 
-    log.info('starting cleanup on %s' % directory.absolute_url())
+    if dryrun:
+        log.info('starting dry run cleanup on %s' % directory.absolute_url())
+    else:
+        log.info('starting real cleanup on %s' % directory.absolute_url())
 
-    remove_stale_previews()
-    archive_past_events()
-    remove_archived_events()
+    remove_stale_previews(directory, dryrun)
+    archive_past_events(directory, dryrun)
+    remove_archived_events(directory, dryrun)
 
     log.info('finished cleanup on %s' % directory.absolute_url())

@@ -6,10 +6,12 @@ from datetime import date as datetime_date
 from urllib import urlopen
 from icalendar import Calendar
 from plone.dexterity.utils import createContent, addContentToContainer
+from zope.component.hooks import getSite
 
 from seantis.dir.base import directory
 from seantis.dir.base import session
 
+from seantis.dir.events.unrestricted import execute_under_special_role
 from seantis.dir.events.interfaces import IEventsDirectory
 from seantis.dir.events.recurrence import grouped_occurrences
 from seantis.dir.events import dates
@@ -217,7 +219,17 @@ class CleanupView(grok.View):
     grok.require('zope2.View')
 
     def render(self):
-        maintenance.cleanup_directory(self.context)
+        
+        # dryrun must be disabled explicitly using &run=1
+        dryrun = not self.request.get('run') == '1'
+
+        # this maintenance feature may be run unrestricted as it does not
+        # leak any information and it's behavior cannot be altered by the
+        # user. This allows for easy use via cronjobs.
+        execute_under_special_role(getSite(), 'Manager', 
+            maintenance.cleanup_directory, self.context, dryrun
+        )
+        
         return u''
 
 class ImportIcsView(grok.View):
