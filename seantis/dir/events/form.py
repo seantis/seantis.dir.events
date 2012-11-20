@@ -375,7 +375,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         self.handlers = button.Handlers()
 
         if self.form_type() == 'addform':
-            preview = button.Button(title=_(u'Preview Event'), name='save')
+            preview = button.Button(title=_(u'Continue'), name='save')
             self.buttons += button.Buttons(preview)
 
             preview_handler = button.Handler(preview, self.__class__.handle_preview)
@@ -384,7 +384,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
             self.ignoreContext = True
             self.ignoreReadonly = True
         else:
-            update = button.Button(title=_(u'Update Event Preview'), name='save')
+            update = button.Button(title=_(u'Continue'), name='save')
             self.buttons += button.Buttons(update)
 
             update_handler = button.Handler(update, self.__class__.handle_update)
@@ -392,7 +392,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
 
             self.context = self.event
 
-        cancel = button.Button(title=_(u'Cancel Event Submission'), name='cancel')
+        cancel = button.Button(title=_(u'Cancel'), name='cancel')
         self.buttons += button.Buttons(cancel)
 
         cancel_handler = button.Handler(cancel, self.__class__.handle_cancel)
@@ -596,7 +596,7 @@ class PreviewForm(EventSubmissionForm, form.AddForm, NavigationMixin):
     grok.context(IEventsDirectoryItem)
     grok.name('preview')
 
-    groups = (PreviewGroup, ListPreviewGroup, SubmitterGroup)
+    groups = (PreviewGroup, ListPreviewGroup)
     template = ViewPageTemplateFile('templates/previewform.pt')
 
     enable_form_tabbing = True
@@ -615,7 +615,47 @@ class PreviewForm(EventSubmissionForm, form.AddForm, NavigationMixin):
         verify_token(self.context, self.request)
         super(PreviewForm, self).update(*args, **kwargs)
 
-    @button.buttonAndHandler(_('Submit Event'), name='save')
+    @button.buttonAndHandler(_('Continue'), name='save')
+    def handleSubmit(self, action):
+        self.request.response.redirect(
+            append_token(self.context, self.context.absolute_url() + '/@@finish')
+        )
+
+    @button.buttonAndHandler(_(u'Adjust'), name='adjust')
+    def handleAdjust(self, action):
+        self.request.response.redirect(
+            append_token(self.context, self.directory.absolute_url() + '/@@submit')
+        )
+
+    @button.buttonAndHandler(_(u'Cancel'), name='cancel')
+    def handleCancel(self, action):
+        self.handle_cancel()
+
+class FinishForm(EventSubmissionForm, form.AddForm, NavigationMixin):
+    grok.context(IEventsDirectoryItem)
+    grok.name('finish')
+
+    groups = (SubmitterGroup, )
+
+    template = ViewPageTemplateFile('templates/finishform.pt')
+
+    enable_form_tabbing = True
+
+    label = _(u'Event Submission Finish')
+    description = u''
+
+    @property
+    def directory(self):
+        return self.context.parent()
+
+    def current_token(self):
+        return current_token(self.request)
+
+    def update(self, *args, **kwargs):
+        verify_token(self.context, self.request)
+        super(FinishForm, self).update(*args, **kwargs)
+
+    @button.buttonAndHandler(_('Submit'), name='save')
     def handleSubmit(self, action):
         data, errors = self.extractData()
         if errors:
@@ -630,6 +670,6 @@ class PreviewForm(EventSubmissionForm, form.AddForm, NavigationMixin):
         IStatusMessage(self.request).add(_(u"Event submitted"), "info")
         self.request.response.redirect(self.directory.absolute_url())
 
-    @button.buttonAndHandler(_(u'Cancel Event Submission'), name='cancel')
+    @button.buttonAndHandler(_(u'Back'), name='cancel')
     def handleCancel(self, action):
         self.handle_cancel()

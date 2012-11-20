@@ -15,7 +15,7 @@
 
 <metal:block use-macro="context/@@seantis-dir-events-macros/macros/form-navigation" />
 
-<div class="event-preview-form">
+<div class="event-finish-form">
     <metal:block use-macro="context/@@ploneform-macros/titlelessform" />
 </div>
 
