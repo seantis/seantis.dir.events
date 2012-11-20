@@ -51,12 +51,13 @@ class BrowserTestCase(FunctionalTestCase):
             fourchan.getControl('Category1').selected = True
             fourchan.getControl('Category2').selected = True
             
-            fourchan.getControl('Preview Event').click()
+            fourchan.getControl('Continue').click()
+            fourchan.getControl('Continue').click()
 
             fourchan.getControl(name='form.widgets.submitter').value = 'John Doe'
             fourchan.getControl(name='form.widgets.submitter_email').value = 'john.doe@example.com'
 
-            fourchan.getControl('Submit Event').click()
+            fourchan.getControl('Submit').click()
 
         create_event()
 
@@ -144,7 +145,7 @@ class BrowserTestCase(FunctionalTestCase):
             name='form.widgets.recurrence'
         ).value = 'RRULE:FREQ=DAILY;COUNT=7'
 
-        fourchan.getControl('Preview Event').click()
+        fourchan.getControl('Continue').click()
 
         # expect all fields to be shown and the recurrence resulting in
         # a number of events in the list
@@ -155,21 +156,21 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertEqual(fourchan.contents.count('"eventgroup"'), 7)
 
         # update the recurrence and check back
-        fourchan.getControl('Change Event').click()
+        fourchan.getControl('Adjust').click()
 
         fourchan.getControl(
             name='form.widgets.recurrence'
         ).value = 'RRULE:FREQ=DAILY;COUNT=52'
 
-        fourchan.getControl('Update Event Preview').click()
+        fourchan.getControl('Continue').click()
 
         self.assertEqual(fourchan.contents.count('"eventgroup"'), 52)
 
         # remove the recurrence, ensuring that one event remains
-        fourchan.getControl('Change Event').click()
+        fourchan.getControl('Adjust').click()
 
         fourchan.getControl(name='form.widgets.recurrence').value = ''
-        fourchan.getControl('Update Event Preview').click()
+        fourchan.getControl('Continue').click()
 
         self.assertEqual(fourchan.contents.count('"eventgroup"'), 1)
 
@@ -195,7 +196,7 @@ class BrowserTestCase(FunctionalTestCase):
         fourchan.getControl('Category1').selected = True
         fourchan.getControl('Category2').selected = True
         
-        fourchan.getControl('Preview Event').click()
+        fourchan.getControl('Continue').click()
 
         # previewing an event should send us to the preview view
         self.assertTrue('preview' in fourchan.url)
@@ -224,7 +225,7 @@ class BrowserTestCase(FunctionalTestCase):
 
         # there's a change-event button which submits a GET request to
         # the submit form using the token in the request
-        fourchan.getControl('Change Event').click()
+        fourchan.getControl('Adjust').click()
         self.assertTrue('submit?token=' in fourchan.url)
         self.assertFalse(fourchan.url.endswith('?token='))
 
@@ -232,7 +233,7 @@ class BrowserTestCase(FunctionalTestCase):
         # and come back to the url to find those changes
 
         fourchan.getControl(name='form.widgets.short_description').value = 'Serious Business'
-        fourchan.getControl('Update Event Preview').click()
+        fourchan.getControl('Continue').click()
 
         self.assertTrue('Serious Business' in fourchan.contents)
         self.assertTrue('preview' in fourchan.url)
@@ -254,7 +255,7 @@ class BrowserTestCase(FunctionalTestCase):
 
         # if the user decides to cancel the event before submitting it, he
         # loses the right to access the event (will be cleaned up by cronjob)
-        fourchan.getControl('Cancel Event Submission').click()
+        fourchan.getControl('Cancel').click()
 
         fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch')
         fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview')
@@ -274,21 +275,23 @@ class BrowserTestCase(FunctionalTestCase):
         new.getControl(name='form.widgets.title').value = "Submitted Event"
         new.getControl(name='form.widgets.short_description').value = "YOLO"
 
-        new.getControl('Preview Event').click()
+        new.getControl('Continue').click()
 
         # at this point the event is invisble to the admin
         browser.open(baseurl + '/veranstaltungen?state=submitted')
         self.assertFalse('YOLO' in browser.contents)
 
         # until the anonymous user submits the event
-        new.getControl('Submit Event').click()
+        new.getControl('Continue').click()
+        
+        new.getControl('Submit').click()
 
         # at this point we 'forgot' to fill in the submitter info so we have at
         # it again and fix that
         new.getControl(name='form.widgets.submitter').value = 'John Doe'
         new.getControl(name='form.widgets.submitter_email').value = 'john.doe@example.com'
 
-        new.getControl('Submit Event').click()
+        new.getControl('Submit').click()
 
         browser.open(baseurl + '/veranstaltungen?state=submitted')
         self.assertTrue('YOLO' in browser.contents)
@@ -332,11 +335,16 @@ class BrowserTestCase(FunctionalTestCase):
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
 
-        browser.getControl('Preview Event').click()
+        browser.getControl('Continue').click()
 
         self.assertTrue('Add Test Description' in browser.contents)
 
-        browser.getControl('Submit Event').click()
+        browser.getControl('Continue').click()
+
+        browser.getControl('Submitter Name').value = 'Submitter'
+        browser.getControl('Submitter Email').value = 'submit@example.com'
+
+        browser.getControl('Submit').click()
 
         self.assertTrue('Add Test Description' in browser.contents)
         self.assertTrue('Veranstaltungen' in browser.contents)
@@ -365,8 +373,13 @@ class BrowserTestCase(FunctionalTestCase):
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
         
-        browser.getControl('Preview Event').click()
-        browser.getControl('Submit Event').click()
+        browser.getControl('Continue').click()
+        browser.getControl('Continue').click()
+
+        browser.getControl('Submitter Name').value = 'Submitter'
+        browser.getControl('Submitter Email').value = 'submit@example.com'
+        
+        browser.getControl('Submit').click()
 
         # take the last occurrence
         first_url = browser.getLink('Recurring', index=0).url
