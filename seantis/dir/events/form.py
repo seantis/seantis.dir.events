@@ -41,6 +41,7 @@ from plone.app.event.dx.behaviors import (
 from seantis.dir.events.interfaces import (
     IEventsDirectory, 
     IEventsDirectoryItem,
+    ITerms
 )
 
 from seantis.dir.events.token import (
@@ -119,7 +120,7 @@ class NavigationMixin(object):
         steps = [
             NavigationStep('submit', _(u'Enter'), None),
             NavigationStep('preview', _(u'Verify'), None),
-            NavigationStep('finish', _(u'Submit'), None)
+            NavigationStep('finish', _(u'Finish'), None)
         ]
 
         if self.__name__ == 'submit':
@@ -587,10 +588,26 @@ class SubmitterGroup(EventBaseGroup):
 
     group_fields = OrderedDict()
     group_fields[IEventsDirectoryItem] = ('submitter', 'submitter_email')
+    group_fields[ITerms] = ('agreed', )
 
     def update_dynamic_fields(self):
         self.fields['submitter'].field.required = True
         self.fields['submitter_email'].field.required = True
+
+        # remove the terms and conditions agreement if there is none
+        if not self.context.parent().terms:
+            del self.fields['agreed']
+        else:
+            # otherwise be sure to link to it
+            url = self.context.parent().absolute_url() + '/@@terms'
+            self.fields['agreed'].field.description = utils.translate(
+                self.request, _((
+                        u"I agree to the "
+                        u"<a target='_blank' href='${url}'>Terms and Conditions</a>"
+                    ),
+                    mapping={'url':url}
+                )
+            )
 
 class PreviewForm(EventSubmissionForm, form.AddForm, NavigationMixin):
     grok.context(IEventsDirectoryItem)

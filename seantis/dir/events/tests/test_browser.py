@@ -394,3 +394,58 @@ class BrowserTestCase(FunctionalTestCase):
 
         browser.open(first_url)
         self.assertTrue('Today' in browser.contents)
+
+    def test_terms(self):
+
+        baseurl = self.baseurl
+        browser = self.admin_browser
+
+        def enable_terms(enable):
+            new = self.new_browser()
+            new.login_admin()
+            
+            new.open(baseurl + '/veranstaltungen/edit')
+            new.getControl(
+                name="form.widgets.terms"
+            ).value = enable and 'verily, though agreeth' or ''
+            new.getControl('Save').click()
+
+        browser.open(baseurl + '/veranstaltungen/++add++seantis.dir.events.item')
+        self.assertTrue('Send us your events' in browser.contents)
+
+        browser.getControl(name='form.widgets.title').value = 'Test'
+        browser.getControl(name='form.widgets.short_description').value = 'Test'
+
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
+        
+        browser.getControl('Continue').click()
+        browser.getControl('Continue').click()
+
+        self.assertFalse('Terms and Conditions' in browser.contents)
+
+        enable_terms(True)
+
+        browser.reload()
+        self.assertTrue('Terms and Conditions' in browser.contents)
+
+        browser.getLink('Terms and Conditions').click()
+        self.assertTrue('verily' in browser.contents)
+
+        browser.goBack()
+
+        # if not agreed upon, the submission is denied
+        browser.getControl('Submitter Name').value = 'Submitter'
+        browser.getControl('Submitter Email').value = 'submit@example.com'
+        self.assertTrue('Terms and Conditions' in browser.contents)
+
+        browser.getControl('Submit').click()
+        self.assertTrue('finish' in browser.url)
+        self.assertTrue('Terms and Conditions' in browser.contents)
+
+        browser.getControl(name='form.widgets.agreed:list').value = 'selected'
+        browser.getControl('Submit').click()
+
+        self.assertFalse('finish' in browser.url)
+        self.assertFalse('Terms and Conditions' in browser.contents)
+        self.assertTrue('Event submitted' in browser.contents)

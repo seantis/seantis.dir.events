@@ -7,9 +7,10 @@ from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
 from plone.directives import form
 from plone.app.event.dx.behaviors import IEventRecurrence
+from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
 from z3c.form import util, validator
-from zope.schema import Text, TextLine, URI
-from zope.interface import Invalid, Interface, Attribute
+from zope.schema import Text, TextLine, URI, Bool
+from zope.interface import Invalid, Interface
 
 from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IDirectory, IDirectoryItem
@@ -39,6 +40,18 @@ class IEventsDirectory(IDirectory):
             required=False,
             default=None
         )
+
+    searchable('terms')
+    terms = Text(
+            title=_(u'Terms and Conditions'),
+            description=_(
+                u'If entered, the terms and conditions have '
+                u'to be agreed to by anyone submitting an event.'
+            ),
+            required=False,
+            default=None
+        )
+    form.widget(terms=WysiwygFieldWidget)
 
 # Hide all categories as they are predefined
 IEventsDirectory.setTaggedValue('seantis.dir.base.omitted', 
@@ -264,3 +277,15 @@ class EventValidator(validator.InvariantsValidator):
 validator.WidgetsValidatorDiscriminators(EventValidator, 
     schema=util.getSpecification(IEventsDirectoryItem, force=True)
 )
+
+class ITerms(form.Schema):
+    agreed = Bool(
+        required=True, default=False
+    )
+
+@form.validator(field=ITerms['agreed'])
+def validate_terms_and_conditions(agreed):
+    if not agreed:
+        raise Invalid(
+            _(u'You have to agree to the terms and conditions to submit this event')
+        )

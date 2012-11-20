@@ -212,6 +212,15 @@ class EventsDirectoryView(directory.View):
 
             return url
 
+class TermsView(grok.View):
+
+    grok.name('terms')
+    grok.context(IEventsDirectory)
+    grok.require('zope2.View')
+
+    label = _(u'Terms and Conditions')
+    template = grok.PageTemplateFile('templates/terms.pt')
+
 class CleanupView(grok.View):
 
     grok.name('cleanup')
