@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-19 15:10+0000\n"
+"POT-Creation-Date: 2012-11-20 08:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr ""
 msgid "Calendars (iCal)"
 msgstr ""
 
-#: ./form.py:330
+#: ./form.py:327
 msgid "Cancel Event Submission"
 msgstr ""
 
@@ -99,7 +99,7 @@ msgstr ""
 msgid "Contact Phone"
 msgstr ""
 
-#: ./form.py:174
+#: ./form.py:181
 msgid "Coordinates"
 msgstr ""
 
@@ -115,7 +115,7 @@ msgstr ""
 msgid "Deny Publication"
 msgstr ""
 
-#: ./form.py:500
+#: ./form.py:497
 msgid "Detail Preview"
 msgstr ""
 
@@ -127,19 +127,19 @@ msgstr ""
 msgid "Event"
 msgstr ""
 
-#: ./form.py:379
+#: ./form.py:376
 msgid "Event Preview Updated"
 msgstr ""
 
-#: ./form.py:460
+#: ./form.py:457
 msgid "Event Saved"
 msgstr ""
 
-#: ./form.py:198
+#: ./form.py:265
 msgid "Event Submission Form"
 msgstr ""
 
-#: ./form.py:537
+#: ./form.py:536
 msgid "Event Submission Preview"
 msgstr ""
 
@@ -152,11 +152,11 @@ msgstr ""
 msgid "Event end before start"
 msgstr ""
 
-#: ./form.py:228
+#: ./form.py:225
 msgid "Event submission cancelled"
 msgstr ""
 
-#: ./form.py:563
+#: ./form.py:562
 msgid "Event submitted"
 msgstr ""
 
@@ -224,11 +224,11 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: ./form.py:181
+#: ./form.py:188
 msgid "Information"
 msgstr ""
 
-#: ./form.py:512
+#: ./form.py:509
 msgid "List Preview"
 msgstr ""
 
@@ -243,6 +243,10 @@ msgstr ""
 
 #: ./interfaces.py:76
 msgid "Long Description"
+msgstr ""
+
+#: ./form.py:171
+msgid "Map"
 msgstr ""
 
 #: ./dates.py:270
@@ -261,7 +265,7 @@ msgstr ""
 msgid "Next Year"
 msgstr ""
 
-#: ./form.py:381
+#: ./form.py:378
 msgid "No changes were applied"
 msgstr ""
 
@@ -290,7 +294,7 @@ msgstr ""
 msgid "Please enter at least one suggestion"
 msgstr ""
 
-#: ./form.py:313
+#: ./form.py:310
 msgid "Preview Event"
 msgstr ""
 
@@ -323,16 +327,12 @@ msgstr ""
 msgid "Recurring Event"
 msgstr ""
 
-#: ./form.py:434
+#: ./form.py:431
 msgid "Save Event"
 msgstr ""
 
-#: ./form.py:269
+#: ./form.py:266
 msgid "Send us your events and we will publish them"
-msgstr ""
-
-#: ./form.py:199
-msgid "Send us your events and we will publish them on this website"
 msgstr ""
 
 #: ./interfaces.py:68
@@ -355,7 +355,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: ./form.py:551
+#: ./form.py:550
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Submit Event"
 msgstr ""
@@ -369,7 +369,7 @@ msgstr ""
 msgid "Submitted"
 msgstr ""
 
-#: ./form.py:519
+#: ./form.py:516
 #: ./templates/macros.pt:180
 msgid "Submitter"
 msgstr ""
@@ -455,7 +455,7 @@ msgstr ""
 msgid "Up to 140 characters"
 msgstr ""
 
-#: ./form.py:322
+#: ./form.py:319
 msgid "Update Event Preview"
 msgstr ""
 

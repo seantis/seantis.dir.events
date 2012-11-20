@@ -161,11 +161,18 @@ class LocationGroup(EventBaseGroup):
     
     label = _(u'Location')
     
-    dynamic_fields = ('wkt', )
     group_fields = OrderedDict() 
     group_fields[IEventsDirectoryItem] = (
         'locality', 'street', 'housenumber', 'zipcode', 'town'
     )
+
+class MapGroup(EventBaseGroup):
+    
+    label = _(u'Map')
+    
+    dynamic_fields = ('wkt', )
+
+    group_fields = OrderedDict() 
     group_fields[IGeoManager] = (
         'wkt',
     )
@@ -189,15 +196,6 @@ class EventSubmissionForm(extensible.ExtensibleForm):
 
     grok.baseclass()
     grok.require('zope2.View')
-    
-    template = ViewPageTemplateFile('templates/form.pt')
-
-    groups = (GeneralGroup, LocationGroup, InformationGroup)
-
-    label = _(u'Event Submission Form')
-    description = _(
-        u'Send us your events and we will publish them on this website'
-    )
 
     coordinates = None
 
@@ -261,7 +259,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form):
 
     template = ViewPageTemplateFile('templates/form.pt')
 
-    groups = (GeneralGroup, LocationGroup, InformationGroup)
+    groups = (GeneralGroup, LocationGroup, MapGroup, InformationGroup)
     enable_form_tabbing = False
 
     label = _(u'Event Submission Form')
