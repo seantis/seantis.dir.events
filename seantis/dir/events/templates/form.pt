@@ -12,6 +12,9 @@
 <tal:main-macro metal:define-macro="main">
         
 <h1 class="documentFirstHeading" tal:content="view/label | nothing" />
+
+<metal:block use-macro="context/@@seantis-dir-events-macros/macros/form-navigation" />
+
 <div class="event-submit-form" data-countdown-template="${chars} characters left" i18n:attributes="data-countdown-template">
     <metal:block use-macro="context/@@ploneform-macros/titlelessform" />
 </div>

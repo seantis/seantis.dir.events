@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-20 08:47+0000\n"
+"POT-Creation-Date: 2012-11-20 09:24+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: DOMAIN\n"
 
-#: ./templates/form.pt:15
+#: ./templates/form.pt:30
 msgid "${chars} characters left"
 msgstr "${chars} Zeichen übrig"
 
@@ -120,6 +120,10 @@ msgstr "Details-Vorschau"
 msgid "Dou you have an event to share?"
 msgstr "Sie organisieren eine Veranstaltung?"
 
+#: ./templates/form.pt:19
+msgid "Enter"
+msgstr "Erfassen"
+
 #: ./form.py:103
 msgid "Event"
 msgstr "Veranstaltung"
@@ -172,6 +176,10 @@ msgstr "Veranstaltungs-Verzeichnis"
 #: ./profiles/default/types/seantis.dir.events.item.xml
 msgid "Events Directory Item"
 msgstr "Veranstaltungs-Verzeichnis Eintrag"
+
+#: ./templates/form.pt:25
+msgid "Finish"
+msgstr "Abschliessen"
 
 #: ./dates.py:232
 msgid "From 4pm next Friday until 12pm next Sunday"
@@ -455,6 +463,10 @@ msgstr "Bis zu 140 Zeichen"
 #: ./form.py:319
 msgid "Update Event Preview"
 msgstr "Veranstaltungs-Vorschau Aktualisieren"
+
+#: ./templates/form.pt:22
+msgid "Verify"
+msgstr "Kontrollieren"
 
 #: ./directory.py:28
 msgid "What"

@@ -203,7 +203,7 @@ class View(core.View):
 
     def ical_url(self, only_this):
         url = self.context.absolute_url() + '?type=ical'
-        if only_this:
+        if only_this and self.request.get('date'):
             url += '&date=' + self.request.get('date')
         return url
 

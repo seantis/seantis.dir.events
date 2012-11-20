@@ -10,6 +10,28 @@
   <body>
 
     <tal:comment replace="nothing">
+      Event Submit Form Navigation
+    </tal:comment>
+
+    <metal:define define-macro="form-navigation">
+      <form class="seantis-form-navigation wizard" tal:condition="python: hasattr(view, 'show_navigation') and view.show_navigation">
+        <ul class="formTabs wizardSteps">
+          <tal:block repeat="step python: view.steps">
+          <li tal:attributes="class python: view.step_classes(step)">
+            
+            <a tal:attributes="href python: step.url" tal:condition="python: step.url"
+            ><span tal:content="step/text"></span></a>
+
+            <a tal:condition="python: not step.url"
+            ><span tal:content="step/text"></span></a>
+          
+          </li>
+          </tal:block>
+        </ul>
+      </form>
+    </metal:define>
+
+    <tal:comment replace="nothing">
       Event Detail View Macro for both view and preview
     </tal:comment>
 

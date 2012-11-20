@@ -2,7 +2,7 @@
 
 from copy import copy
 from five import grok
-from collections import OrderedDict
+from collections import OrderedDict, namedtuple
 
 from Acquisition import aq_inner, aq_base
 from Acquisition.interfaces import IAcquirer
@@ -97,6 +97,74 @@ class EventBaseGroup(group.Group):
 
     def update_widgets(self):
         """ Called when it's time to make changes to the widgets. """
+
+class NavigationStep(object):
+    def __init__(self, id=None, text=None, url=None):
+        self.id, self.text, self.url = id, text, url
+
+class NavigationMixin(object):
+
+    _steps = None
+
+    @property
+    def show_navigation(self):
+        return self.__name__ in ('submit', 'preview', 'finish')
+
+    @property
+    def steps(self):
+
+        if self._steps:
+            return self._steps
+
+        steps = [
+            NavigationStep('submit', _(u'Enter'), None),
+            NavigationStep('preview', _(u'Verify'), None),
+            NavigationStep('finish', _(u'Submit'), None)
+        ]
+
+        if self.__name__ == 'submit':
+            steps[0].url = self.context.absolute_url() + '/@@submit'
+            steps[1].url = None
+            steps[2].url = None
+        elif self.__name__ == 'preview':
+            steps[0].url = self.directory.absolute_url() + '/@@submit'
+            steps[1].url = self.context.absolute_url() + '/@@preview'
+            steps[2].url = None
+        elif self.__name__ == 'finish':
+            steps[0].url = self.directory.absolute_url() + '/@@submit'
+            steps[1].url = self.context.absolute_url() + '/@@preview'
+            steps[2].url = self.context.absolute_url() + '/@@finish'
+        
+        for i in range(0, len(steps)):
+            if steps[i].url:
+                steps[i].url = append_token(self.context, steps[i].url)
+
+        self._steps = steps
+        return self._steps
+
+    @property
+    def current_step(self):
+        for step in self.steps:
+            if self.__name__ == step.id:
+                return step
+
+    def step_classes(self, step):
+
+        classes = ["formTab"]
+        
+        if step.id == self.steps[0].id:
+            classes.append("firstFormTab")
+
+        if step.id == self.steps[-1].id:
+            classes.append("lastFormTab")
+        
+        if step.id == self.current_step.id:
+            classes.append("selected")
+
+        if self.steps.index(step) < self.steps.index(self.current_step):
+            classes.append("visited")
+
+        return ' '.join(classes)
 
 class GeneralGroup(EventBaseGroup):
     
@@ -225,7 +293,7 @@ class EventSubmissionForm(extensible.ExtensibleForm):
         IStatusMessage(self.request).add(_(u"Event submission cancelled"), "info")
         self.request.response.redirect(self.directory.absolute_url())
 
-class EventSubmitForm(extensible.ExtensibleForm, form.Form):
+class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
     """Event submission form mainly targeted at anonymous users.
 
     This form combines add- and edit-form functionality to streamline
@@ -524,7 +592,7 @@ class SubmitterGroup(EventBaseGroup):
         self.fields['submitter'].field.required = True
         self.fields['submitter_email'].field.required = True
 
-class PreviewForm(EventSubmissionForm, form.AddForm):
+class PreviewForm(EventSubmissionForm, form.AddForm, NavigationMixin):
     grok.context(IEventsDirectoryItem)
     grok.name('preview')
 
