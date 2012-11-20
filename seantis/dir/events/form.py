@@ -639,7 +639,7 @@ class FinishForm(EventSubmissionForm, form.AddForm, NavigationMixin):
 
     template = ViewPageTemplateFile('templates/finishform.pt')
 
-    enable_form_tabbing = True
+    enable_form_tabbing = False
 
     label = _(u'Event Submission Finish')
     description = u''
@@ -670,6 +670,12 @@ class FinishForm(EventSubmissionForm, form.AddForm, NavigationMixin):
         IStatusMessage(self.request).add(_(u"Event submitted"), "info")
         self.request.response.redirect(self.directory.absolute_url())
 
-    @button.buttonAndHandler(_(u'Back'), name='cancel')
+    @button.buttonAndHandler(_(u'Back'), name='back')
+    def handleBack(self, action):
+        self.request.response.redirect(
+            append_token(self.context, self.context.absolute_url() + '/@@preview')
+        )
+
+    @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
         self.handle_cancel()

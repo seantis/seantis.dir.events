@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-20 09:24+0000\n"
+"POT-Creation-Date: 2012-11-20 13:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,16 @@ msgstr ""
 "Preferred-Encodings: utf-8 latin1\n"
 "Domain: seantis.dir.events\n"
 
-#: ./templates/form.pt:30
+#: ./templates/form.pt:18
 msgid "${chars} characters left"
 msgstr ""
 
 #: ./interfaces.py:218
 msgid "${type} bigger than ${max} Megabyte are not allowed"
+msgstr ""
+
+#: ./form.py:624
+msgid "Adjust"
 msgstr ""
 
 #: ./directory.py:178
@@ -50,15 +54,19 @@ msgid "Attachment 2"
 msgstr ""
 
 #: ./interfaces.py:253
-#: ./templates/macros.pt:142
+#: ./templates/macros.pt:164
 msgid "Attachments"
+msgstr ""
+
+#: ./form.py:673
+msgid "Back"
 msgstr ""
 
 #: ./templates/directory.pt:49
 msgid "Calendar export for all events"
 msgstr ""
 
-#: ./templates/macros.pt:157
+#: ./templates/macros.pt:179
 msgid "Calendar export for all occurrences of this event"
 msgstr ""
 
@@ -66,25 +74,25 @@ msgstr ""
 msgid "Calendar export for events matching the current filter"
 msgstr ""
 
-#: ./templates/macros.pt:165
+#: ./templates/macros.pt:187
 msgid "Calendar export for this event"
 msgstr ""
 
-#: ./templates/macros.pt:160
+#: ./templates/macros.pt:182
 msgid "Calendar export for this occurrence only"
 msgstr ""
 
 #: ./templates/directory.pt:46
-#: ./templates/macros.pt:154
+#: ./templates/macros.pt:176
 msgid "Calendars (iCal)"
 msgstr ""
 
-#: ./form.py:327
-msgid "Cancel Event Submission"
+#: ./form.py:395
+msgid "Cancel"
 msgstr ""
 
-#: ./templates/previewform.pt:28
-msgid "Change Event"
+#: ./form.py:507
+msgid "Cancel Event Submission"
 msgstr ""
 
 #: ./interfaces.py:145
@@ -99,7 +107,11 @@ msgstr ""
 msgid "Contact Phone"
 msgstr ""
 
-#: ./form.py:181
+#: ./form.py:378
+msgid "Continue"
+msgstr ""
+
+#: ./form.py:249
 msgid "Coordinates"
 msgstr ""
 
@@ -115,7 +127,7 @@ msgstr ""
 msgid "Deny Publication"
 msgstr ""
 
-#: ./form.py:497
+#: ./form.py:565
 msgid "Detail Preview"
 msgstr ""
 
@@ -123,32 +135,36 @@ msgstr ""
 msgid "Dou you have an event to share?"
 msgstr ""
 
-#: ./templates/form.pt:19
+#: ./form.py:120
 msgid "Enter"
 msgstr ""
 
-#: ./form.py:103
+#: ./form.py:171
 msgid "Event"
 msgstr ""
 
-#: ./form.py:376
+#: ./form.py:444
 msgid "Event Preview Updated"
 msgstr ""
 
-#: ./form.py:457
+#: ./form.py:525
 msgid "Event Saved"
 msgstr ""
 
-#: ./form.py:265
+#: ./form.py:644
+msgid "Event Submission Finish"
+msgstr ""
+
+#: ./form.py:333
 msgid "Event Submission Form"
 msgstr ""
 
-#: ./form.py:536
+#: ./form.py:604
 msgid "Event Submission Preview"
 msgstr ""
 
 #: ./interfaces.py:127
-#: ./templates/macros.pt:120
+#: ./templates/macros.pt:142
 msgid "Event Website"
 msgstr ""
 
@@ -156,11 +172,11 @@ msgstr ""
 msgid "Event end before start"
 msgstr ""
 
-#: ./form.py:225
+#: ./form.py:293
 msgid "Event submission cancelled"
 msgstr ""
 
-#: ./form.py:562
+#: ./form.py:670
 msgid "Event submitted"
 msgstr ""
 
@@ -178,10 +194,6 @@ msgstr ""
 
 #: ./profiles/default/types/seantis.dir.events.item.xml
 msgid "Events Directory Item"
-msgstr ""
-
-#: ./templates/form.pt:25
-msgid "Finish"
 msgstr ""
 
 #: ./dates.py:232
@@ -220,10 +232,6 @@ msgstr ""
 msgid "Housenumber"
 msgstr ""
 
-#: ./templates/previewform.pt:21
-msgid "If you find things to change, click on &#34;change event&#34; to adjust your request before proceeding."
-msgstr ""
-
 #: ./interfaces.py:38
 msgid "Image"
 msgstr ""
@@ -232,20 +240,20 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: ./form.py:188
+#: ./form.py:256
 msgid "Information"
 msgstr ""
 
-#: ./form.py:509
+#: ./form.py:577
 msgid "List Preview"
 msgstr ""
 
 #: ./interfaces.py:97
-#: ./templates/macros.pt:104
+#: ./templates/macros.pt:126
 msgid "Locality"
 msgstr ""
 
-#: ./form.py:162
+#: ./form.py:230
 msgid "Location"
 msgstr ""
 
@@ -253,7 +261,7 @@ msgstr ""
 msgid "Long Description"
 msgstr ""
 
-#: ./form.py:171
+#: ./form.py:239
 msgid "Map"
 msgstr ""
 
@@ -273,7 +281,7 @@ msgstr ""
 msgid "Next Year"
 msgstr ""
 
-#: ./form.py:378
+#: ./form.py:446
 msgid "No changes were applied"
 msgstr ""
 
@@ -286,7 +294,7 @@ msgid "No events for the current state"
 msgstr ""
 
 #: ./interfaces.py:133
-#: ./templates/macros.pt:117
+#: ./templates/macros.pt:139
 msgid "Organizer"
 msgstr ""
 
@@ -300,10 +308,6 @@ msgstr ""
 
 #: ./interfaces.py:212
 msgid "Please enter at least one suggestion"
-msgstr ""
-
-#: ./form.py:310
-msgid "Preview Event"
 msgstr ""
 
 #: ./profiles/default/workflows/events_workflow/definition.xml
@@ -331,15 +335,15 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
-#: ./templates/macros.pt:172
+#: ./templates/macros.pt:194
 msgid "Recurring Event"
 msgstr ""
 
-#: ./form.py:431
+#: ./form.py:499
 msgid "Save Event"
 msgstr ""
 
-#: ./form.py:266
+#: ./form.py:334
 msgid "Send us your events and we will publish them"
 msgstr ""
 
@@ -347,7 +351,7 @@ msgstr ""
 msgid "Short Description"
 msgstr ""
 
-#: ./templates/macros.pt:174
+#: ./templates/macros.pt:196
 msgid "Show all occurrences"
 msgstr ""
 
@@ -359,11 +363,11 @@ msgstr ""
 msgid "Street"
 msgstr ""
 
+#: ./form.py:122
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Submit"
 msgstr ""
 
-#: ./form.py:550
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Submit Event"
 msgstr ""
@@ -377,8 +381,8 @@ msgstr ""
 msgid "Submitted"
 msgstr ""
 
-#: ./form.py:516
-#: ./templates/macros.pt:180
+#: ./form.py:584
+#: ./templates/macros.pt:202
 msgid "Submitter"
 msgstr ""
 
@@ -422,20 +426,20 @@ msgstr ""
 msgid "This and Next Year"
 msgstr ""
 
-#: ./templates/macros.pt:173
+#: ./templates/macros.pt:195
 msgid "This is a recurring event"
 msgstr ""
 
-#: ./templates/macros.pt:132
+#: ./templates/macros.pt:154
 msgid "Ticket"
 msgstr ""
 
 #: ./interfaces.py:163
-#: ./templates/macros.pt:134
+#: ./templates/macros.pt:156
 msgid "Ticket / Registration Website"
 msgstr ""
 
-#: ./form.py:145
+#: ./form.py:213
 msgid "Title of event"
 msgstr ""
 
@@ -463,11 +467,7 @@ msgstr ""
 msgid "Up to 140 characters"
 msgstr ""
 
-#: ./form.py:319
-msgid "Update Event Preview"
-msgstr ""
-
-#: ./templates/form.pt:22
+#: ./form.py:121
 msgid "Verify"
 msgstr ""
 
@@ -481,10 +481,6 @@ msgstr ""
 
 #: ./dates.py:105
 msgid "Whole Day"
-msgstr ""
-
-#: ./templates/previewform.pt:17
-msgid "You are almost done! Please have a look a the previews below. If they are to your liking, enter your information and press &#34;Submit Event&#34; to complete your request."
 msgstr ""
 
 #: ./interfaces.py:197
