@@ -22,7 +22,9 @@ from seantis.dir.events import _
 from AccessControl import getSecurityManager
 from Products.CMFCore import permissions
 
-class EventsDirectory(directory.Directory):
+from seantis.dir.events.pages import CustomPageMixin
+
+class EventsDirectory(directory.Directory, CustomPageMixin):
     
     def labels(self):
         return dict(cat1=_(u'What'), cat2=_(u'Where'))
