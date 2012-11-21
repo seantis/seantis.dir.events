@@ -201,6 +201,7 @@ class View(core.View):
 
             utils.render_ical_response(self.request, self.context, calendar)
 
+    @utils.webcal
     def ical_url(self, only_this):
         url = self.context.absolute_url() + '?type=ical'
         if only_this and self.request.get('date'):

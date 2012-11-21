@@ -181,6 +181,7 @@ class EventsDirectoryView(directory.View):
     def state_url(self, method):
         return self.directory.absolute_url() + '?state=' + method
 
+    @utils.webcal
     def ical_url(self, for_all):
         """ Returns the ical url of the current view. """
         url = self.daterange_url('this_year') + '&type=ical'

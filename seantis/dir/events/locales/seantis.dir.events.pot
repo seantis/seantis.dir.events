@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-20 15:51+0000\n"
+"POT-Creation-Date: 2012-11-21 08:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,6 +31,10 @@ msgstr ""
 
 #: ./directory.py:178
 msgid "All"
+msgstr ""
+
+#: ./templates/directory.pt:50
+msgid "All Events"
 msgstr ""
 
 #: ./profiles/default/workflows/events_workflow/definition.xml
@@ -62,16 +66,12 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: ./templates/directory.pt:49
-msgid "Calendar export for all events"
+#: ./templates/directory.pt:46
+msgid "Calendar Export"
 msgstr ""
 
 #: ./templates/macros.pt:179
 msgid "Calendar export for all occurrences of this event"
-msgstr ""
-
-#: ./templates/directory.pt:52
-msgid "Calendar export for events matching the current filter"
 msgstr ""
 
 #: ./templates/macros.pt:187
@@ -82,7 +82,6 @@ msgstr ""
 msgid "Calendar export for this occurrence only"
 msgstr ""
 
-#: ./templates/directory.pt:46
 #: ./templates/macros.pt:176
 msgid "Calendars (iCal)"
 msgstr ""
@@ -131,7 +130,7 @@ msgstr ""
 msgid "Detail Preview"
 msgstr ""
 
-#: ./templates/directory.pt:71
+#: ./templates/directory.pt:75
 msgid "Dou you have an event to share?"
 msgstr ""
 
@@ -194,6 +193,14 @@ msgstr ""
 
 #: ./profiles/default/types/seantis.dir.events.item.xml
 msgid "Events Directory Item"
+msgstr ""
+
+#: ./templates/directory.pt:55
+msgid "Events matching the current filter"
+msgstr ""
+
+#: ./templates/directory.pt:55
+msgid "Filtered Events"
 msgstr ""
 
 #: ./form.py:123
@@ -384,7 +391,7 @@ msgstr ""
 msgid "Submit Event"
 msgstr ""
 
-#: ./templates/directory.pt:72
+#: ./templates/directory.pt:76
 msgid "Submit Your Event"
 msgstr ""
 
@@ -414,7 +421,7 @@ msgstr ""
 msgid "Suggested Values for the Where-Category"
 msgstr ""
 
-#: ./directory.py:221
+#: ./directory.py:222
 #: ./interfaces.py:46
 msgid "Terms and Conditions"
 msgstr ""

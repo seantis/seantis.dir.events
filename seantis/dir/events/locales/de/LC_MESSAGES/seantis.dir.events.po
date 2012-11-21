@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-20 15:51+0000\n"
+"POT-Creation-Date: 2012-11-21 08:39+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,6 +29,10 @@ msgstr "Korrigieren"
 #: ./directory.py:178
 msgid "All"
 msgstr "Alle"
+
+#: ./templates/directory.pt:50
+msgid "All Events"
+msgstr "Alle Veranstaltungen"
 
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Archive"
@@ -59,17 +63,13 @@ msgstr "Anhänge"
 msgid "Back"
 msgstr "Zurück"
 
-#: ./templates/directory.pt:49
-msgid "Calendar export for all events"
-msgstr "Kalender Export für alle Veranstaltungen"
+#: ./templates/directory.pt:46
+msgid "Calendar Export"
+msgstr "Kalender Export"
 
 #: ./templates/macros.pt:179
 msgid "Calendar export for all occurrences of this event"
 msgstr "Kalender Export für alle Wiederholungen dieser Veranstaltung"
-
-#: ./templates/directory.pt:52
-msgid "Calendar export for events matching the current filter"
-msgstr "Kalender Export für alle Veranstaltungen des aktuellen Filters"
 
 #: ./templates/macros.pt:187
 msgid "Calendar export for this event"
@@ -79,7 +79,6 @@ msgstr "Kalender Export für diese Veranstaltung"
 msgid "Calendar export for this occurrence only"
 msgstr "Kalender Export nur für diese Wiederholung"
 
-#: ./templates/directory.pt:46
 #: ./templates/macros.pt:176
 msgid "Calendars (iCal)"
 msgstr "Kalender (iCal)"
@@ -128,7 +127,7 @@ msgstr "Ablehnen"
 msgid "Detail Preview"
 msgstr "Details-Vorschau"
 
-#: ./templates/directory.pt:71
+#: ./templates/directory.pt:75
 msgid "Dou you have an event to share?"
 msgstr "Sie organisieren eine Veranstaltung?"
 
@@ -192,6 +191,14 @@ msgstr "Veranstaltungs-Verzeichnis"
 #: ./profiles/default/types/seantis.dir.events.item.xml
 msgid "Events Directory Item"
 msgstr "Veranstaltungs-Verzeichnis Eintrag"
+
+#: ./templates/directory.pt:55
+msgid "Events matching the current filter"
+msgstr "Veranstaltungen die dem aktuellen Filter entsprechen"
+
+#: ./templates/directory.pt:55
+msgid "Filtered Events"
+msgstr "Gefilterte Veranstaltungen"
 
 #: ./form.py:123
 msgid "Finish"
@@ -381,7 +388,7 @@ msgstr "Melden"
 msgid "Submit Event"
 msgstr "Veranstaltung melden"
 
-#: ./templates/directory.pt:72
+#: ./templates/directory.pt:76
 msgid "Submit Your Event"
 msgstr "Veranstaltung melden"
 
@@ -411,7 +418,7 @@ msgstr "Vorgeschlagene Werte für die Was-Kategorie"
 msgid "Suggested Values for the Where-Category"
 msgstr "Vorgeschlagene Werte für die Wo-Kategorie"
 
-#: ./directory.py:221
+#: ./directory.py:222
 #: ./interfaces.py:46
 msgid "Terms and Conditions"
 msgstr "Allgemeine Geschäftsbedingungen"

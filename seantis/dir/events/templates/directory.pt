@@ -43,13 +43,17 @@
               </div>
 
               <div class="event-navigation-ical">
-                <h3 i18n:translate="">Calendars (iCal)</h3>
+                <h3 i18n:translate="">Calendar Export</h3>
                 <ul>
                   <li tal:condition="python: not view.ical_url(for_all=False)">
-                    <a class="event-navigation-link" tal:attributes="href python: view.ical_url(for_all=True)" i18n:translate="">Calendar export for all events</a>
+                    <span class="link-webcal">
+                      <a class="event-navigation-link" tal:attributes="href python: view.ical_url(for_all=True)" title="All Events" i18n:translate="" i18n:attributes="title">All Events</a>
+                    </span>
                   </li>
                   <li tal:condition="python: view.ical_url(for_all=False)">
-                    <a class="event-navigation-link" tal:attributes="href python: view.ical_url(for_all=False)" i18n:translate="">Calendar export for events matching the current filter</a>
+                    <span class="link-webcal">
+                      <a class="event-navigation-link" tal:attributes="href python: view.ical_url(for_all=False)" title="Events matching the current filter" i18n:translate="" i18n:attributes="title">Filtered Events</a>
+                    </span>
                   </li>
                 </ul>
               </div>

@@ -49,3 +49,19 @@ def profile(fn):
         return result
 
     return wrapper
+
+def webcal(fn):
+    """ Replaces the http in a function that returns an url with webcal.
+    Does nothing if https is used, as webcals seems to be supported badly.
+    """
+
+    @functools.wraps(fn)
+    def wrapper(*args, **kwargs):
+        url = fn(*args, **kwargs)
+        
+        if not url.startswith('https') and url.startswith('http'):
+            url = url.replace('http', 'webcal')
+        
+        return url
+
+    return wrapper
