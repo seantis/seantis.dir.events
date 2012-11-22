@@ -16,7 +16,7 @@
 
     <div tal:replace="structure provider:plone.abovecontenttitle" />
 
-    <a tal:attributes="href python: context.absolute_url() + '?reset=true'"><h1 class="documentFirstHeading" tal:content="context/title" /></a>
+    <a tal:attributes="href python: context.absolute_url() + '?reset=true'"><h1 class="documentFirstHeading" tal:content="view/title" /></a>
 
     <div tal:replace="structure provider:plone.belowcontenttitle" />
     <div tal:replace="structure provider:plone.abovecontentbody" />

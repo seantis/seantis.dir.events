@@ -22,9 +22,9 @@ from seantis.dir.events import _
 from AccessControl import getSecurityManager
 from Products.CMFCore import permissions
 
-from seantis.dir.events.pages import CustomPageMixin
+from seantis.dir.events import pages
 
-class EventsDirectory(directory.Directory, CustomPageMixin):
+class EventsDirectory(directory.Directory, pages.CustomPageHook):
     
     def labels(self):
         return dict(cat1=_(u'What'), cat2=_(u'Where'))
@@ -35,7 +35,7 @@ class EventsDirectory(directory.Directory, CustomPageMixin):
     def unused_categories(self):
         return ('cat3', 'cat4')
 
-class ExtendedDirectoryViewlet(grok.Viewlet):
+class ExtendedDirectoryViewlet(grok.Viewlet, pages.CustomDirectory):
     grok.context(IEventsDirectory)
     grok.name('seantis.dir.events.directory.detail')
     grok.require('zope2.View')
@@ -43,7 +43,11 @@ class ExtendedDirectoryViewlet(grok.Viewlet):
 
     template = grok.PageTemplateFile('templates/directorydetail.pt')
 
-class EventsDirectoryView(directory.View):
+    def __init__(self, *args, **kwargs):
+        super(ExtendedDirectoryViewlet, self).__init__(*args, **kwargs)
+        self.context = self.custom_directory
+
+class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
     grok.name('view')
     grok.context(IEventsDirectory)
@@ -51,6 +55,10 @@ class EventsDirectoryView(directory.View):
 
     template = None
     _template = grok.PageTemplateFile('templates/directory.pt')
+
+    @property
+    def title(self):
+        return self.custom_directory.title
 
     @property
     def is_ical_export(self):

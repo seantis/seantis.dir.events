@@ -9,6 +9,7 @@ from zope.component.hooks import getSite
 from zope.publisher.interfaces import IPublishTraverse
 from zope.interface import implements
 from ZPublisher.BaseRequest import DefaultPublishTraverse
+from zExceptions import NotFound
 
 from plone.app.layout.viewlets.interfaces import IHtmlHeadLinks
 
@@ -16,28 +17,29 @@ from zope.cachedescriptors import property as cacheproperty
 
 from seantis.dir.base.directory import DirectoryCatalogMixin
 from seantis.dir.base.interfaces import IDirectoryRoot
-from seantis.dir.base.session import get_session, set_session
+from seantis.dir.base.session import set_last_search
+
+from seantis.dir.events.interfaces import IEventsDirectory
 
 key = 'seantis-events-pageid'
-pattern = r'-([a-zA-Z]+)-'
+pattern = r'[~-]{1}([a-zA-Z]+)[-]?'
 
-def get_custom_pageid():
-    return get_session(getSite(), key)
+clear = object()
 
-def set_custom_pageid(pageid):
-    set_session(getSite(), key, pageid)
-
-def clear_custom_pageid():
-    set_session(getSite(), key, None)
-
-def custom_properties(directory, pageid=None):
-    pageid = pageid or get_custom_pageid()
-    
-    if not pageid:
+def custom_pageid(request, pageid=None):
+    if pageid is clear:
+        request._custom_pageid = None
+    elif pageid:
+        request._custom_pageid = pageid
+    elif hasattr(request, '_custom_pageid'):
+        return request._custom_pageid
+    else:
         return None
 
-    if not hasattr(directory, pageid):
-        log.debug('pageid %s not found' % pageid)
+def custom_properties(directory, request):
+    pageid = custom_pageid(request)
+    
+    if not pageid:
         return None
 
     try:
@@ -48,7 +50,36 @@ def custom_properties(directory, pageid=None):
 
     return custom
 
-class CustomPageMixin(object):
+def custom_file(path):
+    if not path:
+        return None
+
+    try:
+        return getSite().unrestrictedTraverse(path)
+    except NotFound:
+        return None
+
+def custom_directory(directory, request):
+
+    custom = custom_properties(directory, request) or {}
+    path = custom.get('directory')
+
+    if not path:
+        return directory
+
+    obj = getSite().unrestrictedTraverse(path)
+    if IEventsDirectory.providedBy(obj):
+        return obj
+    else:
+        return directory
+
+class CustomDirectory(object):
+
+    @cacheproperty.cachedIn('_custom')
+    def custom_directory(self):
+        return custom_directory(self.context, self.request)
+    
+class CustomPageHook(object):
     """Intercepts traversal for IImageRepository, but only for 'tags'.
     Everything else is left untouched.
     """
@@ -60,16 +91,19 @@ class CustomPageMixin(object):
         match = re.match(pattern, name)
         if match:
             request._match_request = True
-
             pageid = match.group(1)
             
             log.debug('setting pageid to %s' % pageid)
-            set_custom_pageid(pageid)
+            custom_pageid(request, pageid)
+
+            custom = custom_properties(self, request) or {}
+            if 'searchtext' in custom:
+                set_last_search(self, custom.get('searchtext'))
 
             return self
 
         if not hasattr(request, '_match_request') and name == 'view' and not request.get_header('referer'):
-            clear_custom_pageid()
+            custom_pageid(request, clear)
 
         return DefaultPublishTraverse(self, request).publishTraverse(request, name)
 
@@ -82,12 +116,14 @@ class CustomPageViewlet(grok.Viewlet, DirectoryCatalogMixin):
 
     template = grok.PageTemplateFile('templates/custom.pt')
 
-    @cacheproperty.cachedIn('_custom')
-    def custom(self):
-        return custom_properties(self.directory) or {}
+    @cacheproperty.cachedIn('_custom_properties')
+    def custom_properties(self):
+        return custom_properties(self.context, self.request) or {}
 
     def custom_css(self):
-        return self.custom.get('css', '')
+        f = custom_file(self.custom_properties.get('css', ''))
+        return f and f.absolute_url() or ''
 
     def custom_script(self):
-        return self.custom.get('script', '')
+        f = custom_file(self.custom_properties.get('script', ''))
+        return f and f.absolute_url() or ''
