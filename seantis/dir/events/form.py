@@ -19,6 +19,7 @@ from Products.statusmessages.interfaces import IStatusMessage
 import zope.event
 import zope.lifecycleevent
 
+from zope.interface import implements
 from zope.app.pagetemplate.viewpagetemplatefile import ViewPageTemplateFile
 from zope.schema import Choice, TextLine
 from zope.schema.interfaces import IContextSourceBinder
@@ -37,6 +38,8 @@ from plone.app.event.dx.behaviors import (
     IEventBasic,
     IEventRecurrence
 )
+
+from seantis.dir.base.interfaces import IDirectoryPage
 
 from seantis.dir.events.interfaces import (
     IEventsDirectory, 
@@ -322,6 +325,8 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
 
     """
     
+    implements(IDirectoryPage)
+
     grok.name('submit')
     grok.require('cmf.RequestReview')
     grok.context(IEventsDirectory)
@@ -489,6 +494,8 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
 
 class EventEditForm(EventSubmitForm):
 
+    implements(IDirectoryPage)
+
     grok.name('edit')
     grok.require('cmf.ModifyPortalContent')
     grok.context(IEventsDirectoryItem)
@@ -610,6 +617,9 @@ class SubmitterGroup(EventBaseGroup):
             )
 
 class PreviewForm(EventSubmissionForm, form.AddForm, NavigationMixin):
+
+    implements(IDirectoryPage)
+
     grok.context(IEventsDirectoryItem)
     grok.name('preview')
 
@@ -649,6 +659,9 @@ class PreviewForm(EventSubmissionForm, form.AddForm, NavigationMixin):
         self.handle_cancel()
 
 class FinishForm(EventSubmissionForm, form.AddForm, NavigationMixin):
+
+    implements(IDirectoryPage)
+
     grok.context(IEventsDirectoryItem)
     grok.name('finish')
 

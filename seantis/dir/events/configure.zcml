@@ -38,6 +38,12 @@
         name="seantis.dir.events.item"
         />
 
+    <!-- Transform order 9001 - change custom page urls -->
+    <adapter
+        name="seantis.dir.events.transform"
+        factory=".pages.URLTransform"
+        />
+
     <!-- Register an extension profile to make the product installable -->
     <genericsetup:registerProfile
         name="default"
