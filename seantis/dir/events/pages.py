@@ -47,6 +47,10 @@ class CustomPageRequest(object):
             set_last_search(directory, searchtext)
 
     @property
+    def apply_transformation(self):
+        return bool(self.pageid and self.url)
+
+    @property
     def pageid(self):
         return self.annotations.get(key_pageid)
 
@@ -154,6 +158,7 @@ class CustomPageViewlet(grok.Viewlet, DirectoryCatalogMixin):
         return f and f.absolute_url() or ''
 
 from zope.interface import Interface
+from plone.app.theming.transform import ThemeTransform
 class URLTransform(object):
     implements(ITransform)
     adapts(IDirectoryPage, IBrowserRequest)
@@ -171,10 +176,41 @@ class URLTransform(object):
         return self.transformIterable([result], encoding)
 
     def transformIterable(self, result, encoding):
-        print "woah"
         pagerequest = CustomPageRequest(self.request)
-
+        
         self.request.response.headers['x-page-id'] = pagerequest.pageid or ''
         self.request.response.headers['x-page-url'] = pagerequest.url or ''
+
+        if not pagerequest.apply_transformation:
+            return result
+
+        tree = ThemeTransform(self.published, self.request).parseTree(result).tree
+
+        url = pagerequest.url
+        replacement = url + '/~' + pagerequest.pageid
+
+        links = tree.xpath('//a')
+        for a in links:
+            href = a.attrib.get('href')
+
+            if not href or href == '#':
+                continue
+            
+            if not href.startswith(url):
+                continue
+
+            a.attrib['href'] = href.replace(url, replacement)
+
+        forms = tree.xpath('//form')
+        for form in forms:
+            action = form.attrib.get('action')
+
+            if not action:
+                continue
+
+            if not action.startswith(url):
+                continue
+
+            form.attrib['action'] = action.replace(url, replacement)
 
         return result
