@@ -137,6 +137,9 @@ class CustomPageRequest(object):
         if not self.pageid:
             return {}
 
+        if not hasattr(directory, 'pageid'):
+            return {}
+
         try:
             return json.loads('\n'.join(getattr(directory, self.pageid)))
         except:
