@@ -24,8 +24,9 @@ from Products.CMFCore import permissions
 
 from seantis.dir.events import pages
 
+
 class EventsDirectory(directory.Directory, pages.CustomPageHook):
-    
+
     def labels(self):
         return dict(cat1=_(u'What'), cat2=_(u'Where'))
 
@@ -34,6 +35,7 @@ class EventsDirectory(directory.Directory, pages.CustomPageHook):
 
     def unused_categories(self):
         return ('cat3', 'cat4')
+
 
 class ExtendedDirectoryViewlet(grok.Viewlet, pages.CustomDirectory):
     grok.context(IEventsDirectory)
@@ -46,6 +48,7 @@ class ExtendedDirectoryViewlet(grok.Viewlet, pages.CustomDirectory):
     def __init__(self, *args, **kwargs):
         super(ExtendedDirectoryViewlet, self).__init__(*args, **kwargs)
         self.context = self.custom_directory
+
 
 class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
@@ -178,7 +181,7 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         return self.get_state(self.catalog.states)
 
     def state_filter_list(self):
-        
+
         submitted = utils.translate(self.request, _(u'Submitted'))
         submitted += u' (%i)' % self.catalog.submitted_count
 
@@ -195,10 +198,10 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
     def ical_url(self, for_all):
         """ Returns the ical url of the current view. """
         url = self.daterange_url('this_year') + '&type=ical'
-        
+
         if for_all:
             return url
-        
+
         action, param = self.primary_action()
 
         if action not in (self.search, self.filter):
@@ -211,17 +214,18 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
                 return ''
 
         if action == self.filter:
-            terms = dict([(k,v) for k, v in param.items() if v != '!empty'])
-            
+            terms = dict([(k, v) for k, v in param.items() if v != '!empty'])
+
             if not terms:
                 return ''
 
             url += '&filter=true'
-            
+
             for item in terms.items():
                 url += '&%s=%s' % item
 
             return url
+
 
 class TermsView(grok.View):
 
@@ -232,6 +236,7 @@ class TermsView(grok.View):
     label = _(u'Terms and Conditions')
     template = grok.PageTemplateFile('templates/terms.pt')
 
+
 class CleanupView(grok.View):
 
     grok.name('cleanup')
@@ -239,18 +244,19 @@ class CleanupView(grok.View):
     grok.require('zope2.View')
 
     def render(self):
-        
+
         # dryrun must be disabled explicitly using &run=1
         dryrun = not self.request.get('run') == '1'
 
         # this maintenance feature may be run unrestricted as it does not
         # leak any information and it's behavior cannot be altered by the
         # user. This allows for easy use via cronjobs.
-        execute_under_special_role(getSite(), 'Manager', 
+        execute_under_special_role(getSite(), 'Manager',
             maintenance.cleanup_directory, self.context, dryrun
         )
-        
+
         return u''
+
 
 class ImportIcsView(grok.View):
 
@@ -298,11 +304,15 @@ class ImportIcsView(grok.View):
         start = event['dtstart'].dt
         end = event['dtend'].dt
 
-        if isinstance(start, datetime_date): 
-            start = datetime(start.year, start.month, start.day, tzinfo=timezone(event.timezone))
+        if isinstance(start, datetime_date):
+            start = datetime(start.year, start.month, start.day,
+                tzinfo=timezone(event.timezone)
+            )
 
         if isinstance(end, datetime_date):
-            end = datetime(end.year, end.month, end.day, 23, 59, 59, tzinfo=timezone(event.timezone))
+            end = datetime(end.year, end.month, end.day,
+                23, 59, 59, tzinfo=timezone(event.timezone)
+            )
 
         return start, end
 
@@ -320,18 +330,20 @@ class ImportIcsView(grok.View):
 
             params = dict()
             params['title'] = unicode(event.get('summary', 'No Title'))
-            params['short_description']= unicode(
+            params['short_description'] = unicode(
                 event.get('description', 'No Description')
             )
 
             params['start'], params['end'] = self.daterange(event)
-            
+
             params['timezone'] = event.timezone
             params['whole_day'] = False
             params['recurrence'] = event.get('rrule', '')
 
             if params['recurrence']:
-                params['recurrence'] = 'RRULE:' + params['recurrence'].to_ical()
+                params['recurrence'] = ''.join(
+                    'RRULE:', params['recurrence'].to_ical()
+                )
 
             content = addContentToContainer(self.context, createContent(
                 'seantis.dir.events.item', **params
@@ -339,5 +351,5 @@ class ImportIcsView(grok.View):
 
             content.submit()
             content.publish()
-            
+
         return self.say('events successfully imported')
