@@ -158,6 +158,7 @@ class DoActionView(grok.View):
     }
 
     def render(self):
+
         action = self.request.get('action')
         assert action in self.messages
 
