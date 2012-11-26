@@ -1,5 +1,5 @@
-from datetime import datetime
 from seantis.dir.events.tests import FunctionalTestCase
+
 
 class BrowserTestCase(FunctionalTestCase):
 
@@ -13,22 +13,30 @@ class BrowserTestCase(FunctionalTestCase):
 
         # create an events directory
         browser.open(self.baseurl + '/++add++seantis.dir.events.directory')
-        
+
         browser.getControl('Name').value = 'Veranstaltungen'
-        browser.getControl(name='form.widgets.cat1_suggestions').value = "Category1"
-        browser.getControl(name='form.widgets.cat2_suggestions').value = "Category2"
+        browser.getControl(
+            name='form.widgets.cat1_suggestions'
+        ).value = "Category1"
+        browser.getControl(
+            name='form.widgets.cat2_suggestions'
+        ).value = "Category2"
         browser.getControl('Save').click()
 
         self.assertTrue('Veranstaltungen' in browser.contents)
 
         # the directory needs to be published for the anonymous
         # user to submit events
-        browser.open(browser.url + '/../content_status_modify?workflow_action=publish')
+        browser.open(
+            browser.url + '/../content_status_modify?workflow_action=publish'
+        )
 
         self.admin_browser = browser
 
     def tearDown(self):
-        self.admin_browser.open(self.baseurl + '/veranstaltungen/delete_confirmation')
+        self.admin_browser.open(
+            self.baseurl + '/veranstaltungen/delete_confirmation'
+        )
         self.admin_browser.getControl('Delete').click()
         self.admin_browser.assert_notfound(self.baseurl + '/veranstaltungen')
 
@@ -45,17 +53,25 @@ class BrowserTestCase(FunctionalTestCase):
         # create some event
         def create_event():
             fourchan.getControl(name='form.widgets.title').value = 'Party'
-            fourchan.getControl(name='form.widgets.short_description').value = 'Some Party'
-            fourchan.getControl(name='form.widgets.short_description').value = 'Some Party'
+            fourchan.getControl(
+                name='form.widgets.short_description'
+            ).value = 'Some Party'
+            fourchan.getControl(
+                name='form.widgets.short_description'
+            ).value = 'Some Party'
 
             fourchan.getControl('Category1').selected = True
             fourchan.getControl('Category2').selected = True
-            
+
             fourchan.getControl('Continue').click()
             fourchan.getControl('Continue').click()
 
-            fourchan.getControl(name='form.widgets.submitter').value = 'John Doe'
-            fourchan.getControl(name='form.widgets.submitter_email').value = 'john.doe@example.com'
+            fourchan.getControl(
+                name='form.widgets.submitter'
+            ).value = 'John Doe'
+            fourchan.getControl(
+                name='form.widgets.submitter_email'
+            ).value = 'john.doe@example.com'
 
             fourchan.getControl('Submit').click()
 
@@ -122,9 +138,8 @@ class BrowserTestCase(FunctionalTestCase):
         fourchan.open(browser.url)
         self.assertFalse('SomeParty' in browser.contents)
 
-
     def test_preview(self):
-        
+
         baseurl = self.baseurl
 
         # anonymous browser
@@ -135,9 +150,11 @@ class BrowserTestCase(FunctionalTestCase):
 
         # create a recurring event
         fourchan.getControl(name='form.widgets.title').value = 'Recurring'
-        fourchan.getControl(name='form.widgets.short_description').value = 'Every Day'
+        fourchan.getControl(
+            name='form.widgets.short_description'
+        ).value = 'Every Day'
         fourchan.getControl(name='form.widgets.locality').value = 'at home'
-        
+
         fourchan.getControl('Category1').selected = True
         fourchan.getControl('Category2').selected = True
 
@@ -175,7 +192,7 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertEqual(fourchan.contents.count('"eventgroup"'), 1)
 
     def test_event_submission(self):
-        
+
         browser = self.admin_browser
         baseurl = self.baseurl
 
@@ -191,11 +208,13 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('Send us your events' in fourchan.contents)
 
         fourchan.getControl(name='form.widgets.title').value = 'Stammtisch'
-        fourchan.getControl(name='form.widgets.short_description').value = 'Socializing Yo'
+        fourchan.getControl(
+            name='form.widgets.short_description'
+        ).value = 'Socializing Yo'
 
         fourchan.getControl('Category1').selected = True
         fourchan.getControl('Category2').selected = True
-        
+
         fourchan.getControl('Continue').click()
 
         # previewing an event should send us to the preview view
@@ -208,7 +227,8 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('Socializing Yo' in fourchan.contents)
 
         # if the user tries to submit another event while this one is still
-        # in preview, the existing event is loaded (the form is turned into an edit form)
+        # in preview, the existing event is loaded
+        # (the form is turned into an edit form)
         oldurl = fourchan.url
 
         fourchan.open(baseurl + '/veranstaltungen/@@submit')
@@ -232,7 +252,9 @@ class BrowserTestCase(FunctionalTestCase):
         # we should be able to change some things
         # and come back to the url to find those changes
 
-        fourchan.getControl(name='form.widgets.short_description').value = 'Serious Business'
+        fourchan.getControl(
+            name='form.widgets.short_description'
+        ).value = 'Serious Business'
         fourchan.getControl('Continue').click()
 
         self.assertTrue('Serious Business' in fourchan.contents)
@@ -247,19 +269,27 @@ class BrowserTestCase(FunctionalTestCase):
         # other anonymous users may not access the view or the preview
         google_robot = self.new_browser()
         google_robot.assert_notfound(baseurl + '/veranstaltungen/stammtisch')
-        google_robot.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview')
+        google_robot.assert_notfound(
+            baseurl + '/veranstaltungen/stammtisch/preview'
+        )
 
         # not event the admin at this point (not sure about that one yet)
         browser.assert_notfound(baseurl + '/veranstaltungen/stammtisch')
-        browser.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview')
+        browser.assert_notfound(
+            baseurl + '/veranstaltungen/stammtisch/preview'
+        )
 
         # if the user decides to cancel the event before submitting it, he
         # loses the right to access the event (will be cleaned up by cronjob)
         fourchan.getControl('Cancel').click()
 
         fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch')
-        fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch/preview')
-        fourchan.assert_notfound(baseurl + '/veranstaltungen/stammtisch/edit-event')
+        fourchan.assert_notfound(
+            baseurl + '/veranstaltungen/stammtisch/preview'
+        )
+        fourchan.assert_notfound(
+            baseurl + '/veranstaltungen/stammtisch/edit-event'
+        )
 
         # since we cancelled we must now create a new event to
         # test the submission process
@@ -267,7 +297,9 @@ class BrowserTestCase(FunctionalTestCase):
         new.open(baseurl + '/veranstaltungen/@@submit')
 
         self.assertEqual(new.getControl(name='form.widgets.title').value, '')
-        self.assertEqual(new.getControl(name='form.widgets.short_description').value, '')
+        self.assertEqual(
+            new.getControl(name='form.widgets.short_description').value, ''
+        )
 
         new.getControl('Category1').selected = True
         new.getControl('Category2').selected = True
@@ -283,13 +315,15 @@ class BrowserTestCase(FunctionalTestCase):
 
         # until the anonymous user submits the event
         new.getControl('Continue').click()
-        
+
         new.getControl('Submit').click()
 
         # at this point we 'forgot' to fill in the submitter info so we have at
         # it again and fix that
         new.getControl(name='form.widgets.submitter').value = 'John Doe'
-        new.getControl(name='form.widgets.submitter_email').value = 'john.doe@example.com'
+        new.getControl(
+            name='form.widgets.submitter_email'
+        ).value = 'john.doe@example.com'
 
         new.getControl('Submit').click()
 
@@ -308,7 +342,10 @@ class BrowserTestCase(FunctionalTestCase):
         # once we publish it and open in another browser this information is
         # hidden from the public eye
         url = browser.url
-        browser.open(baseurl + '/veranstaltungen/submitted-event/content_status_modify?workflow_action=publish')
+        browser.open(baseurl + (
+            '/veranstaltungen/submitted-event'
+            '/content_status_modify?workflow_action=publish'
+        ))
 
         public = self.new_browser()
         public.open(url)
@@ -326,11 +363,15 @@ class BrowserTestCase(FunctionalTestCase):
         baseurl = self.baseurl
         browser = self.admin_browser
 
-        browser.open(baseurl + '/veranstaltungen/++add++seantis.dir.events.item')
+        browser.open(
+            baseurl + '/veranstaltungen/++add++seantis.dir.events.item'
+        )
         self.assertTrue('Send us your events' in browser.contents)
 
         browser.getControl(name='form.widgets.title').value = 'Add Test'
-        browser.getControl(name='form.widgets.short_description').value = 'Add Test Description'
+        browser.getControl(
+            name='form.widgets.short_description'
+        ).value = 'Add Test Description'
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
@@ -352,7 +393,9 @@ class BrowserTestCase(FunctionalTestCase):
         browser.open(baseurl + '/veranstaltungen/add-test/edit')
         self.assertTrue('Send us your events' in browser.contents)
 
-        browser.getControl(name='form.widgets.short_description').value = 'Changed Test Description'
+        browser.getControl(
+            name='form.widgets.short_description'
+        ).value = 'Changed Test Description'
         browser.getControl('Save Event').click()
 
         self.assertTrue('Changed Test Description' in browser.contents)
@@ -363,28 +406,36 @@ class BrowserTestCase(FunctionalTestCase):
         baseurl = self.baseurl
         browser = self.admin_browser
 
-        browser.open(baseurl + '/veranstaltungen/++add++seantis.dir.events.item')
+        browser.open(
+            baseurl + '/veranstaltungen/++add++seantis.dir.events.item'
+        )
         self.assertTrue('Send us your events' in browser.contents)
 
         browser.getControl(name='form.widgets.title').value = 'Recurring'
-        browser.getControl(name='form.widgets.short_description').value = 'Add Test Description'
-        browser.getControl(name='form.widgets.recurrence').value = 'RRULE:FREQ=DAILY;COUNT=7'
+        browser.getControl(
+            name='form.widgets.short_description'
+        ).value = 'Add Test Description'
+        browser.getControl(
+            name='form.widgets.recurrence'
+        ).value = 'RRULE:FREQ=DAILY;COUNT=7'
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
-        
+
         browser.getControl('Continue').click()
         browser.getControl('Continue').click()
 
         browser.getControl('Submitter Name').value = 'Submitter'
         browser.getControl('Submitter Email').value = 'submit@example.com'
-        
+
         browser.getControl('Submit').click()
 
         # take the last occurrence
         first_url = browser.getLink('Recurring', index=0).url
         link = browser.getLink('Recurring', index=6)
-        year, month, day = map(int, link.url[len(link.url)-10:].split('-'))
+        year, month, day = map(
+            int, link.url[len(link.url) - 10:].split('-')
+        )
 
         # and ensure that the date is correct in the detail view
         link.click()
@@ -403,22 +454,26 @@ class BrowserTestCase(FunctionalTestCase):
         def enable_terms(enable):
             new = self.new_browser()
             new.login_admin()
-            
+
             new.open(baseurl + '/veranstaltungen/edit')
             new.getControl(
                 name="form.widgets.terms"
             ).value = enable and 'verily, though agreeth' or ''
             new.getControl('Save').click()
 
-        browser.open(baseurl + '/veranstaltungen/++add++seantis.dir.events.item')
+        browser.open(
+            baseurl + '/veranstaltungen/++add++seantis.dir.events.item'
+        )
         self.assertTrue('Send us your events' in browser.contents)
 
         browser.getControl(name='form.widgets.title').value = 'Test'
-        browser.getControl(name='form.widgets.short_description').value = 'Test'
+        browser.getControl(
+            name='form.widgets.short_description'
+        ).value = 'Test'
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
-        
+
         browser.getControl('Continue').click()
         browser.getControl('Continue').click()
 

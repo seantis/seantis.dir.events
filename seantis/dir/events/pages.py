@@ -36,7 +36,6 @@ from urllib import quote
 from five import grok
 
 from zope.annotation.interfaces import IAnnotations
-from zope.cachedescriptors import property as cacheproperty
 from zope.component import adapts
 from zope.component.hooks import getSite
 from zope.interface import implements
@@ -50,6 +49,7 @@ from plone.app.layout.viewlets.interfaces import IHtmlHeadLinks
 from plone.app.theming.transform import ThemeTransform
 from plone.transformchain.interfaces import ITransform
 
+from seantis.dir.base.utils import cached_property
 from seantis.dir.base.directory import DirectoryCatalogMixin
 from seantis.dir.base.interfaces import IDirectoryRoot, IDirectoryPage
 from seantis.dir.events.interfaces import IEventsDirectory
@@ -79,7 +79,7 @@ class CustomPageRequest(object):
         self.pageid = pageid
         self.url = directory.absolute_url()
 
-    @property
+    @cached_property
     def apply_transformation(self):
         """ Return true if the urls should be transformed. """
         return bool(self.pageid and self.url)
@@ -103,20 +103,20 @@ class CustomPageRequest(object):
 
     url = property(get_url, set_url)
 
-    @cacheproperty.cachedIn('_original_url')
+    @cached_property
     def original_path(self):
         path = urlparse(self.url).path
         return path.endswith('/') and path[:-1] or path
 
-    @cacheproperty.cachedIn('_replacement_url')
+    @cached_property
     def replacement_path(self):
         return self.original_path + '/' + self.token
 
-    @cacheproperty.cachedIn('_token')
+    @cached_property
     def token(self):
         return '~' + self.pageid
 
-    @cacheproperty.cachedIn('_quoted_token')
+    @cached_property
     def quoted_token(self):
         return quote(self.token)
 
@@ -186,7 +186,7 @@ class CustomDirectory(object):
 
     """
 
-    @cacheproperty.cachedIn('_custom')
+    @cached_property
     def custom_directory(self):
         pagerequest = CustomPageRequest(self.request)
         return pagerequest.custom_directory(self.context)
@@ -249,7 +249,7 @@ class CustomPageViewlet(grok.Viewlet, DirectoryCatalogMixin):
 
     template = grok.PageTemplateFile('templates/custom.pt')
 
-    @cacheproperty.cachedIn('_custom_properties')
+    @cached_property
     def pagerequest(self):
         return CustomPageRequest(self.request)
 
@@ -277,7 +277,7 @@ class URLTransform(object):
         self.published = published
         self.request = request
 
-    @cacheproperty.cachedIn('_pagerequest')
+    @cached_property
     def pagerequest(self):
         return CustomPageRequest(self.request)
 
