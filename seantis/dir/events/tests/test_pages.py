@@ -11,19 +11,27 @@ from seantis.dir.events import pages
 class PagesTestCase(IntegrationTestCase):
 
     def test_stringmatching(self):
-        match = pages.pageid_from_string
+        match = pages.pageid_from_name
 
+        # do not support urls
         self.assertEqual(match('https://google.com'), None)
         self.assertEqual(match('https://google.com/test'), None)
-        self.assertEqual(match('https://host/~test'), 'test')
-        self.assertEqual(match('https://host/-test-'), 'test')
+        self.assertEqual(match('https://host/~test'), None)
+        self.assertEqual(match('https://host/-test-'), None)
+        self.assertEqual(match('https://host/asdf-asdf'), None)
 
         self.assertEqual(match('~id'), 'id')
         self.assertEqual(match('-id-'), 'id')
         self.assertEqual(match(None), None)
         self.assertEqual(match(''), None)
-        self.assertEqual(match('~/-test'), 'test')
-        self.assertEqual(match('~~~asdf'), 'asdf')
+        self.assertEqual(match('~/-test'), None)
+        self.assertEqual(match('~~~asdf'), None)
+
+        # do not support the same characters in the middle
+        # as that might catch a proper named object
+        self.assertEqual(match('my-folder'), None)
+        self.assertEqual(match('folder-1'), None)
+        self.assertEqual(match('my~home'), None)
 
     def test_urltransform(self):
         request = TestRequest()

@@ -59,11 +59,13 @@ key_pageid = 'seantis.dir.events.pageid'
 key_url = 'seantis.dir.events.directory_url'
 
 # url path matching pattern
-pattern = r'.*?[~-]{1}([a-zA-Z]+)[-]?.*'
+pattern = r'[~-]{1}([a-zA-Z]+)[-]?.*'
 
 
-def pageid_from_string(string):
-    """ Extract the pageid from string (usually path or url).
+def pageid_from_name(string):
+    """ Extract the pageid from a path name
+    e.g. 'test' in 'https://host/test/asdf
+
     Return None if unsuccessful.
 
     """
@@ -228,7 +230,7 @@ class CustomPageHook(object):
 
         try:
 
-            pageid = pageid_from_string(name)
+            pageid = pageid_from_name(name)
             if pageid:
 
                 pagerequest = CustomPageRequest(request)
