@@ -7,14 +7,21 @@ from zope.component import getMultiAdapter
 from zope.component.hooks import getSite
 from zope import i18n
 
+
 def get_current_language(request):
     """ Returns the current language """
-    portal_state = getMultiAdapter((getSite(), request), name=u'plone_portal_state')
+    portal_state = getMultiAdapter(
+        (getSite(), request), name=u'plone_portal_state'
+    )
     return portal_state.language()
+
 
 def translate(request, text):
     lang = get_current_language(request)
-    return i18n.translate(text, target_language=lang, domain='seantis.dir.events')
+    return i18n.translate(
+        text, target_language=lang, domain='seantis.dir.events'
+    )
+
 
 def render_ical_response(request, context, calendar):
     name = '%s.ics' % context.getId()
@@ -24,8 +31,10 @@ def render_ical_response(request, context, calendar):
     )
     request.RESPONSE.write(calendar.to_ical())
 
+
 def workflow_tool():
     return getToolByName(getSite(), "portal_workflow")
+
 
 def verify_wkt(data):
     try:
@@ -35,6 +44,7 @@ def verify_wkt(data):
         from pygeoif.geometry import from_wkt
         geom = from_wkt(data)
     return geom
+
 
 def profile(fn):
     """ Naive profiling of a function.. on unix systems only. """
@@ -50,6 +60,7 @@ def profile(fn):
 
     return wrapper
 
+
 def webcal(fn):
     """ Replaces the http in a function that returns an url with webcal.
     Does nothing if https is used, as webcals seems to be supported badly.
@@ -58,10 +69,10 @@ def webcal(fn):
     @functools.wraps(fn)
     def wrapper(*args, **kwargs):
         url = fn(*args, **kwargs)
-        
+
         if not url.startswith('https') and url.startswith('http'):
             url = url.replace('http', 'webcal')
-        
+
         return url
 
     return wrapper
