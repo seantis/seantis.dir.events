@@ -59,7 +59,23 @@ key_pageid = 'seantis.dir.events.pageid'
 key_url = 'seantis.dir.events.directory_url'
 
 # url path matching pattern
-pattern = r'[~-]{1}([a-zA-Z]+)[-]?'
+pattern = r'.*?[~-]{1}([a-zA-Z]+)[-]?.*'
+
+
+def pageid_from_string(string):
+    """ Extract the pageid from string (usually path or url).
+    Return None if unsuccessful.
+
+    """
+    if not string:
+        return None
+
+    # sometimes the token ends up being quoted, even though '~' is a
+    # valid character in the path segment of an url
+    string = string.replace(quote('~'), '~')
+    match = re.match(pattern, string)
+
+    return match.group(1) if match else None
 
 
 class CustomPageRequest(object):
@@ -212,13 +228,8 @@ class CustomPageHook(object):
 
         try:
 
-            # sometimes the token ends up being quoted, even though '~' is a
-            # valid character in the path segment of an url
-            name = name.replace(quote('~'), '~')
-            match = re.match(pattern, name)
-
-            if match:
-                pageid = match.group(1)
+            pageid = pageid_from_string(name)
+            if pageid:
 
                 pagerequest = CustomPageRequest(request)
                 pagerequest.hook(pageid, self)
@@ -299,6 +310,10 @@ class URLTransform(object):
 
         if not tree:
             return result
+
+        # save the tree on the instance for testing, when running for real
+        # plone.app.theming / diazo will take care of serializing the tree
+        self._tree = tree
 
         path = pagerequest.original_path
 
