@@ -153,7 +153,7 @@ class CustomPageRequest(object):
         if not self.pageid:
             return {}
 
-        if not hasattr(directory, 'pageid'):
+        if not hasattr(directory, self.pageid):
             return {}
 
         try:
