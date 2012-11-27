@@ -13,6 +13,9 @@ def create_uuid(offer):
 
 def parse_offset(string):
 
+    if not string:
+        return 0
+
     sign = string[:1]
     assert sign in ('+', '-')
 
@@ -36,16 +39,24 @@ def parse_date(string):
 
 
 def parse_time(string):
-    hour, minute = map(int, string.split(':')[:2])
-    offset = parse_offset(string[12:])
+    time = string.replace(string[-6:], '')
+    hour, minute = map(int, time.split(':')[:2])
+    offset = parse_offset(string[-6:])
 
     return hour, minute, offset
 
 
 def apply_time(datetime, timestring):
+    assert datetime.tzinfo == pytz.timezone('utc')
+
     hour, minute, offset = parse_time(timestring)
-    datetime.replace(hour=hour, minute=minute)
-    datetime += timedelta(seconds=offset)
+
+    datetime = datetime.astimezone(tzoffset(None, offset))
+
+    datetime += timedelta(seconds=hour * 60 * 60)
+    datetime += timedelta(seconds=minute * 60)
+
+    return datetime.astimezone(pytz.timezone('utc'))
 
 
 def generate_recurrence(date):
