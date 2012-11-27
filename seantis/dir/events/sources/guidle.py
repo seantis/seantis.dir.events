@@ -1,5 +1,8 @@
 import pytz
 
+from logging import getLogger
+log = getLogger('seantis.dir.events')
+
 from datetime import datetime, timedelta
 from dateutil.tz import tzoffset
 
@@ -61,46 +64,99 @@ def apply_time(datetime, timestring):
 
 def generate_recurrence(date):
     try:
-        return "WEEKLY;BYDAY=%s" ','.join([d.upper() for d in date.weekdays])
+        weekdays = list(date.weekdays.iterchildren())
+        return "RRULE:FREQ=WEEKLY;BYDAY=%s" % ','.join(
+            [d.text.upper() for d in weekdays]
+        )
     except AttributeError:
         return ""
 
 
-def occurrences(offer, create_event):
+def limit_recurrence(recurrence, end):
+    if not end or not recurrence:
+        return recurrence
+    else:
+        return recurrence + ';UNTIL=%s' % end.strftime('%Y%m%dT%H%MZ')
 
-    for schedule in offer.schedules:
 
-        date = schedule.date
+def get_dates(date):
 
-        start, end = date.startDate, date.endDate
-        start_time, end_time = date.startTime, date.endTime
+    def child(name):
+        try:
+            return getattr(date, name).text
+        except AttributeError:
+            return None
 
-        event = create_event()
+    return (
+        child('startDate'), child('endDate'),
+        child('startTime'), child('endTime')
+    )
 
-        event.timezone = 'UTC'
-        event.recurrence = generate_recurrence(offer.date)
-        event.start = parse_date(date.startDate)
 
-        if end:
-            event.end = parse_date(date.endDate)
+def events(offer):
+    """ Generates one event for each date in the guidle input. """
+
+    dates = [d for d in offer.schedules.iterchildren()]
+    if not dates:
+        log.error(
+            'offer with id %s has no dates, skipping' % offer.attrib['id']
+        )
+
+        raise StopIteration
+
+    for date in dates:
+
+        start, end, start_time, end_time = get_dates(date)
+
+        event = {}
+
+        event['id'] = offer.attrib['id']
+        event['recurrence'] = generate_recurrence(date)
+        event['start'] = parse_date(start)
+
+        # the end date of recurring events seems to be the date of the
+        # last occurrence, which makes sense since guidle only seems
+        # to support daily occurences by weekday
+        if end and not event['recurrence']:
+            event['end'] = parse_date(end)
         else:
-            event.end = event.start + timedelta(days=1, microseconds=-1)
+            # if a recurrence exists it needs to be limited by the end date
+            if event['recurrence']:
+                until = parse_date(end) + timedelta(days=1)
+                event['recurrence'] = limit_recurrence(
+                    event['recurrence'], until
+                )
+
+            event['end'] = event['start']
 
         if not any((start_time, end_time)):
-            event.whole_day = True
+            event['whole_day'] = True
 
         if start_time:
-            apply_time(event.start, start_time)
+            event['start'] = apply_time(event['start'], start_time)
 
         if end_time:
-            apply_time(event.end, end_time)
+            event['end'] = apply_time(event['end'], end_time)
+
+        # if the event ends before it starts it means that we have a range
+        # like this: 20:00 - 00:30, so the event really ends the next day
+        if event['end'] < event['start']:
+            event['end'] += timedelta(days=1)
 
         yield event
 
 
-def generate_events(url, request, create_event):
+def fetch_events(request):
 
-    xml = urlopen(url)
+    # TODO have an interface to define urls
+    url = (
+        "http://www.guidle.com/dpAccess.jsf"
+        "?id=89625083&language=de&dateOption=NA&primaryTreeId=23400386"
+        "&tagIds=23400386&sorting=ungrouped&locationTreeId=83786753"
+        "&where=83786753&template=XML2"
+    )
+
+    xml = urlopen(url).read()
     root = objectify.fromstring(xml)
 
     offers = root.xpath('*//guidle:offer',
@@ -108,10 +164,14 @@ def generate_events(url, request, create_event):
     )
 
     for offer in offers:
-        for e in occurrences(offer, create_event):
+
+        for e in events(offer):
 
             detail = offer.offerDetail
 
-            e.title = detail.title
-            e.short_description = detail.shortDescription
-            e.long_description = detail.longDescription
+            e['title'] = detail.title.text
+            e['short_description'] = detail.shortDescription.text
+            e['long_description'] = detail.longDescription.text
+            e['timezone'] = 'Europe/Zurich'
+
+            yield e

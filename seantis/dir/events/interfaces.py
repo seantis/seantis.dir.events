@@ -10,7 +10,7 @@ from plone.app.event.dx.behaviors import IEventRecurrence
 from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
 from z3c.form import util, validator
 from zope.schema import Text, TextLine, URI, Bool
-from zope.interface import Invalid, Interface
+from zope.interface import Invalid, Interface, Attribute
 
 from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IDirectory, IDirectoryItem
@@ -31,6 +31,16 @@ class IActionGuard(Interface):
 
     def allow_action(self, action):
         "Return true if the given workflow_events action is allowed"
+
+class IExternalEvent(Interface):
+
+    source = Attribute("Name of external source -> seantis.dir.events.sources")
+    source_id = Attribute("""
+        Id of external source event. External sources may use the same id
+        for multiple events. If the id already exists when fetching the source
+        the source is used and the existing events with the same id are deleted
+    """)
+
 
 class IEventsDirectory(IDirectory):
     """Extends the seantis.dir.base.directory.IDirectory"""
@@ -176,6 +186,7 @@ class IEventsDirectoryItem(IDirectoryItem):
         title=_(u'Ticket / Registration Website'),
         required=False
     )
+
 
 # don't show these fields as they are not used
 IEventsDirectoryItem.setTaggedValue('seantis.dir.base.omitted', 
