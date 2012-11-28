@@ -110,7 +110,9 @@
 
           <div class="descriptions">
             <div class="short" tal:content="o/short_description"></div>
-            <div class="long" tal:content="o/long_description"></div>
+            <div class="long">
+              <tal:block replace="structure python: o.long_description.replace('\n', '<br />')"></tal:block>
+            </div>
               <div class="eventtags">
                 <tal:block repeat="tag python: o.eventtags()">
                   <a class="eventtag" tal:attributes="href python: tag[1]"><tal:block replace="structure python: tag[0]"></tal:block></a>
