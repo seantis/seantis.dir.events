@@ -7,25 +7,31 @@ from zope.proxy import ProxyBase
 from urllib import urlencode
 
 from plone.event.recurrence import recurrence_sequence_ical
-from plone.event.utils import utcoffset_normalize, DSTADJUST, tzdel
+from plone.event.utils import utcoffset_normalize, DSTADJUST
 
 from seantis.dir.events import dates
 from seantis.dir.events.dates import overlaps
 
-# plone.app.event creates occurrences using adapters, which seems a bit wasteful
-# to me. It also doesn't play too well with my interfaces (overridding either
-# my title/description attributes ore not showing my methods).
 
-# This pure proxy has none of those problems. 
-
-# ========================================================================
-# THERE IS ONE CAVEAT. In templates "context/start" will yield the wrapped
-# item's start. "python: context.start" on the other hand will yield the
-# occurence's start. Same with other properties/methods
-# ========================================================================
 class Occurrence(ProxyBase):
 
-    __slots__ = ('_wrapped', '_start', '_end', '_unsplit_start', '_unsplit_end')
+    """ plone.app.event creates occurrences using adapters, which seems
+    a bit wasteful to me. It also doesn't play too well with my interfaces,
+    overridding either my title/description attributes ore not
+    showing my methods.
+
+    This pure proxy has none of those problems.
+
+    ========================================================================
+    THERE IS ONE CAVEAT. In templates "context/start" will yield the wrapped
+    item's start. "python: context.start" on the other hand will yield the
+    occurence's start. Same with other properties/methods
+    ========================================================================
+    """
+
+    __slots__ = (
+        '_wrapped', '_start', '_end', '_unsplit_start', '_unsplit_end'
+    )
 
     def __init__(self, item, start, end, unsplit_start=None, unsplit_end=None):
         self._wrapped = item
@@ -84,19 +90,19 @@ class Occurrence(ProxyBase):
         There would be two other options, but they are less ideal:
 
         1. Add the whole date-time string - Results in a less than pretty url.
-        2. Add an occurrence count - The underlying item of the url might 
+        2. Add an occurrence count - The underlying item of the url might
         change without any chance to tell the user.
 
         """
         base = self._wrapped.absolute_url()
-        
+
         # don't add anything if the wrapped item doesn't have recurrence
         if not self._wrapped.recurrence:
             return base
 
         base += '?' in base and '&' or '?'
         return base + urlencode({'date': self._start.strftime('%Y-%m-%d')})
-    
+
     def human_date(self, request):
         return dates.human_date(self.local_start, request)
 
@@ -111,41 +117,44 @@ class Occurrence(ProxyBase):
 
         start = self.tz.normalize(start)
         end = self.tz.normalize(end)
-        
+
         return dates.human_daterange(start, end, request)
+
 
 def grouped_occurrences(occurrences, request):
     """ Returns the given occurrences grouped by human_date. """
-    
+
     def groupkey(item):
         date = item.human_date(request)
         return date
 
     groups = groupby(occurrences, groupkey)
-    
+
     # Zope Page Templates don't know how to handle generators :-|
     result = OrderedDict()
 
     for group in groups:
         result[group[0]] = [i for i in group[1]]
-        
+
     return result
+
 
 def pick_occurrence(item, start):
     """ Returns the occurrence at startdate. This suffices because two
-    occurrences of the same item are never on the same day. 
+    occurrences of the same item are never on the same day.
 
     """
 
-    min_date = datetime(start.year, start.month, start.day, 
+    min_date = datetime(start.year, start.month, start.day,
         tzinfo=item.local_start.tzinfo
     )
     max_date = min_date + timedelta(days=1, microseconds=-1)
 
-    found = occurrences(item, min_date, max_date)    
+    found = occurrences(item, min_date, max_date)
     assert len(found) in (0, 1), "Multiple occurences on the same day?"
 
     return found and found[0] or None
+
 
 def split_days(occurrence):
     """ Iterates through a list of occurrences and splits the occurrences
@@ -161,7 +170,7 @@ def split_days(occurrence):
     if not days:
         yield occurrence
     else:
-        for day in xrange(0, days+1):
+        for day in xrange(0, days + 1):
             first_day = day == 0
             last_day = day == days
 
@@ -183,19 +192,20 @@ def split_days(occurrence):
                     original_start.month,
                     original_start.day,
                     tzinfo=original_start.tzinfo
-                ) + timedelta(days=day+1, microseconds=-1)
+                ) + timedelta(days=day + 1, microseconds=-1)
 
             start, end = map(dates.to_utc, (start, end))
 
             # if the given occurrence is already a proxy, don't double-wrap it
             if isinstance(occurrence, Occurrence):
-                yield Occurrence(occurrence._wrapped, 
+                yield Occurrence(occurrence._wrapped,
                     start, end, original_start, original_end
                 )
             else:
-                yield Occurrence(occurrence, 
+                yield Occurrence(occurrence,
                     start, end, original_start, original_end
                 )
+
 
 def occurrences(item, min_date, max_date):
     """ Returns the occurrences for item between min and max date.
@@ -211,7 +221,7 @@ def occurrences(item, min_date, max_date):
             return [Occurrence(item, item.start, item.end)]
 
     _occurrences = recurrence_sequence_ical(
-        start=item.local_start, 
+        start=item.local_start,
         recrule=item.recurrence,
         from_=min_date,
         until=max_date)
@@ -224,10 +234,11 @@ def occurrences(item, min_date, max_date):
 
     return result
 
+
 def has_future_occurrences(item, reference_date):
     if not item.recurrence:
         return reference_date <= item.start
 
-    rrule = rrulestr(item.recurrence, dtstart=item.start, ignoretz=True)
+    rrule = rrulestr(item.recurrence, dtstart=item.start, ignoretz=False)
 
     return bool(rrule.after(reference_date, inc=False))
