@@ -1,4 +1,5 @@
 import pytz
+import string
 
 from logging import getLogger
 log = getLogger('seantis.dir.events')
@@ -163,16 +164,57 @@ def fetch_events(request):
         namespaces={'guidle': 'http://www.guidle.com'}
     )
 
+    def copy(event, node, expression):
+        lines = map(string.strip, expression.split('\n'))
+
+        for line in lines:
+            if not line:
+                continue
+
+            key, children = map(string.strip, line.split('<-'))
+
+            for child in map(string.strip, children.split(',')):
+                if not hasattr(node, child):
+                    continue
+
+                if key in event:
+                    event[key] += '\n\n' + getattr(node, child).text
+                else:
+                    event[key] = getattr(node, child).text
+
     for offer in offers:
 
         for e in events(offer):
-
-            detail = offer.offerDetail
-
-            e['title'] = detail.title.text
-            e['short_description'] = detail.shortDescription.text
-            e['long_description'] = detail.longDescription.text
+            # so far all guidle events seem to be in this region
             e['timezone'] = 'Europe/Zurich'
+
+            # basic information
+            copy(e, offer.offerDetail, """
+                title               <- title
+                short_description   <- shortDescription
+                long_description    <- longDescription, openingHours
+                prices              <- priceInformation
+                event_url           <- externalLink
+                registration        <- ticketingUrl
+            """)
+
+            # address
+            copy(e, offer.address, """
+                locality    <- company
+                street      <- street
+                zipcode     <- zip
+                town        <- city
+                latitude    <- latitude
+                longitude   <- longitude
+            """)
+
+            # contact
+            copy(e, offer.contact, """
+                organizer       <- company
+                contact_name    <- name
+                contact_email   <- email
+                contact_phone   <- telephone_1
+            """)
 
             e['source_id'] = offer.attrib['id']
 
