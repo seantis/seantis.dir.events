@@ -1,9 +1,15 @@
 import inspect
 
+from itertools import groupby
 from five import grok
 from plone.dexterity.utils import createContentInContainer
+from zope.interface import alsoProvides
 
-from seantis.dir.events.interfaces import IEventsDirectory
+from seantis.dir.base.interfaces import IDirectoryCatalog
+from seantis.dir.events.interfaces import (
+    IEventsDirectory,
+    IExternalEvent
+)
 
 
 signature_method = 'fetch_events'
@@ -36,15 +42,60 @@ class FetchView(grok.View):
     grok.context(IEventsDirectory)
     grok.require('cmf.ManagePortal')
 
-    def fetch(self, function):
+    def fetch(self, source, function):
         events = [e for e in function(self.request)]
+        existing = self.groupby_source_id(self.existing_events(source))
 
         for event in events:
+            event['source'] = source
+
+            # source id's are not necessarily unique as a single external
+            # event might have to be represented as more than one event in
+            # seantis.dir.events - therefore updating is done through
+            # deleting first, adding second
+
+            if event['source_id'] in existing:
+                ids = [e.id for e in existing[event['source_id']]]
+                self.context.manage_delObjects(ids)
+                del existing[event['source_id']]
+
             obj = createContentInContainer(
                 self.context, 'seantis.dir.events.item', **event
             )
             obj.submit()
             obj.publish()
+
+            alsoProvides(obj, IExternalEvent)
+            obj.reindexObject(idxs=['object_provides'])
+
+    def existing_events(self, source):
+
+        catalog = IDirectoryCatalog(self.context)
+        query = catalog.catalog
+
+        candidates = query(
+            path={'query': self.context.getPhysicalPath(), 'depth': 2},
+            object_provides=IExternalEvent.__identifier__
+        )
+
+        events = []
+        for obj in map(catalog.get_object, candidates):
+            if obj.source == source:
+                events.append(obj)
+
+        return events
+
+    def groupby_source_id(self, events):
+
+        ids = {}
+
+        keyfn = lambda e: e.source_id
+        events.sort(key=keyfn)
+
+        for key, items in groupby(events, lambda e: e.source_id):
+            ids[key] = [e for e in items]
+
+        return ids
 
     def render(self):
         source = self.request.get('source')
@@ -52,4 +103,5 @@ class FetchView(grok.View):
 
         assert source in sources
 
-        self.fetch(sources[source])
+        self.source = source
+        self.fetch(source, sources[source])

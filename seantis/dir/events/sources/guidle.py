@@ -174,4 +174,6 @@ def fetch_events(request):
             e['long_description'] = detail.longDescription.text
             e['timezone'] = 'Europe/Zurich'
 
+            e['source_id'] = offer.attrib['id']
+
             yield e
