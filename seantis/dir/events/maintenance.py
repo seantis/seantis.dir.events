@@ -9,6 +9,7 @@ from seantis.dir.events.dates import to_utc
 from seantis.dir.events.interfaces import IEventsDirectoryItem
 from seantis.dir.events.recurrence import has_future_occurrences
 
+
 def remove_stale_previews(directory, dryrun=False):
 
     catalog = IDirectoryCatalog(directory)
@@ -34,6 +35,7 @@ def remove_stale_previews(directory, dryrun=False):
 
     return stale_previews
 
+
 def archive_past_events(directory, dryrun=False):
 
     catalog = IDirectoryCatalog(directory)
@@ -47,24 +49,24 @@ def archive_past_events(directory, dryrun=False):
     published_events = query(
         path={'query': directory.getPhysicalPath(), 'depth': 2},
         object_provides=IEventsDirectoryItem.__identifier__,
-        review_state=('published', ),
-        start={'query': past, 'range': 'max'},
-        end={'query': past, 'range': 'max'}
+        review_state='published'
     )
 
     past_events = []
-    
+
     for event in map(catalog.get_object, published_events):
-        assert event.start < past
-        assert event.end < past
+        if event.start >= past or event.end >= past:
+            continue
 
         # recurring events may be in the past with one of
         # their occurrences in the future
         if not has_future_occurrences(event, past):
-            past_events.append(event.id)
+            past_events.append(event)
 
     if past_events:
-        log.info('archiving past events -> %s' % str(past_events))
+        log.info('archiving past events -> %s' % str(
+            [p.id for p in past_events]
+        ))
 
         if not dryrun:
             for event in past_events:
@@ -74,10 +76,11 @@ def archive_past_events(directory, dryrun=False):
 
     return past_events
 
+
 def remove_archived_events(directory, dryrun=False):
 
     catalog = IDirectoryCatalog(directory)
-    query = catalog.catalog    
+    query = catalog.catalog
 
     log.info('removing archived events')
 
@@ -95,11 +98,12 @@ def remove_archived_events(directory, dryrun=False):
         log.info('removing archived events -> %s' % str(archived_events))
 
         if not dryrun:
-            directory.manage_delObjects(archived_events)      
+            directory.manage_delObjects(archived_events)
     else:
         log.info('no archived events to remove')
 
     return archived_events
+
 
 def cleanup_directory(directory, dryrun=True):
 
