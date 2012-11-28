@@ -9,15 +9,17 @@ from seantis.dir.events import _
 
 default_daterange = 'this_year'
 
+
 def eventrange():
-    """ Returns the date range (start, end) in which the events are visible. """
+    """ Returns the daterange (start, end) in which the events are visible. """
     now = default_now()
     this_morning = datetime(now.year, now.month, now.day)
 
     return (
         this_morning,
-        this_morning + timedelta(days=365*2)
+        this_morning + timedelta(days=365 * 2)
     )
+
 
 def overlaps(start, end, otherstart, otherend):
     """ Returns true if the two date ranges somehow overlap. """
@@ -30,17 +32,20 @@ def overlaps(start, end, otherstart, otherend):
 
     return False
 
+
 def default_now():
-    """ Returns the current time using the default_timezone from 
+    """ Returns the current time using the default_timezone from
     plone.app.event. Said timezone is either set globally or per user.
 
     """
     utcnow = to_utc(datetime.utcnow())
     return pytz.timezone(default_timezone()).normalize(utcnow)
 
+
 def to_utc(date):
     """ Converts date to utc, making it timezone aware if not already. """
     return as_timezone(date, 'utc')
+
 
 def as_timezone(date, timezone):
     """ Converts date to the given timezone, making it timezone aware if not
@@ -52,6 +57,7 @@ def as_timezone(date, timezone):
 
     return timezone.normalize(date)
 
+
 def is_whole_day(start, end):
     return all((
         start.hour == 0,
@@ -62,17 +68,18 @@ def is_whole_day(start, end):
         end.second == 59
     ))
 
+
 def split_days_count(start, end):
     """ Returns 0 if the given daterange must be kept together and a number
     of splits that need to be created if not.
 
-    If the event ends between 0:00 and 08:59 the new date is not counted as 
+    If the event ends between 0:00 and 08:59 the new date is not counted as
     a new day. An event that goes through the night is not a two-day event.
-    
+
     """
 
     days = (end.date() - start.date()).days
-    
+
     if days == 0:
         return 0
 
@@ -80,6 +87,7 @@ def split_days_count(start, end):
         days -= 1
 
     return days
+
 
 def human_date(date, request):
     now = default_now()
@@ -97,6 +105,7 @@ def human_date(date, request):
         return weekday + ' ' + date.strftime('%d.%m')
     else:
         return weekday + ' ' + date.strftime('%d.%m.%Y')
+
 
 def human_daterange(start, end, request):
 
@@ -117,18 +126,21 @@ def human_daterange(start, end, request):
         return start.strftime('%H:%M - ') + end.strftime('%H:%M')
     else:
         if default_now().year == start.year:
-            return start.strftime('%d.%m %H:%M - ') + end.strftime('%d.%m %H:%M')
+            return start.strftime('%d.%m %H:%M - ') \
+            + end.strftime('%d.%m %H:%M')
         else:
-            return start.strftime('%d.%m.%Y %H:%M - ') + end.strftime('%d.%m.%Y %H:%M')
+            return start.strftime('%d.%m.%Y %H:%M - ') \
+            + end.strftime('%d.%m.%Y %H:%M')
 
 methods = list()
 ranges = dict()
 labels = dict()
 tooltips = dict()
 
+
 def daterange(label, tooltip=u''):
     """ Deocrator that, applied to DateRangeInfo methods, marks them
-    as category methods for further processing. 
+    as category methods for further processing.
 
     """
     tooltip = tooltip or label
@@ -145,17 +157,23 @@ def daterange(label, tooltip=u''):
 
     return decorator
 
+
 def is_valid_daterange(name):
     """ Returns true if the given name is a valid DateRangeInfo method. """
     return name in ranges.values()
 
+
 weekdays = dict(MO=0, TU=1, WE=2, TH=3, FR=4, SA=5, SU=6)
+
+
 def this_weekend(date):
     """ Returns a daterange with the start being friday 4pm and the end
-    being sunday midnight, relative to the given date. 
+    being sunday midnight, relative to the given date.
 
     """
-    this_morning = datetime(date.year, date.month, date.day, 0, 0, tzinfo=date.tzinfo)
+    this_morning = datetime(
+        date.year, date.month, date.day, 0, 0, tzinfo=date.tzinfo
+    )
 
     if this_morning.weekday() in (weekdays["SA"], weekdays["SU"]):
         weekend_start = this_morning + relativedelta(weekday=FR(-1))
@@ -166,21 +184,23 @@ def this_weekend(date):
 
     weekend_start += timedelta(hours=16)
     weekend_end += timedelta(microseconds=-1)
-    
+
     return weekend_start, weekend_end
+
 
 def this_month(date):
     month_start = datetime(date.year, date.month, 1, 0, 0, tzinfo=date.tzinfo)
     month_end = month_start + relativedelta(months=1, microseconds=-1)
-    
+
     return month_start, month_end
+
 
 def next_weekday(date, weekday):
     w = weekdays[weekday]
 
     if date.weekday() == w:
         return date
-    
+
     return date + timedelta((w - date.weekday()) % 7)
 
 
@@ -189,15 +209,19 @@ class DateRanges(object):
     def __init__(self, now=None):
         self.now = now or default_now()
 
-    @property
-    def now(self):
+    def get_now(self):
         return self._now
 
-    @now.setter
-    def now(self, now):
+    def set_now(self, now):
         self._now = now
-        self.this_morning = datetime(now.year, now.month, now.day, tzinfo=now.tzinfo)
-        self.this_evening = self.this_morning + timedelta(days=1, microseconds=-1)
+        self.this_morning = datetime(
+            now.year, now.month, now.day, tzinfo=now.tzinfo
+        )
+        self.this_evening = self.this_morning + timedelta(
+            days=1, microseconds=-1
+        )
+
+    now = property(get_now, set_now)
 
     def overlaps(self, method, start, end):
         s, e = getattr(self, method)
@@ -223,13 +247,17 @@ class DateRanges(object):
         )
 
     @property
-    @daterange(_(u'This Weekend'), _(u'From 4pm this Friday until 12pm this Sunday'))
+    @daterange(
+        _(u'This Weekend'), _(u'From 4pm this Friday until 12pm this Sunday')
+    )
     def this_weekend(self):
         # between friday at 4 and saturday midnight
         return this_weekend(self.now)
-        
+
     @property
-    @daterange(_(u'Next Weekend'), _(u'From 4pm next Friday until 12pm next Sunday'))
+    @daterange(
+        _(u'Next Weekend'), _(u'From 4pm next Friday until 12pm next Sunday')
+    )
     def next_weekend(self):
         weekend_start, weekend_end = this_weekend(self.now)
         weekend_start += timedelta(days=7)
@@ -246,17 +274,22 @@ class DateRanges(object):
         return self.this_morning, end_of_week
 
     @property
-    @daterange(_(u'Next Week'), _(u'From next Monday until the following Sunday'))
+    @daterange(
+        _(u'Next Week'), _(u'From next Monday until the following Sunday')
+    )
     def next_week(self):
         # range between next sunday (as in self.is_this_week)
         # and the sunday after that
-        start_of_week = next_weekday(self.this_morning + timedelta(days=2), "SU")
+        start_of_week = next_weekday(
+            self.this_morning + timedelta(days=2), "SU"
+        )
         start_of_week += timedelta(days=1)
         start_of_week = datetime(
             start_of_week.year, start_of_week.month, start_of_week.day, 0, 0,
             tzinfo=self.now.tzinfo
         )
-        end_of_week = next_weekday(start_of_week, "SU") + timedelta(days=1, microseconds=-1)
+        end_of_week = next_weekday(start_of_week, "SU") \
+        + timedelta(days=1, microseconds=-1)
 
         return start_of_week, end_of_week
 
@@ -267,7 +300,9 @@ class DateRanges(object):
         return self.this_morning, end_of_this_month
 
     @property
-    @daterange(_(u'Next Month'), _(u'From the beginning of next month until the end'))
+    @daterange(
+        _(u'Next Month'), _(u'From the beginning of next month until the end')
+    )
     def next_month(self):
         _, prev_end = this_month(self.now)
         month_start = prev_end + timedelta(microseconds=1)
@@ -275,9 +310,13 @@ class DateRanges(object):
         return this_month(month_start)
 
     @property
-    @daterange(_(u'This Year'), _(u'From today until the end of this year'))
+    @daterange(
+        _(u'This Year'), _(u'From today until the end of this year')
+    )
     def this_year(self):
-        end_of_year = datetime(self.now.year+1, 1, 1, tzinfo=self.now.tzinfo)
+        end_of_year = datetime(
+            self.now.year + 1, 1, 1, tzinfo=self.now.tzinfo
+        )
         end_of_year -= timedelta(microseconds=1)
 
         return self.this_morning, end_of_year
@@ -285,13 +324,17 @@ class DateRanges(object):
     @property
     @daterange(_(u'Next Year'), _(u'The whole next year'))
     def next_year(self):
-        start_of_year = datetime(self.now.year+1, 1, 1, tzinfo=self.now.tzinfo)
-        end_of_year = datetime(self.now.year+2, 1, 1, tzinfo=self.now.tzinfo)
+        start_of_year = datetime(
+            self.now.year + 1, 1, 1, tzinfo=self.now.tzinfo
+        )
+        end_of_year = datetime(self.now.year + 2, 1, 1, tzinfo=self.now.tzinfo)
         end_of_year -= timedelta(microseconds=1)
 
         return start_of_year, end_of_year
 
     @property
-    @daterange(_(u'This and Next Year'), _(u'From today until the end of next year'))
+    @daterange(
+        _(u'This and Next Year'), _(u'From today until the end of next year')
+    )
     def this_and_next_year(self):
         return self.this_year[0], self.next_year[1]
