@@ -1,7 +1,9 @@
 import inspect
 
+from urllib import urlopen
 from itertools import groupby
 from five import grok
+from plone.namedfile import NamedFile, NamedImage
 from plone.dexterity.utils import createContentInContainer
 from zope.interface import alsoProvides
 
@@ -58,6 +60,19 @@ class FetchView(grok.View):
                 ids = [e.id for e in existing[event['source_id']]]
                 self.context.manage_delObjects(ids)
                 del existing[event['source_id']]
+
+            # image and attachments are downloaded
+            downloads = {
+                'image': NamedImage,
+                'attachment_1': NamedFile,
+                'attachment_2': NamedFile
+            }
+
+            for download, method in downloads.items():
+                url = event.get(download)
+
+                if url:
+                    event[download] = method(data=urlopen(url).read())
 
             obj = createContentInContainer(
                 self.context, 'seantis.dir.events.item', **event

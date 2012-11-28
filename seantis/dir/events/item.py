@@ -95,6 +95,10 @@ class EventsDirectoryItem(item.DirectoryItem):
     def attachment_filename(self, attachment):
         filename = getattr(self, attachment).filename
 
+        if not filename:
+            number = attachment[-1]
+            return _(u'Attachment ${number}', mapping=dict(number=number))
+
         if len(filename) > 100:
             return filename[:100] + '...'
         else:

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2012-11-21 08:39+0000\n"
+"POT-Creation-Date: 2012-11-28 12:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,15 +21,15 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr ""
 
-#: ./interfaces.py:231
+#: ./interfaces.py:242
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
-#: ./form.py:641
+#: ./form.py:651
 msgid "Adjust"
 msgstr ""
 
-#: ./directory.py:178
+#: ./directory.py:191
 msgid "All"
 msgstr ""
 
@@ -49,20 +49,24 @@ msgstr ""
 msgid "Archived"
 msgstr ""
 
-#: ./interfaces.py:99
+#: ./item.py:100
+msgid "Attachment ${number}"
+msgstr ""
+
+#: ./interfaces.py:109
 msgid "Attachment 1"
 msgstr ""
 
-#: ./interfaces.py:104
+#: ./interfaces.py:114
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:266
-#: ./templates/macros.pt:164
+#: ./interfaces.py:277
+#: ./templates/macros.pt:166
 msgid "Attachments"
 msgstr ""
 
-#: ./form.py:690
+#: ./form.py:703
 msgid "Back"
 msgstr ""
 
@@ -70,47 +74,47 @@ msgstr ""
 msgid "Calendar Export"
 msgstr ""
 
-#: ./templates/macros.pt:179
+#: ./templates/macros.pt:181
 msgid "Calendar export for all occurrences of this event"
 msgstr ""
 
-#: ./templates/macros.pt:187
+#: ./templates/macros.pt:189
 msgid "Calendar export for this event"
 msgstr ""
 
-#: ./templates/macros.pt:182
+#: ./templates/macros.pt:184
 msgid "Calendar export for this occurrence only"
 msgstr ""
 
-#: ./templates/macros.pt:176
+#: ./templates/macros.pt:178
 msgid "Calendars (iCal)"
 msgstr ""
 
-#: ./form.py:396
+#: ./form.py:401
 msgid "Cancel"
 msgstr ""
 
-#: ./form.py:508
+#: ./form.py:515
 msgid "Cancel Event Submission"
 msgstr ""
 
-#: ./interfaces.py:158
+#: ./interfaces.py:168
 msgid "Contact Email"
 msgstr ""
 
-#: ./interfaces.py:152
+#: ./interfaces.py:162
 msgid "Contact Name"
 msgstr ""
 
-#: ./interfaces.py:164
+#: ./interfaces.py:174
 msgid "Contact Phone"
 msgstr ""
 
-#: ./form.py:379
+#: ./form.py:384
 msgid "Continue"
 msgstr ""
 
-#: ./form.py:250
+#: ./form.py:253
 msgid "Coordinates"
 msgstr ""
 
@@ -126,7 +130,7 @@ msgstr ""
 msgid "Deny Publication"
 msgstr ""
 
-#: ./form.py:566
+#: ./form.py:573
 msgid "Detail Preview"
 msgstr ""
 
@@ -134,56 +138,56 @@ msgstr ""
 msgid "Dou you have an event to share?"
 msgstr ""
 
-#: ./form.py:121
+#: ./form.py:124
 msgid "Enter"
 msgstr ""
 
-#: ./form.py:172
+#: ./form.py:175
 msgid "Event"
 msgstr ""
 
-#: ./form.py:445
+#: ./form.py:450
 msgid "Event Preview Updated"
 msgstr ""
 
-#: ./form.py:526
+#: ./form.py:533
 msgid "Event Saved"
 msgstr ""
 
-#: ./form.py:661
+#: ./form.py:674
 msgid "Event Submission Finish"
 msgstr ""
 
-#: ./form.py:334
+#: ./form.py:339
 msgid "Event Submission Form"
 msgstr ""
 
-#: ./form.py:621
+#: ./form.py:631
 msgid "Event Submission Preview"
 msgstr ""
 
-#: ./interfaces.py:140
-#: ./templates/macros.pt:142
+#: ./interfaces.py:150
+#: ./templates/macros.pt:144
 msgid "Event Website"
 msgstr ""
 
-#: ./interfaces.py:273
+#: ./interfaces.py:284
 msgid "Event end before start"
 msgstr ""
 
-#: ./form.py:294
+#: ./form.py:297
 msgid "Event submission cancelled"
 msgstr ""
 
-#: ./form.py:687
+#: ./form.py:700
 msgid "Event submitted"
 msgstr ""
 
-#: ./item.py:156
+#: ./item.py:160
 msgid "Event was archived"
 msgstr ""
 
-#: ./item.py:155
+#: ./item.py:159
 msgid "Event was published"
 msgstr ""
 
@@ -203,7 +207,7 @@ msgstr ""
 msgid "Filtered Events"
 msgstr ""
 
-#: ./form.py:123
+#: ./form.py:126
 msgid "Finish"
 msgstr ""
 
@@ -239,48 +243,48 @@ msgstr ""
 msgid "From today until the end of this year"
 msgstr ""
 
-#: ./interfaces.py:122
+#: ./interfaces.py:132
 msgid "Housenumber"
 msgstr ""
 
-#: ./form.py:604
+#: ./form.py:611
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr ""
 
-#: ./interfaces.py:47
+#: ./interfaces.py:57
 msgid "If entered, the terms and conditions have to be agreed to by anyone submitting an event."
 msgstr ""
 
-#: ./interfaces.py:39
+#: ./interfaces.py:49
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:245
+#: ./interfaces.py:256
 msgid "Images"
 msgstr ""
 
-#: ./form.py:257
+#: ./form.py:260
 msgid "Information"
 msgstr ""
 
-#: ./form.py:578
+#: ./form.py:585
 msgid "List Preview"
 msgstr ""
 
-#: ./interfaces.py:110
-#: ./templates/macros.pt:126
+#: ./interfaces.py:120
+#: ./templates/macros.pt:128
 msgid "Locality"
 msgstr ""
 
-#: ./form.py:231
+#: ./form.py:234
 msgid "Location"
 msgstr ""
 
-#: ./interfaces.py:89
+#: ./interfaces.py:99
 msgid "Long Description"
 msgstr ""
 
-#: ./form.py:240
+#: ./form.py:243
 msgid "Map"
 msgstr ""
 
@@ -300,32 +304,32 @@ msgstr ""
 msgid "Next Year"
 msgstr ""
 
-#: ./form.py:447
+#: ./form.py:452
 msgid "No changes were applied"
 msgstr ""
 
-#: ./directory.py:94
+#: ./directory.py:107
 msgid "No events for the current daterange"
 msgstr ""
 
-#: ./directory.py:92
+#: ./directory.py:105
 msgid "No events for the current state"
 msgstr ""
 
-#: ./interfaces.py:146
-#: ./templates/macros.pt:139
+#: ./interfaces.py:156
+#: ./templates/macros.pt:141
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:249
+#: ./interfaces.py:260
 msgid "PDF"
 msgstr ""
 
-#: ./interfaces.py:218
+#: ./interfaces.py:229
 msgid "Please choose at least one category"
 msgstr ""
 
-#: ./interfaces.py:225
+#: ./interfaces.py:236
 msgid "Please enter at least one suggestion"
 msgstr ""
 
@@ -333,11 +337,11 @@ msgstr ""
 msgid "Previewed"
 msgstr ""
 
-#: ./interfaces.py:170
+#: ./interfaces.py:180
 msgid "Prices"
 msgstr ""
 
-#: ./item.py:157
+#: ./item.py:161
 msgid "Publication of event was denied"
 msgstr ""
 
@@ -349,28 +353,28 @@ msgstr ""
 msgid "Publish Event"
 msgstr ""
 
-#: ./directory.py:177
+#: ./directory.py:190
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Published"
 msgstr ""
 
-#: ./templates/macros.pt:194
+#: ./templates/macros.pt:196
 msgid "Recurring Event"
 msgstr ""
 
-#: ./form.py:500
+#: ./form.py:507
 msgid "Save Event"
 msgstr ""
 
-#: ./form.py:335
+#: ./form.py:340
 msgid "Send us your events and we will publish them"
 msgstr ""
 
-#: ./interfaces.py:81
+#: ./interfaces.py:91
 msgid "Short Description"
 msgstr ""
 
-#: ./templates/macros.pt:196
+#: ./templates/macros.pt:198
 msgid "Show all occurrences"
 msgstr ""
 
@@ -378,11 +382,11 @@ msgstr ""
 msgid "State"
 msgstr ""
 
-#: ./interfaces.py:116
+#: ./interfaces.py:126
 msgid "Street"
 msgstr ""
 
-#: ./form.py:675
+#: ./form.py:688
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Submit"
 msgstr ""
@@ -395,34 +399,34 @@ msgstr ""
 msgid "Submit Your Event"
 msgstr ""
 
-#: ./directory.py:172
+#: ./directory.py:185
 #: ./profiles/default/workflows/events_workflow/definition.xml
 msgid "Submitted"
 msgstr ""
 
-#: ./form.py:585
-#: ./templates/macros.pt:202
+#: ./form.py:592
+#: ./templates/macros.pt:204
 msgid "Submitter"
 msgstr ""
 
-#: ./interfaces.py:75
+#: ./interfaces.py:85
 msgid "Submitter Email"
 msgstr ""
 
-#: ./interfaces.py:70
+#: ./interfaces.py:80
 msgid "Submitter Name"
 msgstr ""
 
-#: ./interfaces.py:62
+#: ./interfaces.py:72
 msgid "Suggested Values for the What-Category"
 msgstr ""
 
-#: ./interfaces.py:63
+#: ./interfaces.py:73
 msgid "Suggested Values for the Where-Category"
 msgstr ""
 
-#: ./directory.py:222
-#: ./interfaces.py:46
+#: ./directory.py:236
+#: ./interfaces.py:56
 msgid "Terms and Conditions"
 msgstr ""
 
@@ -450,20 +454,20 @@ msgstr ""
 msgid "This and Next Year"
 msgstr ""
 
-#: ./templates/macros.pt:195
+#: ./templates/macros.pt:197
 msgid "This is a recurring event"
 msgstr ""
 
-#: ./templates/macros.pt:154
+#: ./templates/macros.pt:156
 msgid "Ticket"
 msgstr ""
 
-#: ./interfaces.py:176
-#: ./templates/macros.pt:156
+#: ./interfaces.py:186
+#: ./templates/macros.pt:158
 msgid "Ticket / Registration Website"
 msgstr ""
 
-#: ./form.py:214
+#: ./form.py:217
 msgid "Title of event"
 msgstr ""
 
@@ -475,31 +479,31 @@ msgstr ""
 msgid "Tomorrow"
 msgstr ""
 
-#: ./interfaces.py:134
+#: ./interfaces.py:144
 msgid "Town"
 msgstr ""
 
-#: ./interfaces.py:243
+#: ./interfaces.py:254
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:262
+#: ./interfaces.py:273
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
-#: ./interfaces.py:82
+#: ./interfaces.py:92
 msgid "Up to 140 characters"
 msgstr ""
 
-#: ./form.py:122
+#: ./form.py:125
 msgid "Verify"
 msgstr ""
 
-#: ./directory.py:28
+#: ./directory.py:31
 msgid "What"
 msgstr ""
 
-#: ./directory.py:28
+#: ./directory.py:31
 msgid "Where"
 msgstr ""
 
@@ -507,15 +511,15 @@ msgstr ""
 msgid "Whole Day"
 msgstr ""
 
-#: ./interfaces.py:290
+#: ./interfaces.py:301
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 
-#: ./interfaces.py:210
+#: ./interfaces.py:221
 msgid "You may not add more than ${max} occurences"
 msgstr ""
 
-#: ./interfaces.py:128
+#: ./interfaces.py:138
 msgid "Zipcode"
 msgstr ""
 

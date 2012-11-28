@@ -187,6 +187,7 @@ def fetch_events(request):
         for e in events(offer):
             # so far all guidle events seem to be in this region
             e['timezone'] = 'Europe/Zurich'
+            e['source_id'] = offer.attrib['id']
 
             # basic information
             copy(e, offer.offerDetail, """
@@ -216,6 +217,21 @@ def fetch_events(request):
                 contact_phone   <- telephone_1
             """)
 
-            e['source_id'] = offer.attrib['id']
+            # image
+            try:
+                for image in list(offer.offerDetail.images.iterchildren())[:1]:
+                    copy(e, image, "image <- url")
+            except AttributeError:
+                pass
+
+            # attachments (download later)
+            try:
+                attachments = list(
+                    offer.offerDetail.attachments.iterchildren()
+                )[:2]
+                for ix, attachment in enumerate(attachments):
+                    copy(e, attachment, "attachment_%i <- url" % (ix + 1))
+            except AttributeError:
+                pass
 
             yield e
