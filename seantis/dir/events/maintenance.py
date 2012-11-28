@@ -49,24 +49,26 @@ def archive_past_events(directory, dryrun=False):
     published_events = query(
         path={'query': directory.getPhysicalPath(), 'depth': 2},
         object_provides=IEventsDirectoryItem.__identifier__,
-        review_state='published'
+        review_state=('published', ),
+        start={'query': past, 'range': 'max'},
+        end={'query': past, 'range': 'max'}
     )
 
     past_events = []
 
     for event in map(catalog.get_object, published_events):
-        if event.start >= past or event.end >= past:
-            continue
+        assert event.start < past
+        assert event.end < past
 
         # recurring events may be in the past with one of
         # their occurrences in the future
         if not has_future_occurrences(event, past):
             past_events.append(event)
 
+    ids = [p.id for p in past_events]
+
     if past_events:
-        log.info('archiving past events -> %s' % str(
-            [p.id for p in past_events]
-        ))
+        log.info('archiving past events -> %s' % str(ids))
 
         if not dryrun:
             for event in past_events:
@@ -74,7 +76,7 @@ def archive_past_events(directory, dryrun=False):
     else:
         log.info('no past events found')
 
-    return past_events
+    return ids
 
 
 def remove_archived_events(directory, dryrun=False):
