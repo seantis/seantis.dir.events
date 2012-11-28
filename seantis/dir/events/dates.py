@@ -214,12 +214,16 @@ class DateRanges(object):
 
     def set_now(self, now):
         self._now = now
+
         self.this_morning = datetime(
             now.year, now.month, now.day, tzinfo=now.tzinfo
         )
         self.this_evening = self.this_morning + timedelta(
             days=1, microseconds=-1
         )
+
+        # mornings shall start at 3 am
+        self.this_morning += timedelta(hours=3)
 
     now = property(get_now, set_now)
 
