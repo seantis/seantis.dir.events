@@ -3,6 +3,7 @@ import inspect
 from urllib import urlopen
 from itertools import groupby
 from five import grok
+from collective.geo.geographer.interfaces import IWriteGeoreferenced
 from plone.namedfile import NamedFile, NamedImage
 from plone.dexterity.utils import createContentInContainer
 from zope.interface import alsoProvides
@@ -74,9 +75,25 @@ class FetchView(grok.View):
                 if url:
                     event[download] = method(data=urlopen(url).read())
 
+            # latitude and longitude are set through the interface
+            lat, lon = event.get('latitude'), event.get('longitude')
+
+            if lat:
+                del event['latitude']
+
+            if lon:
+                del event['longitude']
+
             obj = createContentInContainer(
                 self.context, 'seantis.dir.events.item', **event
             )
+
+            # set coordinates now
+            if lat and lon:
+                IWriteGeoreferenced(obj).setGeoInterface(
+                    'Point', map(float, (lon, lat))
+                )
+
             obj.submit()
             obj.publish()
 
