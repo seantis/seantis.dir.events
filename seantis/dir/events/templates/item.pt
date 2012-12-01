@@ -39,6 +39,10 @@
         </div>
 
         <div tal:replace="structure provider:plone.belowcontentbody" />
+        
+        <div style="display: none" id="#parentlink">
+          <a tal:attributes="href python: context.parent().absolute_url()"></a>
+        </div>
 
     </tal:main-macro>
 </metal:main>
