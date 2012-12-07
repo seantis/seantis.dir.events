@@ -29,9 +29,10 @@ from seantis.dir.events.interfaces import (
 from AccessControl import getSecurityManager
 from Products.CMFCore import permissions
 
+
 class EventsDirectoryItem(item.DirectoryItem):
-    
-    actions_order = ['submit', 'publish', 'deny', 'archive']
+
+    actions_order = ('submit', 'publish', 'deny', 'archive')
 
     @property
     def tz(self):
@@ -54,7 +55,7 @@ class EventsDirectoryItem(item.DirectoryItem):
         return utils.workflow_tool().getInfoFor(self, 'review_state')
 
     def action_url(self, action):
-        baseurl = self.absolute_url() + '/do-action?action=%s' 
+        baseurl = self.absolute_url() + '/do-action?action=%s'
         return baseurl % action['id']
 
     def list_actions(self):
@@ -64,13 +65,13 @@ class EventsDirectoryItem(item.DirectoryItem):
         return sorted(workflowTool.listActions(object=self), key=sortkey)
 
     def allow_action(self, action):
-        """ Return true if the given action is allowed. This is not a 
+        """ Return true if the given action is allowed. This is not a
         wrapper for the transition guards of the event workflow. Instead
         it is called *by* the transition guards.
 
         This allows a number of people to work together on an event website
         with every person having its own group of events which he or she is
-        responsible for. 
+        responsible for.
 
         There's no actual implementation of that in seantis.dir.events
         but client specific packages like izug.seantis.dir.events may
@@ -107,7 +108,7 @@ class EventsDirectoryItem(item.DirectoryItem):
     def eventtags(self):
         """ Return a list of tuples containing the event tag value
         (category value) in position 0 and the link to the related
-        filter in position 1. 
+        filter in position 1.
 
         The results are sorted by value (position 0).
         """
@@ -123,13 +124,14 @@ class EventsDirectoryItem(item.DirectoryItem):
             for tag in categories:
                 if not tag:
                     continue
-                    
+
                 tags.append((
-                    tag.strip().replace(' ', '&nbsp;'), 
+                    tag.strip().replace(' ', '&nbsp;'),
                     baseurl % (key, urllib.quote(tag.encode('utf-8')))
                 ))
 
         return sorted(tags, key=lambda t: t[0])
+
 
 class DefaultActionGuard(grok.Adapter):
 
@@ -138,7 +140,8 @@ class DefaultActionGuard(grok.Adapter):
 
     def allow_action(self, action):
         return True
-        
+
+
 class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.context(IEventsDirectoryItem)
     grok.name('seantis.dir.events.item.detail')
@@ -146,6 +149,7 @@ class EventsDirectoryItemViewlet(grok.Viewlet):
     grok.viewletmanager(item.DirectoryItemViewletManager)
 
     template = grok.PageTemplateFile('templates/listitem.pt')
+
 
 class DoActionView(grok.View):
     """ Pretty much like modify_content_status, but with
@@ -172,6 +176,7 @@ class DoActionView(grok.View):
 
         return ""
 
+
 class View(core.View):
     """Default view of a seantis.dir.events item."""
     grok.context(IEventsDirectoryItem)
@@ -197,12 +202,16 @@ class View(core.View):
             return self._template.render(self)
         else:
             if self.date:
-                calendar = construct_calendar(self.context.parent(), [self.occurrence])
+                calendar = construct_calendar(
+                    self.context.parent(), [self.occurrence]
+                )
                 for component in calendar.subcomponents:
                     if 'RRULE' in component:
                         del component['RRULE']
             else:
-                calendar = construct_calendar(self.context.parent(), [self.context])
+                calendar = construct_calendar(
+                    self.context.parent(), [self.context]
+                )
 
             utils.render_ical_response(self.request, self.context, calendar)
 
@@ -225,7 +234,7 @@ class View(core.View):
     @property
     def date(self):
         date = self.request.get('date')
-        if not date: 
+        if not date:
             return None
 
         try:
@@ -254,7 +263,7 @@ class View(core.View):
     @view.memoize
     def occurrences(self):
         min_date, max_date = dates.event_range()
-        
+
         return recurrence.occurrences(self.context, min_date, max_date)
 
     @property
@@ -269,9 +278,10 @@ class View(core.View):
             permissions.ModifyPortalContent, self.context
         )
 
+
 class ICalendarEventItemComponent(ICalendarEventComponent, grok.Adapter):
     """ Adds custom information to the default ical implementation. """
-    
+
     grok.implements(IICalendarEventComponent)
     grok.context(IEventsDirectoryItem)
 
@@ -292,29 +302,35 @@ class ICalendarEventItemComponent(ICalendarEventComponent, grok.Adapter):
 
     def to_ical(self):
         ical = ICalendarEventComponent.to_ical(self)
-        
+
         coordinates = self.get_coordinates()
         if coordinates:
             ical.add('geo', coordinates)
 
         # plone.app.event.ical does the following, but when I tried
         # to use their interfaces for contact and location I got really
-        # weird problems that made me give up at some point out of fed-up-ness          
+        # weird problems that made me give up at some point out of fed-up-ness
         e = self.context
 
         if e.locality:
             ical.add('location', e.locality)
 
-        contact = [e.contact_name, e.contact_phone, e.contact_email, e.event_url]
+        contact = [
+            e.contact_name, e.contact_phone, e.contact_email, e.event_url
+        ]
         contact = filter(lambda c: c, contact)
 
         if contact:
             ical.add('contact', u', '.join(contact))
-        
+
         return ical
 
+
 class ExtendedDirectoryItemFieldMap(grok.Adapter):
-    """Adapter extending the import/export fieldmap of seantis.dir.events.item."""
+    """Adapter extending the import/export fieldmap of
+    seantis.dir.events.item.
+
+    """
     grok.context(IEventsDirectory)
     grok.provides(IFieldMapExtender)
 
@@ -344,8 +360,8 @@ class ExtendedDirectoryItemFieldMap(grok.Adapter):
 
         itemmap.bind_wrapper("start", datewrap)
         itemmap.bind_unwrapper("start", dateunwrap)
-        
+
         itemmap.bind_wrapper("end", datewrap)
         itemmap.bind_unwrapper("end", dateunwrap)
-        
+
         itemmap.add_fields(extended, len(itemmap))
