@@ -27,7 +27,7 @@
             occurrence python: view.occurrence;
             is_preview python: False;
           ">
-            <metal:use use-macro="context/parent/@@seantis-dir-events-macros/macros/event-detail"></metal:use>
+            <metal:use use-macro="context/get_parent/@@seantis-dir-events-macros/macros/event-detail"></metal:use>
           </tal:block>
 
           <div class="event-sidebar">
