@@ -2,7 +2,7 @@
 
 from copy import copy
 from five import grok
-from collections import OrderedDict, namedtuple
+from collections import OrderedDict
 
 from Acquisition import aq_inner, aq_base
 from Acquisition.interfaces import IAcquirer
@@ -42,21 +42,27 @@ from plone.app.event.dx.behaviors import (
 from seantis.dir.base.interfaces import IDirectoryPage
 
 from seantis.dir.events.interfaces import (
-    IEventsDirectory, 
+    IEventsDirectory,
     IEventsDirectoryItem,
     ITerms
 )
 
 from seantis.dir.events.token import (
-    verify_token, apply_token, clear_token, append_token, event_by_token, current_token
+    verify_token,
+    apply_token,
+    clear_token,
+    append_token,
+    event_by_token,
+    current_token
 )
 
 from seantis.dir.events import utils, dates
 from seantis.dir.events.recurrence import occurrences, grouped_occurrences
 from seantis.dir.events import _
 
+
 class EventBaseGroup(group.Group):
-    
+
     group_fields = {}
     dynamic_fields = []
 
@@ -65,11 +71,11 @@ class EventBaseGroup(group.Group):
     @property
     def fields(self):
         """ Returns the fields defined in group_fields, making sure that
-        dynamic fields are shallow copied before they are touched. 
-        
+        dynamic fields are shallow copied before they are touched.
+
         Dynamic fields in this context are fields whose schame properties
         are changed on the fly and it is important that they are copied
-        since these changes otherwise leak through to other forms. 
+        since these changes otherwise leak through to other forms.
 
         """
 
@@ -79,7 +85,7 @@ class EventBaseGroup(group.Group):
         result = None
 
         for interface, fields in self.group_fields.items():
-            if result == None:
+            if result is None:
                 result = field.Fields(interface).select(*fields)
             else:
                 result += field.Fields(interface).select(*fields)
@@ -102,9 +108,11 @@ class EventBaseGroup(group.Group):
     def update_widgets(self):
         """ Called when it's time to make changes to the widgets. """
 
+
 class NavigationStep(object):
     def __init__(self, id=None, text=None, url=None):
         self.id, self.text, self.url = id, text, url
+
 
 class NavigationMixin(object):
 
@@ -138,7 +146,7 @@ class NavigationMixin(object):
             steps[0].url = self.directory.absolute_url() + '/@@submit'
             steps[1].url = self.context.absolute_url() + '/@@preview'
             steps[2].url = self.context.absolute_url() + '/@@finish'
-        
+
         for i in range(0, len(steps)):
             if steps[i].url:
                 steps[i].url = append_token(self.context, steps[i].url)
@@ -155,13 +163,13 @@ class NavigationMixin(object):
     def step_classes(self, step):
 
         classes = ["formTab"]
-        
+
         if step.id == self.steps[0].id:
             classes.append("firstFormTab")
 
         if step.id == self.steps[-1].id:
             classes.append("lastFormTab")
-        
+
         if step.id == self.current_step.id:
             classes.append("selected")
 
@@ -170,12 +178,13 @@ class NavigationMixin(object):
 
         return ' '.join(classes)
 
+
 class GeneralGroup(EventBaseGroup):
-    
+
     label = _(u'Event')
-    
+
     dynamic_fields = ('recurrence', 'cat1', 'cat2')
-    
+
     group_fields = OrderedDict()
     group_fields[IEventsDirectoryItem] = (
         'title', 'short_description', 'long_description', 'cat1', 'cat2'
@@ -198,9 +207,11 @@ class GeneralGroup(EventBaseGroup):
         for category in categories:
             category.field.description = u''
             category.field.value_type = Choice(
-                source=self.available_categories(self.context, category.__name__)
+                source=self.available_categories(
+                    self.context, category.__name__
+                )
             )
-        
+
         categories[0].widgetFactory = CheckBoxFieldWidget
         categories[0].field.required = True
         categories[1].widgetFactory = RadioFieldWidget
@@ -210,7 +221,7 @@ class GeneralGroup(EventBaseGroup):
         # update labels of categories
         labels = self.context.labels()
         widgets = [w for w in self.widgets if w in labels]
-        
+
         for widget in widgets:
             self.widgets[widget].label = labels[widget]
 
@@ -223,28 +234,32 @@ class GeneralGroup(EventBaseGroup):
             terms = []
 
             for value in context.suggested_values(category):
-                terms.append(SimpleVocabulary.createTerm(value, hash(value), value))
+                terms.append(
+                    SimpleVocabulary.createTerm(value, hash(value), value)
+                )
 
             return SimpleVocabulary(terms)
 
         return get_categories
 
+
 class LocationGroup(EventBaseGroup):
-    
+
     label = _(u'Location')
-    
-    group_fields = OrderedDict() 
+
+    group_fields = OrderedDict()
     group_fields[IEventsDirectoryItem] = (
         'locality', 'street', 'housenumber', 'zipcode', 'town'
     )
 
+
 class MapGroup(EventBaseGroup):
-    
+
     label = _(u'Map')
-    
+
     dynamic_fields = ('wkt', )
 
-    group_fields = OrderedDict() 
+    group_fields = OrderedDict()
     group_fields[IGeoManager] = (
         'wkt',
     )
@@ -256,6 +271,7 @@ class MapGroup(EventBaseGroup):
         coordinates = self.fields['wkt']
         coordinates.widgetFactory = MapFieldWidget
 
+
 class InformationGroup(EventBaseGroup):
     label = _(u'Information')
     fields = field.Fields(IEventsDirectoryItem).select(
@@ -263,6 +279,7 @@ class InformationGroup(EventBaseGroup):
         'contact_phone', 'prices', 'event_url', 'registration',
         'image', 'attachment_1', 'attachment_2'
     )
+
 
 class EventSubmissionForm(extensible.ExtensibleForm):
 
@@ -294,8 +311,11 @@ class EventSubmissionForm(extensible.ExtensibleForm):
             clear_token(self.context)
         except ComponentLookupError:
             pass
-        IStatusMessage(self.request).add(_(u"Event submission cancelled"), "info")
+        IStatusMessage(self.request).add(
+            _(u"Event submission cancelled"), "info"
+        )
         self.request.response.redirect(self.directory.absolute_url())
+
 
 class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
     """Event submission form mainly targeted at anonymous users.
@@ -318,13 +338,13 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
     machtes an existing event in preview state.
 
     The form is an add-form if the user does not have a token or it does
-    not exist in the database. 
+    not exist in the database.
 
     If the user clicks 'cancel' the token is thrown away, leaving
     an event in limbo. This will be cleaned up by a cron job.
 
     """
-    
+
     implements(IDirectoryPage)
 
     grok.name('submit')
@@ -373,7 +393,9 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         return self.context
 
     def form_type(self):
-        self.event = event_by_token(self.directory, current_token(self.request))
+        self.event = event_by_token(
+            self.directory, current_token(self.request)
+        )
         return self.event and 'editform' or 'addform'
 
     def setup_form(self):
@@ -384,7 +406,9 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
             preview = button.Button(title=_(u'Continue'), name='save')
             self.buttons += button.Buttons(preview)
 
-            preview_handler = button.Handler(preview, self.__class__.handle_preview)
+            preview_handler = button.Handler(
+                preview, self.__class__.handle_preview
+            )
             self.handlers.addHandler(preview, preview_handler)
 
             self.ignoreContext = True
@@ -393,7 +417,9 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
             update = button.Button(title=_(u'Continue'), name='save')
             self.buttons += button.Buttons(update)
 
-            update_handler = button.Handler(update, self.__class__.handle_update)
+            update_handler = button.Handler(
+                update, self.__class__.handle_update
+            )
             self.handlers.addHandler(update, update_handler)
 
             self.context = self.event
@@ -407,7 +433,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
     def prepare_coordinates(self, data):
         """ The coordinates need to be verified and converted. First they are
         converted and kept out of the item creation process. Later they
-        are added to the object once that exists. 
+        are added to the object once that exists.
 
         """
         if data.get('wkt'):
@@ -445,7 +471,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         self.apply_coordinates(self.getContent())
 
         changes = self.applyChanges(data)
-        
+
         if changes:
             self.message(_(u'Event Preview Updated'))
         else:
@@ -465,7 +491,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
 
     def create(self, data):
         data['timezone'] = default_timezone()
-        
+
         self.prepare_coordinates(data)
 
         content = createContent('seantis.dir.events.item', **data)
@@ -492,6 +518,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         self.add(obj)
         return obj
 
+
 class EventEditForm(EventSubmitForm):
 
     implements(IDirectoryPage)
@@ -512,7 +539,9 @@ class EventEditForm(EventSubmitForm):
 
         self.event = self.context
 
-        cancel = button.Button(title=_(u'Cancel Event Submission'), name='cancel')
+        cancel = button.Button(
+            title=_(u'Cancel Event Submission'), name='cancel'
+        )
         self.buttons += button.Buttons(cancel)
 
         cancel_handler = button.Handler(cancel, self.__class__.handle_cancel)
@@ -528,7 +557,7 @@ class EventEditForm(EventSubmitForm):
         self.apply_coordinates(self.getContent())
 
         changes = self.applyChanges(data)
-        
+
         if changes:
             self.message(_(u'Event Saved'))
         else:
@@ -537,8 +566,10 @@ class EventEditForm(EventSubmitForm):
         url = self.context.absolute_url()
         self.redirect(append_token(self.context, url))
 
+
 class IPreview(form.Schema):
     title = TextLine(required=False)
+
 
 class DetailPreviewWidget(widget.Widget):
 
@@ -547,6 +578,7 @@ class DetailPreviewWidget(widget.Widget):
     def render(self):
         self.directory = self.context.get_parent()
         return self._template(self)
+
 
 class ListPreviewWidget(DetailPreviewWidget):
 
@@ -557,19 +589,24 @@ class ListPreviewWidget(DetailPreviewWidget):
     def occurrence_groups(self):
         dr = dates.DateRanges()
         start, end = dr.this_year[0], dr.next_year[1]
-        result = grouped_occurrences(occurrences(self.context, start, end), self.request)
+        result = grouped_occurrences(
+            occurrences(self.context, start, end), self.request
+        )
         return result
+
 
 def DetailPreviewFieldWidget(field, request):
     """IFieldWidget factory for MapWidget."""
     return widget.FieldWidget(field, DetailPreviewWidget(request))
 
+
 def ListPreviewFieldWidget(field, request):
     """IFieldWidget factory for MapWidget."""
     return widget.FieldWidget(field, ListPreviewWidget(request))
 
+
 class PreviewGroup(EventBaseGroup):
-    
+
     label = _(u'Detail Preview')
 
     dynamic_fields = ('title', )
@@ -580,12 +617,14 @@ class PreviewGroup(EventBaseGroup):
     def update_dynamic_fields(self):
         self.fields['title'].widgetFactory = DetailPreviewFieldWidget
 
+
 class ListPreviewGroup(PreviewGroup):
-    
+
     label = _(u'List Preview')
 
     def update_dynamic_fields(self):
         self.fields['title'].widgetFactory = ListPreviewFieldWidget
+
 
 class SubmitterGroup(EventBaseGroup):
 
@@ -608,13 +647,13 @@ class SubmitterGroup(EventBaseGroup):
             # otherwise be sure to link to it
             url = self.context.get_parent().absolute_url() + '/@@terms'
             self.fields['agreed'].field.description = utils.translate(
-                self.request, _((
-                        u"I agree to the "
-                        u"<a target='_blank' href='${url}'>Terms and Conditions</a>"
-                    ),
-                    mapping={'url':url}
+                self.request, _(
+                    u"I agree to the <a target='_blank' href='${url}'>"
+                    u"Terms and Conditions</a>",
+                    mapping={'url': url}
                 )
             )
+
 
 class PreviewForm(EventSubmissionForm, form.AddForm, NavigationMixin):
 
@@ -645,18 +684,23 @@ class PreviewForm(EventSubmissionForm, form.AddForm, NavigationMixin):
     @button.buttonAndHandler(_('Continue'), name='save')
     def handleSubmit(self, action):
         self.request.response.redirect(
-            append_token(self.context, self.context.absolute_url() + '/@@finish')
+            append_token(
+                self.context, self.context.absolute_url() + '/@@finish'
+            )
         )
 
     @button.buttonAndHandler(_(u'Adjust'), name='adjust')
     def handleAdjust(self, action):
         self.request.response.redirect(
-            append_token(self.context, self.directory.absolute_url() + '/@@submit')
+            append_token(
+                self.context, self.directory.absolute_url() + '/@@submit'
+            )
         )
 
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
     def handleCancel(self, action):
         self.handle_cancel()
+
 
 class FinishForm(EventSubmissionForm, form.AddForm, NavigationMixin):
 
@@ -703,7 +747,9 @@ class FinishForm(EventSubmissionForm, form.AddForm, NavigationMixin):
     @button.buttonAndHandler(_(u'Back'), name='back')
     def handleBack(self, action):
         self.request.response.redirect(
-            append_token(self.context, self.context.absolute_url() + '/@@preview')
+            append_token(
+                self.context, self.context.absolute_url() + '/@@preview'
+            )
         )
 
     @button.buttonAndHandler(_(u'Cancel'), name='cancel')
