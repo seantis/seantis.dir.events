@@ -117,7 +117,7 @@ class EventsDirectoryItem(item.DirectoryItem):
         categories['cat1'] = self.keywords(categories=('cat1', ))
         categories['cat2'] = self.keywords(categories=('cat2', ))
 
-        baseurl = self.parent().absolute_url() + '?filter=true&%s=%s'
+        baseurl = self.get_parent().absolute_url() + '?filter=true&%s=%s'
 
         tags = list()
         for key, categories in categories.items():
@@ -172,7 +172,7 @@ class DoActionView(grok.View):
 
         IStatusMessage(self.request).add(self.messages[action], "info")
         self.context.do_action(action)
-        self.request.response.redirect(self.context.parent().absolute_url())
+        self.request.response.redirect(self.context.get_parent().absolute_url())
 
         return ""
 
@@ -203,14 +203,14 @@ class View(core.View):
         else:
             if self.date:
                 calendar = construct_calendar(
-                    self.context.parent(), [self.occurrence]
+                    self.context.get_parent(), [self.occurrence]
                 )
                 for component in calendar.subcomponents:
                     if 'RRULE' in component:
                         del component['RRULE']
             else:
                 calendar = construct_calendar(
-                    self.context.parent(), [self.context]
+                    self.context.get_parent(), [self.context]
                 )
 
             utils.render_ical_response(self.request, self.context, calendar)
@@ -227,7 +227,7 @@ class View(core.View):
         return self.context.recurrence and True or False
 
     def recurrence_url(self, event):
-        baseurl = self.context.parent().absolute_url()
+        baseurl = self.context.get_parent().absolute_url()
         baseurl += '?range=this_and_next_year&search=true&searchtext=%s'
         return baseurl % urllib.quote(event.short_description.encode('utf-8'))
 

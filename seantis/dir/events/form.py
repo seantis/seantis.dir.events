@@ -545,7 +545,7 @@ class DetailPreviewWidget(widget.Widget):
     _template = ViewPageTemplateFile('templates/previewdetail.pt')
 
     def render(self):
-        self.directory = self.context.parent()
+        self.directory = self.context.get_parent()
         return self._template(self)
 
 class ListPreviewWidget(DetailPreviewWidget):
@@ -602,11 +602,11 @@ class SubmitterGroup(EventBaseGroup):
         self.fields['submitter_email'].field.required = True
 
         # remove the terms and conditions agreement if there is none
-        if not self.context.parent().terms:
+        if not self.context.get_parent().terms:
             del self.fields['agreed']
         else:
             # otherwise be sure to link to it
-            url = self.context.parent().absolute_url() + '/@@terms'
+            url = self.context.get_parent().absolute_url() + '/@@terms'
             self.fields['agreed'].field.description = utils.translate(
                 self.request, _((
                         u"I agree to the "
@@ -633,7 +633,7 @@ class PreviewForm(EventSubmissionForm, form.AddForm, NavigationMixin):
 
     @property
     def directory(self):
-        return self.context.parent()
+        return self.context.get_parent()
 
     def current_token(self):
         return current_token(self.request)
@@ -676,7 +676,7 @@ class FinishForm(EventSubmissionForm, form.AddForm, NavigationMixin):
 
     @property
     def directory(self):
-        return self.context.parent()
+        return self.context.get_parent()
 
     def current_token(self):
         return current_token(self.request)
