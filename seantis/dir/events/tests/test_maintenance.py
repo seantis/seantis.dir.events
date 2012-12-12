@@ -5,6 +5,7 @@ from seantis.dir.events.dates import to_utc
 from seantis.dir.events.tests import IntegrationTestCase
 from seantis.dir.events import maintenance
 
+
 class TestMaintenance(IntegrationTestCase):
 
     def setUp(self):
@@ -42,7 +43,7 @@ class TestMaintenance(IntegrationTestCase):
         run = lambda: maintenance.archive_past_events(
             self.directory, dryrun=True
         )
-        
+
         published = self.create_event()
         self.assertEqual(run(), [])
 
@@ -75,7 +76,7 @@ class TestMaintenance(IntegrationTestCase):
         published.end = to_utc(datetime.utcnow() - timedelta(days=100))
         published.recurrence = 'RRULE:FREQ=WEEKLY;COUNT=3'
         published.reindexObject(idxs=['start', 'end'])
-        
+
         self.assertEqual(run(), [published.id])
 
     def test_remove_archived_events(self):

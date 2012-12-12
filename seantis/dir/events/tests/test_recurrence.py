@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import pytz, mock
+import pytz
+import mock
 
 from datetime import datetime, timedelta, date
 
@@ -11,25 +12,28 @@ from seantis.dir.events.tests import IntegrationTestCase
 from seantis.dir.events import recurrence
 from seantis.dir.events import dates
 
-class Item(object, EventsDirectoryItem):
-    
-    def __init__(self, start, end, recurrence="", timezone='Europe/Zurich', whole_day=False):
 
-        # if this is a whole day, the times are adjusted (this is what 
+class Item(object, EventsDirectoryItem):
+
+    def __init__(self, start, end, recurrence="", timezone='Europe/Zurich',
+                 whole_day=False):
+
+        # if this is a whole day, the times are adjusted (this is what
         # plone.app.event would do on the dexterity type)
         if whole_day:
             start = datetime(start.year, start.month, start.day)
             end = datetime(end.year, end.month, end.day, 23, 59, 59)
-        
+
         # the given date is implicitly of the given timezone, so enforce
         # that and then convert to utc as this is what an EventItem actually
         # stores.
         self.start = dates.to_utc(dates.as_timezone(start, timezone))
         self.end = dates.to_utc(dates.as_timezone(end, timezone))
-        
+
         self.recurrence = recurrence
         self.timezone = timezone
         self.whole_day = whole_day
+
 
 class TestRecurrence(IntegrationTestCase):
 
@@ -41,13 +45,14 @@ class TestRecurrence(IntegrationTestCase):
             "RRULE:FREQ=DAILY;COUNT=4"
         )
 
-        occurrences = recurrence.occurrences(item, 
+        occurrences = recurrence.occurrences(
+            item,
             min_date=datetime(2012, 1, 1, 0, 0, tzinfo=item.tz),
             max_date=datetime(2012, 12, 31, 0, 0, tzinfo=item.tz)
         )
 
         self.assertEqual(len(occurrences), 4)
-        
+
         for occurrence in occurrences:
             self.assertEqual(occurrence.recurrence, item.recurrence)
 
@@ -61,9 +66,8 @@ class TestRecurrence(IntegrationTestCase):
             "RRULE:FREQ=DAILY;COUNT=4"
         )
 
-        occurrences = recurrence.occurrences(item,
-            min_date=item.start,
-            max_date=item.end
+        occurrences = recurrence.occurrences(
+            item, min_date=item.start, max_date=item.end
         )
 
         self.assertEqual(len(occurrences), 1)
@@ -82,19 +86,21 @@ class TestRecurrence(IntegrationTestCase):
         self.assertEqual(picked, None)
 
         # occurrences should return an empty list in these cases
-        occurrences = recurrence.occurrences(item,
+        occurrences = recurrence.occurrences(
+            item,
             min_date=datetime(2011, 1, 1, tzinfo=item.tz),
             max_date=datetime(2011, 1, 1, tzinfo=item.tz)
         )
 
         self.assertEqual(occurrences, [])
 
-        non_recurrant = Item( 
+        non_recurrant = Item(
             datetime(2012, 1, 1, 10, 0),
             datetime(2012, 1, 1, 12, 0)
         )
 
-        occurrences = recurrence.occurrences(non_recurrant,
+        occurrences = recurrence.occurrences(
+            non_recurrant,
             min_date=datetime(2011, 1, 1, tzinfo=item.tz),
             max_date=datetime(2011, 1, 1, tzinfo=item.tz)
         )
@@ -102,7 +108,8 @@ class TestRecurrence(IntegrationTestCase):
         self.assertEqual(occurrences, [])
 
         # non-recurring items are packed into a list
-        occurrences = recurrence.occurrences(non_recurrant,
+        occurrences = recurrence.occurrences(
+            non_recurrant,
             datetime(2012, 1, 1, 10, 0, tzinfo=item.tz),
             datetime(2012, 1, 1, 12, 0, tzinfo=item.tz)
         )
@@ -122,15 +129,15 @@ class TestRecurrence(IntegrationTestCase):
 
         assert_split(0, "01.01 16:00 - 02.01 02:00")
         assert_split(0, "01.01 00:00 - 02.01 08:59")
-        
-        assert_split(1, "01.01 16:00 - 02.01 09:00")        
+
+        assert_split(1, "01.01 16:00 - 02.01 09:00")
         assert_split(1, "01.01 16:00 - 02.01 23:00")
         assert_split(1, "01.01 00:00 - 02.01 23:00")
 
         assert_split(2, "01.01 00:00 - 03.01 09:00")
 
         two_days = Item(
-            datetime(2012, 1, 1, 10), 
+            datetime(2012, 1, 1, 10),
             datetime(2012, 1, 2, 20),
             timezone='utc'
         )
@@ -151,13 +158,13 @@ class TestRecurrence(IntegrationTestCase):
         # one split
         two_days = Item(datetime(2012, 1, 1, 10), datetime(2012, 1, 2, 10))
         splits = list(recurrence.split_days(two_days))
-        
+
         self.assertEqual(len(splits), 2)
 
         two_days = Item(datetime(2012, 1, 1, 10), datetime(2012, 1, 2, 9))
         splits = list(recurrence.split_days(two_days))
-        
-        self.assertEqual(len(splits), 2)        
+
+        self.assertEqual(len(splits), 2)
 
         # no split
         one_day = Item(datetime(2012, 1, 1, 10), datetime(2012, 1, 2, 8))
@@ -200,8 +207,8 @@ class TestRecurrence(IntegrationTestCase):
 
         splits = list(recurrence.split_days(three_whole_days))
         self.assertEqual(len(splits), 3)
-        self.assertEqual([1,2,3], [s.start.day for s in splits])
-        self.assertEqual([1,2,3], [s.end.day for s in splits])
+        self.assertEqual([1, 2, 3], [s.start.day for s in splits])
+        self.assertEqual([1, 2, 3], [s.end.day for s in splits])
 
     @mock.patch('seantis.dir.events.dates.default_timezone')
     @mock.patch('seantis.dir.events.dates.default_now')
@@ -223,28 +230,36 @@ class TestRecurrence(IntegrationTestCase):
         )
 
         self.assertEqual(len(occurrences), 3)
-        self.assertEqual([o.local_start.hour for o in occurrences], [7]*3)
-        self.assertEqual([o.local_start.weekday() for o in occurrences], [6]*3)
+        self.assertEqual([o.local_start.hour for o in occurrences], [7] * 3)
+        self.assertEqual(
+            [o.local_start.weekday() for o in occurrences], [6] * 3
+        )
 
         # create an event that starts at 0:00 in a timezone other than
         # utc and ensure that the resulting human date shows the
         # correct weekday in the given timezone
         # to make it tricky, cross over daylight savings time
 
-        default_now.return_value = datetime(2012, 10, 17, tzinfo=pytz.timezone('Europe/Zurich'))
-        
+        default_now.return_value = datetime(
+            2012, 10, 17, tzinfo=pytz.timezone('Europe/Zurich')
+        )
+
         start = datetime(2012, 10, 30)
-        item = Item(start, start + timedelta(seconds=60*60*2), timezone='Europe/Zurich'
+        item = Item(
+            start, start + timedelta(seconds=60 * 60 * 2),
+            timezone='Europe/Zurich'
         )
 
         # behold, the Swiss German language
         request = TestRequest()
         request.locale.dates.calendars['gregorian'].getDayNames = mock.Mock(
-            return_value = [u'Mäntig', u'Zischtig', u'Mittwuch', u'Dunschtig', 
-                            u'Fritig', u'Samschtig', u'Sunntig']
+            return_value=[
+                u'Mäntig', u'Zischtig', u'Mittwuch', u'Dunschtig', u'Fritig',
+                u'Samschtig', u'Sunntig'
+            ]
         )
         human = item.as_occurrence().human_date(request)
-        
+
         self.assertTrue(u'Zischtig' in human)
 
         # while we're at it

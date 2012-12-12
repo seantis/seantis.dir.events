@@ -1,6 +1,7 @@
 from seantis.dir.events.tests import IntegrationTestCase
 from Products.CMFCore.WorkflowCore import WorkflowException
 
+
 class TestWorkflow(IntegrationTestCase):
 
     def setUp(self):
@@ -40,7 +41,7 @@ class TestWorkflow(IntegrationTestCase):
 
         event.do_action('submit')
 
-        self.assertRaises(WorkflowException, action, 'archive')        
+        self.assertRaises(WorkflowException, action, 'archive')
 
         event.do_action('publish')
 
@@ -52,7 +53,7 @@ class TestWorkflow(IntegrationTestCase):
 
         # try denying an event (skipping the publication)
         event = self.create_event()
-    
+
         event.do_action('submit')
         self.assertEqual(event.state, 'submitted')
 
@@ -60,7 +61,7 @@ class TestWorkflow(IntegrationTestCase):
         self.assertEqual(event.state, 'archived')
 
     def test_access_guard(self):
-        actions = ['submit', 'publish','deny', 'archive']
+        actions = ['submit', 'publish', 'deny', 'archive']
 
         # the default access guard has no limits
         event = self.create_event()
@@ -74,7 +75,7 @@ class TestWorkflow(IntegrationTestCase):
         action = lambda a: event.do_action(a)
 
         event.allow_action = lambda a: False
-        
+
         self.assertRaises(WorkflowException, action, 'submit')
 
         event.allow_action = lambda a: True

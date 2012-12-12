@@ -8,6 +8,7 @@ from plone.app.testing import FunctionalTesting
 from Testing import ZopeTestCase as ztc
 from OFS.Folder import Folder
 
+
 class Fixture(PloneSandboxLayer):
 
     default_bases = (PLONE_FIXTURE, )
@@ -22,7 +23,7 @@ class Fixture(PloneSandboxLayer):
         self.loadZCML(package=seantis.dir.events)
 
         app.REQUEST['SESSION'] = self.Session()
-        
+
         if not hasattr(app, 'temp_folder'):
             app._setObject('temp_folder', Folder('temp_folder'))
             transaction.commit()
