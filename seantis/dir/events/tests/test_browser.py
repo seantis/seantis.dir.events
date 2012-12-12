@@ -56,9 +56,6 @@ class BrowserTestCase(FunctionalTestCase):
             fourchan.getControl(
                 name='form.widgets.short_description'
             ).value = 'Some Party'
-            fourchan.getControl(
-                name='form.widgets.short_description'
-            ).value = 'Some Party'
 
             fourchan.getControl('Category1').selected = True
             fourchan.getControl('Category2').selected = True
