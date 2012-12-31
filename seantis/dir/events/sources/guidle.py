@@ -151,10 +151,10 @@ def fetch_events(request):
 
     # TODO have an interface to define urls
     url = (
-        "http://www.guidle.com/dpAccess.jsf"
-        "?id=89625083&language=de&dateOption=NA&primaryTreeId=23400386"
-        "&tagIds=23400386&sorting=ungrouped&locationTreeId=83786753"
-        "&where=83786753&template=XML2"
+        "http://www.guidle.com/dpAccess.jsf?"
+        "id=193352638&language=de&dateOption=NA&tagIds=23400386"
+        "&where=38421957&sorting=ungrouped&primaryTreeId=23400386"
+        "&locationTreeId=13181&template=xml2"
     )
 
     xml = urlopen(url).read()
