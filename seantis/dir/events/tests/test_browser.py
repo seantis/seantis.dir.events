@@ -540,6 +540,9 @@ class BrowserTestCase(FunctionalTestCase):
 
         browser.getControl('Submit').click()
 
+        # make sure to get all events
+        browser.getLink('This and Next Year').click()
+
         # take the last occurrence
         first_url = browser.getLink('Recurring', index=0).url
         link = browser.getLink('Recurring', index=6)
@@ -551,7 +554,7 @@ class BrowserTestCase(FunctionalTestCase):
         link.click()
 
         self.assertFalse('Today' in browser.contents)
-        self.assertTrue('%i.%i' % (day, month) in browser.contents)
+        self.assertTrue('%02i.%02i' % (day, month) in browser.contents)
 
         browser.open(first_url)
         self.assertTrue('Today' in browser.contents)

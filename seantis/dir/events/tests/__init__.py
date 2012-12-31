@@ -131,7 +131,7 @@ class BetterBrowser(Browser):
     def assert_notfound(self, url):
         self.assert_http_exception(url, 'NotFound')
 
-    def show_in_browser(self):
+    def show(self):
         """ Opens the current contents in the default system browser """
         tempfile = NamedTemporaryFile(delete=False)
         tempfile.write(self.contents)
