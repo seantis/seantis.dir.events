@@ -159,7 +159,7 @@ class CustomPageRequest(object):
             return {}
 
         try:
-            return json.loads('\n'.join(getattr(directory, self.pageid)))
+            return json.loads(getattr(directory, self.pageid))
         except:
             log.exception('pageid json for %s is mal-formed' % self.pageid)
 
@@ -178,7 +178,7 @@ class CustomPageRequest(object):
         if not path:
             return directory
 
-        obj = getSite().unrestrictedTraverse(path)
+        obj = getSite().unrestrictedTraverse(str(path))
         if IEventsDirectory.providedBy(obj):
             return obj
         else:
@@ -193,7 +193,7 @@ class CustomPageRequest(object):
             return None
 
         try:
-            return getSite().unrestrictedTraverse(path)
+            return getSite().unrestrictedTraverse(str(path))
         except NotFound:
             return None
 
