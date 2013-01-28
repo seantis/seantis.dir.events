@@ -172,7 +172,9 @@ class DoActionView(grok.View):
 
         IStatusMessage(self.request).add(self.messages[action], "info")
         self.context.do_action(action)
-        self.request.response.redirect(self.context.get_parent().absolute_url())
+        self.request.response.redirect(
+            self.context.get_parent().absolute_url()
+        )
 
         return ""
 
@@ -305,7 +307,9 @@ class ICalendarEventItemComponent(ICalendarEventComponent, grok.Adapter):
 
         coordinates = self.get_coordinates()
         if coordinates:
-            ical.add('geo', coordinates)
+            # ical actually needs a tuple here, not a list which I argue is
+            # a bug: https://github.com/collective/icalendar/issues/83
+            ical.add('geo', tuple(coordinates))
 
         # plone.app.event.ical does the following, but when I tried
         # to use their interfaces for contact and location I got really
