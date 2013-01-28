@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <dc-workflow xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-             i18n:domain="seantis.dir.events"
+             i18n:domain="plone"
              workflow_id="events_workflow" 
              title="seantis.dir.events workflow" 
              description="" 

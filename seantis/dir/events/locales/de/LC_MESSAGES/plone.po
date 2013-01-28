@@ -1,0 +1,38 @@
+# this translation file contains manual entries for plone domain translations,
+# for example found in the workflow definitions.xml
+msgid ""
+msgstr ""
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+
+msgid "Deny Publication"
+msgstr "Ablehnen"
+
+msgid "Archive"
+msgstr "Archivieren"
+
+msgid "Archive Event"
+msgstr "Veranstaltung archivieren"
+
+msgid "Archived"
+msgstr "Archiviert"
+
+msgid "Previewed"
+msgstr "Vorgeschaut"
+
+msgid "Publish"
+msgstr "Veröffentlichen"
+
+msgid "Publish Event"
+msgstr "Veranstaltung veröffentlichen"
+
+msgid "Submit Event"
+msgstr "Veranstaltung melden"
+
+msgid "Submitted"
+msgstr "Gemeldet"

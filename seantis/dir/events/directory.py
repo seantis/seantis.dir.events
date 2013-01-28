@@ -167,8 +167,8 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         """ Returns the given occurrences grouped by human_date. """
         return grouped_occurrences(items, self.request)
 
-    def translate(self, text):
-        return utils.translate(self.request, text)
+    def translate(self, text, domain="seantis.dir.events"):
+        return utils.translate(self.request, text, domain)
 
     @property
     def show_state_filters(self):

@@ -16,11 +16,9 @@ def get_current_language(request):
     return portal_state.language()
 
 
-def translate(request, text):
+def translate(request, text, domain='seantis.dir.events'):
     lang = get_current_language(request)
-    return i18n.translate(
-        text, target_language=lang, domain='seantis.dir.events'
-    )
+    return i18n.translate(text, target_language=lang, domain=domain)
 
 
 def render_ical_response(request, context, calendar):
