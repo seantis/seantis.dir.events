@@ -141,7 +141,9 @@
             <h3 i18n:translate="">Organizer</h3>
             <div class="name" tal:content="o/organizer"></div>
             <div class="event_url" tal:condition="o/event_url">
-              <a i18n:translate="" tal:attributes="href o/event_url">Event Website</a>
+              <span class="link-external">
+                <a i18n:translate="" target="_blank" tal:attributes="href o/event_url">Event Website</a>
+              </span>
             </div>
             <div class="contact" tal:condition="python: any((o.contact_name, o.contact_email))">
               <div class="name" tal:content="o/contact_name"></div>
@@ -155,7 +157,9 @@
           <div class="ticket" tal:condition="python: any((o.registration, o.prices))">
             <h3 i18n:translate="">Ticket</h3>
             <div class="registration" tal:condition="o/registration">
-              <a tal:attributes="href o/registration" i18n:translate="">Ticket / Registration Website</a>
+              <span class="link-external">
+                <a tal:attributes="href o/registration" target="_blank" i18n:translate="">Ticket / Registration Website</a>
+              </span>
             </div>
             <div class="prices">
               <tal:block replace="structure python: o.prices.replace('\n', '<br />')"></tal:block>
