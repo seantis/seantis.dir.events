@@ -161,7 +161,7 @@
                 <a tal:attributes="href o/registration" target="_blank" i18n:translate="">Ticket / Registration Website</a>
               </span>
             </div>
-            <div class="prices">
+            <div class="prices" tal:condition="o/prices">
               <tal:block replace="structure python: o.prices.replace('\n', '<br />')"></tal:block>
             </div>
           </div>
