@@ -111,7 +111,7 @@
           <div class="descriptions">
             <div class="short" tal:content="o/short_description"></div>
             <div class="long" tal:condition="o/long_description">
-              <tal:block replace="structure python: o.long_description.replace('\n', '<br />')"></tal:block>
+              <tal:block replace="structure python: view.safe_html(o.long_description.replace('\n', '<br />'))"></tal:block>
             </div>
               <div class="eventtags">
                 <tal:block repeat="tag python: o.eventtags()">
@@ -162,7 +162,7 @@
               </span>
             </div>
             <div class="prices" tal:condition="o/prices">
-              <tal:block replace="structure python: o.prices.replace('\n', '<br />')"></tal:block>
+              <tal:block replace="structure python: view.safe_html(o.prices.replace('\n', '<br />'))"></tal:block>
             </div>
           </div>
 

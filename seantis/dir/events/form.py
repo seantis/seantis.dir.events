@@ -39,6 +39,7 @@ from plone.app.event.dx.behaviors import (
     IEventRecurrence
 )
 
+from seantis.dir.base import utils as base_utils
 from seantis.dir.base.interfaces import IDirectoryPage
 
 from seantis.dir.events.interfaces import (
@@ -578,6 +579,9 @@ class DetailPreviewWidget(widget.Widget):
     def render(self):
         self.directory = self.context.get_parent()
         return self._template(self)
+
+    def safe_html(self, html):
+        return base_utils.safe_html(html)
 
 
 class ListPreviewWidget(DetailPreviewWidget):
