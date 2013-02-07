@@ -15,7 +15,7 @@
 
 <div class="event-terms">
     <br />
-    <tal:block replace="structure python: view.safe_html(context.terms)"></tal:block>
+    <tal:block replace="structure context/terms"></tal:block>
 </div>
 
 </tal:main-macro>
