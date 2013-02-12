@@ -1,6 +1,10 @@
+import logging
+log = logging.getLogger('seantis.dir.events')
+
 import imghdr
 import magic
 
+from urlparse import urlparse
 from dateutil.rrule import rrulestr
 
 from collective.dexteritytextindexer import searchable
@@ -11,10 +15,27 @@ from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
 from z3c.form import util, validator
 from zope.schema import Text, TextLine, URI, Bool
 from zope.interface import Invalid, Interface, Attribute
+from zope.schema.interfaces import InvalidURI
 
 from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IDirectory, IDirectoryItem
 from seantis.dir.events import _
+
+
+class AutoSchemaURI(URI):
+
+    def fromUnicode(self, value):
+        value = str(value.strip())
+
+        try:
+            if not urlparse(value).scheme:
+                value = 'http://' + value
+        except:
+            log.exception('invalid url %s' % value)
+            raise InvalidURI(value)
+
+        return super(AutoSchemaURI, self).fromUnicode(value)
+
 
 class ITokenAccess(Interface):
 
@@ -27,10 +48,12 @@ class ITokenAccess(Interface):
     def clear_token(self):
         "Remove the token from context and session."
 
+
 class IActionGuard(Interface):
 
     def allow_action(self, action):
         "Return true if the given workflow_events action is allowed"
+
 
 class IExternalEvent(Interface):
 
@@ -64,14 +87,15 @@ class IEventsDirectory(IDirectory):
     form.widget(terms=WysiwygFieldWidget)
 
 # Hide all categories as they are predefined
-IEventsDirectory.setTaggedValue('seantis.dir.base.omitted', 
+IEventsDirectory.setTaggedValue('seantis.dir.base.omitted',
     ['cat1', 'cat2', 'cat3', 'cat4', 'cat3_suggestions', 'cat4_suggestions']
 )
 
-IEventsDirectory.setTaggedValue('seantis.dir.base.labels', { 
+IEventsDirectory.setTaggedValue('seantis.dir.base.labels', {
     'cat1_suggestions': _("Suggested Values for the What-Category"),
     'cat2_suggestions': _("Suggested Values for the Where-Category"),
 })
+
 
 class IEventsDirectoryItem(IDirectoryItem):
     """Extends the seantis.dir.IDirectoryItem."""
@@ -146,7 +170,7 @@ class IEventsDirectoryItem(IDirectoryItem):
     )
 
     searchable('event_url')
-    event_url = TextLine(
+    event_url = AutoSchemaURI(
         title=_(u'Event Website'),
         required=False
     )
@@ -182,44 +206,47 @@ class IEventsDirectoryItem(IDirectoryItem):
     )
 
     searchable('registration')
-    registration = URI(
+    registration = AutoSchemaURI(
         title=_(u'Ticket / Registration Website'),
         required=False
     )
 
 
 # don't show these fields as they are not used
-IEventsDirectoryItem.setTaggedValue('seantis.dir.base.omitted', 
+IEventsDirectoryItem.setTaggedValue('seantis.dir.base.omitted',
     ['cat3', 'cat4', 'description']
 )
 
 # define the event items order
 IEventsDirectoryItem.setTaggedValue('seantis.dir.base.order',
-    ['title', 'cat1', 'cat2', 'short_description', 'long_description', 
-     'IEventBasic.start', 'IEventBasic.end', 'IEventBasic.whole_day', 
-     'IEventBasic.timezone', 'IEventRecurrence.recurrence', 
-     'image','attachment_1', 'attachment_2', 'locality', 'street', 
-     'housenumber', 'zipcode', 'town', 'event_url', 'organizer', 
-     'contact_name', 'contact_email', 'contact_phone', 'prices', 
+    ['title', 'cat1', 'cat2', 'short_description', 'long_description',
+     'IEventBasic.start', 'IEventBasic.end', 'IEventBasic.whole_day',
+     'IEventBasic.timezone', 'IEventRecurrence.recurrence',
+     'image', 'attachment_1', 'attachment_2', 'locality', 'street',
+     'housenumber', 'zipcode', 'town', 'event_url', 'organizer',
+     'contact_name', 'contact_email', 'contact_phone', 'prices',
      'registration', '*'
     ]
 )
 
+
 # plone.app.event is currently not working well with an unlimited or huge
-# number of recurrences with abysmal performance. For this reason the occurences
-# are limited for now and the infinite option is hidden using recurrence.css
+# number of recurrences with abysmal performance. For this reason the
+# occurrences are limited for now and the infinite option
+# is hidden using recurrence.css
 @form.validator(field=IEventRecurrence['recurrence'])
 def validate_recurrence(value):
     if not value:
         return
-        
-    max_occurrences = 52 # one occurrence per week
+
+    max_occurrences = 52  # one occurrence per week
 
     rrule = rrulestr(value)
     for ix, rule in enumerate(rrule):
         if ix > max_occurrences:
             raise Invalid(_(u'You may not add more than ${max} occurences',
                 mapping={'number': max_occurrences}))
+
 
 # force the user to select at least one value for each category
 @form.validator(field=IEventsDirectoryItem['cat1'])
@@ -228,6 +255,7 @@ def validate_category(value):
     if not value:
         raise Invalid(_(u'Please choose at least one category'))
 
+
 # to enforce the last rule, categories must exist
 @form.validator(field=IEventsDirectory['cat1_suggestions'])
 @form.validator(field=IEventsDirectory['cat2_suggestions'])
@@ -235,13 +263,15 @@ def validate_suggestion(value):
     if not value:
         raise Invalid(_(u'Please enter at least one suggestion'))
 
+
 # images and attachments are limited in size
 def check_filesize(value, size_in_mb, type):
 
-    if value.getSize() > size_in_mb * 1024**2:
+    if value.getSize() > size_in_mb * 1024 ** 2:
         raise Invalid(_(u'${type} bigger than ${max} Megabyte are not allowed',
             mapping={'max': size_in_mb, 'type': type}
         ))
+
 
 # Ensure that the uploaded image at least has an image header, a check
 # which is important because users can upload files anonymously
@@ -257,8 +287,9 @@ def validate_image(value):
 
 # Attachments are limited to certain filetypes
 mime_whitelist = {
-    'application/pdf':_(u'PDF'),
+    'application/pdf': _(u'PDF'),
 }
+
 
 @form.validator(field=IEventsDirectoryItem['attachment_1'])
 @form.validator(field=IEventsDirectoryItem['attachment_2'])
@@ -276,27 +307,33 @@ def validate_attachment(value):
 
     check_filesize(value, 10, _(u'Attachments'))
 
+
 # Ensure that the event date is correct
 class EventValidator(validator.InvariantsValidator):
     def validateObject(self, obj):
         errors = super(EventValidator, self).validateObject(obj)
         if obj.start > obj.end:
             errors += (Invalid(_(u'Event end before start')))
-    
+
         return errors
 
-validator.WidgetsValidatorDiscriminators(EventValidator, 
+validator.WidgetsValidatorDiscriminators(EventValidator,
     schema=util.getSpecification(IEventsDirectoryItem, force=True)
 )
+
 
 class ITerms(form.Schema):
     agreed = Bool(
         required=True, default=False
     )
 
+
 @form.validator(field=ITerms['agreed'])
 def validate_terms_and_conditions(agreed):
     if not agreed:
         raise Invalid(
-            _(u'You have to agree to the terms and conditions to submit this event')
+            _(
+              u'You have to agree to the terms '
+              u'and conditions to submit this event'
+            )
         )
