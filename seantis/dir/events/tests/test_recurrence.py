@@ -265,3 +265,47 @@ class TestRecurrence(IntegrationTestCase):
         # while we're at it
         human = item.as_occurrence().human_daterange(request)
         self.assertEqual(human, '00:00 - 02:00')
+
+    def test_has_future_occurrences(self):
+        item = Item(
+            datetime(2013, 1, 1), datetime(2013, 1, 2), timezone='utc'
+        )
+
+        reference = dates.to_utc(datetime(2013, 1, 3))
+        self.assertFalse(recurrence.has_future_occurrences(item, reference))
+
+        reference = dates.to_utc(datetime(2013, 1, 2))
+        self.assertFalse(recurrence.has_future_occurrences(item, reference))
+
+        reference = dates.to_utc(datetime(2013, 1, 1))
+        self.assertTrue(recurrence.has_future_occurrences(item, reference))
+
+        item = Item(
+            datetime(2013, 1, 1), datetime(2013, 1, 2), timezone='utc',
+                recurrence='RRULE:FREQ=DAILY;UNTIL=20130105T000000Z'
+        )
+
+        reference = dates.to_utc(datetime(2013, 1, 4))
+        self.assertTrue(recurrence.has_future_occurrences(item, reference))
+
+        reference = dates.to_utc(datetime(2013, 1, 5))
+        self.assertTrue(recurrence.has_future_occurrences(item, reference))
+
+        reference = dates.to_utc(datetime(2013, 1, 6))
+        self.assertFalse(recurrence.has_future_occurrences(item, reference))
+
+        # the recurrence rule may come without a timezone (missing Z)
+
+        item = Item(
+            datetime(2013, 1, 1), datetime(2013, 1, 2), timezone='utc',
+                recurrence='RRULE:FREQ=DAILY;UNTIL=20130105T000000'
+        )
+
+        reference = dates.to_utc(datetime(2013, 1, 4))
+        self.assertTrue(recurrence.has_future_occurrences(item, reference))
+
+        reference = dates.to_utc(datetime(2013, 1, 5))
+        self.assertTrue(recurrence.has_future_occurrences(item, reference))
+
+        reference = dates.to_utc(datetime(2013, 1, 6))
+        self.assertFalse(recurrence.has_future_occurrences(item, reference))
