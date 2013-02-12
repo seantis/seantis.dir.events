@@ -6,12 +6,8 @@ install:
     - mkdir -p buildout-cache/downloads
     - python bootstrap.py -c travis.cfg
     - bin/buildout -N -t 3 -c travis.cfg
-# travis-ci doesn't work with m2crypto why and how to work around it
-# was shamelessly copied from this person:
-# https://github.com/rentalita/salt/commit/5dac55a75e8b717e25d37e06a6ee7491254bb5ac
-# once this breaks, maybe we can detect running under travis so we can mock m2crypto
+# Required for M2Crypto
 before_install:
-
-    - sudo apt-get update && sudo apt-get install swig
-    - pip install http://dl.dropbox.com/u/174789/m2crypto-0.20.1.tar.gz
+    - sudo apt-get update
+    - sudo apt-get install swig libssl-dev libssl0.9.8
 script: bin/test -s seantis.dir
