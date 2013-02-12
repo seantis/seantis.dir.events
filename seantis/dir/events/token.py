@@ -12,6 +12,7 @@ from Products.CMFCore.utils import getToolByName
 from seantis.dir.base.session import get_session, set_session
 from seantis.dir.events.interfaces import ITokenAccess, IEventsDirectoryItem
 
+
 class TokenAccess(grok.Adapter):
 
     grok.context(IEventsDirectoryItem)
@@ -38,8 +39,9 @@ class TokenAccess(grok.Adapter):
     def clear_token(self):
         if hasattr(self.context, 'access_token'):
             del self.context.access_token
-        
+
         remove_from_session()
+
 
 def current_token(request):
     token = request.get('token', 'missing')
@@ -52,32 +54,39 @@ def current_token(request):
 
     return token.replace('-', '')
 
+
 def store_on_session(context):
     assert context.access_token
     set_session(getSite(), 'events-access-token', context.access_token)
 
+
 def retrieve_from_session():
     return get_session(getSite(), 'events-access-token') or 'missing'
+
 
 def remove_from_session():
     set_session(getSite(), 'events-access-token', None)
 
+
 def apply_token(context):
     token_access = getAdapter(context, ITokenAccess)
     token_access.attach_token()
+
 
 def verify_token(context, request):
     if not context.state == 'preview':
         return
 
     token_access = getAdapter(context, ITokenAccess)
-    
+
     if not token_access.has_access(request):
         raise NotFound()
+
 
 def clear_token(context):
     token_access = getAdapter(context, ITokenAccess)
     token_access.clear_token()
+
 
 def append_token(context, url):
     if not hasattr(context, 'access_token'):
@@ -87,8 +96,9 @@ def append_token(context, url):
 
     return url + querychar + 'token=' + context.access_token
 
+
 def event_by_token(directory, token):
-    
+
     if token == 'missing':
         return None
 
@@ -101,7 +111,7 @@ def event_by_token(directory, token):
     )
 
     for result in results:
-        obj =result.getObject()
+        obj = result.getObject()
 
         if not hasattr(obj, 'access_token'):
             continue
