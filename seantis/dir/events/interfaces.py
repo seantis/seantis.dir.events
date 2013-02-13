@@ -5,21 +5,21 @@ import imghdr
 import magic
 
 from urlparse import urlparse
-from dateutil.rrule import rrulestr
 
+from z3c.form.interfaces import ActionExecutionError
 from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
 from plone.directives import form
-from plone.app.event.dx.behaviors import IEventRecurrence
 from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
-from z3c.form import util, validator
 from zope.schema import Text, TextLine, URI, Bool
 from zope.interface import Invalid, Interface, Attribute
 from zope.schema.interfaces import InvalidURI
 
 from seantis.dir.base.schemafields import Email
 from seantis.dir.base.interfaces import IDirectory, IDirectoryItem
+
 from seantis.dir.events import _
+from seantis.dir.events.recurrence import occurrences_over_limit
 
 
 class AutoSchemaURI(URI):
@@ -230,22 +230,21 @@ IEventsDirectoryItem.setTaggedValue('seantis.dir.base.order',
 )
 
 
-# plone.app.event is currently not working well with an unlimited or huge
-# number of recurrences with abysmal performance. For this reason the
-# occurrences are limited for now and the infinite option
-# is hidden using recurrence.css
-@form.validator(field=IEventRecurrence['recurrence'])
-def validate_recurrence(value):
-    if not value:
+# validation for multiple fields on the form (not possible through invariants
+# because multiple interfaces are involved)
+def validate_event_submission(data):
+
+    if not data['recurrence']:
         return
 
-    max_occurrences = 52  # one occurrence per week
+    limit = 52  # one event each week
 
-    rrule = rrulestr(value)
-    for ix, rule in enumerate(rrule):
-        if ix > max_occurrences:
-            raise Invalid(_(u'You may not add more than ${max} occurences',
-                mapping={'number': max_occurrences}))
+    if occurrences_over_limit(data['recurrence'], data['start'], limit):
+        raise ActionExecutionError(Invalid(
+            _(u'You may not add more than ${max} occurences',
+                mapping={'max': limit}
+            )
+        ))
 
 
 # force the user to select at least one value for each category
@@ -285,6 +284,7 @@ def validate_image(value):
 
     check_filesize(value, 1, _(u'Images'))
 
+
 # Attachments are limited to certain filetypes
 mime_whitelist = {
     'application/pdf': _(u'PDF'),
@@ -306,20 +306,6 @@ def validate_attachment(value):
         ))
 
     check_filesize(value, 10, _(u'Attachments'))
-
-
-# Ensure that the event date is correct
-class EventValidator(validator.InvariantsValidator):
-    def validateObject(self, obj):
-        errors = super(EventValidator, self).validateObject(obj)
-        if obj.start > obj.end:
-            errors += (Invalid(_(u'Event end before start')))
-
-        return errors
-
-validator.WidgetsValidatorDiscriminators(EventValidator,
-    schema=util.getSpecification(IEventsDirectoryItem, force=True)
-)
 
 
 class ITerms(form.Schema):

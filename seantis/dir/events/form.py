@@ -45,7 +45,8 @@ from seantis.dir.base.interfaces import IDirectoryPage
 from seantis.dir.events.interfaces import (
     IEventsDirectory,
     IEventsDirectoryItem,
-    ITerms
+    ITerms,
+    validate_event_submission
 )
 
 from seantis.dir.events.token import (
@@ -453,6 +454,8 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
 
     def handle_preview(self, action):
         data, errors = self.extractData()
+        validate_event_submission(data)
+
         if errors:
             self.status = self.formErrorsMessage
             return
@@ -464,6 +467,8 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
 
     def handle_update(self, action):
         data, errors = self.extractData()
+        validate_event_submission(data)
+
         if errors:
             self.status = self.formErrorsMessage
             return
@@ -550,6 +555,8 @@ class EventEditForm(EventSubmitForm):
 
     def handle_save(self, action):
         data, errors = self.extractData()
+        validate_event_submission(data)
+
         if errors:
             self.status = self.formErrorsMessage
             return

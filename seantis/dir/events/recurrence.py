@@ -206,6 +206,17 @@ def split_days(occurrence):
                 )
 
 
+def occurrences_over_limit(rule, start, limit):
+
+    assert rule and start and limit
+
+    for i, o in enumerate(recurrence_sequence_ical(start=start, recrule=rule)):
+        if i + 1 > limit:
+            return True
+
+    return False
+
+
 def occurrences(item, min_date, max_date):
     """ Returns the occurrences for item between min and max date.
     Will return a list with a single item if the given item has no recurrence.

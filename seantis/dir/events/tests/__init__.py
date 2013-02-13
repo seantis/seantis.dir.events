@@ -140,6 +140,13 @@ class BetterBrowser(Browser):
         os.rename(tempfile.name, tempfile.name + '.html')
         os.system("open " + tempfile.name + '.html')
 
+    def set_date(self, widget, date):
+        self.getControl(name='%s-year' % widget).value = str(date.year)
+        self.getControl(name='%s-month' % widget).value = [str(date.month)]
+        self.getControl(name='%s-day' % widget).value = str(date.day)
+        self.getControl(name='%s-hour' % widget).value = str(date.hour)
+        self.getControl(name='%s-minute' % widget).value = str(date.minute)
+
 
 class FunctionalTestCase(IntegrationTestCase):
 

@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from seantis.dir.events.tests import FunctionalTestCase
 
 
@@ -58,23 +58,11 @@ class BrowserTestCase(FunctionalTestCase):
                 name='form.widgets.short_description'
             ).value = 'Some Party'
 
-            today = date.today()
-            fourchan.getControl(name='form.widgets.start-year').value = \
-                str(today.year)
-            fourchan.getControl(name='form.widgets.start-month').value = \
-                [str(today.month)]
-            fourchan.getControl(name='form.widgets.start-day').value = \
-                str(today.day)
-            fourchan.getControl(name='form.widgets.start-hour').value = '8'
-            fourchan.getControl(name='form.widgets.start-minute').value = '0'
-            fourchan.getControl(name='form.widgets.end-year').value = \
-                str(today.year)
-            fourchan.getControl(name='form.widgets.end-month').value = \
-                [str(today.month)]
-            fourchan.getControl(name='form.widgets.end-day').value = \
-                str(today.day)
-            fourchan.getControl(name='form.widgets.end-hour').value = '12'
-            fourchan.getControl(name='form.widgets.end-minute').value = '0'
+            start = datetime.now().replace(hour=8)
+            end = datetime.now().replace(hour=12)
+
+            fourchan.set_date('form.widgets.start', start)
+            fourchan.set_date('form.widgets.end', end)
 
             fourchan.getControl('Category1').selected = True
             fourchan.getControl('Category2').selected = True
@@ -173,23 +161,11 @@ class BrowserTestCase(FunctionalTestCase):
         ).value = 'Every Day'
         fourchan.getControl(name='form.widgets.locality').value = 'at home'
 
-        today = date.today()
-        fourchan.getControl(name='form.widgets.start-year').value = \
-            str(today.year)
-        fourchan.getControl(name='form.widgets.start-month').value = \
-            [str(today.month)]
-        fourchan.getControl(name='form.widgets.start-day').value = \
-            str(today.day)
-        fourchan.getControl(name='form.widgets.start-hour').value = '8'
-        fourchan.getControl(name='form.widgets.start-minute').value = '0'
-        fourchan.getControl(name='form.widgets.end-year').value = \
-            str(today.year)
-        fourchan.getControl(name='form.widgets.end-month').value = \
-            [str(today.month)]
-        fourchan.getControl(name='form.widgets.end-day').value = \
-            str(today.day)
-        fourchan.getControl(name='form.widgets.end-hour').value = '12'
-        fourchan.getControl(name='form.widgets.end-minute').value = '0'
+        start = datetime.now().replace(hour=8)
+        end = datetime.now().replace(hour=12)
+
+        fourchan.set_date('form.widgets.start', start)
+        fourchan.set_date('form.widgets.end', end)
 
         fourchan.getControl('Category1').selected = True
         fourchan.getControl('Category2').selected = True
@@ -228,6 +204,41 @@ class BrowserTestCase(FunctionalTestCase):
 
         self.assertEqual(fourchan.contents.count('"eventgroup"'), 1)
 
+        # ensure that no more than 52 occurrences may be entered
+        fourchan.getControl('Adjust').click()
+
+        fourchan.getControl(
+            name='form.widgets.recurrence'
+        ).value = 'RRULE:FREQ=DAILY;COUNT=53'
+
+        fourchan.getControl('Continue').click()
+
+        self.assertTrue(
+            'You may not add more than 52 occurences' in fourchan.contents
+        )
+
+        # regression test for an issue where occurrences in the future
+        # were not counted correctly
+        fourchan.set_date('form.widgets.start', datetime(2020, 1, 1, 10, 0))
+        fourchan.set_date('form.widgets.end', datetime(2020, 1, 1, 12, 0))
+
+        fourchan.getControl(
+            name='form.widgets.recurrence'
+        ).value = 'RRULE:FREQ=DAILY;UNTIL=20200222T000000'
+
+        fourchan.getControl('Continue').click()  # ok
+        fourchan.getControl('Adjust').click()
+
+        fourchan.getControl(
+            name='form.widgets.recurrence'
+        ).value = 'RRULE:FREQ=DAILY;UNTIL=20200223T000000'
+
+        fourchan.getControl('Continue').click()  # not okay
+
+        self.assertTrue(
+            'You may not add more than 52 occurences' in fourchan.contents
+        )
+
     def test_event_submission(self):
 
         browser = self.admin_browser
@@ -249,23 +260,11 @@ class BrowserTestCase(FunctionalTestCase):
             name='form.widgets.short_description'
         ).value = 'Socializing Yo'
 
-        today = date.today()
-        fourchan.getControl(name='form.widgets.start-year').value = \
-            str(today.year)
-        fourchan.getControl(name='form.widgets.start-month').value = \
-            [str(today.month)]
-        fourchan.getControl(name='form.widgets.start-day').value = \
-            str(today.day)
-        fourchan.getControl(name='form.widgets.start-hour').value = '8'
-        fourchan.getControl(name='form.widgets.start-minute').value = '0'
-        fourchan.getControl(name='form.widgets.end-year').value = \
-            str(today.year)
-        fourchan.getControl(name='form.widgets.end-month').value = \
-            [str(today.month)]
-        fourchan.getControl(name='form.widgets.end-day').value = \
-            str(today.day)
-        fourchan.getControl(name='form.widgets.end-hour').value = '12'
-        fourchan.getControl(name='form.widgets.end-minute').value = '0'
+        start = datetime.now().replace(hour=8)
+        end = datetime.now().replace(hour=12)
+
+        fourchan.set_date('form.widgets.start', start)
+        fourchan.set_date('form.widgets.end', end)
 
         fourchan.getControl('Category1').selected = True
         fourchan.getControl('Category2').selected = True
@@ -356,23 +355,11 @@ class BrowserTestCase(FunctionalTestCase):
             new.getControl(name='form.widgets.short_description').value, ''
         )
 
-        today = date.today()
-        new.getControl(name='form.widgets.start-year').value = \
-            str(today.year)
-        new.getControl(name='form.widgets.start-month').value = \
-            [str(today.month)]
-        new.getControl(name='form.widgets.start-day').value = \
-            str(today.day)
-        new.getControl(name='form.widgets.start-hour').value = '8'
-        new.getControl(name='form.widgets.start-minute').value = '0'
-        new.getControl(name='form.widgets.end-year').value = \
-            str(today.year)
-        new.getControl(name='form.widgets.end-month').value = \
-            [str(today.month)]
-        new.getControl(name='form.widgets.end-day').value = \
-            str(today.day)
-        new.getControl(name='form.widgets.end-hour').value = '12'
-        new.getControl(name='form.widgets.end-minute').value = '0'
+        start = datetime.now().replace(hour=8)
+        end = datetime.now().replace(hour=12)
+
+        new.set_date('form.widgets.start', start)
+        new.set_date('form.widgets.end', end)
 
         new.getControl('Category1').selected = True
         new.getControl('Category2').selected = True
@@ -446,22 +433,11 @@ class BrowserTestCase(FunctionalTestCase):
             name='form.widgets.short_description'
         ).value = 'Add Test Description'
 
-        today = date.today()
-        browser.getControl(name='form.widgets.start-year').value = \
-            str(today.year)
-        browser.getControl(name='form.widgets.start-month').value = \
-            [str(today.month)]
-        browser.getControl(name='form.widgets.start-day').value = \
-            str(today.day)
-        browser.getControl(name='form.widgets.start-hour').value = '8'
-        browser.getControl(name='form.widgets.start-minute').value = '0'
-        browser.getControl(name='form.widgets.end-year').value = \
-            str(today.year)
-        browser.getControl(name='form.widgets.end-month').value = \
-            [str(today.month)]
-        browser.getControl(name='form.widgets.end-day').value = str(today.day)
-        browser.getControl(name='form.widgets.end-hour').value = '12'
-        browser.getControl(name='form.widgets.end-minute').value = '0'
+        start = datetime.now().replace(hour=8)
+        end = datetime.now().replace(hour=12)
+
+        browser.set_date('form.widgets.start', start)
+        browser.set_date('form.widgets.end', end)
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
@@ -511,23 +487,11 @@ class BrowserTestCase(FunctionalTestCase):
             name='form.widgets.recurrence'
         ).value = 'RRULE:FREQ=DAILY;COUNT=7'
 
-        today = date.today()
-        browser.getControl(name='form.widgets.start-year').value = \
-            str(today.year)
-        browser.getControl(name='form.widgets.start-month').value = \
-            [str(today.month)]
-        browser.getControl(name='form.widgets.start-day').value = \
-            str(today.day)
-        browser.getControl(name='form.widgets.start-hour').value = '8'
-        browser.getControl(name='form.widgets.start-minute').value = '0'
-        browser.getControl(name='form.widgets.end-year').value = \
-            str(today.year)
-        browser.getControl(name='form.widgets.end-month').value = \
-            [str(today.month)]
-        browser.getControl(name='form.widgets.end-day').value = \
-            str(today.day)
-        browser.getControl(name='form.widgets.end-hour').value = '12'
-        browser.getControl(name='form.widgets.end-minute').value = '0'
+        start = datetime.now().replace(hour=8)
+        end = datetime.now().replace(hour=12)
+
+        browser.set_date('form.widgets.start', start)
+        browser.set_date('form.widgets.end', end)
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
@@ -584,23 +548,11 @@ class BrowserTestCase(FunctionalTestCase):
             name='form.widgets.short_description'
         ).value = 'Test'
 
-        today = date.today()
-        browser.getControl(name='form.widgets.start-year').value = \
-            str(today.year)
-        browser.getControl(name='form.widgets.start-month').value = \
-            [str(today.month)]
-        browser.getControl(name='form.widgets.start-day').value = \
-            str(today.day)
-        browser.getControl(name='form.widgets.start-hour').value = '8'
-        browser.getControl(name='form.widgets.start-minute').value = '0'
-        browser.getControl(name='form.widgets.end-year').value = \
-            str(today.year)
-        browser.getControl(name='form.widgets.end-month').value = \
-            [str(today.month)]
-        browser.getControl(name='form.widgets.end-day').value = \
-            str(today.day)
-        browser.getControl(name='form.widgets.end-hour').value = '12'
-        browser.getControl(name='form.widgets.end-minute').value = '0'
+        start = datetime.now().replace(hour=8)
+        end = datetime.now().replace(hour=12)
+
+        browser.set_date('form.widgets.start', start)
+        browser.set_date('form.widgets.end', end)
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
