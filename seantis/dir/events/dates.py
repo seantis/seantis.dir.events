@@ -102,9 +102,9 @@ def human_date(date, request):
     weekday = calendar.getDayNames()[date.weekday()]
 
     if now.year == date.year:
-        return weekday + ' ' + date.strftime('%d.%m')
+        return weekday + ' ' + date.strftime('%d.%m.')
     else:
-        return weekday + ' ' + date.strftime('%d.%m.%Y')
+        return weekday + ' ' + date.strftime('%d.%m.%Y.')
 
 
 def human_daterange(start, end, request):
@@ -114,23 +114,23 @@ def human_daterange(start, end, request):
             return utils.translate(request, _(u'Whole Day'))
         else:
             if default_now().year == start.year:
-                return start.strftime('%d.%m - ') \
-                + end.strftime('%d.%m ') \
+                return start.strftime('%d.%m. - ') \
+                + end.strftime('%d.%m. ') \
                 + utils.translate(request, _(u'Whole Day'))
             else:
-                return start.strftime('%d.%m.%Y - ') \
-                + end.strftime('%d.%m.%Y ') \
+                return start.strftime('%d.%m.%Y. - ') \
+                + end.strftime('%d.%m.%Y. ') \
                 + utils.translate(request, _(u'Whole Day'))
 
     if split_days_count(start, end) < 1:
         return start.strftime('%H:%M - ') + end.strftime('%H:%M')
     else:
         if default_now().year == start.year:
-            return start.strftime('%d.%m %H:%M - ') \
-            + end.strftime('%d.%m %H:%M')
+            return start.strftime('%d.%m. %H:%M - ') \
+            + end.strftime('%d.%m. %H:%M')
         else:
-            return start.strftime('%d.%m.%Y %H:%M - ') \
-            + end.strftime('%d.%m.%Y %H:%M')
+            return start.strftime('%d.%m.%Y. %H:%M - ') \
+            + end.strftime('%d.%m.%Y. %H:%M')
 
 methods = list()
 ranges = dict()
