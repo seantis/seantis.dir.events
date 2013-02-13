@@ -12,6 +12,7 @@ from plone.memoize import view
 from plone.app.event.ical import construct_calendar
 from plone.event.interfaces import IICalendarEventComponent
 from plone.app.event.ical import ICalendarEventComponent
+from OFS.interfaces import IObjectClonedEvent
 
 from seantis.dir.base import item
 from seantis.dir.base import core
@@ -28,6 +29,12 @@ from seantis.dir.events.interfaces import (
 
 from AccessControl import getSecurityManager
 from Products.CMFCore import permissions
+
+
+# when an event is cloned put it in the submitted state
+@grok.subscribe(IEventsDirectoryItem, IObjectClonedEvent)
+def onClonedEvent(item, event):
+    item.submit()
 
 
 class EventsDirectoryItem(item.DirectoryItem):
