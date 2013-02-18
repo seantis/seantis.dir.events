@@ -47,6 +47,13 @@ def to_utc(date):
     return as_timezone(date, 'utc')
 
 
+def delete_timezone(date):
+    """ Converts the timezone aware date to utc and removes the tzinfo. """
+    assert date.tzinfo
+
+    return to_utc(date).replace(tzinfo=None)
+
+
 def as_timezone(date, timezone):
     """ Converts date to the given timezone, making it timezone aware if not
     already. Use this instead of date.astimezone, since said function does

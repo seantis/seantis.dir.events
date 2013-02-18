@@ -40,7 +40,8 @@ setup(name='seantis.dir.events',
           'python-magic',
           'mock',
           'M2Crypto',
-          'lxml'
+          'lxml',
+          'blist'
       ],
       entry_points="""
       [z3c.autoinclude.plugin]

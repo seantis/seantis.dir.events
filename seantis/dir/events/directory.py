@@ -50,6 +50,19 @@ class ExtendedDirectoryViewlet(grok.Viewlet, pages.CustomDirectory):
         self.context = self.custom_directory
 
 
+class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
+
+    grok.name('eventindex')
+    grok.context(IEventsDirectory)
+    grok.require('cmf.ManagePortal')
+
+    template = None
+
+    @utils.profile
+    def render(self):
+        return '\n'.join(self.catalog.eventindex.index)
+
+
 class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
     grok.name('view')
