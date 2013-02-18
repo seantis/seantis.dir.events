@@ -1,8 +1,14 @@
+import logging
+log = logging.getLogger('seantis.dir.events')
+
 import inspect
 
+from datetime import datetime
 from urllib import urlopen
 from itertools import groupby
+
 from five import grok
+
 from collective.geo.geographer.interfaces import IWriteGeoreferenced
 from plone.namedfile import NamedFile, NamedImage
 from plone.dexterity.utils import createContentInContainer
@@ -46,10 +52,19 @@ class FetchView(grok.View):
     grok.require('cmf.ManagePortal')
 
     def fetch(self, source, function):
-        events = [e for e in function(self.request)]
+
+        start = datetime.now()
+        log.info('begin fetching events for %s' % source)
+
+        events = [e for e in function(self.context, self.request)]
         existing = self.groupby_source_id(self.existing_events(source))
 
         for event in events:
+
+            log.info('importing %s @ %s' % (
+                event['title'], event['start'].strftime('%d.%m.%Y %H:%M')
+            ))
+
             event['source'] = source
 
             # source id's are not necessarily unique as a single external
@@ -99,6 +114,13 @@ class FetchView(grok.View):
 
             alsoProvides(obj, IExternalEvent)
             obj.reindexObject(idxs=['object_provides'])
+
+        log('done importing events for %s' % source)
+
+        runtime = datetime.now() - start
+        log('import runtime was %i minutes, %i seconds' % (
+            runtime.minutes, runtime.seconds
+        ))
 
     def existing_events(self, source):
 

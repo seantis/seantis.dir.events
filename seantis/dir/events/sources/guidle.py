@@ -10,6 +10,31 @@ from dateutil.tz import tzoffset
 from lxml import objectify
 from urllib import urlopen
 
+from zope.component import getMultiAdapter
+from zope.interface import Interface, Attribute
+
+
+class IGuidleConfig(Interface):
+    """ Multi Adapter Interface for context/request.
+    See vbeo.seantis.dir.events.guidle for an example.
+
+    """
+
+    url = Attribute("Guidle URL to download from")
+
+    def on_event(root, offer, event):
+        """ Called before an event is yielded to the source. Root is the
+        xml root, offer is the xml offer element and event is the dictionary
+        that is returned to the source handler.
+
+        Since an offer may be split in multiple events this method may be
+        called multiple times for each offer. The difference will be the
+        event's dates.
+
+        This function may then alter the event.
+
+        """
+
 
 def create_uuid(offer):
     pass
@@ -147,17 +172,11 @@ def events(offer):
         yield event
 
 
-def fetch_events(request):
+def fetch_events(context, request):
 
-    # TODO have an interface to define urls
-    url = (
-        "http://www.guidle.com/dpAccess.jsf?"
-        "id=193352638&language=de&dateOption=NA&tagIds=23400386"
-        "&where=38421957&sorting=ungrouped&primaryTreeId=23400386"
-        "&locationTreeId=13181&template=xml2"
-    )
+    config = getMultiAdapter((context, request), IGuidleConfig)
 
-    xml = urlopen(url).read()
+    xml = urlopen(config.url).read()
     root = objectify.fromstring(xml)
 
     offers = root.xpath('*//guidle:offer',
@@ -233,5 +252,7 @@ def fetch_events(request):
                     copy(e, attachment, "attachment_%i <- url" % (ix + 1))
             except AttributeError:
                 pass
+
+            config.on_event(root, offer, e)
 
             yield e
