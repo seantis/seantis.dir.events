@@ -1,3 +1,6 @@
+import threading
+
+from datetime import datetime
 from five import grok
 
 from itertools import ifilter
@@ -13,6 +16,55 @@ from seantis.dir.events.interfaces import (
     IEventsDirectory, IEventsDirectoryItem
 )
 
+from blist import sortedset
+
+
+class EventsDirectoryIndex(object):
+
+    def __init__(self):
+        self.index = sortedset()
+        self.lock = threading.Lock()
+
+    def event_identity(self, event):
+        date = dates.delete_timezone(event.start)
+        return date.strftime('%Y.%m.%d-%H:%M') + ';' + event.id
+
+    def event_by_identity(self, identity):
+        date, id = identity.split(';')
+        date = dates.to_utc(datetime.strptime('%Y.%m.%d-%H:%M', date))
+
+        real = self.get_object(
+            self.catalog(id=id, path={'query': self.path, 'depth': 1})
+        )
+
+        items = self.spawn((real,), date, date)
+        assert len(items) == 1
+
+        return items[0]
+
+    def index_all_events(self, catalog, reindex=False):
+        if not reindex and self.index:
+            return
+
+        with self.lock:
+            start, end = map(dates.to_utc, dates.eventrange())
+
+            real = super(EventsDirectoryCatalog, catalog).items()
+
+            for event in catalog.spawn(real, start, end):
+                self.index.add(self.event_identity(event))
+
+    def index_event(self, event):
+        with self.lock:
+            self.index.add(self.event_identity(event))
+
+    def unindex_event(self, event):
+        with self.lock:
+            self.index.remove(self.event_identity(event))
+
+
+_eventindex = EventsDirectoryIndex()
+
 
 class EventsDirectoryCatalog(DirectoryCatalog):
 
@@ -23,6 +75,12 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         self._daterange = dates.default_daterange
         self._states = ('submitted', 'published')
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
+
+        _eventindex.index_all_events(self)
+
+    @property
+    def eventindex(self):
+        return _eventindex
 
     @property
     def submitted_count(self):
