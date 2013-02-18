@@ -2,6 +2,7 @@ import logging
 log = logging.getLogger('seantis.dir.events')
 
 import inspect
+import transaction
 
 from datetime import datetime
 from urllib import urlopen
@@ -59,7 +60,11 @@ class FetchView(grok.View):
         events = [e for e in function(self.context, self.request)]
         existing = self.groupby_source_id(self.existing_events(source))
 
-        for event in events:
+        for ix, event in enumerate(events):
+
+            # flush to disk every 500 events to keep memory usage low
+            if (ix + 1) % 500 == 0:
+                transaction.savepoint(True)
 
             log.info('importing %s @ %s' % (
                 event['title'], event['start'].strftime('%d.%m.%Y %H:%M')
@@ -115,11 +120,12 @@ class FetchView(grok.View):
             alsoProvides(obj, IExternalEvent)
             obj.reindexObject(idxs=['object_provides'])
 
-        log('done importing events for %s' % source)
+        log('committing events for %s' % source)
+        transaction.commit()
 
         runtime = datetime.now() - start
-        log('import runtime was %i minutes, %i seconds' % (
-            runtime.minutes, runtime.seconds
+        log('imported %i events in %i minutes, %i seconds' % (
+            ix + 1, runtime.minutes, runtime.seconds
         ))
 
     def existing_events(self, source):
