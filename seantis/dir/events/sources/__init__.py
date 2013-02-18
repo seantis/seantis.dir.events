@@ -120,12 +120,14 @@ class FetchView(grok.View):
             alsoProvides(obj, IExternalEvent)
             obj.reindexObject(idxs=['object_provides'])
 
-        log('committing events for %s' % source)
+        log.info('committing events for %s' % source)
         transaction.commit()
 
         runtime = datetime.now() - start
-        log('imported %i events in %i minutes, %i seconds' % (
-            ix + 1, runtime.minutes, runtime.seconds
+        minutes = runtime.total_seconds() // 60
+        seconds = runtime.seconds - minutes * 60
+        log.info('imported %i events in %i minutes, %i seconds' % (
+            ix + 1, minutes, seconds
         ))
 
     def existing_events(self, source):
