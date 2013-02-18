@@ -7,6 +7,7 @@ from urllib import urlopen
 from icalendar import Calendar
 from plone.dexterity.utils import createContent, addContentToContainer
 from zope.component.hooks import getSite
+from Products.CMFPlone.PloneBatch import Batch
 
 from seantis.dir.base import directory
 from seantis.dir.base import session
@@ -188,6 +189,13 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         return getSecurityManager().checkPermission(
             permissions.ReviewPortalContent, self.context
         )
+
+    @property
+    def batch(self):
+        # use a custom batch whose items are lazy evaluated on __getitem__
+        start = int(self.request.get('b_start') or 0)
+        batch = self.catalog.lazybatch
+        return Batch(batch, directory.ITEMSPERPAGE, start, orphan=1)
 
     @property
     def selected_state(self):

@@ -1,6 +1,6 @@
 import threading
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from five import grok
 
 from itertools import ifilter
@@ -29,15 +29,16 @@ class EventsDirectoryIndex(object):
         date = dates.delete_timezone(event.start)
         return date.strftime('%Y.%m.%d-%H:%M') + ';' + event.id
 
-    def event_by_identity(self, identity):
+    def event_by_identity(self, identity, catalog):
         date, id = identity.split(';')
-        date = dates.to_utc(datetime.strptime('%Y.%m.%d-%H:%M', date))
+        date = dates.to_utc(datetime.strptime(date, '%Y.%m.%d-%H:%M'))
 
-        real = self.get_object(
-            self.catalog(id=id, path={'query': self.path, 'depth': 1})
-        )
+        start = date.replace(hour=0, minute=0, second=0, microsecond=0)
+        end = start + timedelta(days=1, microseconds=-1)
 
-        items = self.spawn((real,), date, date)
+        real = catalog.get_object(catalog.catalog(id=id)[0])
+
+        items = [i for i in catalog.spawn((real,), start, end)]
         assert len(items) == 1
 
         return items[0]
@@ -62,8 +63,38 @@ class EventsDirectoryIndex(object):
         with self.lock:
             self.index.remove(self.event_identity(event))
 
+    def by_range(self, start, end):
+        if not start and not end:
+            return self.index
+
+        start = start and dates.delete_timezone(start) or datetime.MINDATE
+        end = end and dates.delete_timezone(end) or datetime.MAXDATE
+
+        def datefilter(item):
+            date = datetime.strptime(item[:10], '%Y.%m.%d')
+            return dates.overlaps(start, end, date, date)
+
+        return filter(datefilter, self.index)
+
 
 _eventindex = EventsDirectoryIndex()
+
+
+class LazyBatch(object):
+
+    def __init__(self, start, end, catalog):
+        self.start = start
+        self.end = end
+        self.index = _eventindex.by_range(start, end)
+        self.actual_result_count = len(self.index)
+        self.catalog = catalog
+
+    def __len__(self):
+        return self.actual_result_count
+
+    def __getitem__(self, index):
+        print index
+        return _eventindex.event_by_identity(self.index[index], self.catalog)
 
 
 class EventsDirectoryCatalog(DirectoryCatalog):
@@ -169,6 +200,11 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
         key = lambda i: i.state != 'submitted' or i.allow_action('publish')
         return ifilter(key, realitems)
+
+    @property
+    def lazybatch(self):
+        start, end = getattr(dates.DateRanges(), self._daterange)
+        return LazyBatch(start, end, self)
 
     @instance.memoize
     def items(self):
