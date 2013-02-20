@@ -11,6 +11,7 @@ from Products.CMFPlone.PloneBatch import Batch
 
 from seantis.dir.base import directory
 from seantis.dir.base import session
+from seantis.dir.base.utils import cached_property
 
 from seantis.dir.events.unrestricted import execute_under_special_role
 from seantis.dir.events.interfaces import IEventsDirectory
@@ -61,7 +62,7 @@ class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
 
     @utils.profile
     def render(self):
-        return '\n'.join(self.catalog.eventindex.index)
+        return '\n'.join(self.catalog.orderindex.index)
 
 
 class EventsDirectoryView(directory.View, pages.CustomDirectory):
@@ -190,12 +191,12 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
             permissions.ReviewPortalContent, self.context
         )
 
-    # @property
-    # def batch(self):
-    #     # use a custom batch whose items are lazy evaluated on __getitem__
-    #     start = int(self.request.get('b_start') or 0)
-    #     lazy_list = self.catalog.lazy_list
-    #     return Batch(lazy_list, directory.ITEMSPERPAGE, start, orphan=1)
+    @cached_property
+    def batch(self):
+        # use a custom batch whose items are lazy evaluated on __getitem__
+        start = int(self.request.get('b_start') or 0)
+        lazy_list = self.catalog.lazy_list
+        return Batch(lazy_list, directory.ITEMSPERPAGE, start, orphan=1)
 
     @property
     def selected_state(self):
