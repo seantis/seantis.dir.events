@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from five import grok
 
 from itertools import ifilter
@@ -26,6 +26,12 @@ from blist import sortedset
 
 def reindex(item, directory):
 
+    if not IEventsDirectory.providedBy(directory):
+        return
+
+    if not IEventsDirectoryItem.providedBy(item):
+        return
+
     if item and directory:
         catalog = utils.get_catalog(directory)
         catalog.reindex([item])
@@ -52,8 +58,15 @@ class LazyList(object):
     def __init__(self, get_item, length):
         assert callable(get_item)
 
-        self.get_item = get_item
+        self._get_item = get_item
         self.length = length
+        self.cache = [get_item] * length
+
+    def get_item(self, index):
+        if self.cache[index] == self._get_item:
+            self.cache[index] = self.cache[index](index)
+
+        return self.cache[index]
 
     def __len__(self):
         return self.length
@@ -131,10 +144,13 @@ class EventIndex(object):
     def event_by_identity(self, identity):
         state, date, id = self.event_identity_data(identity)
 
-        start = date.replace(hour=0, minute=0, second=0, microsecond=0)
-        end = start + timedelta(days=1, microseconds=-1)
+        ranges = dates.DateRanges(
+            now=dates.as_timezone(date, dates.default_timezone())
+        )
+        start, end = ranges.today
+        start = start.replace(hour=0)
 
-        items = self.spawn_events([self.real_event(id)], start, end)
+        items = list(self.spawn_events([self.real_event(id)], start, end))
 
         assert len(items) == 1
         assert items[0].state == state, 'stale index'
@@ -157,7 +173,8 @@ class EventOrderIndex(EventIndex):
         self.remove(events)
 
         for event in self.spawn_events(events):
-            self.index.add(self.event_identity(event))
+            if event.state == 'published':
+                self.index.add(self.event_identity(event))
 
     def remove(self, events):
         stale = set()
@@ -171,22 +188,28 @@ class EventOrderIndex(EventIndex):
 
         self.index = sortedset(self.index - stale)
 
-    def by_range(self, start, end, states):
+    def by_range(self, start, end):
 
         if not start and not end:
-            return self.by_states(states)
+            return self.index
 
         start = start and dates.delete_timezone(start) or datetime.min
         end = end and dates.delete_timezone(end) or datetime.max
+        start = start.date()
+        end = end.date()
 
         def between_start_and_end(identity):
-            date = self.event_identity_data(identity)[1]
+            date = dates.delete_timezone(
+                self.event_identity_data(identity)[1]
+            ).date()
             return dates.overlaps(start, end, date, date)
 
-        return filter(between_start_and_end, self.by_states(states))
+        return filter(between_start_and_end, self.index)
 
-    def by_states(self, states):
-        return filter(lambda i: any(map(i.startswith, states)), self.index)
+    def lazy_list(self, start, end):
+        subset = self.by_range(start, end)
+        get_item = lambda i: self.event_by_identity(subset[i])
+        return LazyList(get_item, len(subset))
 
 
 class EventsDirectoryCatalog(DirectoryCatalog):
@@ -196,7 +219,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     def __init__(self, *args, **kwargs):
         self._daterange = dates.default_daterange
-        self._states = ('submitted', 'published')
+        self._states = ('published', )
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
 
     def reindex(self, events=[]):
@@ -297,8 +320,11 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     @property
     def lazy_list(self):
-        start, end = getattr(dates.DateRanges(), self.daterange)
-        return self.orderindex.lazy_list(start, end, self.states)
+        if list(self.states) == ['published']:
+            start, end = getattr(dates.DateRanges(), self.daterange)
+            return self.orderindex.lazy_list(start, end)
+        else:
+            return self.items()
 
     @instance.memoize
     def items(self):
