@@ -190,12 +190,12 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
             permissions.ReviewPortalContent, self.context
         )
 
-    @property
-    def batch(self):
-        # use a custom batch whose items are lazy evaluated on __getitem__
-        start = int(self.request.get('b_start') or 0)
-        batch = self.catalog.lazybatch
-        return Batch(batch, directory.ITEMSPERPAGE, start, orphan=1)
+    # @property
+    # def batch(self):
+    #     # use a custom batch whose items are lazy evaluated on __getitem__
+    #     start = int(self.request.get('b_start') or 0)
+    #     lazy_list = self.catalog.lazy_list
+    #     return Batch(lazy_list, directory.ITEMSPERPAGE, start, orphan=1)
 
     @property
     def selected_state(self):

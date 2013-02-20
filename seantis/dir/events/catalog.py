@@ -1,5 +1,3 @@
-import threading
-
 from datetime import datetime, timedelta
 from five import grok
 
@@ -7,9 +5,16 @@ from itertools import ifilter
 from plone.app.event.ical import construct_calendar
 from plone.memoize import instance
 
+from zope.annotation.interfaces import IAnnotations
+from zope.app.container.interfaces import IObjectMovedEvent
+from zope.lifecycleevent.interfaces import IObjectModifiedEvent
+from Products.CMFCore.interfaces import IActionSucceededEvent
+
 from seantis.dir.base.catalog import DirectoryCatalog
 from seantis.dir.base.interfaces import IDirectoryCatalog
+from seantis.dir.base.utils import cached_property
 
+from seantis.dir.events import utils
 from seantis.dir.events import dates
 from seantis.dir.events import recurrence
 from seantis.dir.events.interfaces import (
@@ -19,82 +24,169 @@ from seantis.dir.events.interfaces import (
 from blist import sortedset
 
 
-class EventsDirectoryIndex(object):
+def reindex(item, directory):
 
-    def __init__(self):
-        self.index = sortedset()
-        self.lock = threading.Lock()
+    if item and directory:
+        catalog = utils.get_catalog(directory)
+        catalog.reindex([item])
+
+
+@grok.subscribe(IEventsDirectoryItem, IObjectMovedEvent)
+def onMovedItem(item, event):
+    reindex(item, event.oldParent)
+    reindex(item, event.newParent)
+
+
+@grok.subscribe(IEventsDirectoryItem, IObjectModifiedEvent)
+def onModifiedItem(item, event):
+    reindex(item, item.get_parent())
+
+
+@grok.subscribe(IEventsDirectoryItem, IActionSucceededEvent)
+def onChangedWorkflowState(item, event):
+    reindex(item, item.get_parent())
+
+
+class LazyList(object):
+
+    def __init__(self, get_item, length):
+        assert callable(get_item)
+
+        self.get_item = get_item
+        self.length = length
+
+    def __len__(self):
+        return self.length
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            return map(self.get_item, range(*key.indices(self.length)))
+
+        if (key + 1) > self.length:
+            raise IndexError
+
+        return self.get_item(key)
+
+
+class EventIndex(object):
+
+    def __init__(self, catalog):
+        self.catalog = catalog
+        self.key = 'seantis.dir.events.eventindex'
+        self.datekey = '%Y.%m.%d'
+
+        if not self.index:
+            self.reindex()
+
+    @property
+    def name(self):
+        raise NotImplementedError
+
+    def update(self, events):
+        raise NotImplementedError
+
+    def remove(self, events):
+        raise NotImplementedError
+
+    def reindex(self, events=[]):
+        raise NotImplementedError
+
+    @property
+    def annotations(self):
+        return IAnnotations(self.catalog.directory, self.key)
+
+    def get_index(self):
+        return self.annotations.get(self.name, None)
+
+    def set_index(self, value):
+        self.annotations[self.name] = value
+
+    index = property(get_index, set_index)
+
+    def real_event(self, id):
+        return self.catalog.get_object(self.catalog.query(id=id)[0])
+
+    def real_events(self):
+        return super(EventsDirectoryCatalog, self.catalog).items()
+
+    def spawn_events(self, real, start=None, end=None):
+
+        if not start or not end:
+            start, end = map(dates.to_utc, dates.eventrange())
+
+        return self.catalog.spawn(real, start, end)
 
     def event_identity(self, event):
         date = dates.delete_timezone(event.start)
-        return date.strftime('%Y.%m.%d-%H:%M') + ';' + event.id
+        return '%s;%s;%s' % (
+            event.state, date.strftime(self.datekey), event.id
+        )
 
-    def event_by_identity(self, identity, catalog):
-        date, id = identity.split(';')
-        date = dates.to_utc(datetime.strptime(date, '%Y.%m.%d-%H:%M'))
+    def event_identity_data(self, identity):
+        state, date, id = identity.split(';')
+        date = dates.to_utc(datetime.strptime(date, self.datekey))
+
+        return state, date, id
+
+    def event_by_identity(self, identity):
+        state, date, id = self.event_identity_data(identity)
 
         start = date.replace(hour=0, minute=0, second=0, microsecond=0)
         end = start + timedelta(days=1, microseconds=-1)
 
-        real = catalog.get_object(catalog.catalog(id=id)[0])
+        items = self.spawn_events([self.real_event(id)], start, end)
 
-        items = [i for i in catalog.spawn((real,), start, end)]
         assert len(items) == 1
+        assert items[0].state == state, 'stale index'
 
         return items[0]
 
-    def index_all_events(self, catalog, reindex=False):
-        if not reindex and self.index:
-            return
 
-        with self.lock:
-            start, end = map(dates.to_utc, dates.eventrange())
+class EventOrderIndex(EventIndex):
 
-            real = super(EventsDirectoryCatalog, catalog).items()
+    name = 'eventorder'
 
-            for event in catalog.spawn(real, start, end):
-                self.index.add(self.event_identity(event))
+    def reindex(self, events=[]):
+        if not events:
+            events = self.real_events()
+            self.index = sortedset()
 
-    def index_event(self, event):
-        with self.lock:
+        self.update(events)
+
+    def update(self, events):
+        self.remove(events)
+
+        for event in self.spawn_events(events):
             self.index.add(self.event_identity(event))
 
-    def unindex_event(self, event):
-        with self.lock:
-            self.index.remove(self.event_identity(event))
+    def remove(self, events):
+        stale = set()
 
-    def by_range(self, start, end):
+        for real in events:
+            end = ';%s' % real.id
+
+            for identity in self.index:
+                if identity.endswith(end):
+                    stale.add(identity)
+
+        self.index = sortedset(self.index - stale)
+
+    def by_range(self, start, end, states):
+
         if not start and not end:
-            return self.index
+            return self.by_states(states)
 
-        start = start and dates.delete_timezone(start) or datetime.MINDATE
-        end = end and dates.delete_timezone(end) or datetime.MAXDATE
+        start = start and dates.delete_timezone(start) or datetime.min
+        end = end and dates.delete_timezone(end) or datetime.max
 
-        def datefilter(item):
-            date = datetime.strptime(item[:10], '%Y.%m.%d')
+        def between_start_and_end(identity):
+            date = self.event_identity_data(identity)[1]
             return dates.overlaps(start, end, date, date)
 
-        return filter(datefilter, self.index)
+        return filter(between_start_and_end, self.by_states(states))
 
-
-_eventindex = EventsDirectoryIndex()
-
-
-class LazyBatch(object):
-
-    def __init__(self, start, end, catalog):
-        self.start = start
-        self.end = end
-        self.index = _eventindex.by_range(start, end)
-        self.actual_result_count = len(self.index)
-        self.catalog = catalog
-
-    def __len__(self):
-        return self.actual_result_count
-
-    def __getitem__(self, index):
-        print index
-        return _eventindex.event_by_identity(self.index[index], self.catalog)
+    def by_states(self, states):
+        return filter(lambda i: any(map(i.startswith, states)), self.index)
 
 
 class EventsDirectoryCatalog(DirectoryCatalog):
@@ -107,11 +199,13 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         self._states = ('submitted', 'published')
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
 
-        _eventindex.index_all_events(self)
+    def reindex(self, events=[]):
+        for index in (self.orderindex, ):
+            index.reindex(events)
 
-    @property
-    def eventindex(self):
-        return _eventindex
+    @cached_property
+    def orderindex(self):
+        return EventOrderIndex(self)
 
     @property
     def submitted_count(self):
@@ -202,9 +296,9 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         return ifilter(key, realitems)
 
     @property
-    def lazybatch(self):
-        start, end = getattr(dates.DateRanges(), self._daterange)
-        return LazyBatch(start, end, self)
+    def lazy_list(self):
+        start, end = getattr(dates.DateRanges(), self.daterange)
+        return self.orderindex.lazy_list(start, end, self.states)
 
     @instance.memoize
     def items(self):
