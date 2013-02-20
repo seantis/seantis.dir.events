@@ -117,7 +117,7 @@ class EventIndex(object):
     index = property(get_index, set_index)
 
     def real_event(self, id):
-        return self.catalog.get_object(self.catalog.query(id=id)[0])
+        return self.catalog.query(id=id)[0].getObject()
 
     def real_events(self):
         return super(EventsDirectoryCatalog, self.catalog).items()
@@ -246,7 +246,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         submitted_count = 0
 
         items = []
-        for item in map(self.get_object, results):
+        for item in results:
             if item.allow_action('publish'):
                 items.append(item)
 
