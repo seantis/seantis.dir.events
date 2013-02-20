@@ -3,9 +3,15 @@ import time
 
 from Products.CMFCore.utils import getToolByName
 
-from zope.component import getMultiAdapter
+from seantis.dir.base.interfaces import IDirectoryCatalog
+
+from zope.component import getMultiAdapter, getAdapter
 from zope.component.hooks import getSite
 from zope import i18n
+
+
+def get_catalog(directory):
+    return getAdapter(directory, IDirectoryCatalog)
 
 
 def get_current_language(request):

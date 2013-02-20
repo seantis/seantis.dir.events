@@ -100,6 +100,9 @@ class EventsDirectoryItem(item.DirectoryItem):
     def archive(self):
         self.do_action("archive")
 
+    def reindex(self):
+        utils.get_catalog(self.get_parent()).reindex([self])
+
     def attachment_filename(self, attachment):
         filename = getattr(self, attachment).filename
 
