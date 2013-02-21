@@ -116,6 +116,12 @@ class EventIndex(object):
 
     index = property(get_index, set_index)
 
+    def get_metadata(self, key):
+        return self.annotations.get(self.name + '_metadata_' + key, None)
+
+    def set_metadata(self, key, value):
+        self.annotations[self.name + '_metadata_' + key] = value
+
     def real_event(self, id):
         return self.catalog.query(id=id)[0].getObject()
 
