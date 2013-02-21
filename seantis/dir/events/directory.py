@@ -6,6 +6,7 @@ from datetime import date as datetime_date
 from urllib import urlopen
 from icalendar import Calendar
 from plone.dexterity.utils import createContent, addContentToContainer
+from zope.component import queryAdapter
 from zope.component.hooks import getSite
 from Products.CMFPlone.PloneBatch import Batch
 
@@ -14,7 +15,10 @@ from seantis.dir.base import session
 from seantis.dir.base.utils import cached_property
 
 from seantis.dir.events.unrestricted import execute_under_special_role
-from seantis.dir.events.interfaces import IEventsDirectory
+from seantis.dir.events.interfaces import (
+    IEventsDirectory, IActionGuard
+)
+
 from seantis.dir.events.recurrence import grouped_occurrences
 from seantis.dir.events import dates
 from seantis.dir.events import utils
@@ -37,6 +41,28 @@ class EventsDirectory(directory.Directory, pages.CustomPageHook):
 
     def unused_categories(self):
         return ('cat3', 'cat4')
+
+    @cached_property
+    def action_quard(self):
+        return queryAdapter(self, IActionGuard)
+
+    def allow_action(self, action, item_brain):
+        """ Return true if the given action is allowed. This is not a
+        wrapper for the transition guards of the event workflow. Instead
+        it is called *by* the transition guards.
+
+        This allows a number of people to work together on an event website
+        with every person having its own group of events which he or she is
+        responsible for.
+
+        There's no actual implementation of that in seantis.dir.events
+        but client specific packages like izug.seantis.dir.events may
+        use a custom adapter to implement such a thing.
+        """
+        if self.action_quard:
+            return self.action_guard.allow_action(action, item_brain)
+        else:
+            return True
 
 
 class ExtendedDirectoryViewlet(grok.Viewlet, pages.CustomDirectory):
@@ -180,7 +206,13 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
     def groups(self, items):
         """ Returns the given occurrences grouped by human_date. """
-        return grouped_occurrences(items, self.request)
+        groups = grouped_occurrences(items, self.request)
+
+        for key, items in groups.items():
+            for ix, item in enumerate(items):
+                items[ix] = item.get_object()
+
+        return groups
 
     def translate(self, text, domain="seantis.dir.events"):
         return utils.translate(self.request, text, domain)
