@@ -158,7 +158,7 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
     @property
     def has_results(self):
-        return len(self.items) > 0
+        return len(self.batch) > 0
 
     def render(self):
         """ Renders the ical if asked, or the usual template. """
@@ -221,12 +221,12 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
             permissions.ReviewPortalContent, self.context
         )
 
-    # @cached_property
-    # def batch(self):
-    #     # use a custom batch whose items are lazy evaluated on __getitem__
-    #     start = int(self.request.get('b_start') or 0)
-    #     lazy_list = self.catalog.lazy_list
-    #     return Batch(lazy_list, directory.ITEMSPERPAGE, start, orphan=1)
+    @cached_property
+    def batch(self):
+        # use a custom batch whose items are lazy evaluated on __getitem__
+        start = int(self.request.get('b_start') or 0)
+        lazy_list = self.catalog.lazy_list
+        return Batch(lazy_list, directory.ITEMSPERPAGE, start, orphan=1)
 
     @property
     def selected_state(self):
