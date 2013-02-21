@@ -132,7 +132,7 @@ class EventIndex(object):
     def event_identity(self, event):
         date = dates.delete_timezone(event.start)
         return '%s;%s;%s' % (
-            event.state, date.strftime(self.datekey), event.id
+            event.review_state, date.strftime(self.datekey), event.id
         )
 
     def event_identity_data(self, identity):
@@ -153,7 +153,7 @@ class EventIndex(object):
         items = list(self.spawn_events([self.real_event(id)], start, end))
 
         assert len(items) == 1
-        assert items[0].state == state, 'stale index'
+        assert items[0].review_state == state, 'stale index'
 
         return items[0]
 
@@ -173,7 +173,7 @@ class EventOrderIndex(EventIndex):
         self.remove(events)
 
         for event in self.spawn_events(events):
-            if event.state == 'published':
+            if event.review_state == 'published':
                 self.index.add(self.event_identity(event))
 
     def remove(self, events):

@@ -42,10 +42,6 @@ class EventsDirectory(directory.Directory, pages.CustomPageHook):
     def unused_categories(self):
         return ('cat3', 'cat4')
 
-    @cached_property
-    def action_quard(self):
-        return queryAdapter(self, IActionGuard)
-
     def allow_action(self, action, item_brain):
         """ Return true if the given action is allowed. This is not a
         wrapper for the transition guards of the event workflow. Instead
@@ -59,8 +55,10 @@ class EventsDirectory(directory.Directory, pages.CustomPageHook):
         but client specific packages like izug.seantis.dir.events may
         use a custom adapter to implement such a thing.
         """
-        if self.action_quard:
-            return self.action_guard.allow_action(action, item_brain)
+        guard = queryAdapter(self, IActionGuard)
+
+        if guard:
+            return guard.allow_action(action, item_brain)
         else:
             return True
 
@@ -223,12 +221,12 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
             permissions.ReviewPortalContent, self.context
         )
 
-    @cached_property
-    def batch(self):
-        # use a custom batch whose items are lazy evaluated on __getitem__
-        start = int(self.request.get('b_start') or 0)
-        lazy_list = self.catalog.lazy_list
-        return Batch(lazy_list, directory.ITEMSPERPAGE, start, orphan=1)
+    # @cached_property
+    # def batch(self):
+    #     # use a custom batch whose items are lazy evaluated on __getitem__
+    #     start = int(self.request.get('b_start') or 0)
+    #     lazy_list = self.catalog.lazy_list
+    #     return Batch(lazy_list, directory.ITEMSPERPAGE, start, orphan=1)
 
     @property
     def selected_state(self):

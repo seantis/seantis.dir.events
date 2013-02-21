@@ -61,6 +61,10 @@ class EventsDirectoryItem(item.DirectoryItem):
         """ Return the workflow state. """
         return utils.workflow_tool().getInfoFor(self, 'review_state')
 
+    @property
+    def review_state(self):
+        return self.state
+
     def action_url(self, action):
         baseurl = self.absolute_url() + '/do-action?action=%s'
         return baseurl % action['id']

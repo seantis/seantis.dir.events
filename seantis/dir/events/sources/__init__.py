@@ -141,7 +141,7 @@ class FetchView(grok.View):
         )
 
         events = []
-        for obj in map(catalog.get_object, candidates):
+        for obj in (c.getObject() for c in candidates):
             if obj.source == source:
                 events.append(obj)
 
