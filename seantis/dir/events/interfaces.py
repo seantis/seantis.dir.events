@@ -51,8 +51,10 @@ class ITokenAccess(Interface):
 
 class IActionGuard(Interface):
 
-    def allow_action(self, action):
-        "Return true if the given workflow_events action is allowed"
+    def allow_action(self, action, item):
+        """Return true if the given workflow_events action is allowed.
+        The item can currently be a brain or not which is fugly, so maybe
+        don't use for now and wait for a better implementation."""
 
 
 class IExternalEvent(Interface):
