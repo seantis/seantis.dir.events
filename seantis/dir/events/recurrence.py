@@ -1,3 +1,5 @@
+import pytz
+
 from itertools import groupby
 from collections import OrderedDict
 from datetime import datetime, timedelta
@@ -41,6 +43,22 @@ class Occurrence(ProxyBase):
 
     def __new__(cls, item, *args, **kwargs):
         return ProxyBase.__new__(cls, item)
+
+    def get_object(self):
+        """ Wraps the underlying getObject of the brain, ensuring that the
+        result is still an occurrence with the same characteristics.
+
+        """
+        if hasattr(self._wrapped, 'getObject'):
+            return Occurrence(self._wrapped.getObject(),
+                self._start, self._end, self._unsplit_start, self._unsplit_end
+            )
+        else:
+            return self
+
+    @property
+    def tz(self):
+        return pytz.timezone(self.timezone)
 
     @property
     def start(self):
@@ -223,21 +241,34 @@ def occurrences(item, min_date, max_date):
 
     """
 
+    if not isinstance(item.start, datetime):
+        item_start = dates.to_utc(datetime.utcfromtimestamp(item.start))
+    else:
+        item_start = item.start
+
+    if not isinstance(item.end, datetime):
+        item_end = dates.to_utc(datetime.utcfromtimestamp(item.end))
+    else:
+        item_end = item.end
+
     if not item.recurrence:
 
-        if not overlaps(min_date, max_date, item.start, item.end):
+        if not overlaps(min_date, max_date, item_start, item_end):
             return []
         else:
-            return [Occurrence(item, item.start, item.end)]
+            return [Occurrence(item, item_start, item_end)]
+
+    tz = pytz.timezone(item.timezone)
+    local_start = tz.normalize(item_start)
 
     _occurrences = recurrence_sequence_ical(
-        start=item.local_start,
+        start=local_start,
         recrule=item.recurrence,
         from_=min_date,
         until=max_date)
 
     result = []
-    duration = item.end - item.start
+    duration = item_end - item_start
     for start in _occurrences:
         start = utcoffset_normalize(start, dstmode=DSTADJUST)
         result.append(Occurrence(item, start, start + duration))

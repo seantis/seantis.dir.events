@@ -247,7 +247,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
         items = []
         for item in results:
-            if item.allow_action('publish'):
+            if self.directory.allow_action('publish', item):
                 items.append(item)
 
         for spawn in self.spawn(items):
@@ -296,6 +296,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
             start, end = getattr(dates.DateRanges(), self._daterange)
 
         for item in realitems:
+
             for occurrence in recurrence.occurrences(item, start, end):
                 for split in recurrence.split_days(occurrence):
                     if dates.overlaps(start, end, split.start, split.end):
@@ -315,7 +316,9 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         if not 'submitted' in self.states:
             return (r for r in realitems)
 
-        key = lambda i: i.state != 'submitted' or i.allow_action('publish')
+        key = lambda i: i.review_state != 'submitted' \
+                     or self.directory.allow_action('publish', i)
+
         return ifilter(key, realitems)
 
     @property
