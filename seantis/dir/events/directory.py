@@ -84,11 +84,21 @@ class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
 
     template = None
 
-    @utils.profile
     def render(self):
+
         if 'reindex' in self.request:
-            self.catalog.orderindex.reindex()
-        return '\n'.join(self.catalog.orderindex.index)
+            self.catalog.reindex()
+
+        result = []
+        for name, index in self.catalog.indices.items():
+
+            result.append(name)
+            result.append('-' * len(name))
+            result.append('')
+            result.append('\n'.join(index.index))
+            result.append('')
+
+        return '\n'.join(result)
 
 
 class EventsDirectoryView(directory.View, pages.CustomDirectory):

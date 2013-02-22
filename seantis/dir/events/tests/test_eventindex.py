@@ -40,37 +40,54 @@ class TestEventIndex(IntegrationTestCase):
 
         self.login_testuser()
 
-        index = self.catalog.orderindex
+        submitted = self.catalog.indices['submitted']
+        published = self.catalog.indices['published']
 
-        self.assertEqual(len(index.index), 0)
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
 
         event = self.create_event()
 
-        self.assertEqual(len(index.index), 0)
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
 
         event.submit()
 
-        self.assertEqual(len(index.index), 0)
+        self.assertEqual(len(submitted.index), 1)
+        self.assertEqual(len(published.index), 0)
 
         event.publish()
 
-        self.assertEqual(len(index.index), 1)
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 1)
 
         event.archive()
 
-        self.assertEqual(len(index.index), 0)
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
 
         event = self.create_event(recurrence='RRULE:FREQ=DAILY;COUNT=10')
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
+
         event.submit()
+
+        self.assertEqual(len(submitted.index), 10)
+        self.assertEqual(len(published.index), 0)
+
         event.publish()
 
-        self.assertEqual(len(index.index), 10)
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 10)
 
         event.recurrence = ''
         event.reindex()
 
-        self.assertEqual(len(index.index), 1)
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 1)
 
         event.archive()
 
-        self.assertEqual(len(index.index), 0)
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)

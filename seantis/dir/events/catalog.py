@@ -12,7 +12,6 @@ from Products.CMFCore.interfaces import IActionSucceededEvent
 
 from seantis.dir.base.catalog import DirectoryCatalog
 from seantis.dir.base.interfaces import IDirectoryCatalog
-from seantis.dir.base.utils import cached_property
 
 from seantis.dir.events import utils
 from seantis.dir.events import dates
@@ -83,6 +82,8 @@ class LazyList(object):
 
 class EventIndex(object):
 
+    version = "1.0"
+
     def __init__(self, catalog):
         self.catalog = catalog
         self.key = 'seantis.dir.events.eventindex'
@@ -108,19 +109,27 @@ class EventIndex(object):
     def annotations(self):
         return IAnnotations(self.catalog.directory, self.key)
 
+    @property
+    def index_key(self):
+        return self.name + self.version
+
+    @property
+    def meta_key(self):
+        return self.index_key + '_meta_'
+
     def get_index(self):
-        return self.annotations.get(self.name, None)
+        return self.annotations.get(self.index_key, None)
 
     def set_index(self, value):
-        self.annotations[self.name] = value
+        self.annotations[self.index_key] = value
 
     index = property(get_index, set_index)
 
     def get_metadata(self, key):
-        return self.annotations.get(self.name + '_metadata_' + key, None)
+        return self.annotations.get(self.meta_key, None)
 
     def set_metadata(self, key, value):
-        self.annotations[self.name + '_metadata_' + key] = value
+        self.annotations[self.meta_key] = value
 
     def real_event(self, id):
         return self.catalog.query(id=id)[0].getObject()
@@ -135,20 +144,7 @@ class EventIndex(object):
 
         return self.catalog.spawn(real, start, end)
 
-    def event_identity(self, event):
-        date = dates.delete_timezone(event.start)
-        return '%s;%s;%s' % (
-            event.review_state, date.strftime(self.datekey), event.id
-        )
-
-    def event_identity_data(self, identity):
-        state, date, id = identity.split(';')
-        date = dates.to_utc(datetime.strptime(date, self.datekey))
-
-        return state, date, id
-
-    def event_by_identity(self, identity):
-        state, date, id = self.event_identity_data(identity)
+    def event_by_id_and_date(self, id, date):
 
         ranges = dates.DateRanges(now=dates.to_utc(date))
         start, end = ranges.today
@@ -157,14 +153,36 @@ class EventIndex(object):
         items = list(self.spawn_events([self.real_event(id)], start, end))
 
         assert len(items) == 1
-        assert items[0].review_state == state, 'stale index'
-
         return items[0]
 
 
 class EventOrderIndex(EventIndex):
 
-    name = 'eventorder'
+    def __init__(self, catalog, state):
+        assert state in ('submitted', 'published', 'archived')
+        self.state = state
+        super(EventOrderIndex, self).__init__(catalog)
+
+    @property
+    def name(self):
+        return 'eventorder-%s' % self.state
+
+    def identity(self, event):
+        date = dates.delete_timezone(event.start)
+        return '%s;%s' % (date.strftime('%y.%m.%d-%H:%M'), event.id)
+
+    def identity_id(self, identity):
+        return identity[15:]
+
+    def identity_date(self, identity):
+        return dates.to_utc(datetime.strptime(identity[:14], '%y.%m.%d-%H:%M'))
+
+    def event_by_identity(self, identity):
+
+        id = self.identity_id(identity)
+        date = self.identity_date(identity)
+
+        return self.event_by_id_and_date(id, date)
 
     def reindex(self, events=[]):
 
@@ -175,21 +193,19 @@ class EventOrderIndex(EventIndex):
         self.update(events)
 
     def update(self, events):
-        self.remove(events)
+        if events:
+            self.remove(events)
 
-        for event in self.spawn_events(events):
-            if event.review_state == 'published':
-                self.index.add(self.event_identity(event))
+        managed = (e for e in events if e.review_state == self.state)
+
+        for event in self.spawn_events(managed):
+            self.index.add(self.identity(event))
 
     def remove(self, events):
-        stale = set()
+        assert events
 
-        for real in events:
-            end = ';%s' % real.id
-
-            for identity in self.index:
-                if identity.endswith(end):
-                    stale.add(identity)
+        ids = [r.id for r in events]
+        stale = set(i for i in self.index if self.identity_id(i) in ids)
 
         self.index = sortedset(self.index - stale)
 
@@ -198,16 +214,13 @@ class EventOrderIndex(EventIndex):
         if not start and not end:
             return self.index
 
-        start = start and dates.delete_timezone(start) or datetime.min
-        end = end and dates.delete_timezone(end) or datetime.max
-        start = start.date()
-        end = end.date()
+        start = dates.to_utc(start or datetime.min)
+        end = dates.to_utc(end or datetime.max)
 
         def between_start_and_end(identity):
-            date = dates.delete_timezone(
-                self.event_identity_data(identity)[1]
-            ).date()
-            return dates.overlaps(start, end, date, date)
+            event_date = self.identity_date(identity)
+
+            return dates.overlaps(start, end, event_date, event_date)
 
         return filter(between_start_and_end, self.index)
 
@@ -225,15 +238,21 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     def __init__(self, *args, **kwargs):
         self._daterange = dates.default_daterange
         self._state = 'published'
+
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
 
-    def reindex(self, events=[]):
-        for index in (self.orderindex, ):
-            index.reindex(events)
+        self.ix_submitted = self.index_for_state('submitted')
+        self.ix_published = self.index_for_state('published')
+        self.indices = dict(
+            submitted=self.ix_submitted, published=self.ix_published
+        )
 
-    @cached_property
-    def orderindex(self):
-        return EventOrderIndex(self)
+    def index_for_state(self, state):
+        return EventOrderIndex(self, state)
+
+    def reindex(self, events=[]):
+        for ix in self.indices.values():
+            ix.reindex(events)
 
     @property
     def submitted_count(self):
@@ -327,11 +346,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     @property
     def lazy_list(self):
-        if self.state == 'published':
-            start, end = getattr(dates.DateRanges(), self.daterange)
-            return self.orderindex.lazy_list(start, end)
-        else:
-            return self.items()
+        start, end = getattr(dates.DateRanges(), self.daterange)
+        return self.indices[self.state].lazy_list(start, end)
 
     @instance.memoize
     def items(self):
