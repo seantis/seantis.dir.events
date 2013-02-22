@@ -86,6 +86,8 @@ class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
 
     @utils.profile
     def render(self):
+        if 'reindex' in self.request:
+            self.catalog.orderindex.reindex()
         return '\n'.join(self.catalog.orderindex.index)
 
 
@@ -118,32 +120,18 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
     def get_last_state(self):
         """ Returns the last selected event state. """
-        return session.get_session(self.context, 'state') or 'all'
+        return session.get_session(self.context, 'state') or 'published'
 
     def set_last_state(self, method):
         """ Store the last selected event state on the session. """
         session.set_session(self.context, 'state', method)
 
-    def get_states(self, state):
-        if state == 'submitted':
-            return ('submitted', )
-        if state == 'all':
-            return ('published', 'submitted')
-
-        return ('published', )
-
-    def get_state(self, states):
-        if 'submitted' in states and 'published' in states:
-            return 'all'
-
-        return states[0]
-
     @property
     def no_events_helptext(self):
-        if 'published' not in self.catalog.states:
-            return _(u'No events for the current state')
-        else:
+        if 'published' == self.catalog.state:
             return _(u'No events for the current daterange')
+        else:
+            return _(u'No events for the current state')
 
     @property
     def selected_daterange(self):
@@ -190,13 +178,13 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         state = self.request.get('state', self.get_last_state())
 
         if not self.show_state_filters or state not in (
-            'submitted', 'published', 'all'
+            'submitted', 'published', 'archived'
         ):
-            state = 'all'
+            state = 'published'
         else:
             self.set_last_state(state)
 
-        self.catalog.states = self.get_states(state)
+        self.catalog.state = state
         self.catalog.daterange = daterange
 
         if not self.is_ical_export:
@@ -230,7 +218,7 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
     @property
     def selected_state(self):
-        return self.get_state(self.catalog.states)
+        return self.catalog.state
 
     def state_filter_list(self):
 
@@ -239,8 +227,7 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
         return [
             ('submitted', submitted),
-            ('published', _(u'Published')),
-            ('all', _(u'All'))
+            ('published', _(u'Published'))
         ]
 
     def state_url(self, method):

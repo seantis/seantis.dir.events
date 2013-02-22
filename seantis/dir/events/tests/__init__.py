@@ -34,7 +34,6 @@ class IntegrationTestCase(unittest.TestCase):
             getSite(), 'seantis.dir.events.directory'
         )
         self.catalog = getAdapter(self.directory, IDirectoryCatalog)
-        self.catalog.reindex()
 
         self.directory.manage_setLocalRoles(testing.TEST_USER_ID, ('Manager',))
         self.logout()

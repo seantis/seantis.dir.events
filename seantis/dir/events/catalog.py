@@ -150,9 +150,7 @@ class EventIndex(object):
     def event_by_identity(self, identity):
         state, date, id = self.event_identity_data(identity)
 
-        ranges = dates.DateRanges(
-            now=dates.as_timezone(date, dates.default_timezone())
-        )
+        ranges = dates.DateRanges(now=dates.to_utc(date))
         start, end = ranges.today
         start = start.replace(hour=0)
 
@@ -169,6 +167,7 @@ class EventOrderIndex(EventIndex):
     name = 'eventorder'
 
     def reindex(self, events=[]):
+
         if not events:
             events = self.real_events()
             self.index = sortedset()
@@ -225,7 +224,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     def __init__(self, *args, **kwargs):
         self._daterange = dates.default_daterange
-        self._states = ('published', )
+        self._state = 'published'
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
 
     def reindex(self, events=[]):
@@ -239,7 +238,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     @property
     def submitted_count(self):
         """ Returns the submitted count depending on the current date filter
-        but independent of the current states filter.
+        but independent of the current state filter.
 
         This needs to loop through all elements again so use only if needed.
         """
@@ -271,20 +270,19 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     daterange = property(get_daterange, set_daterange)
 
-    def get_states(self):
-        return self._states
+    def get_state(self):
+        return self._state
 
     @instance.clearafter
-    def set_states(self, states):
-        for state in states:
-            # as an added security measure it is not yet possible to
-            # query for previewed events as they should only be availble
-            # to the user with the right token (see form.py)
-            assert state in ('submitted', 'published', 'archived')
+    def set_state(self, state):
+        # as an added security measure it is not yet possible to
+        # query for previewed events as they should only be availble
+        # to the user with the right token (see form.py)
+        assert state in ('submitted', 'published', 'archived')
 
-        self._states = states
+        self._state = state
 
-    states = property(get_states, set_states)
+    state = property(get_state, set_state)
 
     def sortkey(self):
         return lambda i: i.start
@@ -292,7 +290,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     def query(self, **kwargs):
         results = self.catalog(path={'query': self.path, 'depth': 1},
             object_provides=IEventsDirectoryItem.__identifier__,
-            review_state=self._states,
+            review_state=self.state,
             **kwargs
         )
         return results
@@ -319,7 +317,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
         """
 
-        if not 'submitted' in self.states:
+        if self.state != 'submitted':
             return (r for r in realitems)
 
         key = lambda i: i.review_state != 'submitted' \
@@ -329,7 +327,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     @property
     def lazy_list(self):
-        if list(self.states) == ['published']:
+        if self.state == 'published':
             start, end = getattr(dates.DateRanges(), self.daterange)
             return self.orderindex.lazy_list(start, end)
         else:
