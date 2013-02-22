@@ -4,6 +4,8 @@ log = logging.getLogger('seantis.dir.events')
 import inspect
 import transaction
 
+from functools32 import lru_cache
+
 from datetime import datetime
 from urllib import urlopen
 from itertools import groupby
@@ -16,6 +18,7 @@ from plone.dexterity.utils import createContentInContainer
 from zope.interface import alsoProvides
 
 from seantis.dir.base.interfaces import IDirectoryCatalog
+from seantis.dir.base.directory import DirectoryCatalogMixin
 from seantis.dir.events.interfaces import (
     IEventsDirectory,
     IExternalEvent
@@ -46,27 +49,37 @@ def available_sources():
     return callables
 
 
-class FetchView(grok.View):
+class FetchView(grok.View, DirectoryCatalogMixin):
 
     grok.name('fetch')
     grok.context(IEventsDirectory)
     grok.require('cmf.ManagePortal')
 
-    def fetch(self, source, function):
+    @lru_cache(maxsize=50)
+    def download(self, url):
+        return urlopen(url).read()
+
+    def fetch(self, source, function, limit=None):
 
         start = datetime.now()
         log.info('begin fetching events for %s' % source)
 
         events = [e for e in function(self.context, self.request)]
+        total = len(events)
         existing = self.groupby_source_id(self.existing_events(source))
 
         for ix, event in enumerate(events):
 
-            # flush to disk every 500 events to keep memory usage low
-            if (ix + 1) % 500 == 0:
+            # for testing
+            if limit and (ix + 1) > limit:
+                log.info('reached limit of %i events' % limit)
+                break
+
+            # flush to disk every 1000 events to keep memory usage low
+            if (ix + 1) % 1000 == 0:
                 transaction.savepoint(True)
 
-            log.info('importing %s @ %s' % (
+            log.info('importing %i/%i %s @ %s' % (ix + 1, total,
                 event['title'], event['start'].strftime('%d.%m.%Y %H:%M')
             ))
 
@@ -93,7 +106,9 @@ class FetchView(grok.View):
                 url = event.get(download)
 
                 if url:
-                    event[download] = method(data=urlopen(url).read())
+                    event[download] = method(self.download(url))
+                else:
+                    event[download] = None
 
             # latitude and longitude are set through the interface
             lat, lon = event.get('latitude'), event.get('longitude')
@@ -118,10 +133,15 @@ class FetchView(grok.View):
             obj.publish()
 
             alsoProvides(obj, IExternalEvent)
-            obj.reindexObject(idxs=['object_provides'])
 
         log.info('committing events for %s' % source)
         transaction.commit()
+
+        log.info('reindexing ZCatalog')
+        self.catalog.catalog.refreshCatalog(clear=1)
+
+        log.info('reindexing event indices')
+        self.catalog.reindex()
 
         runtime = datetime.now() - start
         minutes = runtime.total_seconds() // 60
@@ -166,4 +186,4 @@ class FetchView(grok.View):
         assert source in sources
 
         self.source = source
-        self.fetch(source, sources[source])
+        self.fetch(source, sources[source], int(self.request.get('limit', 0)))
