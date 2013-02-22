@@ -148,14 +148,26 @@ class EventIndex(object):
 
         real = self.real_event(id)
 
-        ranges = dates.DateRanges(now=dates.as_timezone(date, real.timezone))
-        start, end = ranges.today
-        start = start.replace(hour=0)
+        if not real.recurrence:
+            return real.as_occurrence()
 
-        items = list(self.spawn_events([self.real_event(id)], start, end))
+        # there is currently no way to easily look up the event by date
+        # if it has been split over dates already (which is what happens
+        # when the events are indexed)
 
-        assert len(items) == 1
-        return items[0]
+        # therefore we need to currently loop over all events to find the
+        # right one. certainly this can be optimized.
+
+        # however, tests on a 10k sites with 60% of all events being recurrent
+        # indicate that it's not that big of a problem. spawning events is
+        # quite fast and it only happens for 10 items per request
+
+        # still, I would prefer some kind of lookup here
+        for item in self.spawn_events([real]):
+            if item.start == date:
+                return item
+
+        import pdb; pdb.set_trace()
 
 
 class EventOrderIndex(EventIndex):
