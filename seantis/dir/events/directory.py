@@ -95,8 +95,21 @@ class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
             result.append(name)
             result.append('-' * len(name))
             result.append('')
-            result.append('\n'.join(index.index))
+
+            for ix, identity in enumerate(index.index):
+                result.append('%i -> %s' % (ix, identity))
+
             result.append('')
+
+            dateindex = index.get_metadata('dateindex')
+
+            if dateindex:
+                result.append('-> dateindex')
+
+                for date in sorted(dateindex):
+                    result.append('%s -> %s' % (
+                        date.strftime('%y.%m.%d'), dateindex[date])
+                    )
 
         return '\n'.join(result)
 
