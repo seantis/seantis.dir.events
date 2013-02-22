@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from five import grok
 
 from itertools import ifilter
@@ -146,7 +146,9 @@ class EventIndex(object):
 
     def event_by_id_and_date(self, id, date):
 
-        ranges = dates.DateRanges(now=dates.to_utc(date))
+        real = self.real_event(id)
+
+        ranges = dates.DateRanges(now=dates.as_timezone(date, real.timezone))
         start, end = ranges.today
         start = start.replace(hour=0)
 
@@ -210,10 +212,11 @@ class EventOrderIndex(EventIndex):
 
         self.index = sortedset(self.index - stale)
 
-    @utils.profile
     def generate_metadata(self):
 
         if not self.index:
+            if self.get_metadata('dateindex'):
+                self.set_metadata('dateindex', None)
             return
 
         dt = lambda i: i if i is None else self.identity_date(i).date()
@@ -252,15 +255,31 @@ class EventOrderIndex(EventIndex):
         if not start and not end:
             return self.index
 
-        start = dates.to_utc(start or datetime.min)
-        end = dates.to_utc(end or datetime.max)
+        if not self.index:
+            return []
 
-        def between_start_and_end(identity):
-            event_date = self.identity_date(identity)
+        first_date = self.identity_date(self.index[0])
+        last_date = self.identity_date(self.index[-1])
 
-            return dates.overlaps(start, end, event_date, event_date)
+        if not dates.overlaps(first_date, last_date, start, end):
+            return []
 
-        return filter(between_start_and_end, self.index)
+        dateindex = self.get_metadata('dateindex')
+
+        start = dates.to_utc(start or first_date).date()
+        end = dates.to_utc(end or last_date).date()
+
+        if start <= first_date.date():
+            startrange = 0
+        else:
+            startrange = dateindex[start]
+
+        if end >= last_date.date():
+            endrange = len(self.index)
+        else:
+            endrange = dateindex[end + timedelta(days=1)]
+
+        return self.index[startrange:endrange]
 
     def lazy_list(self, start, end):
         subset = self.by_range(start, end)
@@ -357,7 +376,6 @@ class EventsDirectoryCatalog(DirectoryCatalog):
             start, end = getattr(dates.DateRanges(), self._daterange)
 
         for item in realitems:
-
             for occurrence in recurrence.occurrences(item, start, end):
                 for split in recurrence.split_days(occurrence):
                     if dates.overlaps(start, end, split.start, split.end):
