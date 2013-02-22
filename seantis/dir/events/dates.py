@@ -76,6 +76,10 @@ def is_whole_day(start, end):
     ))
 
 
+def days_between(start, end):
+    return [(start + timedelta(days=d)) for d in xrange((end - start).days)]
+
+
 def split_days_count(start, end):
     """ Returns 0 if the given daterange must be kept together and a number
     of splits that need to be created if not.

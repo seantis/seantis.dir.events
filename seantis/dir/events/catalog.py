@@ -12,6 +12,7 @@ from Products.CMFCore.interfaces import IActionSucceededEvent
 
 from seantis.dir.base.catalog import DirectoryCatalog
 from seantis.dir.base.interfaces import IDirectoryCatalog
+from seantis.dir.base.utils import previous_and_next
 
 from seantis.dir.events import utils
 from seantis.dir.events import dates
@@ -113,9 +114,8 @@ class EventIndex(object):
     def index_key(self):
         return self.name + self.version
 
-    @property
-    def meta_key(self):
-        return self.index_key + '_meta_'
+    def meta_key(self, key):
+        return self.index_key + '_meta_' + key
 
     def get_index(self):
         return self.annotations.get(self.index_key, None)
@@ -126,10 +126,10 @@ class EventIndex(object):
     index = property(get_index, set_index)
 
     def get_metadata(self, key):
-        return self.annotations.get(self.meta_key, None)
+        return self.annotations.get(self.meta_key(key), None)
 
     def set_metadata(self, key, value):
-        self.annotations[self.meta_key] = value
+        self.annotations[self.meta_key(key)] = value
 
     def real_event(self, id):
         return self.catalog.query(id=id)[0].getObject()
@@ -191,6 +191,7 @@ class EventOrderIndex(EventIndex):
             self.index = sortedset()
 
         self.update(events)
+        self.generate_metadata()
 
     def update(self, events):
         if events:
@@ -208,6 +209,43 @@ class EventOrderIndex(EventIndex):
         stale = set(i for i in self.index if self.identity_id(i) in ids)
 
         self.index = sortedset(self.index - stale)
+
+    @utils.profile
+    def generate_metadata(self):
+
+        if not self.index:
+            return
+
+        dt = lambda i: i if i is None else self.identity_date(i).date()
+
+        dateindex = {}
+        position, offset = 0, 0
+        first = True
+
+        for prev, curr, next in previous_and_next(self.index):
+
+            prev, curr, next = map(dt, (prev, curr, next))
+            assert curr
+
+            if curr == next or prev is None or next is None:
+                dateindex[curr] = position
+            elif curr != next:
+                if first:
+                    dateindex[curr] = 0
+                    first = False
+                else:
+                    dateindex[curr] = position + 1
+
+                position += offset
+                offset = 0
+
+                for date in dates.days_between(curr, next):
+                    if date != curr:
+                        dateindex[date] = position
+
+            offset += 1
+
+        self.set_metadata('dateindex', dateindex)
 
     def by_range(self, start, end):
 
