@@ -41,7 +41,8 @@ setup(name='seantis.dir.events',
           'mock',
           'M2Crypto',
           'lxml',
-          'blist'
+          'blist',
+          'functools32'
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
