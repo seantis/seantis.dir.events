@@ -212,14 +212,14 @@ class View(core.View):
         else:
             if self.date:
                 calendar = construct_calendar(
-                    self.context.get_parent(), [self.occurrence]
+                    self.context, [self.occurrence]
                 )
                 for component in calendar.subcomponents:
                     if 'RRULE' in component:
                         del component['RRULE']
             else:
                 calendar = construct_calendar(
-                    self.context.get_parent(), [self.context]
+                    self.context, [self.context]
                 )
 
             utils.render_ical_response(self.request, self.context, calendar)
