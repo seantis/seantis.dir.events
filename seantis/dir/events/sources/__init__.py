@@ -104,7 +104,13 @@ class FetchView(grok.View, DirectoryCatalogMixin):
 
         workflowTool = getToolByName(self.context, 'portal_workflow')
 
+        categories = dict(cat1=set(), cat2=set())
+
         for ix, event in enumerate(events):
+
+            # keep a set of all categories for the suggestions
+            for cat in categories:
+                categories[cat] |= event[cat]
 
             # for testing
             if limit and (ix + 1) > limit:
@@ -175,6 +181,14 @@ class FetchView(grok.View, DirectoryCatalogMixin):
                 getattr(obj, download)
 
             alsoProvides(obj, IExternalEvent)
+
+        # add categories to suggestions
+        for category in categories:
+            key = '%s_suggestions' % category
+            existing = set(getattr(self.context, key))
+            new = categories[category] | existing
+
+            setattr(self.context, key, sorted(new))
 
         log.info('committing events for %s' % source)
         transaction.commit()

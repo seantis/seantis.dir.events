@@ -22,6 +22,14 @@ class IGuidleConfig(Interface):
 
     url = Attribute("Guidle URL to download from")
 
+    classification = Attribute(
+        "Name of classification to use (guidle:classification name)"
+    )
+
+    tags = Attribute(
+        "Dictionary mapping tags to categories (guidle:classification tags)"
+    )
+
     def on_event(root, offer, event):
         """ Called before an event is yielded to the source. Root is the
         xml root, offer is the xml offer element and event is the dictionary
@@ -172,6 +180,17 @@ def events(offer):
         yield event
 
 
+def categories_by_tags(tags, classification):
+    categories = set()
+
+    for tag in (t.attrib['name'] for t in tags):
+        for key in classification:
+            if tag.startswith(key):
+                categories.add(classification[key])
+
+    return categories
+
+
 def fetch_events(context, request):
 
     config = getMultiAdapter((context, request), IGuidleConfig)
@@ -179,7 +198,8 @@ def fetch_events(context, request):
     xml = urlopen(config.url).read()
     root = objectify.fromstring(xml)
 
-    offers = root.xpath('*//guidle:offer',
+    offers = root.xpath(
+        '*//guidle:offer',
         namespaces={'guidle': 'http://www.guidle.com'}
     )
 
@@ -236,7 +256,18 @@ def fetch_events(context, request):
                 contact_phone   <- telephone_1
             """)
 
-            # image
+            # categories
+            for classification in offer.classifications.iterchildren():
+
+                if classification.attrib['name'] != config.classification:
+                    continue
+
+                e['cat1'] = categories_by_tags(
+                    classification.iterchildren(), config.tags
+                )
+                e['cat2'] = set((e['town'],))
+
+            # image (download later)
             try:
                 for image in list(offer.offerDetail.images.iterchildren())[:1]:
                     copy(e, image, "image <- url")
