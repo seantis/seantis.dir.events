@@ -21,7 +21,7 @@
     <div tal:replace="structure provider:plone.belowcontenttitle" />
     <div tal:replace="structure provider:plone.abovecontentbody" />
 
-        <tal:block condition="python: not view.filtered">
+        <tal:block condition="view/show_banner">
             <div tal:replace="structure provider:seantis.dir.base.directory.viewletmanager"/>
         </tal:block>
 
