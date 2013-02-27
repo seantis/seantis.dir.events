@@ -173,7 +173,7 @@ class EventIndex(object):
             if item.start == date:
                 return item
 
-        import pdb; pdb.set_trace()
+        assert False, "lookup for %s failed" % id
 
 
 class EventOrderIndex(EventIndex):
@@ -299,10 +299,19 @@ class EventOrderIndex(EventIndex):
 
         return self.index[startrange:endrange]
 
-    def lazy_list(self, start, end):
-        subset = self.by_range(start, end)
-        get_item = lambda i: self.event_by_identity(subset[i])
-        return LazyList(get_item, len(subset))
+    def limit_to_subset(self, index, subset):
+
+        if not subset:
+            return index
+
+        ids = set(brain.id for brain in subset)
+        return filter(lambda i: self.identity_id(i) in ids, index)
+
+    def lazy_list(self, start, end, subset=None):
+        subindex = self.by_range(start, end)
+        subindex = self.limit_to_subset(subindex, subset)
+        get_item = lambda i: self.event_by_identity(subindex[i])
+        return LazyList(get_item, len(subindex))
 
 
 class EventsDirectoryCatalog(DirectoryCatalog):
@@ -313,6 +322,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     def __init__(self, *args, **kwargs):
         self._daterange = dates.default_daterange
         self._state = 'published'
+
+        self.subset = None
 
         super(EventsDirectoryCatalog, self).__init__(*args, **kwargs)
 
@@ -337,7 +348,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         This needs to loop through all elements again so use only if needed.
         """
 
-        results = self.catalog(path={'query': self.path, 'depth': 1},
+        results = self.catalog(
+            path={'query': self.path, 'depth': 1},
             object_provides=IEventsDirectoryItem.__identifier__,
             review_state=('submitted', )
         )
@@ -382,7 +394,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         return lambda i: i.start
 
     def query(self, **kwargs):
-        results = self.catalog(path={'query': self.path, 'depth': 1},
+        results = self.catalog(
+            path={'query': self.path, 'depth': 1},
             object_provides=IEventsDirectoryItem.__identifier__,
             review_state=self.state,
             **kwargs
@@ -414,14 +427,14 @@ class EventsDirectoryCatalog(DirectoryCatalog):
             return (r for r in realitems)
 
         key = lambda i: i.review_state != 'submitted' \
-                     or self.directory.allow_action('publish', i)
+            or self.directory.allow_action('publish', i)
 
         return ifilter(key, realitems)
 
     @property
     def lazy_list(self):
         start, end = getattr(dates.DateRanges(), self.daterange)
-        return self.indices[self.state].lazy_list(start, end)
+        return self.indices[self.state].lazy_list(start, end, self.subset)
 
     @instance.memoize
     def items(self):
@@ -434,13 +447,16 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         if len(nonempty_terms) == 0:
             return self.items()
 
-        real = super(EventsDirectoryCatalog, self).filter(term)
-        return sorted(self.spawn(self.hide_blocked(real)), key=self.sortkey())
+        self.subset = super(EventsDirectoryCatalog, self).filter(term)
+        return sorted(
+            self.spawn(self.hide_blocked(self.subset)), key=self.sortkey()
+        )
 
-    @instance.memoize
     def search(self, text):
-        real = super(EventsDirectoryCatalog, self).search(text)
-        return sorted(self.spawn(self.hide_blocked(real)), key=self.sortkey())
+        self.subset = super(EventsDirectoryCatalog, self).search(text)
+        return sorted(
+            self.spawn(self.hide_blocked(self.subset)), key=self.sortkey()
+        )
 
     def calendar(self, search=None, filter=None):
         if search:
