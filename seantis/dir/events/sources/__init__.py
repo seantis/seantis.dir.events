@@ -13,9 +13,12 @@ from itertools import groupby
 from five import grok
 
 from collective.geo.geographer.interfaces import IWriteGeoreferenced
+from Products.CMFCore.utils import getToolByName
 from plone.namedfile import NamedFile, NamedImage
 from plone.dexterity.utils import createContentInContainer
 from zope.interface import alsoProvides
+
+from collective import noindexing
 
 from seantis.dir.base.interfaces import IDirectoryCatalog
 from seantis.dir.base.directory import DirectoryCatalogMixin
@@ -59,14 +62,47 @@ class FetchView(grok.View, DirectoryCatalogMixin):
     def download(self, url):
         return urlopen(url).read()
 
+    def disable_indexing(self):
+        self.context._v_fetching = True
+        noindexing.patches.apply()
+
+    def enable_indexing(self):
+        self.context._v_fetching = False
+        noindexing.patches.unapply()
+
     def fetch(self, source, function, limit=None):
 
         start = datetime.now()
         log.info('begin fetching events for %s' % source)
 
+        self.disable_indexing()
+
+        try:
+            imported = self._fetch(source, function, limit)
+        finally:
+            self.enable_indexing()
+
+        log.info('reindexing ZCatalog')
+        self.catalog.catalog.refreshCatalog(clear=1)
+
+        log.info('reindexing event indices')
+        self.catalog.reindex()
+
+        runtime = datetime.now() - start
+        minutes = runtime.total_seconds() // 60
+        seconds = runtime.seconds - minutes * 60
+
+        log.info('imported %i events in %i minutes, %i seconds' % (
+            imported, minutes, seconds
+        ))
+
+    def _fetch(self, source, function, limit=None):
+
         events = [e for e in function(self.context, self.request)]
-        total = len(events)
+        total = len(events) if not limit else limit
         existing = self.groupby_source_id(self.existing_events(source))
+
+        workflowTool = getToolByName(self.context, 'portal_workflow')
 
         for ix, event in enumerate(events):
 
@@ -75,12 +111,13 @@ class FetchView(grok.View, DirectoryCatalogMixin):
                 log.info('reached limit of %i events' % limit)
                 break
 
-            # flush to disk every 1000 events to keep memory usage low
-            if (ix + 1) % 1000 == 0:
+            # flush to disk every 500th event to keep memory usage low
+            if (ix + 1) % 500 == 0:
                 transaction.savepoint(True)
 
-            log.info('importing %i/%i %s @ %s' % (ix + 1, total,
-                event['title'], event['start'].strftime('%d.%m.%Y %H:%M')
+            log.info('importing %i/%i %s @ %s' % (
+                ix + 1, total, event['title'],
+                event['start'].strftime('%d.%m.%Y %H:%M')
             ))
 
             event['source'] = source
@@ -120,7 +157,9 @@ class FetchView(grok.View, DirectoryCatalogMixin):
                 del event['longitude']
 
             obj = createContentInContainer(
-                self.context, 'seantis.dir.events.item', **event
+                self.context, 'seantis.dir.events.item',
+                checkConstraints=False,
+                **event
             )
 
             # set coordinates now
@@ -129,26 +168,18 @@ class FetchView(grok.View, DirectoryCatalogMixin):
                     'Point', map(float, (lon, lat))
                 )
 
-            obj.submit()
-            obj.publish()
+            workflowTool.doActionFor(obj, 'submit')
+            workflowTool.doActionFor(obj, 'publish')
+
+            for download in downloads:
+                getattr(obj, download)
 
             alsoProvides(obj, IExternalEvent)
 
         log.info('committing events for %s' % source)
         transaction.commit()
 
-        log.info('reindexing ZCatalog')
-        self.catalog.catalog.refreshCatalog(clear=1)
-
-        log.info('reindexing event indices')
-        self.catalog.reindex()
-
-        runtime = datetime.now() - start
-        minutes = runtime.total_seconds() // 60
-        seconds = runtime.seconds - minutes * 60
-        log.info('imported %i events in %i minutes, %i seconds' % (
-            ix + 1, minutes, seconds
-        ))
+        return ix + 1  # number of imported events
 
     def existing_events(self, source):
 

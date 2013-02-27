@@ -26,6 +26,12 @@ from blist import sortedset
 
 def reindex(item, directory):
 
+    if not directory or not item:
+        return
+
+    if hasattr(directory, '_v_fetching') and getattr(directory, '_v_fetching'):
+        return
+
     if not IEventsDirectory.providedBy(directory):
         return
 

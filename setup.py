@@ -42,7 +42,8 @@ setup(name='seantis.dir.events',
           'M2Crypto',
           'lxml',
           'blist',
-          'functools32'
+          'functools32',
+          'collective.noindexing'
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
