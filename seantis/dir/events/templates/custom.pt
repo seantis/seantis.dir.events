@@ -1,3 +1,3 @@
 <!-- custom style/script -->
-<link rel="stylesheet" type="text/css" tal:attributes="href viewlet/custom_css">
-<script type="text/javascript" tal:attributes="src viewlet/custom_script"></script>
+<style type="text/css" tal:content="structure viewlet/custom_css"></style>
+<script type="text/javascript" tal:content="structure viewlet/custom_script"></script>
