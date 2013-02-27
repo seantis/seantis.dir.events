@@ -268,11 +268,11 @@ class CustomPageViewlet(grok.Viewlet, DirectoryCatalogMixin):
 
     def custom_css(self):
         f = self.pagerequest.custom_file(self.context, 'css')
-        return f and f.absolute_url() or ''
+        return f and f.data or ''
 
     def custom_script(self):
         f = self.pagerequest.custom_file(self.context, 'js')
-        return f and f.absolute_url() or ''
+        return f and f.data or ''
 
 
 class URLTransform(object):
