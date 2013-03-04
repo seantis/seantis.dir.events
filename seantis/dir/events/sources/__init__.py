@@ -139,13 +139,23 @@ class FetchView(grok.View, DirectoryCatalogMixin):
                 'attachment_2': NamedFile
             }
 
+            def allow_download(download, url):
+
+                if download != 'image':
+                    return True
+
+                # whitelist the images that are known to work
+                # not working is *.bmp. We could convert but I'd rather
+                # force people to use a sane format
+                return url.lower().endswith(('png', 'jpg', 'jpeg'))
+
             for download, method in downloads.items():
                 url = event.get(download)
 
-                if url:
-                    event[download] = method(self.download(url))
-                else:
+                if not url or not allow_download(download, url):
                     event[download] = None
+                else:
+                    event[download] = method(self.download(url))
 
             # latitude and longitude are set through the interface
             lat, lon = event.get('latitude'), event.get('longitude')
