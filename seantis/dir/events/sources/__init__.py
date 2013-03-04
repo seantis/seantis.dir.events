@@ -228,5 +228,5 @@ class FetchView(grok.View, DirectoryCatalogMixin):
         self.fetch(source, sources[source], int(self.request.get('limit', 0)))
 
         indexurl = self.context.absolute_url() + '/eventindex?rebuild&reindex'
-        log.info('redirecting to %s for index regeneration' & indexurl)
+        log.info('redirecting to %s for index regeneration' % indexurl)
         self.request.response.redirect(indexurl)
