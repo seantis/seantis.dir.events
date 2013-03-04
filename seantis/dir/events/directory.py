@@ -93,7 +93,7 @@ class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
 
         if 'rebuild' in self.request:
             log.info('rebuilding ZCatalog')
-            self.catalog.catalog.refreshCatalog(clear=1)
+            self.catalog.catalog.clearFindAndRebuild()
 
         if 'reindex' in self.request:
             log.info('reindexing event indices')
