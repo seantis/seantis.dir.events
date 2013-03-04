@@ -1,3 +1,6 @@
+import logging
+log = logging.getLogger('seantis.dir.events')
+
 from five import grok
 from pytz import timezone
 
@@ -86,7 +89,14 @@ class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
 
     def render(self):
 
+        self.request.response.setHeader("Content-type", "text/plain")
+
+        if 'rebuild' in self.request:
+            log.info('rebuilding ZCatalog')
+            self.catalog.catalog.refreshCatalog(clear=1)
+
         if 'reindex' in self.request:
+            log.info('reindexing event indices')
             self.catalog.reindex()
 
         result = []
@@ -135,7 +145,7 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
     def get_last_daterange(self):
         """ Returns the last selected daterange. """
         return session.get_session(self.context, 'daterange') \
-        or dates.default_daterange
+            or dates.default_daterange
 
     def set_last_daterange(self, method):
         """ Store the last selected daterange on the session. """
@@ -313,7 +323,8 @@ class CleanupView(grok.View):
         # this maintenance feature may be run unrestricted as it does not
         # leak any information and it's behavior cannot be altered by the
         # user. This allows for easy use via cronjobs.
-        execute_under_special_role(getSite(), 'Manager',
+        execute_under_special_role(
+            getSite(), 'Manager',
             maintenance.cleanup_directory, self.context, dryrun
         )
 
@@ -367,13 +378,15 @@ class ImportIcsView(grok.View):
         end = event['dtend'].dt
 
         if isinstance(start, datetime_date):
-            start = datetime(start.year, start.month, start.day,
+            start = datetime(
+                start.year, start.month, start.day,
                 tzinfo=timezone(event.timezone)
             )
 
         if isinstance(end, datetime_date):
-            end = datetime(end.year, end.month, end.day,
-                23, 59, 59, tzinfo=timezone(event.timezone)
+            end = datetime(
+                end.year, end.month, end.day, 23, 59, 59,
+                tzinfo=timezone(event.timezone)
             )
 
         return start, end

@@ -82,12 +82,6 @@ class FetchView(grok.View, DirectoryCatalogMixin):
         finally:
             self.enable_indexing()
 
-        log.info('reindexing ZCatalog')
-        self.catalog.catalog.refreshCatalog(clear=1)
-
-        log.info('reindexing event indices')
-        self.catalog.reindex()
-
         runtime = datetime.now() - start
         minutes = runtime.total_seconds() // 60
         seconds = runtime.seconds - minutes * 60
@@ -232,3 +226,7 @@ class FetchView(grok.View, DirectoryCatalogMixin):
 
         self.source = source
         self.fetch(source, sources[source], int(self.request.get('limit', 0)))
+
+        indexurl = self.context.absolute_url() + '/eventindex?rebuild&reindex'
+        log.info('redirecting to %s for index regeneration' & indexurl)
+        self.request.response.redirect(indexurl)
