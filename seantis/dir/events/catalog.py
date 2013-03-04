@@ -437,7 +437,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         return self.indices[self.state].lazy_list(start, end, self.subset)
 
     @instance.memoize
-    def items(self):
+    def all_items(self):
         real = super(EventsDirectoryCatalog, self).items()
         return sorted(self.spawn(self.hide_blocked(real)), key=self.sortkey())
 
@@ -464,6 +464,6 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         elif filter:
             items = super(EventsDirectoryCatalog, self).filter(filter)
         else:
-            items = super(EventsDirectoryCatalog, self).items()
+            items = super(EventsDirectoryCatalog, self).all_items()
 
         return construct_calendar(self.directory, items)
