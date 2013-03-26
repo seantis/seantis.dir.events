@@ -137,12 +137,6 @@ class EventIndex(object):
     def set_metadata(self, key, value):
         self.annotations[self.meta_key(key)] = value
 
-    def real_event(self, id):
-        return self.catalog.query(id=id)[0].getObject()
-
-    def real_events(self):
-        return super(EventsDirectoryCatalog, self.catalog).items()
-
     def spawn_events(self, real, start=None, end=None):
 
         if not start or not end:
@@ -152,7 +146,7 @@ class EventIndex(object):
 
     def event_by_id_and_date(self, id, date):
 
-        real = self.real_event(id)
+        real = self.catalog.query(id=id)[0].getObject()
 
         if not real.recurrence:
             return real.as_occurrence()
@@ -207,7 +201,7 @@ class EventOrderIndex(EventIndex):
     def reindex(self, events=[]):
 
         if not events:
-            events = self.real_events()
+            events = self.catalog.query(review_state=self.state)
             self.index = sortedset()
 
         self.update(events)
@@ -393,13 +387,16 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     def sortkey(self):
         return lambda i: i.start
 
-    def query(self, **kwargs):
+    def query(self, review_state=None, **kwargs):
+        review_state = review_state or self.state
+
         results = self.catalog(
             path={'query': self.path, 'depth': 1},
             object_provides=IEventsDirectoryItem.__identifier__,
-            review_state=self.state,
+            review_state=review_state,
             **kwargs
         )
+
         return results
 
     def spawn(self, realitems, start=None, end=None):
