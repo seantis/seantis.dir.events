@@ -32,7 +32,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         This needs to loop through all elements again so use only if needed.
         """
 
-        results = self.catalog(path={'query': self.path, 'depth': 1},
+        results = self.catalog(
+            path={'query': self.path, 'depth': 1},
             object_provides=IEventsDirectoryItem.__identifier__,
             review_state=('submitted', )
         )
@@ -78,7 +79,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         return lambda i: i.start
 
     def query(self, **kwargs):
-        results = self.catalog(path={'query': self.path, 'depth': 1},
+        results = self.catalog(
+            path={'query': self.path, 'depth': 1},
             object_provides=IEventsDirectoryItem.__identifier__,
             review_state=self._states,
             **kwargs
