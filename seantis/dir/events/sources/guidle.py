@@ -26,7 +26,7 @@ class IGuidleConfig(Interface):
         "Name of classification to use (guidle:classification name)"
     )
 
-    tags = Attribute(
+    tagmap = Attribute(
         "Dictionary mapping tags to categories (guidle:classification tags)"
     )
 
