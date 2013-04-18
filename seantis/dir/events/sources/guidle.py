@@ -180,13 +180,13 @@ def events(offer):
         yield event
 
 
-def categories_by_tags(tags, classification):
+def categories_by_tags(classification, tagmap):
     categories = set()
 
-    for tag in (t.attrib['name'] for t in tags):
-        for key in classification:
-            if tag.startswith(key):
-                categories.add(classification[key])
+    for tagname in (c.attrib['name'] for c in classification.iterchildren()):
+        for key in tagmap:
+            if tagname.startswith(key):
+                categories.add(tagmap[key])
 
     return categories
 
@@ -262,9 +262,7 @@ def fetch_events(context, request):
                 if classification.attrib['name'] != config.classification:
                     continue
 
-                e['cat1'] = categories_by_tags(
-                    classification.iterchildren(), config.tags
-                )
+                e['cat1'] = categories_by_tags(classification, config.tagmap)
                 e['cat2'] = set((e['town'],))
 
             # image (download later)
