@@ -1,5 +1,6 @@
 import pytz
 import string
+import isodate
 
 from logging import getLogger
 log = getLogger('seantis.dir.events')
@@ -44,10 +45,6 @@ class IGuidleConfig(Interface):
         """
 
 
-def create_uuid(offer):
-    pass
-
-
 def parse_offset(string):
 
     if not string:
@@ -81,6 +78,10 @@ def parse_time(string):
     offset = parse_offset(string[-6:])
 
     return hour, minute, offset
+
+
+def parse_datetime(string):
+    return isodate.parse_datetime(string)
 
 
 def apply_time(datetime, timestring):
@@ -191,6 +192,25 @@ def categories_by_tags(classification, tagmap):
     return categories
 
 
+def copy(event, node, expression):
+    lines = map(string.strip, expression.split('\n'))
+
+    for line in lines:
+        if not line:
+            continue
+
+        key, children = map(string.strip, line.split('<-'))
+
+        for child in map(string.strip, children.split(',')):
+            if not hasattr(node, child):
+                continue
+
+            if key in event:
+                event[key] += '\n\n' + getattr(node, child).text
+            else:
+                event[key] = getattr(node, child).text
+
+
 def fetch_events(context, request):
 
     config = getMultiAdapter((context, request), IGuidleConfig)
@@ -203,27 +223,23 @@ def fetch_events(context, request):
         namespaces={'guidle': 'http://www.guidle.com'}
     )
 
-    def copy(event, node, expression):
-        lines = map(string.strip, expression.split('\n'))
-
-        for line in lines:
-            if not line:
-                continue
-
-            key, children = map(string.strip, line.split('<-'))
-
-            for child in map(string.strip, children.split(',')):
-                if not hasattr(node, child):
-                    continue
-
-                if key in event:
-                    event[key] += '\n\n' + getattr(node, child).text
-                else:
-                    event[key] = getattr(node, child).text
-
     for offer in offers:
 
+        last_update_of_offer = parse_datetime(
+            offer.lastUpdateDate.text
+        ).replace(
+            microsecond=0
+        )
+
+        assert last_update_of_offer, """"
+            offers should all have an update timestamp
+        """
+
         for e in events(offer):
+
+            e['fetch_id'] = config.url
+            e['last_update'] = last_update_of_offer
+
             # so far all guidle events seem to be in this region
             e['timezone'] = 'Europe/Zurich'
             e['source_id'] = offer.attrib['id']

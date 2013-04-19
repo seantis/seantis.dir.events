@@ -6,8 +6,12 @@ version = '1.0a1'
 setup(name='seantis.dir.events',
       version=version,
       description="Directory of upcoming Events",
-      long_description=open("README.md").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+      long_description="\n".join(
+          (
+              open("README.md").read(),
+              open(os.path.join("docs", "HISTORY.txt")).read()
+          )
+      ),
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
@@ -43,7 +47,7 @@ setup(name='seantis.dir.events',
           'lxml',
           'blist',
           'functools32',
-          'collective.noindexing'
+          'isodate'
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
