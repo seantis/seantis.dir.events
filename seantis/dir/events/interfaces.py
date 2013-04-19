@@ -73,7 +73,18 @@ class IEventsDirectory(IDirectory):
 # Hide all categories as they are predefined
 IEventsDirectory.setTaggedValue(
     'seantis.dir.base.omitted',
-    ['cat1', 'cat2', 'cat3', 'cat4', 'cat3_suggestions', 'cat4_suggestions']
+    [
+        'cat1',
+        'cat2',
+        'cat3',
+        'cat4',
+        'cat3_suggestions',
+        'cat4_suggestions',
+        'cat1_descriptions',
+        'cat2_descriptions',
+        'cat3_descriptions',
+        'cat4_descriptions'
+    ]
 )
 
 IEventsDirectory.setTaggedValue('seantis.dir.base.labels', {
