@@ -16,7 +16,10 @@ from OFS.interfaces import IObjectClonedEvent
 
 from seantis.dir.base import item
 from seantis.dir.base import core
-from seantis.dir.base.interfaces import IFieldMapExtender
+from seantis.dir.base.interfaces import (
+    IFieldMapExtender,
+    IDirectoryCategorized
+)
 
 from seantis.dir.events import _
 from seantis.dir.events import dates
@@ -40,6 +43,9 @@ def onClonedEvent(item, event):
 class EventsDirectoryItem(item.DirectoryItem):
 
     actions_order = ('submit', 'publish', 'deny', 'archive')
+
+    def get_parent(self):
+        return self.aq_inner.aq_parent
 
     @property
     def tz(self):
@@ -115,9 +121,11 @@ class EventsDirectoryItem(item.DirectoryItem):
         The results are sorted by value (position 0).
         """
 
+        categorized = IDirectoryCategorized(self)
+
         categories = dict()
-        categories['cat1'] = self.keywords(categories=('cat1', ))
-        categories['cat2'] = self.keywords(categories=('cat2', ))
+        categories['cat1'] = categorized.keywords(categories=('cat1', ))
+        categories['cat2'] = categorized.keywords(categories=('cat2', ))
 
         baseurl = self.get_parent().absolute_url() + '?filter=true&%s=%s'
 

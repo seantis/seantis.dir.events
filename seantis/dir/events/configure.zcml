@@ -64,5 +64,14 @@
       handler=".upgrades.setup_indexing"
       />
 
+    <genericsetup:upgradeStep
+       source="1000"
+       destination="1001"
+       title="Adds new seantis.dir.base categorized behavior"
+       description=""
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1000_to_1001"
+       />
+
 
 </configure>

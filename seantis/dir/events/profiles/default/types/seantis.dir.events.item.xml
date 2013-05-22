@@ -5,7 +5,7 @@
  <!-- Basic metadata -->
  <property name="title" i18n:translate="">Events Directory Item</property>
  <property name="description" i18n:translate=""></property>
- <property name="content_icon">document_icon.gif</property>
+ <property name="icon_expr">string:${portal_url}/document_icon.png</property>
  <property name="allow_discussion">False</property>
  <property name="global_allow">False</property>
  <property name="filter_content_types">True</property>
@@ -26,6 +26,7 @@
     <element value="collective.dexteritytextindexer.behavior.IDexterityTextIndexer"/>
     <element value="plone.app.event.dx.behaviors.IEventBasic"/>
     <element value="plone.app.event.dx.behaviors.IEventRecurrence"/>
+    <element value="seantis.dir.base.interfaces.IDirectoryCategorized" />
  </property>
  
  <!-- View information -->

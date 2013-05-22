@@ -1,7 +1,15 @@
 from Products.CMFCore.utils import getToolByName
 
-from seantis.dir.events.interfaces import IEventsDirectory
 from seantis.dir.base.interfaces import IDirectoryCatalog
+from seantis.dir.base.upgrades import (
+    add_behavior_to_item,
+    reset_images_and_attachments
+)
+
+from seantis.dir.events.interfaces import (
+    IEventsDirectory,
+    IEventsDirectoryItem
+)
 
 
 def setup_indexing(context):
@@ -22,3 +30,12 @@ def setup_indexing(context):
 
         directory_catalog = IDirectoryCatalog(directory.getObject())
         directory_catalog.reindex()
+
+
+def upgrade_1000_to_1001(context):
+    add_behavior_to_item(context, 'seantis.dir.events', IEventsDirectoryItem)
+    reset_images_and_attachments(
+        context,
+        (IEventsDirectory, IEventsDirectoryItem),
+        ['image', 'attachment_1', 'attachment_2']
+    )

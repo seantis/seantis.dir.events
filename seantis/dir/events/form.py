@@ -40,7 +40,7 @@ from plone.app.event.dx.behaviors import (
 )
 
 from seantis.dir.base import utils as base_utils
-from seantis.dir.base.interfaces import IDirectoryPage
+from seantis.dir.base.interfaces import IDirectoryPage, IDirectoryCategorized
 
 from seantis.dir.events.interfaces import (
     IEventsDirectory,
@@ -189,7 +189,10 @@ class GeneralGroup(EventBaseGroup):
 
     group_fields = OrderedDict()
     group_fields[IEventsDirectoryItem] = (
-        'title', 'short_description', 'long_description', 'cat1', 'cat2'
+        'title', 'short_description', 'long_description'
+    )
+    group_fields[IDirectoryCategorized] = (
+        'cat1', 'cat2'
     )
     group_fields[IEventBasic] = (
         'start', 'end', 'whole_day'
@@ -218,6 +221,16 @@ class GeneralGroup(EventBaseGroup):
         categories[0].field.required = True
         categories[1].widgetFactory = RadioFieldWidget
         categories[1].field.required = True
+
+        from plone.formwidget.datetime.z3cform.widget import DatetimeWidget
+        from plone.app.event.dx.behaviors import first_weekday_sun0
+
+        self.fields['start'].widgetFactory = ParameterizedWidgetFactory(
+            DatetimeWidget, first_day=first_weekday_sun0
+        )
+        self.fields['end'].widgetFactory = ParameterizedWidgetFactory(
+            DatetimeWidget, first_day=first_weekday_sun0
+        )
 
     def update_widgets(self):
         # update labels of categories
