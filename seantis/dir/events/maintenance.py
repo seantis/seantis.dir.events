@@ -56,7 +56,9 @@ def archive_past_events(directory, dryrun=False):
 
     past_events = []
 
-    for event in map(catalog.get_object, published_events):
+    for event in published_events:
+        event = event.getObject()
+
         assert event.start < past
         assert event.end < past
 

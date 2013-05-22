@@ -94,7 +94,7 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('Some Party' in browser.contents)
 
         browser = self.admin_browser
-        browser.open(baseurl + '/veranstaltungen?state=all')
+        browser.open(baseurl + '/veranstaltungen?state=submitted')
 
         self.assertTrue('Some Party' in browser.contents)
 
@@ -455,6 +455,9 @@ class BrowserTestCase(FunctionalTestCase):
 
         browser.getControl('Submit').click()
 
+        # show the submitted events
+        browser.getLink('Submitted').click()
+
         self.assertTrue('Add Test Description' in browser.contents)
         self.assertTrue('Veranstaltungen' in browser.contents)
 
@@ -506,6 +509,9 @@ class BrowserTestCase(FunctionalTestCase):
 
         # make sure to get all events
         browser.getLink('This and Next Year').click()
+
+        # with the state submitted
+        browser.getLink('Submitted').click()
 
         # take the last occurrence
         first_url = browser.getLink('Recurring', index=0).url

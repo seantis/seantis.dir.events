@@ -10,4 +10,4 @@ install:
 before_install:
     - sudo apt-get update
     - sudo apt-get install swig libssl-dev libssl0.9.8
-script: bin/test -s seantis.dir
+script: bin/test -s seantis.dir.events

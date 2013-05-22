@@ -4,37 +4,19 @@ log = logging.getLogger('seantis.dir.events')
 import imghdr
 import magic
 
-from urlparse import urlparse
-
 from z3c.form.interfaces import ActionExecutionError
 from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
 from plone.directives import form
 from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
-from zope.schema import Text, TextLine, URI, Bool
+from zope.schema import Text, TextLine, Bool
 from zope.interface import Invalid, Interface, Attribute
-from zope.schema.interfaces import InvalidURI
 
-from seantis.dir.base.schemafields import Email
+from seantis.dir.base.schemafields import Email, AutoProtocolURI
 from seantis.dir.base.interfaces import IDirectory, IDirectoryItem
 
 from seantis.dir.events import _
 from seantis.dir.events.recurrence import occurrences_over_limit
-
-
-class AutoSchemaURI(URI):
-
-    def fromUnicode(self, value):
-        value = str(value.strip())
-
-        try:
-            if not urlparse(value).scheme:
-                value = 'http://' + value
-        except:
-            log.exception('invalid url %s' % value)
-            raise InvalidURI(value)
-
-        return super(AutoSchemaURI, self).fromUnicode(value)
 
 
 class ITokenAccess(Interface):
@@ -51,8 +33,10 @@ class ITokenAccess(Interface):
 
 class IActionGuard(Interface):
 
-    def allow_action(self, action):
-        "Return true if the given workflow_events action is allowed"
+    def allow_action(self, action, item):
+        """Return true if the given workflow_events action is allowed.
+        The item can currently be a brain or not which is fugly, so maybe
+        don't use for now and wait for a better implementation."""
 
 
 class IExternalEvent(Interface):
@@ -69,26 +53,38 @@ class IEventsDirectory(IDirectory):
     """Extends the seantis.dir.base.directory.IDirectory"""
 
     image = NamedImage(
-            title=_(u'Image'),
-            required=False,
-            default=None
-        )
+        title=_(u'Image'),
+        required=False,
+        default=None
+    )
 
     searchable('terms')
     terms = Text(
-            title=_(u'Terms and Conditions'),
-            description=_(
-                u'If entered, the terms and conditions have '
-                u'to be agreed to by anyone submitting an event.'
-            ),
-            required=False,
-            default=None
-        )
+        title=_(u'Terms and Conditions'),
+        description=_(
+            u'If entered, the terms and conditions have '
+            u'to be agreed to by anyone submitting an event.'
+        ),
+        required=False,
+        default=None
+    )
     form.widget(terms=WysiwygFieldWidget)
 
 # Hide all categories as they are predefined
-IEventsDirectory.setTaggedValue('seantis.dir.base.omitted',
-    ['cat1', 'cat2', 'cat3', 'cat4', 'cat3_suggestions', 'cat4_suggestions']
+IEventsDirectory.setTaggedValue(
+    'seantis.dir.base.omitted',
+    [
+        'cat1',
+        'cat2',
+        'cat3',
+        'cat4',
+        'cat3_suggestions',
+        'cat4_suggestions',
+        'cat1_descriptions',
+        'cat2_descriptions',
+        'cat3_descriptions',
+        'cat4_descriptions'
+    ]
 )
 
 IEventsDirectory.setTaggedValue('seantis.dir.base.labels', {
@@ -170,7 +166,7 @@ class IEventsDirectoryItem(IDirectoryItem):
     )
 
     searchable('event_url')
-    event_url = AutoSchemaURI(
+    event_url = AutoProtocolURI(
         title=_(u'Event Website'),
         required=False
     )
@@ -206,27 +202,27 @@ class IEventsDirectoryItem(IDirectoryItem):
     )
 
     searchable('registration')
-    registration = AutoSchemaURI(
+    registration = AutoProtocolURI(
         title=_(u'Ticket / Registration Website'),
         required=False
     )
 
 
 # don't show these fields as they are not used
-IEventsDirectoryItem.setTaggedValue('seantis.dir.base.omitted',
-    ['cat3', 'cat4', 'description']
+IEventsDirectoryItem.setTaggedValue(
+    'seantis.dir.base.omitted', ['cat3', 'cat4', 'description']
 )
 
 # define the event items order
-IEventsDirectoryItem.setTaggedValue('seantis.dir.base.order',
+IEventsDirectoryItem.setTaggedValue(
+    'seantis.dir.base.order',
     ['title', 'cat1', 'cat2', 'short_description', 'long_description',
      'IEventBasic.start', 'IEventBasic.end', 'IEventBasic.whole_day',
      'IEventBasic.timezone', 'IEventRecurrence.recurrence',
      'image', 'attachment_1', 'attachment_2', 'locality', 'street',
      'housenumber', 'zipcode', 'town', 'event_url', 'organizer',
      'contact_name', 'contact_email', 'contact_phone', 'prices',
-     'registration', '*'
-    ]
+     'registration', '*']
 )
 
 
@@ -241,7 +237,8 @@ def validate_event_submission(data):
 
     if occurrences_over_limit(data['recurrence'], data['start'], limit):
         raise ActionExecutionError(Invalid(
-            _(u'You may not add more than ${max} occurences',
+            _(
+                u'You may not add more than ${max} occurences',
                 mapping={'max': limit}
             )
         ))
@@ -267,9 +264,12 @@ def validate_suggestion(value):
 def check_filesize(value, size_in_mb, type):
 
     if value.getSize() > size_in_mb * 1024 ** 2:
-        raise Invalid(_(u'${type} bigger than ${max} Megabyte are not allowed',
-            mapping={'max': size_in_mb, 'type': type}
-        ))
+        raise Invalid(
+            _(
+                u'${type} bigger than ${max} Megabyte are not allowed',
+                mapping={'max': size_in_mb, 'type': type}
+            )
+        )
 
 
 # Ensure that the uploaded image at least has an image header, a check
@@ -301,9 +301,12 @@ def validate_attachment(value):
 
     if not filetype in mime_whitelist:
         print filetype
-        raise Invalid(_(u'Unsupported fileformat. Supported is ${formats}',
-            mapping={'formats': u','.join(sorted(mime_whitelist.values()))}
-        ))
+        raise Invalid(
+            _(
+                u'Unsupported fileformat. Supported is ${formats}',
+                mapping={'formats': u','.join(sorted(mime_whitelist.values()))}
+            )
+        )
 
     check_filesize(value, 10, _(u'Attachments'))
 
@@ -319,7 +322,7 @@ def validate_terms_and_conditions(agreed):
     if not agreed:
         raise Invalid(
             _(
-              u'You have to agree to the terms '
-              u'and conditions to submit this event'
+                u'You have to agree to the terms '
+                u'and conditions to submit this event'
             )
         )

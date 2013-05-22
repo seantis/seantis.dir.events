@@ -54,4 +54,15 @@
         for="Products.CMFPlone.interfaces.IPloneSiteRoot" 
         />
 
+    <!-- Upgrades -->
+    <genericsetup:upgradeStep
+      source="*"
+      destination="1000"
+      title="Setup new indexing"
+      description=""
+      profile="seantis.dir.events:default"
+      handler=".upgrades.setup_indexing"
+      />
+
+
 </configure>

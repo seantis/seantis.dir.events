@@ -47,6 +47,13 @@ def to_utc(date):
     return as_timezone(date, 'utc')
 
 
+def delete_timezone(date):
+    """ Converts the timezone aware date to utc and removes the tzinfo. """
+    assert date.tzinfo
+
+    return to_utc(date).replace(tzinfo=None)
+
+
 def as_timezone(date, timezone):
     """ Converts date to the given timezone, making it timezone aware if not
     already. Use this instead of date.astimezone, since said function does
@@ -67,6 +74,10 @@ def is_whole_day(start, end):
         end.minute == 59,
         end.second == 59
     ))
+
+
+def days_between(start, end):
+    return [(start + timedelta(days=d)) for d in xrange((end - start).days)]
 
 
 def split_days_count(start, end):

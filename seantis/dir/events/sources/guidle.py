@@ -1,5 +1,6 @@
 import pytz
 import string
+import isodate
 
 from logging import getLogger
 log = getLogger('seantis.dir.events')
@@ -22,6 +23,14 @@ class IGuidleConfig(Interface):
 
     url = Attribute("Guidle URL to download from")
 
+    classification = Attribute(
+        "Name of classification to use (guidle:classification name)"
+    )
+
+    tagmap = Attribute(
+        "Dictionary mapping tags to categories (guidle:classification tags)"
+    )
+
     def on_event(root, offer, event):
         """ Called before an event is yielded to the source. Root is the
         xml root, offer is the xml offer element and event is the dictionary
@@ -34,10 +43,6 @@ class IGuidleConfig(Interface):
         This function may then alter the event.
 
         """
-
-
-def create_uuid(offer):
-    pass
 
 
 def parse_offset(string):
@@ -73,6 +78,10 @@ def parse_time(string):
     offset = parse_offset(string[-6:])
 
     return hour, minute, offset
+
+
+def parse_datetime(string):
+    return isodate.parse_datetime(string)
 
 
 def apply_time(datetime, timestring):
@@ -172,6 +181,36 @@ def events(offer):
         yield event
 
 
+def categories_by_tags(classification, tagmap):
+    categories = set()
+
+    for tagname in (c.attrib['name'] for c in classification.iterchildren()):
+        for key in tagmap:
+            if tagname.startswith(key):
+                categories.add(tagmap[key])
+
+    return categories
+
+
+def copy(event, node, expression):
+    lines = map(string.strip, expression.split('\n'))
+
+    for line in lines:
+        if not line:
+            continue
+
+        key, children = map(string.strip, line.split('<-'))
+
+        for child in map(string.strip, children.split(',')):
+            if not hasattr(node, child):
+                continue
+
+            if key in event:
+                event[key] += '\n\n' + getattr(node, child).text
+            else:
+                event[key] = getattr(node, child).text
+
+
 def fetch_events(context, request):
 
     config = getMultiAdapter((context, request), IGuidleConfig)
@@ -179,31 +218,28 @@ def fetch_events(context, request):
     xml = urlopen(config.url).read()
     root = objectify.fromstring(xml)
 
-    offers = root.xpath('*//guidle:offer',
+    offers = root.xpath(
+        '*//guidle:offer',
         namespaces={'guidle': 'http://www.guidle.com'}
     )
 
-    def copy(event, node, expression):
-        lines = map(string.strip, expression.split('\n'))
-
-        for line in lines:
-            if not line:
-                continue
-
-            key, children = map(string.strip, line.split('<-'))
-
-            for child in map(string.strip, children.split(',')):
-                if not hasattr(node, child):
-                    continue
-
-                if key in event:
-                    event[key] += '\n\n' + getattr(node, child).text
-                else:
-                    event[key] = getattr(node, child).text
-
     for offer in offers:
 
+        last_update_of_offer = parse_datetime(
+            offer.lastUpdateDate.text
+        ).replace(
+            microsecond=0
+        )
+
+        assert last_update_of_offer, """"
+            offers should all have an update timestamp
+        """
+
         for e in events(offer):
+
+            e['fetch_id'] = config.url
+            e['last_update'] = last_update_of_offer
+
             # so far all guidle events seem to be in this region
             e['timezone'] = 'Europe/Zurich'
             e['source_id'] = offer.attrib['id']
@@ -236,7 +272,16 @@ def fetch_events(context, request):
                 contact_phone   <- telephone_1
             """)
 
-            # image
+            # categories
+            for classification in offer.classifications.iterchildren():
+
+                if classification.attrib['name'] != config.classification:
+                    continue
+
+                e['cat1'] = categories_by_tags(classification, config.tagmap)
+                e['cat2'] = set((e['town'],))
+
+            # image (download later)
             try:
                 for image in list(offer.offerDetail.images.iterchildren())[:1]:
                     copy(e, image, "image <- url")

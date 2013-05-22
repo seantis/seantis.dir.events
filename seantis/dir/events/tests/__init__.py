@@ -12,8 +12,10 @@ from plone.testing.z2 import Browser
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
 
+from zope.component import getAdapter
 from zope.component.hooks import getSite
 
+from seantis.dir.base.interfaces import IDirectoryCatalog
 from seantis.dir.events.tests.layer import INTEGRATION_TESTING
 from seantis.dir.events.tests.layer import FUNCTIONAL_TESTING
 
@@ -31,6 +33,7 @@ class IntegrationTestCase(unittest.TestCase):
         self.directory = createContentInContainer(
             getSite(), 'seantis.dir.events.directory'
         )
+        self.catalog = getAdapter(self.directory, IDirectoryCatalog)
 
         self.directory.manage_setLocalRoles(testing.TEST_USER_ID, ('Manager',))
         self.logout()

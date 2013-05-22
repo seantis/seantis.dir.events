@@ -6,8 +6,12 @@ version = '1.0a1'
 setup(name='seantis.dir.events',
       version=version,
       description="Directory of upcoming Events",
-      long_description=open("README.md").read() + "\n" +
-                       open(os.path.join("docs", "HISTORY.txt")).read(),
+      long_description="\n".join(
+          (
+              open("README.md").read(),
+              open(os.path.join("docs", "HISTORY.txt")).read()
+          )
+      ),
       # Get more strings from
       # http://pypi.python.org/pypi?:action=list_classifiers
       classifiers=[
@@ -34,13 +38,16 @@ setup(name='seantis.dir.events',
           'collective.testcaselayer',
           'collective.dexteritytextindexer',
           'collective.z3cform.mapwidget',
-          'seantis.dir.base',
+          'seantis.dir.base>=1.3',
           'zope.proxy',
           'pytz',
           'python-magic',
           'mock',
           'M2Crypto',
-          'lxml'
+          'lxml',
+          'blist',
+          'functools32',
+          'isodate'
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
