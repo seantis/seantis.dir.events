@@ -6,8 +6,10 @@ from plone.app.event.ical import construct_calendar
 from plone.memoize import instance
 
 from zope.annotation.interfaces import IAnnotations
-from zope.app.container.interfaces import IObjectMovedEvent
-from zope.lifecycleevent.interfaces import IObjectModifiedEvent
+from zope.lifecycleevent.interfaces import (
+    IObjectMovedEvent,
+    IObjectModifiedEvent
+)
 from Products.CMFCore.interfaces import IActionSucceededEvent
 
 from seantis.dir.base.catalog import DirectoryCatalog

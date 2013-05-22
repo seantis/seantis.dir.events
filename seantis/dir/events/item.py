@@ -135,15 +135,6 @@ class EventsDirectoryItem(item.DirectoryItem):
         return sorted(tags, key=lambda t: t[0])
 
 
-class EventsDirectoryItemViewlet(grok.Viewlet):
-    grok.context(IEventsDirectoryItem)
-    grok.name('seantis.dir.events.item.detail')
-    grok.require('zope2.View')
-    grok.viewletmanager(item.DirectoryItemViewletManager)
-
-    template = grok.PageTemplateFile('templates/listitem.pt')
-
-
 class DoActionView(grok.View):
     """ Pretty much like modify_content_status, but with
     better messages and redirection to the directory. """

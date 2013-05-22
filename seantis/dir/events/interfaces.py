@@ -13,7 +13,11 @@ from zope.schema import Text, TextLine, Bool
 from zope.interface import Invalid, Interface, Attribute
 
 from seantis.dir.base.schemafields import Email, AutoProtocolURI
-from seantis.dir.base.interfaces import IDirectory, IDirectoryItem
+from seantis.dir.base.interfaces import (
+    IDirectory,
+    IDirectoryItem,
+    IDirectoryItemCategories
+)
 
 from seantis.dir.events import _
 from seantis.dir.events.recurrence import occurrences_over_limit
@@ -245,8 +249,8 @@ def validate_event_submission(data):
 
 
 # force the user to select at least one value for each category
-@form.validator(field=IEventsDirectoryItem['cat1'])
-@form.validator(field=IEventsDirectoryItem['cat2'])
+@form.validator(field=IDirectoryItemCategories['cat1'])
+@form.validator(field=IDirectoryItemCategories['cat2'])
 def validate_category(value):
     if not value:
         raise Invalid(_(u'Please choose at least one category'))
