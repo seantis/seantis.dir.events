@@ -281,9 +281,6 @@ class ICalendarEventItemComponent(ICalendarEventComponent, grok.Adapter):
 
     def get_coordinates(self):
 
-        if not self.context.has_mapdata:
-            return None
-
         coordinates = self.context.get_coordinates()
 
         if not len(coordinates) == 2:
