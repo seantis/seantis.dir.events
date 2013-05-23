@@ -39,6 +39,9 @@ from plone.app.event.dx.behaviors import (
     IEventRecurrence
 )
 
+from plone.formwidget.datetime.z3cform.widget import DatetimeWidget
+from plone.app.event.dx.behaviors import first_weekday_sun0
+
 from seantis.dir.base import utils as base_utils
 from seantis.dir.base.interfaces import IDirectoryPage, IDirectoryCategorized
 
@@ -222,9 +225,6 @@ class GeneralGroup(EventBaseGroup):
         categories[1].widgetFactory = RadioFieldWidget
         categories[1].field.required = True
 
-        from plone.formwidget.datetime.z3cform.widget import DatetimeWidget
-        from plone.app.event.dx.behaviors import first_weekday_sun0
-
         self.fields['start'].widgetFactory = ParameterizedWidgetFactory(
             DatetimeWidget, first_day=first_weekday_sun0
         )
@@ -367,6 +367,8 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
     grok.context(IEventsDirectory)
 
     template = ViewPageTemplateFile('templates/form.pt')
+
+    portal_type = 'seantis.dir.events.item'
 
     groups = (GeneralGroup, LocationGroup, MapGroup, InformationGroup)
     enable_form_tabbing = False
