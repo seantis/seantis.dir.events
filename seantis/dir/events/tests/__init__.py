@@ -1,16 +1,15 @@
-import os
 import unittest2 as unittest
 
 from datetime import datetime, timedelta
-from tempfile import NamedTemporaryFile
 
 from AccessControl import getSecurityManager
 from plone.testing import z2
 from plone.dexterity.utils import createContentInContainer
 from plone.app import testing
-from plone.testing.z2 import Browser
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
+
+from collective.betterbrowser import new_browser
 
 from zope.component import getAdapter
 from zope.component.hooks import getSite
@@ -87,70 +86,6 @@ class IntegrationTestCase(unittest.TestCase):
         return self.has_permission(obj, permissions.View)
 
 
-class BetterBrowser(Browser):
-
-    portal = None
-
-    def login(self, user, password):
-        self.open(self.portal.absolute_url() + "/login_form")
-        self.getControl(name='__ac_name').value = user
-        self.getControl(name='__ac_password').value = password
-        self.getControl(name='submit').click()
-
-        assert 'logout' in self.contents
-
-    def logout(self):
-        self.open(self.portal.absolute_url() + "/logout")
-
-        assert 'logged out' in self.contents
-
-    def login_admin(self):
-        self.login('admin', 'secret')
-
-    def login_testuser(self):
-        self.login('test-user', 'secret')
-
-    def assert_http_exception(self, url, exception):
-        self.portal.error_log._ignored_exceptions = ()
-        self.portal.acl_users.credentials_cookie_auth.login_path = ""
-
-        expected = False
-        try:
-            self.open(url)
-        except Exception, e:
-
-            # zope does not always raise unathorized exceptions with the
-            # correct class signature, so we need to do this thing:
-            expected = e.__repr__().startswith(exception)
-
-            if not expected:
-                raise
-
-        assert expected
-
-    def assert_unauthorized(self, url):
-        self.assert_http_exception(url, 'Unauthorized')
-
-    def assert_notfound(self, url):
-        self.assert_http_exception(url, 'NotFound')
-
-    def show(self):
-        """ Opens the current contents in the default system browser """
-        tempfile = NamedTemporaryFile(delete=False)
-        tempfile.write(self.contents)
-        tempfile.close()
-
-        os.rename(tempfile.name, tempfile.name + '.html')
-        os.system("open " + tempfile.name + '.html')
-
-    def set_date(self, widget, date):
-        self.getControl(name='%s-year' % widget).value = str(date.year)
-        self.getControl(name='%s-month' % widget).value = [str(date.month)]
-        self.getControl(name='%s-day' % widget).value = str(date.day)
-        self.getControl(name='%s-hour' % widget).value = str(date.hour)
-        self.getControl(name='%s-minute' % widget).value = str(date.minute)
-
-
 class FunctionalTestCase(IntegrationTestCase):
 
     layer = FUNCTIONAL_TESTING
@@ -160,21 +95,7 @@ class FunctionalTestCase(IntegrationTestCase):
         self.portal = self.layer['portal']
 
     def new_browser(self):
-        browser = BetterBrowser(self.app)
-        browser.portal = self.portal
-        browser.handleErrors = False
-
-        self.portal.error_log._ignored_exceptions = ()
-
-        def raising(self, info):
-            import traceback
-            traceback.print_tb(info[2])
-            print info[1]
-
-        from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
-        SiteErrorLog.raising = raising
-
-        return browser
+        return new_browser(self.layer)
 
     def tearDown(self):
         pass

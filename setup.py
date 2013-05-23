@@ -50,7 +50,8 @@ setup(name='seantis.dir.events',
           'blist',
           'functools32',
           'isodate',
-          'icalendar'
+          'icalendar',
+          'collective.betterbrowser'
       ],
       entry_points="""
       [z3c.autoinclude.plugin]
