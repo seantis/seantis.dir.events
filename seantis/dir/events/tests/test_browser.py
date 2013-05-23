@@ -439,7 +439,6 @@ class BrowserTestCase(FunctionalTestCase):
         browser.set_date('form.widgets.start', start)
         browser.set_date('form.widgets.end', end)
 
-        browser.show()
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
 

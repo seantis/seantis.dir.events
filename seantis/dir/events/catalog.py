@@ -462,6 +462,6 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         elif filter:
             items = super(EventsDirectoryCatalog, self).filter(filter)
         else:
-            items = super(EventsDirectoryCatalog, self).all_items()
+            items = super(EventsDirectoryCatalog, self).items()
 
         return construct_calendar(self.directory, items)
