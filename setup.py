@@ -29,7 +29,7 @@ setup(name='seantis.dir.events',
       zip_safe=False,
       install_requires=[
           'setuptools',
-          'Plone',
+          'Plone>=4.3',
           'python-dateutil',
           'plone.app.event[ploneintegration, dexterity]',
           'plone.app.dexterity',
