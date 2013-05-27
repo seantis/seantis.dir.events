@@ -130,8 +130,9 @@ class EventsDirectoryItem(item.DirectoryItem):
         baseurl = self.get_parent().absolute_url() + '?filter=true&%s=%s'
 
         tags = list()
-        for key, categories in categories.items():
-            for tag in categories:
+
+        for key in sorted(categories):
+            for tag in sorted(categories[key]):
                 if not tag:
                     continue
 
@@ -140,7 +141,7 @@ class EventsDirectoryItem(item.DirectoryItem):
                     baseurl % (key, urllib.quote(tag.encode('utf-8')))
                 ))
 
-        return sorted(tags, key=lambda t: t[0])
+        return tags
 
 
 class DoActionView(grok.View):
