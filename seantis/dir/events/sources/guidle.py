@@ -1,12 +1,10 @@
-import pytz
 import string
-import isodate
 
 from logging import getLogger
 log = getLogger('seantis.dir.events')
 
-from datetime import datetime, timedelta
-from dateutil.tz import tzoffset
+from datetime import timedelta
+from dateutil.parser import parse
 
 from lxml import objectify
 from urllib import urlopen
@@ -43,58 +41,6 @@ class IGuidleConfig(Interface):
         This function may then alter the event.
 
         """
-
-
-def parse_offset(string):
-
-    if not string:
-        return 0
-
-    sign = string[:1]
-    assert sign in ('+', '-')
-
-    tz = string.replace(sign, '')
-
-    hours, minutes = map(int, tz.split(':'))
-    seconds = hours * 60 * 60 + minutes * 60
-
-    if sign == '+':
-        return seconds
-    else:
-        return -seconds
-
-
-def parse_date(string):
-    date, tz = string[:10], string[10:]
-    date = datetime.strptime(date, '%Y-%m-%d')
-    date = date.replace(tzinfo=tzoffset(None, parse_offset(tz)))
-
-    return date.astimezone(pytz.timezone('utc'))
-
-
-def parse_time(string):
-    time = string.replace(string[-6:], '')
-    hour, minute = map(int, time.split(':')[:2])
-    offset = parse_offset(string[-6:])
-
-    return hour, minute, offset
-
-
-def parse_datetime(string):
-    return isodate.parse_datetime(string)
-
-
-def apply_time(datetime, timestring):
-    assert datetime.tzinfo == pytz.timezone('utc')
-
-    hour, minute, offset = parse_time(timestring)
-
-    datetime = datetime.astimezone(tzoffset(None, offset))
-
-    datetime += timedelta(seconds=hour * 60 * 60)
-    datetime += timedelta(seconds=minute * 60)
-
-    return datetime.astimezone(pytz.timezone('utc'))
 
 
 def generate_recurrence(date):
@@ -147,17 +93,17 @@ def events(offer):
 
         event['id'] = offer.attrib['id']
         event['recurrence'] = generate_recurrence(date)
-        event['start'] = parse_date(start)
+        event['start'] = parse(start)
 
         # the end date of recurring events seems to be the date of the
         # last occurrence, which makes sense since guidle only seems
         # to support daily occurences by weekday
         if end and not event['recurrence']:
-            event['end'] = parse_date(end)
+            event['end'] = parse(end)
         else:
             # if a recurrence exists it needs to be limited by the end date
             if event['recurrence']:
-                until = parse_date(end) + timedelta(days=1)
+                until = parse(end) + timedelta(days=1)
                 event['recurrence'] = limit_recurrence(
                     event['recurrence'], until
                 )
@@ -168,10 +114,10 @@ def events(offer):
             event['whole_day'] = True
 
         if start_time:
-            event['start'] = apply_time(event['start'], start_time)
+            event['start'] = parse(start_time, default=event['start'])
 
         if end_time:
-            event['end'] = apply_time(event['end'], end_time)
+            event['end'] = parse(end_time, default=event['end'])
 
         # if the event ends before it starts it means that we have a range
         # like this: 20:00 - 00:30, so the event really ends the next day
@@ -225,7 +171,7 @@ def fetch_events(context, request):
 
     for offer in offers:
 
-        last_update_of_offer = parse_datetime(
+        last_update_of_offer = parse(
             offer.lastUpdateDate.text
         ).replace(
             microsecond=0
@@ -251,6 +197,7 @@ def fetch_events(context, request):
                 long_description    <- longDescription, openingHours
                 prices              <- priceInformation
                 event_url           <- externalLink
+                location_url        <- homepage
                 registration        <- ticketingUrl
             """)
 

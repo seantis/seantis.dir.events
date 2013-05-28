@@ -22,7 +22,10 @@ from plone.dexterity.utils import createContentInContainer
 from zope.interface import alsoProvides
 from zope.annotation.interfaces import IAnnotations
 
-from seantis.dir.base.interfaces import IDirectoryCatalog
+from seantis.dir.base.interfaces import (
+    IDirectoryCatalog,
+    IDirectoryCategorized
+)
 from seantis.dir.base.directory import DirectoryCatalogMixin
 from seantis.dir.events.interfaces import (
     IEventsDirectory,
@@ -247,6 +250,15 @@ class FetchView(grok.View, DirectoryCatalogMixin):
             if lon:
                 del event['longitude']
 
+            # so are categories
+            cats = map(event.get, ('cat1', 'cat2'))
+            del event['cat1']
+            del event['cat2']
+
+            assert 'cat3' not in event and 'cat4' not in event, """
+                unsupported categories
+            """
+
             obj = createContentInContainer(
                 self.context, 'seantis.dir.events.item',
                 checkConstraints=False,
@@ -258,6 +270,10 @@ class FetchView(grok.View, DirectoryCatalogMixin):
                 IWriteGeoreferenced(obj).setGeoInterface(
                     'Point', map(float, (lon, lat))
                 )
+
+            # followed by the categories
+            IDirectoryCategorized(obj).cat1 = list(cats[0])
+            IDirectoryCategorized(obj).cat2 = list(cats[1])
 
             workflowTool.doActionFor(obj, 'submit')
             workflowTool.doActionFor(obj, 'publish')
