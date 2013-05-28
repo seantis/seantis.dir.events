@@ -136,7 +136,9 @@
               <span tal:content="o/town"></span>
             </div>
             <div class="location-url" tal:condition="o/location_url">
-              <a tal:content="o/location_url" tal:attributes="href o/location_url"></a>
+              <span class="link-external">
+                <a tal:content="o/location_url" tal:attributes="href o/location_url"></a>
+              </span>
             </div>
           </div>
 
