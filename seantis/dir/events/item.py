@@ -336,11 +336,11 @@ class ExtendedDirectoryItemFieldMap(grok.Adapter):
         itemmap.interface = IEventsDirectoryItem
 
         extended = [
-            "start", "end", "timezone", "whole_day", "recurrence",
-            "short_description", "long_description", "locality", "street",
-            "housenumber", "zipcode", "town", "event_url", "organizer",
-            "contact_name", "contact_email", "contact_phone", "prices",
-            "registration", "submitter", "submitter_email"
+            'start', 'end', 'timezone', 'whole_day', 'recurrence',
+            'short_description', 'long_description', 'locality', 'street',
+            'housenumber', 'zipcode', 'town', 'location_url', 'event_url',
+            'organizer', 'contact_name', 'contact_email', 'contact_phone',
+            'prices', 'registration', 'submitter', 'submitter_email'
         ]
 
         boolwrap = lambda v: v and '1' or ''

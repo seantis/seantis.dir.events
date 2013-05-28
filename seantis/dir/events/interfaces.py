@@ -87,7 +87,8 @@ IEventsDirectory.setTaggedValue(
         'cat1_descriptions',
         'cat2_descriptions',
         'cat3_descriptions',
-        'cat4_descriptions'
+        'cat4_descriptions',
+        'allow_custom_categories'  # always locked
     ]
 )
 
@@ -169,6 +170,12 @@ class IEventsDirectoryItem(IDirectoryItem):
         required=False
     )
 
+    searchable('location_url')
+    location_url = AutoProtocolURI(
+        title=_(u'Location Website'),
+        required=False
+    )
+
     searchable('event_url')
     event_url = AutoProtocolURI(
         title=_(u'Event Website'),
@@ -224,9 +231,9 @@ IEventsDirectoryItem.setTaggedValue(
      'IEventBasic.start', 'IEventBasic.end', 'IEventBasic.whole_day',
      'IEventBasic.timezone', 'IEventRecurrence.recurrence',
      'image', 'attachment_1', 'attachment_2', 'locality', 'street',
-     'housenumber', 'zipcode', 'town', 'event_url', 'organizer',
-     'contact_name', 'contact_email', 'contact_phone', 'prices',
-     'registration', '*']
+     'housenumber', 'zipcode', 'town', 'location_url', 'event_url',
+     'organizer', 'contact_name', 'contact_email', 'contact_phone',
+     'prices', 'registration', '*']
 )
 
 

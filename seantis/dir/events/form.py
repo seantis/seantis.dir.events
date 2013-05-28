@@ -264,7 +264,7 @@ class LocationGroup(EventBaseGroup):
 
     group_fields = OrderedDict()
     group_fields[IEventsDirectoryItem] = (
-        'locality', 'street', 'housenumber', 'zipcode', 'town'
+        'locality', 'street', 'housenumber', 'zipcode', 'town', 'location_url'
     )
 
 

@@ -135,6 +135,9 @@
               <span tal:content="o/zipcode"></span>
               <span tal:content="o/town"></span>
             </div>
+            <div class="location-url" tal:condition="o/location_url">
+              <a tal:content="o/location_url" tal:attributes="href o/location_url"></a>
+            </div>
           </div>
 
           <div class="organizer" tal:condition="python: any((o.organizer, o.event_url, o.contact_name, o.contact_email, o.contact_phone))">
