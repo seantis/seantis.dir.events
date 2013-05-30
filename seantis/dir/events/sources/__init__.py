@@ -73,7 +73,9 @@ class FetchView(grok.View, DirectoryCatalogMixin):
     def enable_indexing(self):
         self.context._v_fetching = False
 
-    def fetch(self, source, function, limit=None, reimport=False):
+    def fetch(
+        self, source, function, limit=None, reimport=False, source_ids=[]
+    ):
 
         start = datetime.now()
         log.info('begin fetching events for %s' % source)
@@ -81,7 +83,9 @@ class FetchView(grok.View, DirectoryCatalogMixin):
         self.disable_indexing()
 
         try:
-            imported = self._fetch(source, function, limit, reimport)
+            imported = self._fetch(
+                source, function, limit, reimport, source_ids
+            )
         finally:
             self.enable_indexing()
 
@@ -90,6 +94,8 @@ class FetchView(grok.View, DirectoryCatalogMixin):
         # reindex in the ZCatalog
         for event in imported:
             event.reindexObject()
+
+        self.context.reindexObject()
 
         # reindex in the Events Catalog
         IDirectoryCatalog(self.context).reindex(imported)
@@ -123,7 +129,9 @@ class FetchView(grok.View, DirectoryCatalogMixin):
         annotations = IAnnotations(self.context)
         annotations[self.annotation_key] = isodate.datetime_isoformat(dt)
 
-    def _fetch(self, source, function, limit=None, reimport=False):
+    def _fetch(
+        self, source, function, limit=None, reimport=False, source_ids=[]
+    ):
 
         events = sorted(
             function(self.context, self.request),
@@ -165,6 +173,9 @@ class FetchView(grok.View, DirectoryCatalogMixin):
 
             if limit_reached_id and limit_reached_id != event['source_id']:
                 break
+
+            if source_ids and event['source_id'] not in source_ids:
+                continue
 
             assert 'last_update' in event, """
                 Each event needs a last_update datetime info which is used
@@ -212,8 +223,8 @@ class FetchView(grok.View, DirectoryCatalogMixin):
             # deleting first, adding second
 
             if event['source_id'] in existing:
-                ids = [e.id for e in existing[event['source_id']]]
-                self.context.manage_delObjects(ids)
+                for e in existing[event['source_id']]:
+                    self.context._delObject(e.id, suppress_events=True)
                 del existing[event['source_id']]
 
             # image and attachments are downloaded
@@ -301,13 +312,8 @@ class FetchView(grok.View, DirectoryCatalogMixin):
 
     def existing_events(self, source):
 
-        catalog = IDirectoryCatalog(self.context)
-        query = catalog.catalog
-
-        candidates = query(
-            path={'query': self.context.getPhysicalPath(), 'depth': 2},
-            object_provides=IExternalEvent.__identifier__
-        )
+        catalog = getToolByName(self.context, 'portal_catalog')
+        candidates = catalog(object_provides=IExternalEvent.__identifier__)
 
         events = []
         for obj in (c.getObject() for c in candidates):
@@ -336,8 +342,11 @@ class FetchView(grok.View, DirectoryCatalogMixin):
 
         limit = int(self.request.get('limit', 0))
         reimport = bool(self.request.get('reimport', False))
+        ids = self.request.get('source-ids', '').split(',')
 
         self.source = source
-        self.fetch(source, sources[source], limit, reimport)
+        self.fetch(
+            source, sources[source], limit, reimport, all(ids) and ids or None
+        )
 
         IDirectoryCatalog(self.context).reindex()
