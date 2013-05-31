@@ -1,0 +1,170 @@
+/* Sunburst Styles for Seantis Dir Events */
+
+/* directory search header */
+#directorySearch {
+    background-color: #efefef;
+    border: none;
+    border-radius: 3px;
+}
+
+#directorySearch label {
+    color: #555;
+    font-weight: normal   
+}
+
+/* header description */
+#landingPageIntro {
+    margin: 10px 0 0 0;
+    font-size: 1.2em;  
+}
+
+/* directory content block */
+#directoryInfo {
+    margin: 10px 0 0 0;   
+}
+
+/* event directory columns */
+.event-navigation, #directoryResultList, .event-sidebar {
+    float: left;
+    box-sizing: border-box;
+}
+
+.event-navigation, #directoryResultList {
+    padding-right: 25px;
+}
+
+.event-navigation {
+    width: 20%;
+}
+
+#directoryResultList {
+    width: 45%;
+}
+
+.event-sidebar {
+    width: 35%;   
+}
+
+@media (max-width: 900px) {
+    .event-navigation, #directoryResultList, .event-sidebar {
+         float: none;
+         width: 100%;
+         padding: 0;  
+    }
+}
+
+/* event navigation */
+.event-navigation h3 {
+    color: black;
+    margin-bottom: 2px;
+}
+
+.event-navigation ul {
+    margin: 0 !important;
+    margin-bottom: 5px !important;
+}
+
+.event-navigation ul li {
+    margin: 0 !important;
+    list-style: none;
+}
+
+/* event navigation links */
+.event-navigation ul a {
+    border-bottom: none !important; 
+    color: black !important;
+    display: block;
+    background-color: #efefef;
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+#content .event-navigation ul a:hover,
+.event-navigation ul a.selected {
+    background-color: #205c90;
+    color: white !important;
+}
+
+/* event results */
+.directoryResult {
+    border: none !important;
+}
+
+.directoryMarker {
+    right: 0;   
+}
+
+.eventgroup-title {
+    margin-top: 6px;
+    margin-bottom: 2px !important;
+}
+
+/* single result */
+.eventgroup-title {
+    font-size: 1.4em;
+    color: #205c90;
+    font-weight: 100;
+    text-align: right;
+    border: none !important;
+    border-bottom: 1px solid #ccc !important;
+    padding-bottom: 2px;
+}
+
+.event-text h3 {
+    font-size: 1.5em;   
+    font-weight: normal;
+}
+
+.event-text {
+   
+    color: #333;
+    font-size: 12px;
+}
+
+.event-image {
+    float: right;
+    margin: 7px 50px;
+    border: 1px solid #ccc;
+    background-color: #efefef;
+    padding: 15px;
+}
+
+/* directory map */
+#directoryResultMap {
+    margin-top: 26px;   
+}
+
+/* tags */
+#content .eventtags a,
+#content .eventtags a:hover {
+    border: none;
+}
+
+.eventtag {
+    background-color: #efefef;
+    padding: 2px 4px;
+    border-radius: 3px;   
+}
+
+/* event time */
+.timerange {
+    float: right;
+    margin-right: 50px;
+    color: #666;   
+}
+
+/* submit event */
+.your-event {
+    font-size: 1.8em;
+    margin-top: 20px;
+    padding: 30px;
+    background-color: #0383be;
+    color: white;
+}
+
+#content .your-event a,
+#content .your-event a:hover {
+    color: white;
+    border-color: white;
+    border-width: 0 0 4px 0;
+}
