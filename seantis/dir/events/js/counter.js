@@ -11,6 +11,11 @@ var inputtext_countdown = function($, input, label, template, maxlength) {
     @maxlength  the maximum length that should be enforced
     */
 
+    // requires jquery.template to run
+    if (typeof($.template) == "undefined") {
+        return;
+    }
+
     var $input = $(input);
     var $label = $(label);
     var initial_text = $label.text();
@@ -23,7 +28,7 @@ var inputtext_countdown = function($, input, label, template, maxlength) {
 
     var gettext = function(length) {
         if (length === 0) {
-            return initial_text;    
+            return initial_text;
         } else {
             return $.tmpl('counter-template', {'chars': 140 - length})[0].data;
         }
@@ -31,21 +36,23 @@ var inputtext_countdown = function($, input, label, template, maxlength) {
 
     var update = function(e) {
         var length = getlength();
-        
+
         if (length > maxlength) {
             $input.val($input.val().substring(0, maxlength));
         }
-        
-        $label.text(gettext(getlength()));
+
+        $label.text(gettext(length));
     };
 
     update();
 
     var events = ['keydown', 'paste', 'cut'];
+    var handler = function() {
+        setTimeout(update, 25);
+    };
+
     for (var i=0; i<events.length; i++) {
-        $input.bind(events[0], function() {
-            setTimeout(update, 25);
-        });
+        $input.bind(events[i], handler);
     }
 
     $input.bind('keydown', update);
@@ -53,10 +60,12 @@ var inputtext_countdown = function($, input, label, template, maxlength) {
     $input.bind('cut', update);
 };
 
-jQuery(document).ready(function() {
-    inputtext_countdown($,
-        '#formfield-form-widgets-short_description textarea',
-        '#formfield-form-widgets-short_description span.formHelp',
-        $('.event-submit-form').attr('data-countdown-template'),
-        140);
-});
+(function($){
+    $(document).ready(function() {
+        var input = '#formfield-form-widgets-short_description textarea';
+        var label = '#formfield-form-widgets-short_description span.formHelp';
+        var template = $('.event-submit-form').attr('data-countdown-template');
+
+        inputtext_countdown($, input, label, template);
+    });
+})(jQuery);
