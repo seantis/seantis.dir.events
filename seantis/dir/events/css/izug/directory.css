@@ -381,6 +381,12 @@ form.change-event {
 #directorySearch {
     border-bottom: 1px solid #0072ba !important;
     padding-bottom: 5px;
+    margin-top: 0;
+    border-width: 0;
+}
+
+.directorySearchFormButtons {
+    width: 100px !important;
 }
 
 #directorySearch input[type="submit"] {
