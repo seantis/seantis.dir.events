@@ -5,7 +5,7 @@
  <!-- Basic metadata -->
  <property name="title" i18n:translate="">Events Directory</property>
  <property name="description" i18n:translate=""></property>
- <property name="content_icon">folder_icon.gif</property>
+ <property name="icon_expr">string:${portal_url}/folder_icon.png</property>
  <property name="allow_discussion">False</property>
  <property name="global_allow">True</property>
  <property name="filter_content_types">True</property>
