@@ -1,0 +1,25 @@
+/* ie10 does not do conditional comments anymore so we are back to css hacks */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    .event-navigation {
+        margin-right: 25px !important;
+    }
+
+    #landingPageIntro #landingPageText #landingPageImage {
+        position: relative;
+        left: -6px;
+    }
+
+    .event-view .event-date {
+        width: 934px !important;
+    }
+
+    .formControls input {
+        margin-right: 5px !important;
+    }
+
+    .event-submit-form input[type="radio"] {
+        margin-right: 5px !important;
+        padding-top: 1px !important;
+        margin-bottom: 2px !important;
+    }
+}

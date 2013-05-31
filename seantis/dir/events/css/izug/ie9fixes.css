@@ -1,0 +1,21 @@
+.event-navigation {
+    margin-right: 25px !important;
+}
+
+div#landingPageIntro {
+    margin-top: 22px !important;
+}
+
+/* in ie9 and ie10 the image is off by six, why is beyond me */
+#landingPageIntro #landingPageText #landingPageImage {
+    position: relative;
+    left: -6px;
+}
+
+.event-view .event-date {
+    width: 934px !important;
+}
+
+.formControls input {
+    margin-right: 5px !important;
+}

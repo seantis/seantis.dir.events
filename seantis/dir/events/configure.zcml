@@ -44,15 +44,30 @@
         factory=".pages.URLTransform"
         />
 
-    <!-- Register an extension profile to make the product installable -->
-    <genericsetup:registerProfile
+    <!-- Profiles -->
+    <genericsetup:registerProfile 
         name="default"
-        title="seantis.dir.events"
-        description="Events Directory"
+        title="Seantis Dir Events"
+        description="Base Profile for Seantis Dir Events, Minimal Styles"
         directory="profiles/default"
         provides="Products.GenericSetup.interfaces.EXTENSION"
-        for="Products.CMFPlone.interfaces.IPloneSiteRoot" 
-        />
+    />
+
+    <genericsetup:registerProfile
+        name="sunburst"
+        title="Seantis Dir Events - for default plone theme"
+        description="Sunburst Profile for Seantis Dir Events, Usually You Want This"
+        directory="profiles/sunburst"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
+
+    <genericsetup:registerProfile
+        name="izug_basetheme"
+        title="Seantis Dir Events - for izug.basetheme"
+        description="IZug Basetheme Profile for Seantis Dir Events"
+        directory="profiles/izug_basetheme"
+        provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
 
     <!-- Upgrades -->
     <genericsetup:upgradeStep
@@ -72,6 +87,20 @@
        profile="seantis.dir.events:default"
        handler=".upgrades.upgrade_1000_to_1001"
        />
+
+    <genericsetup:upgradeStep
+       source="1001"
+       destination="1002"
+       title="Moves to new theme profiles"
+       description=""
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1001_to_1002"
+       />
+
+    <!-- Advanced Theme Adjustments through Diazo -->
+    <plone:static name="seantis.dir.events.izug-theme" 
+      directory="themes/izug-theme" type="theme" 
+    />
 
 
 </configure>

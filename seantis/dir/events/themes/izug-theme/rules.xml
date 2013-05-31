@@ -1,0 +1,105 @@
+<rules xmlns="http://namespaces.plone.org/diazo" xmlns:css="http://namespaces.plone.org/diazo/css" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+    <xsl:output method="html" />
+
+    <xsl:template match="@*|node()">
+      <xsl:copy>
+        <xsl:apply-templates select="@*|node()"/>
+      </xsl:copy>
+    </xsl:template>
+
+    <!-- Add navigation tree classes to event navigation, making it look like plone's portal navigation -->
+    <xsl:template match="//*[@class = 'event-navigation']/div/ul">
+        <dl class="portlet portletNavigationTree"> 
+            <dd class="portletItem lastItem">
+                <xsl:copy>
+                    <xsl:apply-templates select="@*"/>
+                    <xsl:attribute name="class">
+                        <xsl:value-of select="'navTree navTreeLevel0'"/>
+                    </xsl:attribute>
+                    <xsl:apply-templates select="node()"/>
+                </xsl:copy>
+            </dd>
+        </dl>
+    </xsl:template>
+
+    <xsl:template match="//*[@class = 'event-navigation']/div/ul/li">
+        <xsl:copy>
+            <xsl:apply-templates select="@*"/>
+            <xsl:attribute name="class">
+                <xsl:value-of select="'navTreeItem visualNoMarker navTreeFolderish'"/>
+            </xsl:attribute>
+            <xsl:apply-templates select="node()"/>
+        </xsl:copy>
+    </xsl:template>
+
+    <xsl:template match="//a[contains(@class, 'event-navigation-link')]/@class">
+        <xsl:attribute name="class">
+            <xsl:value-of select="str:replace(str:replace(., 'event-navigation-link', ''), 'selected', 'navTreeCurrentNode navTreeCurrentItem')"/>
+        </xsl:attribute>
+    </xsl:template>
+
+    <!-- Add a visual clear after the event-text for the floating -->
+    <xsl:template match="//*[@class = 'event-text']">
+        <xsl:copy>
+            <xsl:apply-templates select="@*|node()"/>
+        </xsl:copy>
+        <div class="visualClear"></div>
+    </xsl:template>
+
+    <!-- Remove the responsiveness -->
+    <xsl:template match="//div[contains(@class, 'responsive-events')]/@class">
+        <xsl:attribute name="class">
+            <xsl:value-of select="str:replace(., 'responsive-events', '')"/>
+        </xsl:attribute>
+    </xsl:template>    
+
+    <!-- Your Event should be a button without helptext -->
+    <xsl:template match="//div[@id!='directoryDetails']/div[contains(@class, 'event-sidebar')]">
+        <div class="event-sidebar">
+            <div class="your-event">
+                <form method="get">
+                    <xsl:attribute name="action">
+                        <xsl:value-of select="div[contains(@class, 'your-event')]/a/@href" />
+                    </xsl:attribute>
+
+                    <input type="submit" class="context">
+                        <xsl:attribute name="value">
+                            <xsl:value-of select="div[contains(@class, 'your-event')]/a" />
+                        </xsl:attribute>
+                    </input>
+                </form>
+            </div>
+
+            <xsl:copy-of select="//*[@id='directoryResultMap']" />
+        </div>
+    </xsl:template>
+
+    <!-- The search field gets a placeholder instead of a label -->
+    <xsl:template match="//*[@id='searchtext']">
+        <xsl:copy>
+            <xsl:apply-templates select="@*"/>
+            <xsl:attribute name="placeholder"> Inhalt durchsuchen</xsl:attribute>
+            <xsl:apply-templates select="node()"/>
+        </xsl:copy>
+    </xsl:template>
+
+    <!-- The item detail view gets a back button -->
+    <xsl:template match="//*[@id='directoryDetails']/div[1]/div[1]/div[1]/div">
+        <div class="event-date">
+            <div style="float: left;">
+                <xsl:copy-of select="./span" />
+            </div>
+            <div style="float: right;">
+                <a>
+                    <xsl:attribute name="href">
+                        <xsl:value-of select="//*[@id='#parentlink']/a/@href" />
+                    </xsl:attribute>
+                    Zurück
+                </a>
+            </div>
+            <div class="visualClear"></div>
+        </div>
+    </xsl:template>
+</rules>
+
+ 

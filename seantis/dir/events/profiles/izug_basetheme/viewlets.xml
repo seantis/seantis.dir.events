@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<object>
+    <!-- below content title -->
+    <order manager="plone.belowcontenttitle" skinname="iZug Base Theme">
+        <viewlet name="plone.abovecontenttitle.documentactions"/>
+        <viewlet name="plone.belowcontenttitle.documentbyline"/>
+        <viewlet name="ftw.tabbedview.searchbox"/>
+        <viewlet name="seantis.dir.base.DirectorySearchViewlet"/>
+        <viewlet name="ftw.contentviews"/>
+        <viewlet name="plone.belowcontenttitle.keywords"/>
+    </order>
+</object>
