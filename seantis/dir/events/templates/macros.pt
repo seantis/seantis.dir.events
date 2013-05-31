@@ -93,9 +93,9 @@
     </tal:comment>
 
     <metal:define define-macro="event-detail">
-      <div tal:define="
-        o python: occurrence;
-        is_recurring python: o.recurrence and True or False;
+      <div tal:condition="python: occurrence is not None"
+        tal:define="o python: occurrence;
+                    is_recurring python: (o and o.recurrence) and True or False;
       " class="event-view responsive-events">
         <div class="event-head">
           <div class="event-title">
