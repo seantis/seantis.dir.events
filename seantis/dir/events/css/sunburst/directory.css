@@ -108,6 +108,21 @@
     margin-bottom: 2px !important;
 }
 
+/* admin controls */
+.event-workflow {
+    float: left;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.event-state {
+    color: #555;   
+}
+
+.event-actions {
+    font-weight: bold;   
+}
+
 /* single result */
 .eventgroup-title {
     font-size: 1.4em;
@@ -240,4 +255,20 @@
     .event-details > div, .descriptions {
         margin-right: 0 !important;
     }
+}
+
+/* submit form */
+#formfield-form-widgets-cat1,
+#formfield-form-widgets-cat2 {
+    width: 50%;
+    float: left;
+    clear: none;  
+}
+#formfield-form-widgets-cat1 > span,
+#formfield-form-widgets-cat2 > span {
+    display: block;   
+}
+
+#formfield-form-widgets-long_description textarea {
+    height: 200px;
 }
