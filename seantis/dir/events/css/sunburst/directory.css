@@ -88,6 +88,11 @@
 /* event results */
 .directoryResult {
     border: none !important;
+    border-bottom: 1px solid #ddd !important;
+}
+
+.directoryResult:last-child {
+    border-bottom: none !important;   
 }
 
 .directoryMarker {
@@ -106,7 +111,7 @@
     font-weight: 100;
     text-align: right;
     border: none !important;
-    border-bottom: 1px solid #ccc !important;
+    border-bottom: #0383be solid !important;
     padding-bottom: 2px;
 }
 
@@ -116,7 +121,6 @@
 }
 
 .event-text {
-   
     color: #333;
     font-size: 12px;
 }
@@ -148,9 +152,16 @@
 
 /* event time */
 .timerange {
+    background-color: #c9f685;
+    padding: 2px 4px;
+    border-radius: 3px;
+    margin: 0 50px 0 0;
     float: right;
-    margin-right: 50px;
-    color: #666;   
+    text-align: center;
+    display: inline-block;
+    clear: both;
+    min-width: 88px;
+    color: green;
 }
 
 /* submit event */
