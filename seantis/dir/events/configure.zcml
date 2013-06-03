@@ -69,6 +69,14 @@
         provides="Products.GenericSetup.interfaces.EXTENSION"
     />
 
+    <genericsetup:registerProfile
+         name="teamraum"
+         title="Seantis Dir Events - for plonetheme.teamraum"
+         description="Plonetheme Teamraum Profile for Seantis Dir Events"
+         directory="profiles/teamraum"
+         provides="Products.GenericSetup.interfaces.EXTENSION"
+    />
+
     <!-- Upgrades -->
     <genericsetup:upgradeStep
       source="*"
