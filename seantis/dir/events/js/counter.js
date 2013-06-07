@@ -30,21 +30,22 @@ var inputtext_countdown = function($, input, label, template, maxlength) {
         if (length === 0) {
             return initial_text;
         } else {
-            return $.tmpl('counter-template', {'chars': 140 - length})[0].data;
+            return $.tmpl('counter-template', {
+                'chars': maxlength - length
+            })[0].data;
         }
     };
 
     var update = function(e) {
         var length = getlength();
 
-        if (length > maxlength) {
+        if (length >= maxlength) {
             $input.val($input.val().substring(0, maxlength));
+            length = maxlength;
         }
 
         $label.text(gettext(length));
     };
-
-    update();
 
     var events = ['keydown', 'paste', 'cut'];
     var handler = function() {
@@ -55,9 +56,7 @@ var inputtext_countdown = function($, input, label, template, maxlength) {
         $input.bind(events[i], handler);
     }
 
-    $input.bind('keydown', update);
-    $input.bind('paste', update);
-    $input.bind('cut', update);
+    update();
 };
 
 (function($){
@@ -66,6 +65,6 @@ var inputtext_countdown = function($, input, label, template, maxlength) {
         var label = '#formfield-form-widgets-short_description span.formHelp';
         var template = $('.event-submit-form').attr('data-countdown-template');
 
-        inputtext_countdown($, input, label, template);
+        inputtext_countdown($, input, label, template, 140);
     });
 })(jQuery);
