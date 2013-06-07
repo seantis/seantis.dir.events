@@ -31,7 +31,7 @@ import json
 import logging
 log = logging.getLogger('seantis.dir.events')
 
-from urlparse import urlparse
+from urlparse import urlparse, urlunparse
 from urllib import quote
 from five import grok
 
@@ -78,6 +78,26 @@ def pageid_from_name(string):
     match = re.match(pattern, string)
 
     return match.group(1) if match else None
+
+
+def urlreplace(url, **kwargs):
+    print url
+    parts = urlparse(url)._asdict()
+
+    for key, value in kwargs.items():
+        if callable(value):
+            parts[key] = value(parts[key])
+        else:
+            parts[key] = kwargs[value]
+
+    return urlunparse((
+        parts['scheme'],
+        parts['netloc'],
+        parts['path'],
+        parts['params'],
+        parts['query'],
+        parts['fragment']
+    ))
 
 
 class CustomPageRequest(object):
@@ -145,7 +165,10 @@ class CustomPageRequest(object):
         if self.token in url or self.quoted_token in url:
             return url
 
-        return url.replace(self.original_path, self.replacement_path)
+        return urlreplace(
+            url,
+            path=lambda p: p.replace(self.original_path, self.replacement_path)
+        )
 
     def properties(self, directory):
         """ Return the custom properties by page id for the given
@@ -341,6 +364,7 @@ def pub_success(e):
 
         pagerequest = CustomPageRequest(e.request)
         if pagerequest.apply_transformation:
-            response.setHeader('Location',
+            response.setHeader(
+                'Location',
                 pagerequest.transform_url(response.getHeader('Location'))
             )
