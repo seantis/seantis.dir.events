@@ -81,7 +81,7 @@ def pageid_from_name(string):
 
 
 def urlreplace(url, **kwargs):
-    print url
+
     parts = urlparse(url)._asdict()
 
     for key, value in kwargs.items():
