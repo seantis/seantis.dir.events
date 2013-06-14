@@ -260,7 +260,6 @@ class EventOrderIndex(EventIndex):
 
         dateindex = {}
         position, offset = 0, 0
-        first = True
 
         for prev, curr, next in previous_and_next(self.index):
 
@@ -271,9 +270,7 @@ class EventOrderIndex(EventIndex):
                 dateindex[curr] = position
 
             if curr != next and not next is None:
-                if first:
-                    dateindex[curr] = 0
-                    first = False
+                if prev is None:
                     position += 1
                 else:
                     dateindex[curr] = position + 1
@@ -332,6 +329,7 @@ class EventOrderIndex(EventIndex):
         subindex = self.by_range(start, end)
         subindex = self.limit_to_subset(subindex, subset)
         get_item = lambda i: self.event_by_identity(subindex[i])
+
         return LazyList(get_item, len(subindex))
 
 

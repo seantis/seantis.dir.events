@@ -145,7 +145,7 @@ def grouped_occurrences(occurrences, request):
         date = item.human_date(request)
         return date
 
-    groups = groupby(occurrences, groupkey)
+    groups = groupby(sorted(occurrences, key=lambda o: o.start), groupkey)
 
     # Zope Page Templates don't know how to handle generators :-|
     result = OrderedDict()
