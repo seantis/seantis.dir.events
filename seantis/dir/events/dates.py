@@ -48,10 +48,9 @@ def to_utc(date):
 
 
 def delete_timezone(date):
-    """ Converts the timezone aware date to utc and removes the tzinfo. """
+    """ Removes the timezone from a date. """
     assert date.tzinfo
-
-    return to_utc(date).replace(tzinfo=None)
+    return date.replace(tzinfo=None)
 
 
 def as_timezone(date, timezone):

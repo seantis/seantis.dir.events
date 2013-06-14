@@ -166,7 +166,7 @@ class EventIndex(object):
 
         # still, I would prefer some kind of lookup here
         for item in self.spawn_events([real]):
-            if item.start == date:
+            if dates.to_utc(dates.delete_timezone(item.local_start)) == date:
                 return item
 
         assert False, "lookup for %s failed" % id
@@ -184,7 +184,7 @@ class EventOrderIndex(EventIndex):
         return 'eventorder-%s' % self.state
 
     def identity(self, event):
-        date = dates.delete_timezone(event.start)
+        date = dates.delete_timezone(event.local_start)
         return '%s;%s' % (date.strftime('%y.%m.%d-%H:%M'), event.id)
 
     def identity_id(self, identity):
