@@ -227,6 +227,29 @@ class EventOrderIndex(EventIndex):
         self.index = sortedset(self.index - stale)
 
     def generate_metadata(self):
+        """Creates a metaindex, indexing the date positions by date.
+        For example:
+
+        Events:
+            0 -> 01.01.2012
+            1 -> 05.01.2012
+            2 -> 06.01.2012
+
+        Resulting metaindex:
+            01.01.2012 -> 0
+            02.01.2012 -> 1
+            03.01.2012 -> 1
+            04.01.2012 -> 1
+            05.01.2012 -> 1
+            06.01.2012 -> 2
+
+        The idea is for every possible date between the first event
+        and the last event to point to an event in the index. This allows
+        for fast pagination using slicing.
+
+        (the algorithm is rife for rewriting)
+
+        """
 
         if not self.index:
             if self.get_metadata('dateindex'):
@@ -246,10 +269,12 @@ class EventOrderIndex(EventIndex):
 
             if curr == next or prev is None or next is None:
                 dateindex[curr] = position
-            elif curr != next:
+
+            if curr != next and not next is None:
                 if first:
                     dateindex[curr] = 0
                     first = False
+                    position += 1
                 else:
                     dateindex[curr] = position + 1
 
