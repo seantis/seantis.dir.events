@@ -44,6 +44,17 @@ class EventsDirectoryItem(item.DirectoryItem):
 
     actions_order = ('submit', 'publish', 'deny', 'archive')
 
+    # there's currently an issue with seantis.dir.events, plone.app.event and
+    # plone.app.imaging. this mock function servers as a work-around.
+    # see https://github.com/plone/plone.app.event/issues/78
+    def Schema(self):
+
+        class MockSchema(object):
+            def get(self, field):
+                return None
+
+        return MockSchema()
+
     def get_parent(self):
         return self.aq_inner.aq_parent
 
