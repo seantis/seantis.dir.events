@@ -1,3 +1,7 @@
+import transaction
+from transaction.interfaces import ISavepointDataManager
+from transaction._transaction import AbortSavepoint
+
 from datetime import datetime, timedelta
 from five import grok
 
@@ -5,10 +9,12 @@ from itertools import ifilter
 from plone.app.event.ical import construct_calendar
 from plone.memoize import instance
 
+from zope.interface import implements
 from zope.annotation.interfaces import IAnnotations
 from zope.lifecycleevent.interfaces import (
     IObjectMovedEvent,
-    IObjectModifiedEvent
+    IObjectModifiedEvent,
+    IObjectRemovedEvent
 )
 from Products.CMFCore.interfaces import IActionSucceededEvent
 
@@ -26,39 +32,100 @@ from seantis.dir.events.interfaces import (
 from blist import sortedset
 
 
-def reindex(item, directory):
+# this is just awful
+# http://plone.293351.n2.nabble.com/Event-on-object-deletion-td3670562.html
+# http://stackoverflow.com/questions/11218272/plone-reacting-to-object-removal
+class ReindexDataManager(object):
 
-    if not directory or not item:
-        return
+    implements(ISavepointDataManager)
 
-    if hasattr(directory, '_v_fetching') and getattr(directory, '_v_fetching'):
-        return
+    def __init__(self, request, directory):
+        self.request = request
+        self.directory = directory
+        self.transaction_manager = transaction.manager
 
-    if not IEventsDirectory.providedBy(directory):
-        return
+    def tpc_begin(self, transaction):
+        pass
+
+    def tpc_finish(self, transaction):
+        reindex_directory(self.directory)
+
+    def tpc_abort(self, transaction):
+        pass
+
+    def commit(self, transaction):
+        pass
+
+    def abort(self, transaction):
+        pass
+
+    def tpc_vote(self, transaction):
+        pass
+
+    def sortKey(self):
+        return id(self)
+
+    def savepoint(self):
+        """ Make it possible to enter a savepoint with this manager active. """
+        return AbortSavepoint(self, transaction.get())
+
+
+@grok.subscribe(IEventsDirectoryItem, IObjectRemovedEvent)
+def onRemovedItem(item, event):
+
+    request = getattr(item, 'REQUEST', None)
+    if request:
+        directory = event.oldParent
+        transaction.get().join(ReindexDataManager(request, directory))
+
+
+def may_reindex_item(item):
+    if not item:
+        return False
 
     if not IEventsDirectoryItem.providedBy(item):
-        return
+        return False
 
-    if item and directory:
-        catalog = utils.get_catalog(directory)
-        catalog.reindex([item])
+    return True
+
+
+def may_reindex_directory(directory):
+    if not directory:
+        return False
+
+    if hasattr(directory, '_v_fetching') and getattr(directory, '_v_fetching'):
+        return False
+
+    if not IEventsDirectory.providedBy(directory):
+        return False
+
+    return True
+
+
+def reindex_directory(directory):
+    if may_reindex_directory(directory):
+        utils.get_catalog(directory).reindex()
+
+
+def reindex_item(directory, item):
+    if may_reindex_item(item) and may_reindex_directory(directory):
+        utils.get_catalog(directory).reindex([item])
 
 
 @grok.subscribe(IEventsDirectoryItem, IObjectMovedEvent)
 def onMovedItem(item, event):
-    reindex(item, event.oldParent)
-    reindex(item, event.newParent)
+    reindex_item(event.oldParent, item)
+    reindex_item(event.newParent, item)
 
 
 @grok.subscribe(IEventsDirectoryItem, IObjectModifiedEvent)
 def onModifiedItem(item, event):
-    reindex(item, item.get_parent())
+    reindex_item(item.get_parent(), item)
 
 
 @grok.subscribe(IEventsDirectoryItem, IActionSucceededEvent)
 def onChangedWorkflowState(item, event):
-    reindex(item, item.get_parent())
+    reindex_item(item.get_parent(), item)
 
 
 class LazyList(object):
