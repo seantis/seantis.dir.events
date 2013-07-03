@@ -115,3 +115,14 @@ def upgrade_1001_to_1002(context):
         setup.runAllImportStepsFromProfile(
             'profile-izug.seantis.dir.events:default'
         )
+
+
+def upgrade_1002_to_1003(context):
+    """ Import new javascript. """
+    setup = getToolByName(context, 'portal_setup')
+    setup.runImportStepFromProfile(
+        'profile-seantis.dir.events:default', 'jsregistry'
+    )
+    setup.runImportStepFromProfile(
+        'profile-seantis.dir.events:default', 'cssregistry'
+    )

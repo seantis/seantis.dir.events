@@ -9,8 +9,9 @@ from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
 from plone.directives import form
 from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
-from zope.schema import Text, TextLine, Bool
+from zope.schema import Text, TextLine, Bool, List, Choice, Time, Date
 from zope.interface import Invalid, Interface, Attribute
+from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
 from seantis.dir.base.schemafields import Email, AutoProtocolURI
 from seantis.dir.base.interfaces import (
@@ -235,6 +236,61 @@ IEventsDirectoryItem.setTaggedValue(
      'organizer', 'contact_name', 'contact_email', 'contact_phone',
      'prices', 'registration', '*']
 )
+
+
+class IEventSubmissionDate(form.Schema):
+    """ The event submission form uses this interfaces to get the event dates
+    from the user, since the default IEventBasic interface turned out to be
+    too confusing for many.
+
+    """
+
+    submission_date_type = List(
+        title=_(u'When will this event occur?'),
+        required=True,
+        value_type=Choice(
+            vocabulary=SimpleVocabulary([
+                SimpleTerm(value='date', title=_(u'On a single day')),
+                SimpleTerm(value='range', title=_(u'On several days'))
+            ])
+        ),
+        default=['date']
+    )
+
+    date = Date(
+        title=_(u'Date'),
+        required=False
+    )
+
+    start = Time(
+        title=_(u'Start time'),
+        required=False
+    )
+
+    end = Time(
+        title=_(u'End time'),
+        required=False
+    )
+
+    range_start_date = Date(
+        title=_(u'Start date'),
+        required=False
+    )
+
+    range_end_date = Date(
+        title=_(u'End date'),
+        required=False
+    )
+
+    range_start_time = Time(
+        title=_(u'Starts each day at'),
+        required=False
+    )
+
+    range_end_time = Time(
+        title=_(u'Ends each day at'),
+        required=False
+    )
 
 
 # validation for multiple fields on the form (not possible through invariants

@@ -35,11 +35,10 @@ from collective.geo.contentlocations.interfaces import IGeoManager
 
 from plone.app.event.base import default_timezone
 from plone.app.event.dx.behaviors import (
-    IEventBasic,
     IEventRecurrence
 )
 
-from plone.formwidget.datetime.z3cform.widget import DatetimeWidget
+from plone.formwidget.datetime.z3cform.widget import DateWidget
 from plone.app.event.dx.behaviors import first_weekday_sun0
 
 from seantis.dir.base import utils as base_utils
@@ -49,6 +48,7 @@ from seantis.dir.events.interfaces import (
     IEventsDirectory,
     IEventsDirectoryItem,
     ITerms,
+    IEventSubmissionDate,
     validate_event_submission
 )
 
@@ -197,8 +197,10 @@ class GeneralGroup(EventBaseGroup):
     group_fields[IDirectoryCategorized] = (
         'cat1', 'cat2'
     )
-    group_fields[IEventBasic] = (
-        'start', 'end', 'whole_day'
+    group_fields[IEventSubmissionDate] = (
+        'submission_date_type', 'date', 'start', 'end',
+        'range_start_date', 'range_end_date',
+        'range_start_time', 'range_end_time'
     )
     group_fields[IEventRecurrence] = (
         'recurrence',
@@ -207,7 +209,7 @@ class GeneralGroup(EventBaseGroup):
     def update_dynamic_fields(self):
         recurrence = self.fields['recurrence']
         recurrence.widgetFactory = ParameterizedWidgetFactory(
-            RecurrenceWidget, start_field='start'
+            RecurrenceWidget, start_field='date'
         )
 
         categories = (self.fields['cat1'], self.fields['cat2'])
@@ -225,12 +227,13 @@ class GeneralGroup(EventBaseGroup):
         categories[1].widgetFactory = RadioFieldWidget
         categories[1].field.required = True
 
-        self.fields['start'].widgetFactory = ParameterizedWidgetFactory(
-            DatetimeWidget, first_day=first_weekday_sun0
-        )
-        self.fields['end'].widgetFactory = ParameterizedWidgetFactory(
-            DatetimeWidget, first_day=first_weekday_sun0
-        )
+        self.fields['submission_date_type'].widgetFactory = RadioFieldWidget
+
+        # plone.formwidget.recurrencewidget needs this... obviously?
+        for field in ('date', 'range_start_date', 'range_end_date'):
+            self.fields[field].widgetFactory = ParameterizedWidgetFactory(
+                DateWidget, first_day=first_weekday_sun0
+            )
 
     def update_widgets(self):
         # update labels of categories
