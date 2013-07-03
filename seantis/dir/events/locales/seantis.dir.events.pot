@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-07-03 09:48+0000\n"
+"POT-Creation-Date: 2013-07-03 13:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
-#: ./form.py:721
+#: ./form.py:741
 msgid "Adjust"
 msgstr ""
 
@@ -50,7 +50,7 @@ msgstr ""
 msgid "Attachments"
 msgstr ""
 
-#: ./form.py:776
+#: ./form.py:796
 msgid "Back"
 msgstr ""
 
@@ -74,11 +74,11 @@ msgstr ""
 msgid "Calendars (iCal)"
 msgstr ""
 
-#: ./form.py:447
+#: ./form.py:467
 msgid "Cancel"
 msgstr ""
 
-#: ./form.py:567
+#: ./form.py:587
 msgid "Cancel Event Submission"
 msgstr ""
 
@@ -94,11 +94,11 @@ msgstr ""
 msgid "Contact Phone"
 msgstr ""
 
-#: ./form.py:426
+#: ./form.py:446
 msgid "Continue"
 msgstr ""
 
-#: ./form.py:286
+#: ./form.py:304
 msgid "Coordinates"
 msgstr ""
 
@@ -111,7 +111,7 @@ msgstr ""
 msgid "Day after Tomorrow"
 msgstr ""
 
-#: ./form.py:639
+#: ./form.py:659
 msgid "Detail Preview"
 msgstr ""
 
@@ -139,23 +139,23 @@ msgstr ""
 msgid "Event"
 msgstr ""
 
-#: ./form.py:500
+#: ./form.py:520
 msgid "Event Preview Updated"
 msgstr ""
 
-#: ./form.py:588
+#: ./form.py:608
 msgid "Event Saved"
 msgstr ""
 
-#: ./form.py:747
+#: ./form.py:767
 msgid "Event Submission Finish"
 msgstr ""
 
-#: ./form.py:379
+#: ./form.py:399
 msgid "Event Submission Form"
 msgstr ""
 
-#: ./form.py:699
+#: ./form.py:719
 msgid "Event Submission Preview"
 msgstr ""
 
@@ -164,11 +164,15 @@ msgstr ""
 msgid "Event Website"
 msgstr ""
 
-#: ./form.py:333
+#: ./form.py:245
+msgid "Event date"
+msgstr ""
+
+#: ./form.py:351
 msgid "Event submission cancelled"
 msgstr ""
 
-#: ./form.py:773
+#: ./form.py:793
 msgid "Event submitted"
 msgstr ""
 
@@ -236,7 +240,7 @@ msgstr ""
 msgid "Housenumber"
 msgstr ""
 
-#: ./form.py:679
+#: ./form.py:699
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr ""
 
@@ -252,11 +256,11 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: ./form.py:294
+#: ./form.py:312
 msgid "Information"
 msgstr ""
 
-#: ./form.py:652
+#: ./form.py:672
 msgid "List Preview"
 msgstr ""
 
@@ -265,7 +269,7 @@ msgstr ""
 msgid "Locality"
 msgstr ""
 
-#: ./form.py:266
+#: ./form.py:284
 msgid "Location"
 msgstr ""
 
@@ -277,7 +281,7 @@ msgstr ""
 msgid "Long Description"
 msgstr ""
 
-#: ./form.py:276
+#: ./form.py:294
 msgid "Map"
 msgstr ""
 
@@ -297,7 +301,7 @@ msgstr ""
 msgid "Next Year"
 msgstr ""
 
-#: ./form.py:502
+#: ./form.py:522
 msgid "No changes were applied"
 msgstr ""
 
@@ -350,11 +354,11 @@ msgstr ""
 msgid "Recurring Event"
 msgstr ""
 
-#: ./form.py:558
+#: ./form.py:578
 msgid "Save Event"
 msgstr ""
 
-#: ./form.py:380
+#: ./form.py:400
 msgid "Send us your events and we will publish them"
 msgstr ""
 
@@ -386,7 +390,7 @@ msgstr ""
 msgid "Street"
 msgstr ""
 
-#: ./form.py:761
+#: ./form.py:781
 msgid "Submit"
 msgstr ""
 
@@ -398,7 +402,7 @@ msgstr ""
 msgid "Submitted"
 msgstr ""
 
-#: ./form.py:660
+#: ./form.py:680
 #: ./templates/macros.pt:213
 msgid "Submitter"
 msgstr ""
@@ -461,7 +465,7 @@ msgstr ""
 msgid "Ticket / Registration Website"
 msgstr ""
 
-#: ./form.py:246
+#: ./form.py:225
 msgid "Title of event"
 msgstr ""
 

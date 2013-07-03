@@ -262,12 +262,12 @@ class IEventSubmissionDate(form.Schema):
         required=False
     )
 
-    start = Time(
+    start_time = Time(
         title=_(u'Start time'),
         required=False
     )
 
-    end = Time(
+    end_time = Time(
         title=_(u'End time'),
         required=False
     )

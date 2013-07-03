@@ -188,7 +188,7 @@ class GeneralGroup(EventBaseGroup):
 
     label = _(u'Event')
 
-    dynamic_fields = ('recurrence', 'cat1', 'cat2')
+    dynamic_fields = ('cat1', 'cat2')
 
     group_fields = OrderedDict()
     group_fields[IEventsDirectoryItem] = (
@@ -197,21 +197,8 @@ class GeneralGroup(EventBaseGroup):
     group_fields[IDirectoryCategorized] = (
         'cat1', 'cat2'
     )
-    group_fields[IEventSubmissionDate] = (
-        'submission_date_type', 'date', 'start', 'end',
-        'range_start_date', 'range_end_date',
-        'range_start_time', 'range_end_time'
-    )
-    group_fields[IEventRecurrence] = (
-        'recurrence',
-    )
 
     def update_dynamic_fields(self):
-        recurrence = self.fields['recurrence']
-        recurrence.widgetFactory = ParameterizedWidgetFactory(
-            RecurrenceWidget, start_field='date'
-        )
-
         categories = (self.fields['cat1'], self.fields['cat2'])
 
         for category in categories:
@@ -226,14 +213,6 @@ class GeneralGroup(EventBaseGroup):
         categories[0].field.required = True
         categories[1].widgetFactory = RadioFieldWidget
         categories[1].field.required = True
-
-        self.fields['submission_date_type'].widgetFactory = RadioFieldWidget
-
-        # plone.formwidget.recurrencewidget needs this... obviously?
-        for field in ('date', 'range_start_date', 'range_end_date'):
-            self.fields[field].widgetFactory = ParameterizedWidgetFactory(
-                DateWidget, first_day=first_weekday_sun0
-            )
 
     def update_widgets(self):
         # update labels of categories
@@ -259,6 +238,45 @@ class GeneralGroup(EventBaseGroup):
             return SimpleVocabulary(terms)
 
         return get_categories
+
+
+class DateGroup(EventBaseGroup):
+
+    label = _(u'Event date')
+
+    dynamic_fields = (
+        'submission_date_type',
+        'recurrence',
+        'date',
+        'range_start_date',
+        'range_end_date'
+    )
+
+    group_fields = OrderedDict()
+
+    group_fields[IEventSubmissionDate] = (
+        'submission_date_type',
+        'date', 'start_time', 'end_time',
+        'range_start_date', 'range_end_date',
+        'range_start_time', 'range_end_time'
+    )
+    group_fields[IEventRecurrence] = (
+        'recurrence',
+    )
+
+    def update_dynamic_fields(self):
+        recurrence = self.fields['recurrence']
+        recurrence.widgetFactory = ParameterizedWidgetFactory(
+            RecurrenceWidget, start_field='date'
+        )
+
+        self.fields['submission_date_type'].widgetFactory = RadioFieldWidget
+
+        # plone.formwidget.recurrencewidget needs this... obviously?
+        for field in ('date', 'range_start_date', 'range_end_date'):
+            self.fields[field].widgetFactory = ParameterizedWidgetFactory(
+                DateWidget, first_day=first_weekday_sun0
+            )
 
 
 class LocationGroup(EventBaseGroup):
@@ -373,7 +391,9 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
 
     portal_type = 'seantis.dir.events.item'
 
-    groups = (GeneralGroup, LocationGroup, MapGroup, InformationGroup)
+    groups = (
+        GeneralGroup, DateGroup, LocationGroup, MapGroup, InformationGroup
+    )
     enable_form_tabbing = False
 
     label = _(u'Event Submission Form')

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-07-03 09:48+0000\n"
+"POT-Creation-Date: 2013-07-03 13:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr "${chars} Zeichen übrig"
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
-#: ./form.py:721
+#: ./form.py:741
 msgid "Adjust"
 msgstr "Korrigieren"
 
@@ -47,7 +47,7 @@ msgstr "Anhang 2"
 msgid "Attachments"
 msgstr "Anhänge"
 
-#: ./form.py:776
+#: ./form.py:796
 msgid "Back"
 msgstr "Zurück"
 
@@ -71,11 +71,11 @@ msgstr "Kalender Export nur für diese Wiederholung"
 msgid "Calendars (iCal)"
 msgstr "Kalender (iCal)"
 
-#: ./form.py:447
+#: ./form.py:467
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ./form.py:567
+#: ./form.py:587
 msgid "Cancel Event Submission"
 msgstr "Abbrechen"
 
@@ -91,11 +91,11 @@ msgstr "Kontakt Name"
 msgid "Contact Phone"
 msgstr "Kontakt Telefon"
 
-#: ./form.py:426
+#: ./form.py:446
 msgid "Continue"
 msgstr "Weiter"
 
-#: ./form.py:286
+#: ./form.py:304
 msgid "Coordinates"
 msgstr "Koordinaten"
 
@@ -108,7 +108,7 @@ msgstr "Datum"
 msgid "Day after Tomorrow"
 msgstr "Übermorgen"
 
-#: ./form.py:639
+#: ./form.py:659
 msgid "Detail Preview"
 msgstr "Details-Vorschau"
 
@@ -136,23 +136,23 @@ msgstr "Erfassen"
 msgid "Event"
 msgstr "Veranstaltung"
 
-#: ./form.py:500
+#: ./form.py:520
 msgid "Event Preview Updated"
 msgstr "Veranstaltungs Vorschau Aktualisiert"
 
-#: ./form.py:588
+#: ./form.py:608
 msgid "Event Saved"
 msgstr "Veranstaltung gespeichert"
 
-#: ./form.py:747
+#: ./form.py:767
 msgid "Event Submission Finish"
 msgstr "Veranstaltung melden"
 
-#: ./form.py:379
+#: ./form.py:399
 msgid "Event Submission Form"
 msgstr "Veranstaltung erfassen"
 
-#: ./form.py:699
+#: ./form.py:719
 msgid "Event Submission Preview"
 msgstr "Veranstaltungs-Vorschau"
 
@@ -161,11 +161,15 @@ msgstr "Veranstaltungs-Vorschau"
 msgid "Event Website"
 msgstr "Veranstaltungs-Webseite"
 
-#: ./form.py:333
+#: ./form.py:245
+msgid "Event date"
+msgstr "Veranstaltungs-Datum"
+
+#: ./form.py:351
 msgid "Event submission cancelled"
 msgstr "Veranstaltungs-Meldung abgebrochen"
 
-#: ./form.py:773
+#: ./form.py:793
 msgid "Event submitted"
 msgstr "Veranstaltung gemeldet"
 
@@ -233,7 +237,7 @@ msgstr "Von Heute bis Jahresende"
 msgid "Housenumber"
 msgstr "Hausnummer"
 
-#: ./form.py:679
+#: ./form.py:699
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr "Ich stimme den <a target='_blank' href='${url}'>Allgemeinen Geschäftsbedingungen</a> zu"
 
@@ -249,11 +253,11 @@ msgstr "Bild"
 msgid "Images"
 msgstr "Bilder"
 
-#: ./form.py:294
+#: ./form.py:312
 msgid "Information"
 msgstr "Informationen"
 
-#: ./form.py:652
+#: ./form.py:672
 msgid "List Preview"
 msgstr "Listen-Vorschau"
 
@@ -262,7 +266,7 @@ msgstr "Listen-Vorschau"
 msgid "Locality"
 msgstr "Lokalität"
 
-#: ./form.py:266
+#: ./form.py:284
 msgid "Location"
 msgstr "Ort"
 
@@ -274,7 +278,7 @@ msgstr "Webseite der Lokalität"
 msgid "Long Description"
 msgstr "Lange Beschreibung"
 
-#: ./form.py:276
+#: ./form.py:294
 msgid "Map"
 msgstr "Karte"
 
@@ -294,7 +298,7 @@ msgstr "Nächstes Wochenende"
 msgid "Next Year"
 msgstr "Nächstes Jahr"
 
-#: ./form.py:502
+#: ./form.py:522
 msgid "No changes were applied"
 msgstr "Keine Änderungen"
 
@@ -347,11 +351,11 @@ msgstr "Veröffentlicht"
 msgid "Recurring Event"
 msgstr "Wiederholende Veranstaltung"
 
-#: ./form.py:558
+#: ./form.py:578
 msgid "Save Event"
 msgstr "Veranstaltung speichern"
 
-#: ./form.py:380
+#: ./form.py:400
 msgid "Send us your events and we will publish them"
 msgstr "Senden Sie uns Ihre Veransteltungen und wir werden sie veröffentlichen"
 
@@ -383,7 +387,7 @@ msgstr "Status"
 msgid "Street"
 msgstr "Strasse"
 
-#: ./form.py:761
+#: ./form.py:781
 msgid "Submit"
 msgstr "Melden"
 
@@ -395,7 +399,7 @@ msgstr "Veranstaltung melden"
 msgid "Submitted"
 msgstr "Gemeldet"
 
-#: ./form.py:660
+#: ./form.py:680
 #: ./templates/macros.pt:213
 msgid "Submitter"
 msgstr "Erfasser"
@@ -458,7 +462,7 @@ msgstr "Ticket"
 msgid "Ticket / Registration Website"
 msgstr "Ticket / Registrations Webseite"
 
-#: ./form.py:246
+#: ./form.py:225
 msgid "Title of event"
 msgstr "Titel der Veranstaltung"
 
