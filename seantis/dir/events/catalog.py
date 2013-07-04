@@ -217,9 +217,6 @@ class EventIndex(object):
 
         real = self.catalog.query(id=id)[0].getObject()
 
-        if not real.recurrence:
-            return real.as_occurrence()
-
         # there is currently no way to easily look up the event by date
         # if it has been split over dates already (which is what happens
         # when the events are indexed)
