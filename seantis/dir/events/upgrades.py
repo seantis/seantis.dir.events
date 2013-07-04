@@ -98,10 +98,7 @@ def upgrade_1001_to_1002(context):
 
     setup = getToolByName(context, 'portal_setup')
 
-    setup.runImportStepFromProfile
-
     # reapply the chosen profile
-
     setup.runAllImportStepsFromProfile(
         'profile-seantis.dir.events:%s' % profile
     )
@@ -115,3 +112,14 @@ def upgrade_1001_to_1002(context):
         setup.runAllImportStepsFromProfile(
             'profile-izug.seantis.dir.events:default'
         )
+
+
+def upgrade_1002_to_1003(context):
+
+    # the new plone.formwidget.recurrence release introduced gs profiles which
+    # need to be loaded on existing sites
+
+    setup = getToolByName(context, 'portal_setup')
+    setup.runAllImportStepsFromProfile(
+        'profile-plone.formwidget.recurrence:default'
+    )

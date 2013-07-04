@@ -105,6 +105,15 @@
        handler=".upgrades.upgrade_1001_to_1002"
        />
 
+    <genericsetup:upgradeStep
+       source="1002"
+       destination="1003"
+       title="Apply plone.formwidget.recurrence profile"
+       description=""
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1002_to_1003"
+       />
+
     <!-- Advanced Theme Adjustments through Diazo -->
     <plone:static name="seantis.dir.events.izug-theme" 
       directory="themes/izug-theme" type="theme" 
