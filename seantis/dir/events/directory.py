@@ -247,7 +247,10 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         # use a custom batch whose items are lazy evaluated on __getitem__
         start = int(self.request.get('b_start') or 0)
         lazy_list = self.catalog.lazy_list
-        return Batch(lazy_list, directory.ITEMSPERPAGE, start, orphan=1)
+
+        # seantis.dir.events lazy list implementation currently cannot
+        # deal with orphans.
+        return Batch(lazy_list, directory.ITEMSPERPAGE, start, orphan=0)
 
     @property
     def selected_state(self):
