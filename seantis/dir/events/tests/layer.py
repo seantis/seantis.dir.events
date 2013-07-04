@@ -1,5 +1,6 @@
 import transaction
 
+from plone.testing import z2
 from plone.app.testing import PloneSandboxLayer
 from plone.app.testing import PLONE_FIXTURE
 from plone.app.testing import IntegrationTesting
@@ -29,6 +30,12 @@ class Fixture(PloneSandboxLayer):
             transaction.commit()
             ztc.utils.setupCoreSessions(app)
 
+        # needed by plone.app.event
+        z2.installProduct(app, 'Products.DateRecurringIndex')
+
+    def tearDownZope(self, app):
+        z2.uninstallProduct(app, 'Products.DateRecurringIndex')
+
     def setUpPloneSite(self, portal):
         self.applyProfile(portal, 'seantis.dir.events:default')
 
@@ -39,6 +46,7 @@ class Fixture(PloneSandboxLayer):
         self.applyProfile(portal, 'collective.geo.contentlocations:default')
         self.applyProfile(portal, 'collective.geo.kml:default')
         self.applyProfile(portal, 'collective.geo.settings:default')
+
 
 FIXTURE = Fixture()
 INTEGRATION_TESTING = IntegrationTesting(
