@@ -50,8 +50,12 @@ class Occurrence(ProxyBase):
 
         """
         if hasattr(self._wrapped, 'getObject'):
-            return Occurrence(self._wrapped.getObject(),
-                self._start, self._end, self._unsplit_start, self._unsplit_end
+            return Occurrence(
+                self._wrapped.getObject(),
+                self._start,
+                self._end,
+                self._unsplit_start,
+                self._unsplit_end
             )
         else:
             return self
@@ -162,7 +166,8 @@ def pick_occurrence(item, start):
 
     """
 
-    min_date = datetime(start.year, start.month, start.day,
+    min_date = datetime(
+        start.year, start.month, start.day,
         tzinfo=item.local_start.tzinfo
     )
     max_date = min_date + timedelta(days=1, microseconds=-1)
@@ -215,11 +220,13 @@ def split_days(occurrence):
 
             # if the given occurrence is already a proxy, don't double-wrap it
             if isinstance(occurrence, Occurrence):
-                yield Occurrence(occurrence._wrapped,
+                yield Occurrence(
+                    occurrence._wrapped,
                     start, end, original_start, original_end
                 )
             else:
-                yield Occurrence(occurrence,
+                yield Occurrence(
+                    occurrence,
                     start, end, original_start, original_end
                 )
 
@@ -281,8 +288,8 @@ def has_future_occurrences(item, reference_date):
     if not item.recurrence:
         return reference_date <= item.start
 
-    futures = recurrence_sequence_ical(item.start,
-        recrule=item.recurrence, from_=reference_date
+    futures = recurrence_sequence_ical(
+        item.start, recrule=item.recurrence, from_=reference_date
     )
 
     try:

@@ -1,6 +1,7 @@
+from datetime import date
 from seantis.dir.events.tests import IntegrationTestCase
 
-from seantis.dir.events.catalog import LazyList
+from seantis.dir.events.catalog import LazyList, EventOrderIndex
 
 from mock import Mock
 
@@ -91,3 +92,81 @@ class TestEventIndex(IntegrationTestCase):
 
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 0)
+
+    def test_eventorder_metadata(self):
+
+        class MockCatalog(object):
+
+            def __init__(self, directory):
+                self.directory = directory
+
+        def generate_metadata(testindex):
+
+            orderindex = EventOrderIndex(
+                catalog=MockCatalog(self.directory), state='published',
+                initial_index=testindex
+            )
+
+            orderindex.generate_metadata()
+            return orderindex.get_metadata('dateindex')
+
+        dateindex = generate_metadata([
+            '12.01.01-12:00;'
+        ])
+
+        self.assertTrue(date(2012, 1, 1) in dateindex)
+        self.assertEqual(dateindex[date(2012, 1, 1)], 0)
+        self.assertEqual(len(dateindex), 1)
+
+        dateindex = generate_metadata([
+            '12.01.01-00:00;',
+            '12.01.01-23:59;'
+        ])
+
+        self.assertTrue(date(2012, 1, 1) in dateindex)
+        self.assertEqual(dateindex[date(2012, 1, 1)], 0)
+        self.assertEqual(len(dateindex), 1)
+
+        dateindex = generate_metadata([
+            '12.01.01-00:00;',
+            '12.01.01-00:00;',
+            '12.01.02-00:00;'
+        ])
+
+        self.assertTrue(date(2012, 1, 1) in dateindex)
+        self.assertTrue(date(2012, 1, 2) in dateindex)
+        self.assertEqual(dateindex[date(2012, 1, 1)], 0)
+        self.assertEqual(dateindex[date(2012, 1, 2)], 2)
+        self.assertEqual(len(dateindex), 2)
+
+        dateindex = generate_metadata([
+            '12.01.01-00:00',
+            '12.09.07-00:00',
+            '12.12.31-00:00'
+        ])
+
+        self.assertEqual(dateindex[date(2012, 1, 1)], 0)
+        self.assertEqual(dateindex[date(2012, 1, 2)], 1)
+        self.assertEqual(dateindex[date(2012, 9, 6)], 1)
+        self.assertEqual(dateindex[date(2012, 9, 7)], 1)
+        self.assertEqual(dateindex[date(2012, 9, 8)], 2)
+        self.assertEqual(dateindex[date(2012, 12, 30)], 2)
+        self.assertEqual(dateindex[date(2012, 12, 31)], 2)
+        self.assertEqual(len(dateindex), 366)
+
+        dateindex = generate_metadata([
+            '13.07.04-14:00;',
+            '13.07.05-18:45;',
+            '13.07.05-19:00;',
+            '13.07.05-19:00;',
+            '13.07.05-19:00;',
+            '13.07.06-19:00;',
+        ])
+
+        self.assertTrue(date(2013, 07, 04) in dateindex)
+        self.assertTrue(date(2013, 07, 05) in dateindex)
+        self.assertTrue(date(2013, 07, 06) in dateindex)
+
+        self.assertEqual(dateindex[date(2013, 07, 04)], 0)
+        self.assertEqual(dateindex[date(2013, 07, 05)], 1)
+        self.assertEqual(dateindex[date(2013, 07, 06)], 5)

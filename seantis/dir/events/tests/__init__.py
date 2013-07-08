@@ -8,7 +8,6 @@ from plone.dexterity.utils import createContentInContainer
 from plone.app import testing
 from Products.CMFCore.utils import getToolByName
 from Products.CMFCore import permissions
-
 from collective.betterbrowser import new_browser
 
 from zope.component import getAdapter

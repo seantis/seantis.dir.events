@@ -160,10 +160,12 @@ class EventIndex(object):
 
     version = "1.0"
 
-    def __init__(self, catalog):
+    def __init__(self, catalog, initial_index=None):
         self.catalog = catalog
         self.key = 'seantis.dir.events.eventindex'
         self.datekey = '%Y.%m.%d'
+
+        self.index = initial_index
 
         if not self.index:
             self.reindex()
@@ -217,9 +219,6 @@ class EventIndex(object):
 
         real = self.catalog.query(id=id)[0].getObject()
 
-        if not real.recurrence:
-            return real.as_occurrence()
-
         # there is currently no way to easily look up the event by date
         # if it has been split over dates already (which is what happens
         # when the events are indexed)
@@ -241,10 +240,10 @@ class EventIndex(object):
 
 class EventOrderIndex(EventIndex):
 
-    def __init__(self, catalog, state):
+    def __init__(self, catalog, state, initial_index=None):
         assert state in ('submitted', 'published', 'archived')
         self.state = state
-        super(EventOrderIndex, self).__init__(catalog)
+        super(EventOrderIndex, self).__init__(catalog, initial_index)
 
     @property
     def name(self):
@@ -314,8 +313,6 @@ class EventOrderIndex(EventIndex):
         and the last event to point to an event in the index. This allows
         for fast pagination using slicing.
 
-        (the algorithm is rife for rewriting)
-
         """
 
         if not self.index:
@@ -325,31 +322,26 @@ class EventOrderIndex(EventIndex):
 
         dt = lambda i: i if i is None else self.identity_date(i).date()
 
+        keydates = {}
+
+        # set the key positions (first occurrence of each date)
+        for ix, date in enumerate(map(dt, self.index)):
+            if date not in keydates:
+                keydates[date] = ix
+
+        # fill the gaps
         dateindex = {}
-        position, offset = 0, 0
+        for prev, curr, next in previous_and_next(sorted(keydates.keys())):
+            if prev is None:
+                continue
+            if prev == curr:
+                continue
 
-        for prev, curr, next in previous_and_next(self.index):
+            for date in dates.days_between(prev, curr):
+                dateindex[date] = keydates[curr]
 
-            prev, curr, next = map(dt, (prev, curr, next))
-            assert curr
-
-            if curr == next or prev is None or next is None:
-                dateindex[curr] = position
-
-            if curr != next and not next is None:
-                if prev is None:
-                    position += 1
-                else:
-                    dateindex[curr] = position + 1
-
-                position += offset
-                offset = 0
-
-                for date in dates.days_between(curr, next):
-                    if date != curr:
-                        dateindex[date] = position
-
-            offset += 1
+        # merge
+        dateindex.update(keydates)
 
         self.set_metadata('dateindex', dateindex)
 
@@ -369,8 +361,11 @@ class EventOrderIndex(EventIndex):
 
         dateindex = self.get_metadata('dateindex')
 
-        start = dates.to_utc(start or first_date).date()
-        end = dates.to_utc(end or last_date).date()
+        # use whatever timezone is given, because a search for a range cannot
+        # be normalized, since the day of this search is not really a concept
+        # that exists globally, everyone calls a different utc time a day
+        start = (start or first_date).date()
+        end = (end or last_date).date()
 
         if start <= first_date.date():
             startrange = 0

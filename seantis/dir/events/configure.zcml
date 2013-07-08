@@ -108,10 +108,19 @@
     <genericsetup:upgradeStep
        source="1002"
        destination="1003"
-       title="Install new javascript"
+       title="Apply plone.formwidget.recurrence profile"
        description=""
        profile="seantis.dir.events:default"
        handler=".upgrades.upgrade_1002_to_1003"
+       />
+
+    <genericsetup:upgradeStep
+       source="1003"
+       destination="1004"
+       title="Install new javascript"
+       description=""
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1003_to_1004"
        />
 
     <!-- Advanced Theme Adjustments through Diazo -->
