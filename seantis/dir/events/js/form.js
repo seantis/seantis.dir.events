@@ -4,24 +4,24 @@
 
     var submission_type_groups = {
         'date': [
-            '#formfield-form-widgets-date',
-            '#formfield-form-widgets-start_time',
-            '#formfield-form-widgets-end_time',
-            '#formfield-form-widgets-recurrence'
+            '#formfield-form-widgets-submission_date',
+            '#formfield-form-widgets-submission_start_time',
+            '#formfield-form-widgets-submission_end_time',
+            '#formfield-form-widgets-submission_recurrence'
         ],
         'range': [
-            '#formfield-form-widgets-range_start_date',
-            '#formfield-form-widgets-range_end_date',
-            '#formfield-form-widgets-range_start_time',
-            '#formfield-form-widgets-range_end_time'
+            '#formfield-form-widgets-submission_range_start_date',
+            '#formfield-form-widgets-submission_range_end_date',
+            '#formfield-form-widgets-submission_range_start_time',
+            '#formfield-form-widgets-submission_range_end_time'
         ]
     };
 
     var time_fields = [
-        '#formfield-form-widgets-start_time input',
-        '#formfield-form-widgets-end_time input',
-        '#formfield-form-widgets-range_start_time input',
-        '#formfield-form-widgets-range_end_time input'
+        '#formfield-form-widgets-submission_start_time input',
+        '#formfield-form-widgets-submission_end_time input',
+        '#formfield-form-widgets-submission_range_start_time input',
+        '#formfield-form-widgets-submission_range_end_time input'
     ];
 
     var wholeday_field = '#formfield-form-widgets-whole_day input';

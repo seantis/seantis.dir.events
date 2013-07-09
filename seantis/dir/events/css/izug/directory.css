@@ -1131,10 +1131,10 @@ form span.required:before {
     color: #eee; 
 }
 
-.event-submit-form #formfield-form-widgets-start_time input,
-.event-submit-form #formfield-form-widgets-end_time input,
-.event-submit-form #formfield-form-widgets-range_start_time input,
-.event-submit-form #formfield-form-widgets-range_end_time input,
+.event-submit-form #formfield-form-widgets-submission_start_time input,
+.event-submit-form #formfield-form-widgets-submission_end_time input,
+.event-submit-form #formfield-form-widgets-submission_range_start_time input,
+.event-submit-form #formfield-form-widgets-submission_range_end_time input,
 div.time-picker {
     width: 70px !important;
 }
@@ -1144,36 +1144,36 @@ div.time-picker {
 }
 
 /* simple one day event */
-.event-submit-form #formfield-form-widgets-date {
+.event-submit-form #formfield-form-widgets-submission_date {
     float: left;
     clear: left;
 }
-.event-submit-form #formfield-form-widgets-start_time {
+.event-submit-form #formfield-form-widgets-submission_start_time {
     float: left;
     clear: none;
 }
-.event-submit-form #formfield-form-widgets-end_time {
+.event-submit-form #formfield-form-widgets-submission_end_time {
     float: left;
     clear: right;   
 }
 
 /* complex multi day event */
-.event-submit-form #formfield-form-widgets-range_start_date {
+.event-submit-form #formfield-form-widgets-submission_range_start_date {
     float: left;
     clear: left;   
 }
 
-.event-submit-form #formfield-form-widgets-range_end_date {
+.event-submit-form #formfield-form-widgets-submission_range_end_date {
     float: left;
     clear: right;   
 }
 
-.event-submit-form #formfield-form-widgets-range_start_time {
+.event-submit-form #formfield-form-widgets-submission_range_start_time {
     float: left;
     clear: left;   
 }
 
-.event-submit-form #formfield-form-widgets-range_end_time {
+.event-submit-form #formfield-form-widgets-submission_range_end_time {
     float: left;
     clear: right;   
 }

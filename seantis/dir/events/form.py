@@ -3,6 +3,7 @@
 from copy import copy
 from five import grok
 from collections import OrderedDict
+from datetime import datetime
 
 from Acquisition import aq_inner, aq_base
 from Acquisition.interfaces import IAcquirer
@@ -35,7 +36,7 @@ from collective.geo.contentlocations.interfaces import IGeoManager
 
 from plone.app.event.base import default_timezone
 from plone.app.event.dx.behaviors import (
-    IEventRecurrence
+    IEventRecurrence, IEventBasic
 )
 
 from plone.formwidget.datetime.z3cform.widget import DateWidget
@@ -48,7 +49,7 @@ from seantis.dir.events.interfaces import (
     IEventsDirectory,
     IEventsDirectoryItem,
     ITerms,
-    IEventSubmissionDate,
+    IEventSubmissionData,
     validate_event_submission
 )
 
@@ -245,22 +246,27 @@ class DateGroup(EventBaseGroup):
     label = _(u'Event date')
 
     dynamic_fields = (
-        'submission_date_type',
         'recurrence',
-        'date',
-        'range_start_date',
-        'range_end_date',
-        'whole_day'
+        'submission_date',
+        'submission_range_start_date',
+        'submission_range_end_date',
+        'submission_date_type'
     )
 
     group_fields = OrderedDict()
 
-    group_fields[IEventSubmissionDate] = (
+    group_fields[IEventSubmissionData] = (
         'submission_date_type',
-        'date', 'start_time', 'end_time',
-        'range_start_date', 'range_end_date',
-        'range_start_time', 'range_end_time',
-        'whole_day'
+        'submission_date',
+        'submission_start_time',
+        'submission_end_time',
+        'submission_range_start_date',
+        'submission_range_end_date',
+        'submission_range_start_time',
+        'submission_range_end_time'
+    )
+    group_fields[IEventBasic] = (
+        'whole_day',
     )
     group_fields[IEventRecurrence] = (
         'recurrence',
@@ -269,13 +275,18 @@ class DateGroup(EventBaseGroup):
     def update_dynamic_fields(self):
         recurrence = self.fields['recurrence']
         recurrence.widgetFactory = ParameterizedWidgetFactory(
-            RecurrenceWidget, start_field='date'
+            RecurrenceWidget, start_field='submission_date'
         )
 
         self.fields['submission_date_type'].widgetFactory = RadioFieldWidget
 
         # plone.formwidget.recurrencewidget needs this... obviously?
-        for field in ('date', 'range_start_date', 'range_end_date'):
+        date_widget_fields = (
+            'submission_date',
+            'submission_range_start_date',
+            'submission_range_end_date'
+        )
+        for field in date_widget_fields:
             self.fields[field].widgetFactory = ParameterizedWidgetFactory(
                 DateWidget, first_day=first_weekday_sun0
             )
@@ -492,6 +503,28 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         else:
             IGeoManager(content).removeCoordinates()
 
+    def inject_sane_dates(self, data):
+        """ Takes the IEventSubmissionDate data and makes nice IEvent data
+        out of it.
+
+        """
+
+        assert data['submission_date_type'], "invalid request"
+        single_day = 'date' in data['submission_date_type']
+
+        local_tz = dates.default_timezone()
+        in_local_tz = lambda date: dates.as_timezone(date, local_tz)
+
+        if single_day:
+            date, start, end = (
+                data['submission_date'],
+                data['submission_start_time'],
+                data['submission_end_time']
+            )
+
+            data['start'] = in_local_tz(datetime.combine(date, start))
+            data['end'] = in_local_tz(datetime.combine(date, end))
+
     def handle_preview(self, action):
         data, errors = self.extractData()
         validate_event_submission(data)
@@ -539,6 +572,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         data['timezone'] = default_timezone()
 
         self.prepare_coordinates(data)
+        self.inject_sane_dates(data)
 
         content = createContent('seantis.dir.events.item', **data)
 

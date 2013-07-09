@@ -10,7 +10,7 @@ from plone.namedfile.field import NamedImage, NamedFile
 from plone.directives import form
 from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
 from zope.schema import Text, TextLine, Bool, List, Choice, Time, Date
-from zope.interface import Invalid, Interface, Attribute
+from zope.interface import Invalid, Interface, Attribute, alsoProvides
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
 from seantis.dir.base.schemafields import Email, AutoProtocolURI
@@ -238,7 +238,7 @@ IEventsDirectoryItem.setTaggedValue(
 )
 
 
-class IEventSubmissionDate(form.Schema):
+class IEventSubmissionData(form.Schema):
     """ The event submission form uses this interfaces to get the event dates
     from the user, since the default IEventBasic interface turned out to be
     too confusing for many.
@@ -257,45 +257,39 @@ class IEventSubmissionDate(form.Schema):
         default=['date']
     )
 
-    date = Date(
+    submission_date = Date(
         title=_(u'Date'),
         required=False
     )
 
-    start_time = Time(
+    submission_start_time = Time(
         title=_(u'Start time'),
         required=False
     )
 
-    end_time = Time(
+    submission_end_time = Time(
         title=_(u'End time'),
         required=False
     )
 
-    range_start_date = Date(
+    submission_range_start_date = Date(
         title=_(u'Start date'),
         required=False
     )
 
-    range_end_date = Date(
+    submission_range_end_date = Date(
         title=_(u'End date'),
         required=False
     )
 
-    range_start_time = Time(
+    submission_range_start_time = Time(
         title=_(u'Starts each day at'),
         required=False
     )
 
-    range_end_time = Time(
+    submission_range_end_time = Time(
         title=_(u'Ends each day at'),
         required=False
-    )
-
-    whole_day = Bool(
-        title=_(u'Lasts the whole day'),
-        required=False,
-        default=False
     )
 
 
@@ -306,7 +300,7 @@ def validate_event_submission(data):
     if not data['recurrence']:
         return
 
-    limit = 52  # one event each week
+    limit = 365  # one event each day for a whole year
 
     if occurrences_over_limit(data['recurrence'], data['start'], limit):
         raise ActionExecutionError(Invalid(

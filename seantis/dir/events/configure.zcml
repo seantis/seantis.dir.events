@@ -44,6 +44,15 @@
         factory=".pages.URLTransform"
         />
 
+    <!-- Behaviors -->
+    <plone:behavior
+        title="Event Submission Data"
+        description="Event Data relevant in a submission, but not for display"
+        provides=".interfaces.IEventSubmissionData"
+        for=".interfaces.IEventsDirectoryItem"
+    />
+
+
     <!-- Profiles -->
     <genericsetup:registerProfile 
         name="default"
