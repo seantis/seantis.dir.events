@@ -292,6 +292,12 @@ class IEventSubmissionDate(form.Schema):
         required=False
     )
 
+    whole_day = Bool(
+        title=_(u'Lasts the whole day'),
+        required=False,
+        default=False
+    )
+
 
 # validation for multiple fields on the form (not possible through invariants
 # because multiple interfaces are involved)

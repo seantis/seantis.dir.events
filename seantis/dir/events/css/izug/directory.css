@@ -1119,18 +1119,16 @@ form span.required:before {
     display: none;   
 }
 
-/* date / time part on submit form */
-.event-submit-form #formfield-form-widgets-date {
-    float: left;
-    clear: left;
-}
-.event-submit-form #formfield-form-widgets-start_time {
-    float: left;
-    clear: none;
-}
-.event-submit-form #formfield-form-widgets-end_time {
-    float: left;
-    clear: right;   
+/* 
+
+    date / time part on submit form
+    
+*/
+
+/* general date time styles */
+.event-submit-form input:disabled {
+    background-color: #eee;
+    color: #eee; 
 }
 
 .event-submit-form #formfield-form-widgets-start_time input,
@@ -1144,6 +1142,42 @@ div.time-picker {
 #formfield-form-widgets-recurrence > label {
     display: none;
 }
+
+/* simple one day event */
+.event-submit-form #formfield-form-widgets-date {
+    float: left;
+    clear: left;
+}
+.event-submit-form #formfield-form-widgets-start_time {
+    float: left;
+    clear: none;
+}
+.event-submit-form #formfield-form-widgets-end_time {
+    float: left;
+    clear: right;   
+}
+
+/* complex multi day event */
+.event-submit-form #formfield-form-widgets-range_start_date {
+    float: left;
+    clear: left;   
+}
+
+.event-submit-form #formfield-form-widgets-range_end_date {
+    float: left;
+    clear: right;   
+}
+
+.event-submit-form #formfield-form-widgets-range_start_time {
+    float: left;
+    clear: left;   
+}
+
+.event-submit-form #formfield-form-widgets-range_end_time {
+    float: left;
+    clear: right;   
+}
+
 /* the recurrence widget is scrambled egg on izug.basetheme */
 .rioccurrences .occurrence .action {
     position: absolute;

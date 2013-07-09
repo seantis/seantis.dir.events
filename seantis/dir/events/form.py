@@ -249,7 +249,8 @@ class DateGroup(EventBaseGroup):
         'recurrence',
         'date',
         'range_start_date',
-        'range_end_date'
+        'range_end_date',
+        'whole_day'
     )
 
     group_fields = OrderedDict()
@@ -258,7 +259,8 @@ class DateGroup(EventBaseGroup):
         'submission_date_type',
         'date', 'start_time', 'end_time',
         'range_start_date', 'range_end_date',
-        'range_start_time', 'range_end_time'
+        'range_start_time', 'range_end_time',
+        'whole_day'
     )
     group_fields[IEventRecurrence] = (
         'recurrence',
