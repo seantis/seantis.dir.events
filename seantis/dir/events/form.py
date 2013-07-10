@@ -35,7 +35,6 @@ from collective.geo.contentlocations.interfaces import IGeoManager
 
 from plone.formwidget.datetime.z3cform.widget import DateWidget
 from plone.app.event.base import default_timezone
-from plone.app.event.dx.behaviors import IEventRecurrence
 from plone.app.event.dx.behaviors import first_weekday_sun0
 
 from seantis.dir.base import utils as base_utils
@@ -242,11 +241,11 @@ class DateGroup(EventBaseGroup):
     label = _(u'Event date')
 
     dynamic_fields = (
-        'recurrence',
         'submission_date',
         'submission_range_start_date',
         'submission_range_end_date',
-        'submission_date_type'
+        'submission_date_type',
+        'submission_recurrence'
     )
 
     group_fields = OrderedDict()
@@ -260,14 +259,12 @@ class DateGroup(EventBaseGroup):
         'submission_range_end_date',
         'submission_range_start_time',
         'submission_range_end_time',
-        'submission_whole_day'
-    )
-    group_fields[IEventRecurrence] = (
-        'recurrence',
+        'submission_whole_day',
+        'submission_recurrence'
     )
 
     def update_dynamic_fields(self):
-        recurrence = self.fields['recurrence']
+        recurrence = self.fields['submission_recurrence']
         recurrence.widgetFactory = ParameterizedWidgetFactory(
             RecurrenceWidget, start_field='submission_date'
         )

@@ -7,9 +7,12 @@ import magic
 from z3c.form.interfaces import ActionExecutionError
 from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
+from plone.app.event.dx import ParameterizedWidgetFactory
+from plone.app.event.dx.behaviors import first_weekday_sun0
 from plone.directives import form
 from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
 from plone.autoform.interfaces import IFormFieldProvider
+from plone.formwidget.recurrence.z3cform.widget import RecurrenceWidget
 from zope.schema import Text, TextLine, Bool, List, Choice, Time, Date
 from zope.interface import Invalid, Interface, Attribute, alsoProvides
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
@@ -226,18 +229,6 @@ IEventsDirectoryItem.setTaggedValue(
     'seantis.dir.base.omitted', ['cat3', 'cat4', 'description']
 )
 
-# define the event items order
-IEventsDirectoryItem.setTaggedValue(
-    'seantis.dir.base.order',
-    ['title', 'cat1', 'cat2', 'short_description', 'long_description',
-     'IEventBasic.start', 'IEventBasic.end', 'IEventBasic.whole_day',
-     'IEventBasic.timezone', 'IEventRecurrence.recurrence',
-     'image', 'attachment_1', 'attachment_2', 'locality', 'street',
-     'housenumber', 'zipcode', 'town', 'location_url', 'event_url',
-     'organizer', 'contact_name', 'contact_email', 'contact_phone',
-     'prices', 'registration', '*']
-)
-
 
 class IEventSubmissionData(form.Schema):
     """ The event submission form uses this interfaces to get the event dates
@@ -298,8 +289,21 @@ class IEventSubmissionData(form.Schema):
         required=False
     )
 
+    submission_recurrence = Text(
+        title=_(u'Recurrence'),
+        required=False
+    )
+
 
 alsoProvides(IEventSubmissionData, IFormFieldProvider)
+
+IEventSubmissionData.setTaggedValue('plone.autoform.widgets', {
+    'submission_recurrence': ParameterizedWidgetFactory(
+        RecurrenceWidget,
+        start_field='IEventSubmissionData.submission_date',
+        first_day=first_weekday_sun0
+    )
+})
 
 
 # validation for multiple fields on the form (not possible through invariants
@@ -310,9 +314,6 @@ def validate_event_submission(data):
         return
 
     limit = 365  # one event each day for a whole year
-
-    if data['submission_date_type'] == ['date']:
-        start = datetime.combine
 
     if occurrences_over_limit(data['recurrence'], data['start'], limit):
         raise ActionExecutionError(Invalid(

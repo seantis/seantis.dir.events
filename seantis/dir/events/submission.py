@@ -1,5 +1,5 @@
 from datetime import datetime
-from plone.app.event.dx.behaviors import IEventBasic
+from plone.app.event.dx.behaviors import IEventBasic, IEventRecurrence
 from zope.annotation.interfaces import IAnnotations
 from zope.interface import implements
 from seantis.dir.events.interfaces import IEventSubmissionData
@@ -7,6 +7,26 @@ from seantis.dir.events import dates
 
 
 ANNOTATION_KEY = 'seantis.dir.events.submission-data'
+
+
+def get_event_dates_from_submission(data):
+
+    local_tz = dates.default_timezone()
+    in_local_tz = lambda date: dates.as_timezone(date, local_tz)
+
+    if data['submission_date_type'] == ['date']:
+        date, start, end, whole_day, recurrence = (
+            data['submission_date'],
+            data['submission_start_time'],
+            data['submission_end_time'],
+            data['submission_whole_day'],
+            data['submission_recurrence']
+        )
+
+        start = in_local_tz(datetime.combine(date, start))
+        end = in_local_tz(datetime.combine(date, end))
+
+        return start, end, whole_day, recurrence
 
 
 class EventSubmissionData(object):
@@ -39,9 +59,7 @@ class EventSubmissionData(object):
     def ready_for_injection(self):
         for field in self.fields:
             if field not in self.data:
-                print "can't inject, missing %s" % field
                 return False
-
         return True
 
     def inject_sane_dates(self):
@@ -49,23 +67,12 @@ class EventSubmissionData(object):
         data out of it.
 
         """
-
-        print "injecting sane dates"
-
         basic = IEventBasic(self.context)
-        single_day = self.data['submission_date_type'] == ['date']
+        recurring = IEventRecurrence(self.context)
 
-        local_tz = dates.default_timezone()
-        in_local_tz = lambda date: dates.as_timezone(date, local_tz)
-
-        if single_day:
-            date, start, end = (
-                self.data['submission_date'],
-                self.data['submission_start_time'],
-                self.data['submission_end_time']
-            )
-
-            basic.start = in_local_tz(datetime.combine(date, start))
-            basic.end = in_local_tz(datetime.combine(date, end))
-
-            basic.whole_day = self.data['submission_whole_day']
+        (
+            basic.start,
+            basic.end,
+            basic.whole_day,
+            recurring.recurrence
+        ) = get_event_dates_from_submission(self.data)
