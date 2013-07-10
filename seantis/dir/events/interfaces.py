@@ -9,6 +9,7 @@ from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
 from plone.directives import form
 from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
+from plone.autoform.interfaces import IFormFieldProvider
 from zope.schema import Text, TextLine, Bool, List, Choice, Time, Date
 from zope.interface import Invalid, Interface, Attribute, alsoProvides
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
@@ -292,6 +293,14 @@ class IEventSubmissionData(form.Schema):
         required=False
     )
 
+    submission_whole_day = Bool(
+        title=_(u'Whole day'),
+        required=False
+    )
+
+
+alsoProvides(IEventSubmissionData, IFormFieldProvider)
+
 
 # validation for multiple fields on the form (not possible through invariants
 # because multiple interfaces are involved)
@@ -301,6 +310,9 @@ def validate_event_submission(data):
         return
 
     limit = 365  # one event each day for a whole year
+
+    if data['submission_date_type'] == ['date']:
+        start = datetime.combine
 
     if occurrences_over_limit(data['recurrence'], data['start'], limit):
         raise ActionExecutionError(Invalid(

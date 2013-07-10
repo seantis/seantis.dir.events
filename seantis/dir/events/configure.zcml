@@ -49,6 +49,7 @@
         title="Event Submission Data"
         description="Event Data relevant in a submission, but not for display"
         provides=".interfaces.IEventSubmissionData"
+        factory=".submission.EventSubmissionData"
         for=".interfaces.IEventsDirectoryItem"
     />
 

@@ -24,7 +24,7 @@
         '#formfield-form-widgets-submission_range_end_time input'
     ];
 
-    var wholeday_field = '#formfield-form-widgets-whole_day input';
+    var wholeday_field = '#formfield-form-widgets-submission_whole_day input';
 
     var submission_type = function(shown) {
         if (shown) {
