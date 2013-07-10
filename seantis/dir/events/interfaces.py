@@ -285,7 +285,7 @@ class IEventSubmissionData(form.Schema):
     )
 
     submission_whole_day = Bool(
-        title=_(u'Whole day'),
+        title=_(u'Whole Day'),
         required=False
     )
 
