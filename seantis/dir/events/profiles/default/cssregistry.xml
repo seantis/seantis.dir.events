@@ -3,9 +3,6 @@
     <stylesheet id="++resource++seantis.dir.events.stylesheets/base.css"
         media="all" rendering="link"
     />
-    <stylesheet id="++resource++seantis.dir.events.stylesheets/timepicker.css"
-        media="all" rendering="link" 
-    />
     <stylesheet id="++resource++seantis.dir.events.stylesheets/recurrence.css"
         media="all" rendering="link" 
         insert-after="++resource++plone.formwidget.recurrence/integration.css"

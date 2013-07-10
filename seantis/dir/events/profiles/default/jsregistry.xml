@@ -13,12 +13,6 @@
         insert-after="jquery.js"
     />
 
-    <javascript id="++resource++seantis.dir.events.javascript/timepicker.js"
-        enabled="True"
-        insert-after="jquery.js"
-        compression="none"
-    />
-
     <javascript id="++resource++seantis.dir.events.javascript/form.js"
         enabled="True"
         expression="python: 'seantis.dir.events' in object.portal_type"
