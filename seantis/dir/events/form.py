@@ -494,6 +494,25 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         else:
             IGeoManager(content).removeCoordinates()
 
+    def prepare_submission(self, data):
+        self.submission = {}
+
+        submission_fields = IEventSubmissionData.names()
+        submitted_fields = data.keys()
+
+        for field in submitted_fields:
+            if field in submission_fields:
+                self.submission[field] = data[field]
+                del data[field]
+
+    def apply_submission(self, content):
+        submission = IEventSubmissionData(content)
+
+        for field, value in self.submission.items():
+            setattr(submission, field, value)
+
+        submission.inject_sane_dates()
+
     def handle_preview(self, action):
         data, errors = self.extractData()
         #validate_event_submission(data)
@@ -518,6 +537,9 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         self.prepare_coordinates(data)
         self.apply_coordinates(self.getContent())
 
+        self.prepare_submission(data)
+        self.apply_submission(self.getContent())
+
         changes = self.applyChanges(data)
 
         if changes:
@@ -541,11 +563,14 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         data['timezone'] = default_timezone()
 
         self.prepare_coordinates(data)
+        self.prepare_submission(data)
 
         content = createContent('seantis.dir.events.item', **data)
 
         if IAcquirer.providedBy(content):
             content = content.__of__(aq_inner(self.context))
+
+        self.apply_submission(content)
 
         return aq_base(content)
 
@@ -605,6 +630,9 @@ class EventEditForm(EventSubmitForm):
 
         self.prepare_coordinates(data)
         self.apply_coordinates(self.getContent())
+
+        self.prepare_submission(data)
+        self.apply_submission(self.getContent())
 
         changes = self.applyChanges(data)
 

@@ -64,6 +64,14 @@ def as_timezone(date, timezone):
     return timezone.normalize(date)
 
 
+def as_rfc5545_string(datetime):
+    """ Converts a datetime into the RFC5545 Datetime Form #2 as defined in
+    http://tools.ietf.org/html/rfc5545#section-3.3.4.
+
+    """
+    return to_utc(datetime).strftime('%Y%m%dT%H%M%SZ')
+
+
 def is_whole_day(start, end):
     return all((
         start.hour == 0,
@@ -77,6 +85,23 @@ def is_whole_day(start, end):
 
 def days_between(start, end):
     return [(start + timedelta(days=d)) for d in xrange((end - start).days)]
+
+
+def combine_daterange(date, start_time, end_time):
+    """ Combines a date, a start_time and an end_time into a start-datetime,
+    end-datetime range.
+
+    """
+    if end_time >= start_time:
+        return (
+            datetime.combine(date, start_time),
+            datetime.combine(date, end_time)
+        )
+    else:
+        return (
+            datetime.combine(date, start_time),
+            datetime.combine(date + timedelta(days=1), end_time)
+        )
 
 
 def split_days_count(start, end):
@@ -125,22 +150,22 @@ def human_daterange(start, end, request):
         else:
             if default_now().year == start.year:
                 return start.strftime('%d.%m. - ') \
-                + end.strftime('%d.%m. ') \
-                + utils.translate(request, _(u'Whole Day'))
+                    + end.strftime('%d.%m. ') \
+                    + utils.translate(request, _(u'Whole Day'))
             else:
                 return start.strftime('%d.%m.%Y. - ') \
-                + end.strftime('%d.%m.%Y. ') \
-                + utils.translate(request, _(u'Whole Day'))
+                    + end.strftime('%d.%m.%Y. ') \
+                    + utils.translate(request, _(u'Whole Day'))
 
     if split_days_count(start, end) < 1:
         return start.strftime('%H:%M - ') + end.strftime('%H:%M')
     else:
         if default_now().year == start.year:
             return start.strftime('%d.%m. %H:%M - ') \
-            + end.strftime('%d.%m. %H:%M')
+                + end.strftime('%d.%m. %H:%M')
         else:
             return start.strftime('%d.%m.%Y. %H:%M - ') \
-            + end.strftime('%d.%m.%Y. %H:%M')
+                + end.strftime('%d.%m.%Y. %H:%M')
 
 methods = list()
 ranges = dict()
@@ -249,15 +274,17 @@ class DateRanges(object):
     @property
     @daterange(_(u'Tomorrow'))
     def tomorrow(self):
-        return (self.this_morning + timedelta(days=1),
-                self.this_evening + timedelta(days=1)
+        return (
+            self.this_morning + timedelta(days=1),
+            self.this_evening + timedelta(days=1)
         )
 
     @property
     @daterange(_(u'Day after Tomorrow'))
     def day_after_tomorrow(self):
-        return (self.this_morning + timedelta(days=2),
-                self.this_evening + timedelta(days=2)
+        return (
+            self.this_morning + timedelta(days=2),
+            self.this_evening + timedelta(days=2)
         )
 
     @property
@@ -303,7 +330,7 @@ class DateRanges(object):
             tzinfo=self.now.tzinfo
         )
         end_of_week = next_weekday(start_of_week, "SU") \
-        + timedelta(days=1, microseconds=-1)
+            + timedelta(days=1, microseconds=-1)
 
         return start_of_week, end_of_week
 

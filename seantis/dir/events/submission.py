@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, time
 from plone.app.event.dx.behaviors import IEventBasic, IEventRecurrence
 from zope.annotation.interfaces import IAnnotations
 from zope.interface import implements
@@ -14,7 +14,9 @@ def get_event_dates_from_submission(data):
     local_tz = dates.default_timezone()
     in_local_tz = lambda date: dates.as_timezone(date, local_tz)
 
-    if data['submission_date_type'] == ['date']:
+    single_day = data['submission_date_type'] == ['date']
+
+    if single_day:
         date, start, end, whole_day, recurrence = (
             data['submission_date'],
             data['submission_start_time'],
@@ -23,8 +25,33 @@ def get_event_dates_from_submission(data):
             data['submission_recurrence']
         )
 
-        start = in_local_tz(datetime.combine(date, start))
-        end = in_local_tz(datetime.combine(date, end))
+        start, end = map(
+            in_local_tz, dates.combine_daterange(date, start, end)
+        )
+
+        return start, end, whole_day, recurrence
+    else:
+        start_date, end_date, start_time, end_time, whole_day = (
+            data['submission_range_start_date'],
+            data['submission_range_end_date'],
+            data['submission_range_start_time'],
+            data['submission_range_end_time'],
+            data['submission_whole_day']
+        )
+
+        start, end = map(
+            in_local_tz, dates.combine_daterange(
+                start_date, start_time, end_time
+            )
+        )
+
+        recurrence = 'RRULE:FREQ=DAILY;UNTIL={}'.format(
+            dates.as_rfc5545_string(
+                in_local_tz(
+                    datetime.combine(end_date, time(23, 59, 59))
+                )
+            )
+        )
 
         return start, end, whole_day, recurrence
 
@@ -50,17 +77,8 @@ class EventSubmissionData(object):
     def __setattr__(self, name, value):
         if name in self.__dict__.get('fields', []):
             self.data[name] = value
-
-            if self.ready_for_injection():
-                self.inject_sane_dates()
         else:
             self.__dict__[name] = value
-
-    def ready_for_injection(self):
-        for field in self.fields:
-            if field not in self.data:
-                return False
-        return True
 
     def inject_sane_dates(self):
         """ Takes the IEventSubmissionDate data and makes nice IEventBasic
