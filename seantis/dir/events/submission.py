@@ -39,6 +39,10 @@ def get_event_dates_from_submission(data):
             data['submission_whole_day']
         )
 
+        if whole_day:
+            start_time = time(0, 0, 0)
+            end_time = time(23, 59, 59)
+
         start, end = map(
             in_local_tz, dates.combine_daterange(
                 start_date, start_time, end_time
@@ -94,3 +98,5 @@ class EventSubmissionData(object):
             basic.whole_day,
             recurring.recurrence
         ) = get_event_dates_from_submission(self.data)
+
+        self.submission_recurrence = recurring.recurrence

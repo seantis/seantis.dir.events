@@ -570,6 +570,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         if IAcquirer.providedBy(content):
             content = content.__of__(aq_inner(self.context))
 
+        # must be done before adding to the container
         self.apply_submission(content)
 
         return aq_base(content)
