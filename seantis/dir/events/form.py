@@ -667,7 +667,7 @@ class ListPreviewWidget(DetailPreviewWidget):
     _template = ViewPageTemplateFile('templates/previewlist.pt')
     show_map = False
 
-    @property
+    @base_utils.cached_property
     def occurrence_groups(self):
         dr = dates.DateRanges()
         start, end = dr.this_year[0], dr.next_year[1]
@@ -675,6 +675,15 @@ class ListPreviewWidget(DetailPreviewWidget):
             occurrences(self.context, start, end), self.request
         )
         return result
+
+    @base_utils.cached_property
+    def occurrences_count(self):
+        count = 0
+
+        for day, occurrences in self.occurrence_groups.items():
+            count += len(occurrences)
+
+        return count
 
 
 def DetailPreviewFieldWidget(field, request):
@@ -706,6 +715,15 @@ class ListPreviewGroup(PreviewGroup):
 
     def update_dynamic_fields(self):
         self.fields['title'].widgetFactory = ListPreviewFieldWidget
+
+    def update_widgets(self):
+        occurrences = self.widgets['title'].occurrences_count
+        if occurrences > 1:
+            self.label = _(u'List Preview (${number} Occurrences)', mapping={
+                'number': occurrences
+            })
+        else:
+            self.label = _(u'List Preview (No Occurrences)')
 
 
 class SubmitterGroup(EventBaseGroup):

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-07-10 14:43+0000\n"
+"POT-Creation-Date: 2013-07-11 10:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,7 +22,7 @@ msgstr "${chars} Zeichen übrig"
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
-#: ./form.py:774
+#: ./form.py:792
 msgid "Adjust"
 msgstr "Korrigieren"
 
@@ -47,7 +47,7 @@ msgstr "Anhang 2"
 msgid "Attachments"
 msgstr "Anhänge"
 
-#: ./form.py:829
+#: ./form.py:847
 msgid "Back"
 msgstr "Zurück"
 
@@ -108,7 +108,7 @@ msgstr "Datum"
 msgid "Day after Tomorrow"
 msgstr "Übermorgen"
 
-#: ./form.py:692
+#: ./form.py:701
 msgid "Detail Preview"
 msgstr "Details-Vorschau"
 
@@ -144,7 +144,7 @@ msgstr "Veranstaltungs Vorschau Aktualisiert"
 msgid "Event Saved"
 msgstr "Veranstaltung gespeichert"
 
-#: ./form.py:800
+#: ./form.py:818
 msgid "Event Submission Finish"
 msgstr "Veranstaltung melden"
 
@@ -152,7 +152,7 @@ msgstr "Veranstaltung melden"
 msgid "Event Submission Form"
 msgstr "Veranstaltung erfassen"
 
-#: ./form.py:752
+#: ./form.py:770
 msgid "Event Submission Preview"
 msgstr "Veranstaltungs-Vorschau"
 
@@ -169,7 +169,7 @@ msgstr "Veranstaltungs-Datum"
 msgid "Event submission cancelled"
 msgstr "Veranstaltungs-Meldung abgebrochen"
 
-#: ./form.py:826
+#: ./form.py:844
 msgid "Event submitted"
 msgstr "Veranstaltung gemeldet"
 
@@ -237,7 +237,7 @@ msgstr "Von Heute bis Jahresende"
 msgid "Housenumber"
 msgstr "Hausnummer"
 
-#: ./form.py:732
+#: ./form.py:750
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr "Ich stimme den <a target='_blank' href='${url}'>Allgemeinen Geschäftsbedingungen</a> zu"
 
@@ -257,9 +257,17 @@ msgstr "Bilder"
 msgid "Information"
 msgstr "Informationen"
 
-#: ./form.py:705
+#: ./form.py:714
 msgid "List Preview"
 msgstr "Listen-Vorschau"
+
+#: ./form.py:722
+msgid "List Preview (${number} Occurrences)"
+msgstr "Listen-Vorschau (${number} Wiederholungen)"
+
+#: ./form.py:726
+msgid "List Preview (No Occurrences)"
+msgstr "Listen-Vorschau (Keine Wiederholungen)"
 
 #: ./interfaces.py:150
 #: ./templates/macros.pt:128
@@ -391,7 +399,7 @@ msgstr "Status"
 msgid "Street"
 msgstr "Strasse"
 
-#: ./form.py:814
+#: ./form.py:832
 msgid "Submit"
 msgstr "Melden"
 
@@ -403,7 +411,7 @@ msgstr "Veranstaltung melden"
 msgid "Submitted"
 msgstr "Gemeldet"
 
-#: ./form.py:713
+#: ./form.py:731
 #: ./templates/macros.pt:213
 msgid "Submitter"
 msgstr "Erfasser"

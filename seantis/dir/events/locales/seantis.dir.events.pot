@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-07-10 14:43+0000\n"
+"POT-Creation-Date: 2013-07-11 10:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
-#: ./form.py:774
+#: ./form.py:792
 msgid "Adjust"
 msgstr ""
 
@@ -50,7 +50,7 @@ msgstr ""
 msgid "Attachments"
 msgstr ""
 
-#: ./form.py:829
+#: ./form.py:847
 msgid "Back"
 msgstr ""
 
@@ -111,7 +111,7 @@ msgstr ""
 msgid "Day after Tomorrow"
 msgstr ""
 
-#: ./form.py:692
+#: ./form.py:701
 msgid "Detail Preview"
 msgstr ""
 
@@ -147,7 +147,7 @@ msgstr ""
 msgid "Event Saved"
 msgstr ""
 
-#: ./form.py:800
+#: ./form.py:818
 msgid "Event Submission Finish"
 msgstr ""
 
@@ -155,7 +155,7 @@ msgstr ""
 msgid "Event Submission Form"
 msgstr ""
 
-#: ./form.py:752
+#: ./form.py:770
 msgid "Event Submission Preview"
 msgstr ""
 
@@ -172,7 +172,7 @@ msgstr ""
 msgid "Event submission cancelled"
 msgstr ""
 
-#: ./form.py:826
+#: ./form.py:844
 msgid "Event submitted"
 msgstr ""
 
@@ -240,7 +240,7 @@ msgstr ""
 msgid "Housenumber"
 msgstr ""
 
-#: ./form.py:732
+#: ./form.py:750
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr ""
 
@@ -260,8 +260,16 @@ msgstr ""
 msgid "Information"
 msgstr ""
 
-#: ./form.py:705
+#: ./form.py:714
 msgid "List Preview"
+msgstr ""
+
+#: ./form.py:722
+msgid "List Preview (${number} Occurrences)"
+msgstr ""
+
+#: ./form.py:726
+msgid "List Preview (No Occurrences)"
 msgstr ""
 
 #: ./interfaces.py:150
@@ -394,7 +402,7 @@ msgstr ""
 msgid "Street"
 msgstr ""
 
-#: ./form.py:814
+#: ./form.py:832
 msgid "Submit"
 msgstr ""
 
@@ -406,7 +414,7 @@ msgstr ""
 msgid "Submitted"
 msgstr ""
 
-#: ./form.py:713
+#: ./form.py:731
 #: ./templates/macros.pt:213
 msgid "Submitter"
 msgstr ""
