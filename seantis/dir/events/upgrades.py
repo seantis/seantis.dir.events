@@ -143,6 +143,11 @@ def upgrade_1004_to_1005(context):
         'profile-seantis.dir.events:default', 'typeinfo'
     )
 
+    # upgrade javascript
+    setup.runImportStepFromProfile(
+        'profile-seantis.dir.events:default', 'jsregistry'
+    )
+
     # guess the submission data for the existing events. This does
     # not actually lead to a change of the event dates, it just opens
     # the possiblity to do so by manually editing and saving the event
