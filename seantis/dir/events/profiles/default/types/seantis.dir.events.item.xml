@@ -27,6 +27,7 @@
     <element value="plone.app.event.dx.behaviors.IEventBasic"/>
     <element value="plone.app.event.dx.behaviors.IEventRecurrence"/>
     <element value="seantis.dir.base.interfaces.IDirectoryCategorized" />
+    <element value="seantis.dir.events.interfaces.IEventSubmissionData" />
  </property>
  
  <!-- View information -->

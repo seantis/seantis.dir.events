@@ -9,10 +9,10 @@ from seantis.dir.events import dates
 ANNOTATION_KEY = 'seantis.dir.events.submission-data'
 
 
-def get_event_dates_from_submission(data):
+def get_event_dates_from_submission(data, timezone=None):
 
-    local_tz = dates.default_timezone()
-    in_local_tz = lambda date: dates.as_timezone(date, local_tz)
+    timezone = timezone or dates.default_timezone()
+    in_timezone = lambda date: dates.as_timezone(date, timezone)
 
     single_day = data['submission_date_type'] == ['date']
 
@@ -26,7 +26,7 @@ def get_event_dates_from_submission(data):
         )
 
         start, end = map(
-            in_local_tz, dates.combine_daterange(date, start, end)
+            in_timezone, dates.combine_daterange(date, start, end)
         )
 
         return start, end, whole_day, recurrence
@@ -44,14 +44,14 @@ def get_event_dates_from_submission(data):
             end_time = time(23, 59, 59)
 
         start, end = map(
-            in_local_tz, dates.combine_daterange(
+            in_timezone, dates.combine_daterange(
                 start_date, start_time, end_time
             )
         )
 
         recurrence = 'RRULE:FREQ=DAILY;UNTIL={}'.format(
             dates.as_rfc5545_string(
-                in_local_tz(
+                in_timezone(
                     datetime.combine(end_date, time(23, 59, 59))
                 )
             )
@@ -97,6 +97,6 @@ class EventSubmissionData(object):
             basic.end,
             basic.whole_day,
             recurring.recurrence
-        ) = get_event_dates_from_submission(self.data)
+        ) = get_event_dates_from_submission(self.data, basic.timezone)
 
         self.submission_recurrence = recurring.recurrence

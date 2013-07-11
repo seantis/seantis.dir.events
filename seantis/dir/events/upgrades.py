@@ -15,6 +15,7 @@ from seantis.dir.base.upgrades import (
     reset_images_and_attachments
 )
 
+from seantis.dir.events.submission import EventSubmissionData
 from seantis.dir.events.interfaces import (
     IEventsDirectory,
     IEventsDirectoryItem
@@ -133,3 +134,43 @@ def upgrade_1003_to_1004(context):
     setup.runImportStepFromProfile(
         'profile-seantis.dir.events:default', 'cssregistry'
     )
+
+
+def upgrade_1004_to_1005(context):
+    # adds a new behvaior
+    setup = getToolByName(context, 'portal_setup')
+    setup.runImportStepFromProfile(
+        'profile-seantis.dir.events:default', 'typeinfo'
+    )
+
+    # guess the submission data for the existing events. This does
+    # not actually lead to a change of the event dates, it just opens
+    # the possiblity to do so by manually editing and saving the event
+    catalog = getToolByName(context, 'portal_catalog')
+    brains = catalog(object_provides=IEventsDirectoryItem.__identifier__)
+
+    h = 60 * 60
+
+    for brain in brains:
+        # don't acquire through interface as that would require more reindexing
+        event = brain.getObject()
+        submission = EventSubmissionData(event)
+
+        if (event.end - event.start).total_seconds() < 24 * h:
+            submission.submission_date_type = ['date']
+            submission.submission_date = event.local_start.date()
+            submission.submission_start_time = event.local_start.time()
+            submission.submission_end_time = event.local_end.time()
+            submission.submission_whole_day = event.whole_day
+            submission.submission_recurrence = event.recurrence
+        else:
+            # eventual recurrence is lost here, it's no longer possible
+            # to have recurring events which last for days
+            submission.submission_date_type = ['range']
+            submission.submission_range_start_date = event.local_start.date()
+            submission.submission_range_end_date = event.local_end.date()
+            submission.submission_range_start_time = event.local_start.time()
+            submission.submission_range_end_time = event.local_end.time()
+            submission.submission_whole_day = event.whole_day
+
+        event.reindexObject()
