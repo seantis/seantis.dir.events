@@ -24,6 +24,31 @@
         '#formfield-form-widgets-submission_range_end_time input'
     ];
 
+    var date_type_field = '#formfield-form-widgets-submission_date_type input';
+
+    var kept_in_sync = [
+        [
+            '#formfield-form-widgets-submission_start_time input',
+            '#formfield-form-widgets-submission_range_start_time input'
+        ],
+        [
+            '#formfield-form-widgets-submission_end_time input',
+            '#formfield-form-widgets-submission_range_end_time input'
+        ],
+        [
+            '#form-widgets-submission_date-day',
+            '#form-widgets-submission_range_start_date-day'
+        ],
+        [
+            '#form-widgets-submission_date-month',
+            '#form-widgets-submission_range_start_date-month'
+        ],
+        [
+            '#form-widgets-submission_date-year',
+            '#form-widgets-submission_range_start_date-year'
+        ]
+    ];
+
     var wholeday_field = '#formfield-form-widgets-submission_whole_day input';
 
     var submission_type = function(shown) {
@@ -119,6 +144,33 @@
         input.val(force_valid_time(input.val()));
     };
 
+    var sync_field = function(origin) {
+        var changed = $(origin);
+
+        for (var i=0; i < kept_in_sync.length; i++) {
+            var pair = kept_in_sync[i];
+
+            if (changed.is($(pair[0]))) {
+                $(pair[1]).val(changed.val());
+                continue;
+            }
+
+            if (changed.is($(pair[1]))) {
+                $(pair[0]).val(changed.val());
+                continue;
+            }
+        }
+    };
+
+    var sync_fields = function(e) {
+        var date_type = $(this).val();
+        var origin_index = date_type == 'date' ? 1 : 0;
+
+        for (var i=0; i < kept_in_sync.length; i++) {
+            sync_field(kept_in_sync[i][origin_index]);
+        }
+    };
+
     $(document).ready(function() {
         $(submission_input).change(update_submission_fields);
         $(wholeday_field).change(update_submission_fields);
@@ -130,5 +182,7 @@
             field.attr('placeholder', 'hh:mm');
             field.change(fix_time_inputs);
         }
+
+        $(date_type_field).change(sync_fields);
     });
 })(jQuery);
