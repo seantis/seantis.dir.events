@@ -20,7 +20,7 @@ from Products.CMFCore.interfaces import IActionSucceededEvent
 
 from seantis.dir.base.catalog import DirectoryCatalog
 from seantis.dir.base.interfaces import IDirectoryCatalog
-from seantis.dir.base.utils import previous_and_next
+from seantis.dir.base.utils import previous_and_next, cached_property
 
 from seantis.dir.events import utils
 from seantis.dir.events import dates
@@ -165,7 +165,11 @@ class EventIndex(object):
         self.key = 'seantis.dir.events.eventindex'
         self.datekey = '%Y.%m.%d'
 
-        self.index = initial_index
+        # be careful here, there's self.index a property which gets
+        # the index from the annotation. Initial_index is for debugging
+        # only and must not overwrite an existing index otherwise.
+        if initial_index is not None:
+            self.index = initial_index
 
         if not self.index:
             self.reindex()
@@ -183,7 +187,7 @@ class EventIndex(object):
     def reindex(self, events=[]):
         raise NotImplementedError
 
-    @property
+    @cached_property
     def annotations(self):
         return IAnnotations(self.catalog.directory, self.key)
 
