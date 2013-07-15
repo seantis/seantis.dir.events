@@ -92,6 +92,18 @@
 
     var force_valid_time = function(time) {
 
+        var twelve_hour_suffix = function(time) {
+            if (time.indexOf('am') != -1)
+                return ' AM';
+            if (time.indexOf('AM') != -1)
+                return ' AM';
+            if (time.indexOf('pm') != -1)
+                return ' PM';
+            if (time.indexOf('PM') != -1)
+                return ' PM';
+            return '';
+        };
+
         var normalize = function(time) {
             var digits = time.match(/\d+/g);
 
@@ -110,8 +122,8 @@
                     return digits + ':00';
                 case 3:
                     return [
-                        digits.substring(0, 2),
-                        digits.substring(2, 3) + '0'
+                        '0' + digits.substring(0, 1),
+                        digits.substring(1, 3)
                     ].join(':');
                 default:
                     return [
@@ -136,7 +148,7 @@
             return pad(hour, 2) + ':' + pad(minute, 2);
         };
 
-        return limit(normalize(time));
+        return limit(normalize(time)) + twelve_hour_suffix(time);
     };
 
     var fix_time_inputs = function(e) {
