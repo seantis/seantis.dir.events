@@ -54,11 +54,13 @@ class BrowserTestCase(FunctionalTestCase):
                 name='form.widgets.short_description'
             ).value = 'Some Party'
 
-            start = datetime.now().replace(hour=8)
-            end = datetime.now().replace(hour=12)
-
-            fourchan.set_date('form.widgets.start', start)
-            fourchan.set_date('form.widgets.end', end)
+            fourchan.set_date('form.widgets.submission_date', datetime.now())
+            fourchan.getControl(
+                name='form.widgets.submission_start_time'
+            ).value = '08:00 AM'
+            fourchan.getControl(
+                name='form.widgets.submission_end_time'
+            ).value = '12:00 AM'
 
             fourchan.getControl('Category1').selected = True
             fourchan.getControl('Category2').selected = True
@@ -155,17 +157,19 @@ class BrowserTestCase(FunctionalTestCase):
         ).value = 'Every Day'
         fourchan.getControl(name='form.widgets.locality').value = 'at home'
 
-        start = datetime.now().replace(hour=8)
-        end = datetime.now().replace(hour=12)
-
-        fourchan.set_date('form.widgets.start', start)
-        fourchan.set_date('form.widgets.end', end)
+        fourchan.set_date('form.widgets.submission_date', datetime.now())
+        fourchan.getControl(
+            name='form.widgets.submission_start_time'
+        ).value = '08:00 AM'
+        fourchan.getControl(
+            name='form.widgets.submission_end_time'
+        ).value = '04:00 PM'
 
         fourchan.getControl('Category1').selected = True
         fourchan.getControl('Category2').selected = True
 
         fourchan.getControl(
-            name='form.widgets.recurrence'
+            name='form.widgets.submission_recurrence'
         ).value = 'RRULE:FREQ=DAILY;COUNT=7'
 
         fourchan.getControl('Continue').click()
@@ -183,7 +187,7 @@ class BrowserTestCase(FunctionalTestCase):
         fourchan.getControl('Adjust').click()
 
         fourchan.getControl(
-            name='form.widgets.recurrence'
+            name='form.widgets.submission_recurrence'
         ).value = 'RRULE:FREQ=DAILY;COUNT=52'
 
         fourchan.getControl('Continue').click()
@@ -193,7 +197,9 @@ class BrowserTestCase(FunctionalTestCase):
         # remove the recurrence, ensuring that one event remains
         fourchan.getControl('Adjust').click()
 
-        fourchan.getControl(name='form.widgets.recurrence').value = ''
+        fourchan.getControl(
+            name='form.widgets.submission_recurrence'
+        ).value = ''
         fourchan.getControl('Continue').click()
 
         self.assertEqual(fourchan.contents.count('"eventgroup"'), 1)
@@ -202,7 +208,7 @@ class BrowserTestCase(FunctionalTestCase):
         fourchan.getControl('Adjust').click()
 
         fourchan.getControl(
-            name='form.widgets.recurrence'
+            name='form.widgets.submission_recurrence'
         ).value = 'RRULE:FREQ=DAILY;COUNT=53'
 
         fourchan.getControl('Continue').click()
@@ -217,14 +223,14 @@ class BrowserTestCase(FunctionalTestCase):
         fourchan.set_date('form.widgets.end', datetime(2020, 1, 1, 12, 0))
 
         fourchan.getControl(
-            name='form.widgets.recurrence'
+            name='form.widgets.submission_recurrence'
         ).value = 'RRULE:FREQ=DAILY;UNTIL=20200222T000000'
 
         fourchan.getControl('Continue').click()  # ok
         fourchan.getControl('Adjust').click()
 
         fourchan.getControl(
-            name='form.widgets.recurrence'
+            name='form.widgets.submission_recurrence'
         ).value = 'RRULE:FREQ=DAILY;UNTIL=20200223T000000'
 
         fourchan.getControl('Continue').click()  # not okay
@@ -253,11 +259,13 @@ class BrowserTestCase(FunctionalTestCase):
             name='form.widgets.short_description'
         ).value = 'Socializing Yo'
 
-        start = datetime.now().replace(hour=8)
-        end = datetime.now().replace(hour=12)
-
-        fourchan.set_date('form.widgets.start', start)
-        fourchan.set_date('form.widgets.end', end)
+        fourchan.set_date('form.widgets.submission_date', datetime.now())
+        fourchan.getControl(
+            name='form.widgets.submission_start_time'
+        ).value = '08:00 AM'
+        fourchan.getControl(
+            name='form.widgets.submission_end_time'
+        ).value = '12:00 AM'
 
         fourchan.getControl('Category1').selected = True
         fourchan.getControl('Category2').selected = True
@@ -348,11 +356,13 @@ class BrowserTestCase(FunctionalTestCase):
             new.getControl(name='form.widgets.short_description').value, ''
         )
 
-        start = datetime.now().replace(hour=8)
-        end = datetime.now().replace(hour=12)
-
-        new.set_date('form.widgets.start', start)
-        new.set_date('form.widgets.end', end)
+        new.set_date('form.widgets.submission_date', datetime.now())
+        new.getControl(
+            name='form.widgets.submission_start_time'
+        ).value = '08:00 AM'
+        new.getControl(
+            name='form.widgets.submission_end_time'
+        ).value = '12:00 AM'
 
         new.getControl('Category1').selected = True
         new.getControl('Category2').selected = True
@@ -424,11 +434,13 @@ class BrowserTestCase(FunctionalTestCase):
             name='form.widgets.short_description'
         ).value = 'Add Test Description'
 
-        start = datetime.now().replace(hour=8)
-        end = datetime.now().replace(hour=12)
-
-        browser.set_date('form.widgets.start', start)
-        browser.set_date('form.widgets.end', end)
+        browser.set_date('form.widgets.submission_date', datetime.now())
+        browser.getControl(
+            name='form.widgets.submission_start_time'
+        ).value = '08:00 AM'
+        browser.getControl(
+            name='form.widgets.submission_end_time'
+        ).value = '04:00 PM'
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
@@ -476,14 +488,16 @@ class BrowserTestCase(FunctionalTestCase):
             name='form.widgets.short_description'
         ).value = 'Add Test Description'
         browser.getControl(
-            name='form.widgets.recurrence'
+            name='form.widgets.submission_recurrence'
         ).value = 'RRULE:FREQ=DAILY;COUNT=7'
 
-        start = datetime.now().replace(hour=8)
-        end = datetime.now().replace(hour=12)
-
-        browser.set_date('form.widgets.start', start)
-        browser.set_date('form.widgets.end', end)
+        browser.set_date('form.widgets.submission_date', datetime.now())
+        browser.getControl(
+            name='form.widgets.submission_start_time'
+        ).value = '08:00 AM'
+        browser.getControl(
+            name='form.widgets.submission_end_time'
+        ).value = '04:00 PM'
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
@@ -541,11 +555,13 @@ class BrowserTestCase(FunctionalTestCase):
             name='form.widgets.short_description'
         ).value = 'Test'
 
-        start = datetime.now().replace(hour=8)
-        end = datetime.now().replace(hour=12)
-
-        browser.set_date('form.widgets.start', start)
-        browser.set_date('form.widgets.end', end)
+        browser.set_date('form.widgets.submission_date', datetime.now())
+        browser.getControl(
+            name='form.widgets.submission_start_time'
+        ).value = '08:00 AM'
+        browser.getControl(
+            name='form.widgets.submission_end_time'
+        ).value = '04:00 PM'
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
