@@ -165,7 +165,11 @@ class EventIndex(object):
         self.key = 'seantis.dir.events.eventindex'
         self.datekey = '%Y.%m.%d'
 
-        self.index = initial_index
+        # be careful here, there's self.index a property which gets
+        # the index from the annotation. Initial_index is for debugging
+        # only and must not overwrite an existing index otherwise.
+        if initial_index is not None:
+            self.index = initial_index
 
         if not self.index:
             self.reindex()
