@@ -4,7 +4,6 @@ log = logging.getLogger('seantis.dir.events')
 import imghdr
 import magic
 
-from z3c.form.interfaces import ActionExecutionError
 from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
 from plone.app.event.dx import ParameterizedWidgetFactory
@@ -25,8 +24,6 @@ from seantis.dir.base.interfaces import (
 )
 
 from seantis.dir.events import _
-from seantis.dir.events.recurrence import occurrences_over_limit
-
 
 class ITokenAccess(Interface):
 
@@ -304,25 +301,6 @@ IEventSubmissionData.setTaggedValue('plone.autoform.widgets', {
         first_day=first_weekday_sun0
     )
 })
-
-
-# validation for multiple fields on the form (not possible through invariants
-# because multiple interfaces are involved)
-def validate_event_submission(data):
-
-    if not data['recurrence']:
-        return
-
-    limit = 365  # one event each day for a whole year
-
-    if occurrences_over_limit(data['recurrence'], data['start'], limit):
-        raise ActionExecutionError(Invalid(
-            _(
-                u'You may not add more than ${max} occurences',
-                mapping={'max': limit}
-            )
-        ))
-
 
 # force the user to select at least one value for each category
 @form.validator(field=IDirectoryItemCategories['cat1'])

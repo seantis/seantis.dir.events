@@ -1,12 +1,44 @@
 from datetime import datetime, time
 from plone.app.event.dx.behaviors import IEventBasic, IEventRecurrence
+from z3c.form.interfaces import ActionExecutionError
 from zope.annotation.interfaces import IAnnotations
-from zope.interface import implements
+from zope.interface import implements, Invalid
 from seantis.dir.events.interfaces import IEventSubmissionData
 from seantis.dir.events import dates
+from seantis.dir.events import _
+from seantis.dir.events.recurrence import occurrences_over_limit
 
 
 ANNOTATION_KEY = 'seantis.dir.events.submission-data'
+
+
+def validate_event_submission(data):
+
+    start, end, whole_day, recurrence = get_event_dates_from_submission(data)
+
+    def fail(msg):
+        raise ActionExecutionError(Invalid(msg))
+
+    if not start:
+        fail(_(u'Missing start date'))
+
+    if not end:
+        fail(_(u'Missing end date'))
+
+    if start > end:
+        fail(_(u'Start date before end date'))
+
+    # ensure that the recurrences are not over limit
+    if recurrence:
+        limit = 365  # one event each day for a whole year
+
+        if occurrences_over_limit(recurrence, start, limit):
+            fail(
+                _(
+                    u'You may not add more than ${max} occurences',
+                    mapping={'max': limit}
+                )
+            )
 
 
 def get_event_dates_from_submission(data, timezone=None):

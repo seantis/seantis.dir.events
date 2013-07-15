@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from seantis.dir.events.tests import FunctionalTestCase
 
 
@@ -60,7 +60,7 @@ class BrowserTestCase(FunctionalTestCase):
             ).value = '08:00 AM'
             fourchan.getControl(
                 name='form.widgets.submission_end_time'
-            ).value = '12:00 AM'
+            ).value = '12:00 PM'
 
             fourchan.getControl('Category1').selected = True
             fourchan.getControl('Category2').selected = True
@@ -151,26 +151,20 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('Send us your events' in fourchan.contents)
 
         # create a recurring event
-        fourchan.getControl(name='form.widgets.title').value = 'Recurring'
-        fourchan.getControl(
-            name='form.widgets.short_description'
-        ).value = 'Every Day'
-        fourchan.getControl(name='form.widgets.locality').value = 'at home'
+        fourchan.set_widget('title', 'Recurring')
+        fourchan.set_widget('short_description', 'Every Day')
+        fourchan.set_widget('locality', 'at home')
 
-        fourchan.set_date('form.widgets.submission_date', datetime.now())
-        fourchan.getControl(
-            name='form.widgets.submission_start_time'
-        ).value = '08:00 AM'
-        fourchan.getControl(
-            name='form.widgets.submission_end_time'
-        ).value = '04:00 PM'
+        fourchan.set_date('submission_date', datetime.now())
+        fourchan.set_widget('submission_start_time', '08:00 AM')
+        fourchan.set_widget('submission_end_time', '04:00 PM')
 
         fourchan.getControl('Category1').selected = True
         fourchan.getControl('Category2').selected = True
 
-        fourchan.getControl(
-            name='form.widgets.submission_recurrence'
-        ).value = 'RRULE:FREQ=DAILY;COUNT=7'
+        fourchan.set_widget(
+            'submission_recurrence', 'RRULE:FREQ=DAILY;COUNT=7'
+        )
 
         fourchan.getControl('Continue').click()
         self.assertTrue('preview' in fourchan.url)
@@ -186,57 +180,54 @@ class BrowserTestCase(FunctionalTestCase):
         # update the recurrence and check back
         fourchan.getControl('Adjust').click()
 
-        fourchan.getControl(
-            name='form.widgets.submission_recurrence'
-        ).value = 'RRULE:FREQ=DAILY;COUNT=52'
-
+        fourchan.set_widget(
+            'submission_recurrence', 'RRULE:FREQ=DAILY;COUNT=365'
+        )
         fourchan.getControl('Continue').click()
 
-        self.assertEqual(fourchan.contents.count('"eventgroup"'), 52)
+        self.assertEqual(fourchan.contents.count('"eventgroup"'), 365)
 
         # remove the recurrence, ensuring that one event remains
         fourchan.getControl('Adjust').click()
 
-        fourchan.getControl(
-            name='form.widgets.submission_recurrence'
-        ).value = ''
+        fourchan.set_widget('submission_recurrence', '')
         fourchan.getControl('Continue').click()
 
         self.assertEqual(fourchan.contents.count('"eventgroup"'), 1)
 
-        # ensure that no more than 52 occurrences may be entered
+        # ensure that no more than 365 occurrences may be entered
         fourchan.getControl('Adjust').click()
-
-        fourchan.getControl(
-            name='form.widgets.submission_recurrence'
-        ).value = 'RRULE:FREQ=DAILY;COUNT=53'
+        fourchan.set_widget(
+            'submission_recurrence', 'RRULE:FREQ=DAILY;COUNT=366'
+        )
 
         fourchan.getControl('Continue').click()
 
         self.assertTrue(
-            'You may not add more than 52 occurences' in fourchan.contents
+            'You may not add more than 365 occurences' in fourchan.contents
         )
 
         # regression test for an issue where occurrences in the future
         # were not counted correctly
-        fourchan.set_date('form.widgets.start', datetime(2020, 1, 1, 10, 0))
-        fourchan.set_date('form.widgets.end', datetime(2020, 1, 1, 12, 0))
+        fourchan.set_date('submission_date', datetime(2020, 1, 1, 0, 0))
+        fourchan.set_widget('submission_start_time', '10:00 AM')
+        fourchan.set_widget('submission_end_time', '11:00 AM')
 
-        fourchan.getControl(
-            name='form.widgets.submission_recurrence'
-        ).value = 'RRULE:FREQ=DAILY;UNTIL=20200222T000000'
+        fourchan.set_widget(
+            'submission_recurrence', 'RRULE:FREQ=DAILY;UNTIL=20201231T000000'
+        )
 
         fourchan.getControl('Continue').click()  # ok
         fourchan.getControl('Adjust').click()
 
-        fourchan.getControl(
-            name='form.widgets.submission_recurrence'
-        ).value = 'RRULE:FREQ=DAILY;UNTIL=20200223T000000'
+        fourchan.set_widget(
+            'submission_recurrence', 'RRULE:FREQ=DAILY;UNTIL=20210101T000000'
+        )
 
         fourchan.getControl('Continue').click()  # not okay
 
         self.assertTrue(
-            'You may not add more than 52 occurences' in fourchan.contents
+            'You may not add more than 365 occurences' in fourchan.contents
         )
 
     def test_event_submission(self):
@@ -417,6 +408,58 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertFalse('John Doe' in public.contents)
         self.assertFalse('john.doe@example.com' in public.contents)
 
+    def test_simplified_recurrence_submission(self):
+        browser = self.admin_browser
+        browser.open('/veranstaltungen/++add++seantis.dir.events.item')
+
+        browser.set_widget('title', 'Testtitle')
+        browser.set_widget('short_description', 'Testdescription')
+
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
+
+        browser.set_widget('submission_date_type', ['range'])
+
+        start = datetime.today()
+        end = start + timedelta(days=2)
+
+        browser.set_date('submission_range_start_date', start)
+        browser.set_date('submission_range_end_date', end)
+        browser.set_widget('submission_range_start_time', '2:00 PM')
+        browser.set_widget('submission_range_end_time', '4:00 PM')
+
+        browser.getControl('Continue').click()
+
+        self.assertTrue('3 Occurrences' in browser.contents)
+
+        browser.getControl('Adjust').click()
+
+        browser.set_date('submission_range_end_date', end - timedelta(days=1))
+
+        browser.getControl('Continue').click()
+
+        self.assertTrue('2 Occurrences' in browser.contents)
+
+        browser.getControl('Adjust').click()
+        browser.set_widget('submission_date_type', ['date'])
+        browser.set_date('submission_date', start)
+        browser.set_widget('submission_start_time', '2:00 PM')
+        browser.set_widget('submission_end_time', '4:00 PM')
+        browser.set_widget('submission_recurrence', '')
+
+        browser.getControl('Continue').click()
+
+        self.assertTrue('No Occurrences' in browser.contents)
+
+        browser.getControl('Adjust').click()
+        browser.set_widget('submission_date_type', ['range'])
+        browser.set_date('submission_range_start_date', start)
+        browser.set_date('submission_range_end_date', start)
+
+        browser.getControl('Continue').click()
+
+        self.assertTrue('No Occurrences' in browser.contents)
+
     def test_default_forms(self):
 
         # admins use the submit / preview forms for adding / editing
@@ -424,9 +467,7 @@ class BrowserTestCase(FunctionalTestCase):
         # the following code tests that
         browser = self.admin_browser
 
-        browser.open(
-            '/veranstaltungen/++add++seantis.dir.events.item'
-        )
+        browser.open('/veranstaltungen/++add++seantis.dir.events.item')
         self.assertTrue('Send us your events' in browser.contents)
 
         browser.getControl(name='form.widgets.title').value = 'Add Test'

@@ -44,8 +44,7 @@ from seantis.dir.events.interfaces import (
     IEventsDirectory,
     IEventsDirectoryItem,
     ITerms,
-    IEventSubmissionData,
-    validate_event_submission
+    IEventSubmissionData
 )
 
 from seantis.dir.events.token import (
@@ -58,6 +57,7 @@ from seantis.dir.events.token import (
 )
 
 from seantis.dir.events import utils, dates
+from seantis.dir.events.submission import validate_event_submission
 from seantis.dir.events.recurrence import occurrences, grouped_occurrences
 from seantis.dir.events import _
 
@@ -515,7 +515,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
 
     def handle_preview(self, action):
         data, errors = self.extractData()
-        #validate_event_submission(data)
+        validate_event_submission(data)
 
         if errors:
             self.status = self.formErrorsMessage
@@ -528,7 +528,7 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
 
     def handle_update(self, action):
         data, errors = self.extractData()
-        #validate_event_submission(data)
+        validate_event_submission(data)
 
         if errors:
             self.status = self.formErrorsMessage
@@ -623,7 +623,7 @@ class EventEditForm(EventSubmitForm):
 
     def handle_save(self, action):
         data, errors = self.extractData()
-        #validate_event_submission(data)
+        validate_event_submission(data)
 
         if errors:
             self.status = self.formErrorsMessage

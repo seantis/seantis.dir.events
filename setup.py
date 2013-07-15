@@ -11,7 +11,7 @@ teamraum_require = [
     'plonetheme.teamraum'
 ]
 tests_require = [
-    'collective.betterbrowser',
+    'collective.betterbrowser>=0.3',
     'collective.testcaselayer',
     'plone.app.testing',
 ]
