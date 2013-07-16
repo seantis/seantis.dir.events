@@ -1178,6 +1178,10 @@ div.time-picker {
     clear: right;   
 }
 
+.event-submit-form #formfield-form-widgets-submission_days .option {
+    float: left;
+}
+
 /* the recurrence widget is scrambled egg on izug.basetheme */
 .rioccurrences .occurrence .action {
     position: absolute;
