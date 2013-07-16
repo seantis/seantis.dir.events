@@ -1,4 +1,4 @@
-(function($) {
+load_libraries(['jQuery'], function($) {
     $(document).ready(function() {
         $('.event-image a').prepOverlay({
              subtype: 'image'
@@ -7,6 +7,6 @@
              subtype: 'ajax',
              filter: '#content > *',
              cssclass: 'event-terms'
-        })
+        });
     });
-})(jQuery);
+});

@@ -1,4 +1,4 @@
-(function($){
+load_libraries(['jQuery'], function($) {
     "use strict";
 
     var submission_input = 'input[name="form.widgets.submission_date_type"]';
@@ -199,4 +199,4 @@
 
         $(date_type_field).change(sync_fields);
     });
-})(jQuery);
+});

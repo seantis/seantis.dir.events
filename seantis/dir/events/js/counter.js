@@ -59,7 +59,7 @@ var inputtext_countdown = function($, input, label, template, maxlength) {
     update();
 };
 
-(function($){
+load_libraries(['jQuery'], function($) {
     $(document).ready(function() {
         var input = '#formfield-form-widgets-short_description textarea';
         var label = '#formfield-form-widgets-short_description span.formHelp';
@@ -67,4 +67,4 @@ var inputtext_countdown = function($, input, label, template, maxlength) {
 
         inputtext_countdown($, input, label, template, 140);
     });
-})(jQuery);
+});
