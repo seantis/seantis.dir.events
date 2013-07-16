@@ -30,6 +30,7 @@ def validate_event_submission(data):
 
     # ensure that the recurrences are not over limit
     if recurrence:
+
         limit = 365  # one event each day for a whole year
 
         if occurrences_over_limit(recurrence, start, limit):
@@ -81,13 +82,18 @@ def get_event_dates_from_submission(data, timezone=None):
             )
         )
 
-        recurrence = 'RRULE:FREQ=DAILY;UNTIL={}'.format(
-            dates.as_rfc5545_string(
-                in_timezone(
-                    datetime.combine(end_date, time(23, 59, 59))
+        recurrence = 'RRULE:FREQ=WEEKLY;UNTIL={}'.format(
+            dates.as_rfc5545_string(in_timezone(
+                datetime.combine(end_date, time(23, 59, 59))
+            ))
+        )
+
+        if data['submission_days']:
+            recurrence += ';BYDAY={}'.format(
+                ','.join(
+                    [str(d) for d in data['submission_days']]
                 )
             )
-        )
 
         return start, end, whole_day, recurrence
 

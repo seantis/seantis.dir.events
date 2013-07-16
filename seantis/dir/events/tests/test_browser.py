@@ -460,6 +460,46 @@ class BrowserTestCase(FunctionalTestCase):
 
         self.assertTrue('No Occurrences' in browser.contents)
 
+    def test_simplified_recurrence_submission_days(self):
+        browser = self.admin_browser
+        browser.open('/veranstaltungen/++add++seantis.dir.events.item')
+
+        browser.set_widget('title', 'Testtitle')
+        browser.set_widget('short_description', 'Testdescription')
+
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
+
+        browser.set_widget('submission_date_type', ['range'])
+
+        # get a monday to test with
+        start = datetime.now()
+        while start.weekday() != 0:
+            start += timedelta(days=1)
+
+        end = start + timedelta(days=6)  # sunday
+
+        browser.set_date('submission_range_start_date', start)
+        browser.set_date('submission_range_end_date', end)
+        browser.set_widget('submission_range_start_time', '2:00 PM')
+        browser.set_widget('submission_range_end_time', '4:00 PM')
+        browser.set_widget('submission_days:list', ['MO', 'SU'])
+
+        browser.getControl('Continue').click()
+        self.assertTrue('2 Occurrences' in browser.contents)
+
+        browser.getControl('Adjust').click()
+        browser.set_widget('submission_days:list', ['MO', 'WE', 'SU'])
+
+        browser.getControl('Continue').click()
+        self.assertTrue('3 Occurrences' in browser.contents)
+
+        browser.getControl('Adjust').click()
+        browser.set_widget('submission_days:list', [])
+
+        browser.getControl('Continue').click()
+        self.assertTrue('No Occurrences' in browser.contents)
+
     def test_default_forms(self):
 
         # admins use the submit / preview forms for adding / editing

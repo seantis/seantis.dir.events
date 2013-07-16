@@ -1,4 +1,5 @@
 (function($){
+    "use strict";
 
     var submission_input = 'input[name="form.widgets.submission_date_type"]';
 
@@ -13,7 +14,8 @@
             '#formfield-form-widgets-submission_range_start_date',
             '#formfield-form-widgets-submission_range_end_date',
             '#formfield-form-widgets-submission_range_start_time',
-            '#formfield-form-widgets-submission_range_end_time'
+            '#formfield-form-widgets-submission_range_end_time',
+            '#formfield-form-widgets-submission_days'
         ]
     };
 

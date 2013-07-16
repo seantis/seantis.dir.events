@@ -272,7 +272,8 @@ def occurrences(item, min_date, max_date):
         start=local_start,
         recrule=item.recurrence,
         from_=min_date,
-        until=max_date)
+        until=max_date
+    )
 
     result = []
     duration = item_end - item_start

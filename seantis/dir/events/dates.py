@@ -66,7 +66,7 @@ def as_timezone(date, timezone):
 
 def as_rfc5545_string(datetime):
     """ Converts a datetime into the RFC5545 Datetime Form #2 as defined in
-    http://tools.ietf.org/html/rfc5545#section-3.3.4.
+    http://tools.ietf.org/html/rfc5545#section-3.3.5
 
     """
     return to_utc(datetime).strftime('%Y%m%dT%H%M%SZ')

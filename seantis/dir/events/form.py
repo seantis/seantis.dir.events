@@ -245,7 +245,8 @@ class DateGroup(EventBaseGroup):
         'submission_range_start_date',
         'submission_range_end_date',
         'submission_date_type',
-        'submission_recurrence'
+        'submission_recurrence',
+        'submission_days'
     )
 
     group_fields = OrderedDict()
@@ -260,7 +261,8 @@ class DateGroup(EventBaseGroup):
         'submission_range_start_time',
         'submission_range_end_time',
         'submission_whole_day',
-        'submission_recurrence'
+        'submission_recurrence',
+        'submission_days'
     )
 
     def update_dynamic_fields(self):
@@ -281,6 +283,8 @@ class DateGroup(EventBaseGroup):
             self.fields[field].widgetFactory = ParameterizedWidgetFactory(
                 DateWidget, first_day=first_weekday_sun0
             )
+
+        self.fields['submission_days'].widgetFactory = CheckBoxFieldWidget
 
 
 class LocationGroup(EventBaseGroup):

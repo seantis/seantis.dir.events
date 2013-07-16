@@ -25,6 +25,24 @@ from seantis.dir.base.interfaces import (
 
 from seantis.dir.events import _
 
+
+days = SimpleVocabulary(
+    [
+        SimpleTerm(value='MO', title=_(u'Mo')),
+        SimpleTerm(value='TU', title=_(u'Tu')),
+        SimpleTerm(value='WE', title=_(u'We')),
+        SimpleTerm(value='TH', title=_(u'Th')),
+        SimpleTerm(value='FR', title=_(u'Fr')),
+        SimpleTerm(value='SA', title=_(u'Sa')),
+        SimpleTerm(value='SU', title=_(u'Su')),
+    ]
+)
+
+# cannot use the comprehension in the zope interface definition
+# because zope takes some weird magic to work
+days.keys = [str(d.value) for d in days._terms]
+
+
 class ITokenAccess(Interface):
 
     def attach_token(self, token=None):
@@ -291,6 +309,13 @@ class IEventSubmissionData(form.Schema):
         required=False
     )
 
+    submission_days = List(
+        title=_(u'Days'),
+        value_type=Choice(vocabulary=days),
+        required=False,
+        default=days.keys
+    )
+
 
 alsoProvides(IEventSubmissionData, IFormFieldProvider)
 
@@ -301,6 +326,7 @@ IEventSubmissionData.setTaggedValue('plone.autoform.widgets', {
         first_day=first_weekday_sun0
     )
 })
+
 
 # force the user to select at least one value for each category
 @form.validator(field=IDirectoryItemCategories['cat1'])
