@@ -300,7 +300,7 @@ class IEventSubmissionData(form.Schema):
     )
 
     submission_whole_day = Bool(
-        title=_(u'Whole Day'),
+        title=_(u'All day'),
         required=False
     )
 
@@ -310,7 +310,7 @@ class IEventSubmissionData(form.Schema):
     )
 
     submission_days = List(
-        title=_(u'Days'),
+        title=_(u'On these days'),
         value_type=Choice(vocabulary=days),
         required=False,
         default=days.keys

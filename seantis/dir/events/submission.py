@@ -25,8 +25,8 @@ def validate_event_submission(data):
     if not end:
         fail(_(u'Missing end date'))
 
-    if start > end:
-        fail(_(u'Start date before end date'))
+    if end < start:
+        fail(_(u'Start date after end date'))
 
     # ensure that the recurrences are not over limit
     if recurrence:
