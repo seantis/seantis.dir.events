@@ -1,4 +1,4 @@
-load_libraries(['jQuery'], function($) {
+load_libraries(['jQuery', '_'], function($, _) {
     "use strict";
 
     var submission_input = 'input[name="form.widgets.submission_date_type"]';
@@ -53,6 +53,9 @@ load_libraries(['jQuery'], function($) {
 
     var wholeday_field = '#formfield-form-widgets-submission_whole_day input';
 
+    var range_start_date = '#formfield-form-widgets-submission_range_start_date';
+    var range_end_date = '#formfield-form-widgets-submission_range_end_date';
+
     var submission_type = function(shown) {
         if (shown) {
             return $(submission_input + ':checked').val();
@@ -62,15 +65,15 @@ load_libraries(['jQuery'], function($) {
     };
 
     var toggle_fields = function(fields, show) {
-        for (var i=0; i<fields.length; i++) {
-            $(fields[i]).toggle(show);
-        }
+        _.each(fields, function(field) {
+            $(field).toggle(show);
+        });
     };
 
     var enable_fields = function(fields, enable) {
-        for (var i=0; i<fields.length; i++) {
-            $(fields[i]).prop('disabled', !enable);
-        }
+        _.each(fields, function(field) {
+            $(field).prop('disabled', !enable);
+        });
     };
 
     var enable_time_fields = function() {
@@ -85,6 +88,90 @@ load_libraries(['jQuery'], function($) {
         toggle_fields(hidden_fields, false);
 
         enable_fields(time_fields, enable_time_fields());
+    };
+
+    var get_fieldname_by_id = function(id) {
+        return '#' + $(id).data('fieldname').replace(/\./g, '-');
+    };
+
+    var get_date = function(field) {
+        var date = {};
+
+        var fieldname = get_fieldname_by_id(field);
+        date.year = $(fieldname + '-year').val();
+        date.month = $(fieldname + '-month').val();
+        date.day = $(fieldname + '-day').val();
+
+        if (_.contains([date.year, date.month, date.day], undefined)) {
+            return null;
+        }
+
+        date.year = parseInt(date.year, 10);
+        date.month = parseInt(date.month, 10);
+        date.day = parseInt(date.day, 10);
+
+        return new Date(date.year, date.month - 1, date.day);
+    };
+
+    var set_date = function(field, date) {
+        var fieldname = get_fieldname_by_id(field);
+        $(fieldname + '-year').val(date.year);
+        $(fieldname + '-month').val(date.month);
+        $(fieldname + '-day').val(date.day);
+    };
+
+    var autoselect_days = function() {
+
+        var start = get_date(range_start_date);
+        var end = get_date(range_end_date);
+
+        if (_.contains([start, end], null)) {
+            return;
+        }
+
+        if (start > end) {
+            return;
+        }
+
+        var ids = _.map([6, 0, 1, 2, 3, 4, 5],
+            function(ix) {
+                return '#form-widgets-submission_days-' + ix;
+            }
+        );
+
+        var days = _.map(ids, function(id) { return $(id); });
+
+        var span = ((end - start) / 1000 / 60 / 60 / 24) + 1;
+        var first = start.getDay();
+        var last = end.getDay();
+
+        var checked = [];
+        var i = 0;
+
+        if (span >= 7) {
+            checked = [0, 1, 2, 3, 4, 5, 6];
+        } else if (first == last) {
+            checked = [first];
+        } else if (first < last) {
+            for (i=first; i<=last; i++) {
+                checked.push(i);
+            }
+        } else {
+            for (i=0; i<= last; i++) {
+                checked.push(i);
+            }
+            for (i=6; i>= first; i--) {
+                checked.push(i);
+            }
+        }
+
+        _.each(days, function(day) {
+            day.removeAttr('checked');
+        });
+
+        _.each(checked, function(ix) {
+            days[ix].attr('checked', 'checked');
+        });
     };
 
     var pad = function(num, size) {
@@ -161,28 +248,28 @@ load_libraries(['jQuery'], function($) {
     var sync_field = function(origin) {
         var changed = $(origin);
 
-        for (var i=0; i < kept_in_sync.length; i++) {
-            var pair = kept_in_sync[i];
-
+        _.each(kept_in_sync, function(pair) {
             if (changed.is($(pair[0]))) {
                 $(pair[1]).val(changed.val());
-                continue;
+                return;
             }
 
             if (changed.is($(pair[1]))) {
                 $(pair[0]).val(changed.val());
-                continue;
+                return;
             }
-        }
+        });
     };
 
     var sync_fields = function(e) {
         var date_type = $(this).val();
         var origin_index = date_type == 'date' ? 1 : 0;
 
-        for (var i=0; i < kept_in_sync.length; i++) {
-            sync_field(kept_in_sync[i][origin_index]);
-        }
+        _.each(kept_in_sync, function(pair) {
+            sync_field(pair[origin_index]);
+        });
+
+        autoselect_days();
     };
 
     $(document).ready(function() {
@@ -190,13 +277,17 @@ load_libraries(['jQuery'], function($) {
         $(wholeday_field).change(update_submission_fields);
         update_submission_fields();
 
-        for (var i=0; i < time_fields.length; i++) {
-            var field = $(time_fields[i]);
+        _.each(time_fields, function(field) {
+            var $field = $(field);
 
-            field.attr('placeholder', 'hh:mm');
-            field.change(fix_time_inputs);
-        }
+            $field.attr('placeholder', 'hh:mm');
+            $field.change(fix_time_inputs);
+        });
 
         $(date_type_field).change(sync_fields);
+
+        $([range_start_date, range_end_date].join(', ')).change(function() {
+            _.defer(autoselect_days);
+        });
     });
 });
