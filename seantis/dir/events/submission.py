@@ -18,27 +18,26 @@ def validate_event_submission(data):
         raise ActionExecutionError(Invalid(msg))
 
     if data['submission_date_type'] == ['date']:
-        if not data.get('submission_date'):
+        if data.get('submission_date') is None:
             fail(_(u'Missing start date'))
 
         if not data.get('submission_whole_day', False):
-            if not data.get('submission_start_time'):
+            if data.get('submission_start_time') is None:
                 fail(_(u'Missing start time'))
-            if not data.get('submission_end_time'):
+            if data.get('submission_end_time') is None:
                 fail(_(u'Missing end time'))
-    
+
     if data['submission_date_type'] == ['range']:
-        if not data.get('submission_range_start_date'):
+        if data.get('submission_range_start_date') is None:
             fail(_(u'Missing start date'))
-        if not data.get('submission_range_end_date'):
+        if data.get('submission_range_end_date') is None:
             fail(_(u'Missing end date'))
 
         if not data.get('submission_whole_day', False):
-            if not data.get('submission_range_start_time'):
+            if data.get('submission_range_start_time') is None:
                 fail(_(u'Missing start time'))
-            if not data.get('submission_range_end_time'):
+            if data.get('submission_range_end_time') is None:
                 fail(_(u'Missing end time'))
-
 
     start, end, whole_day, recurrence = get_event_dates_from_submission(data)
 
