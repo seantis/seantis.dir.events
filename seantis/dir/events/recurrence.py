@@ -277,6 +277,7 @@ def occurrences(item, min_date, max_date):
 
     result = []
     duration = item_end - item_start
+
     for start in _occurrences:
         start = utcoffset_normalize(start, dstmode=DSTADJUST)
         result.append(Occurrence(item, start, start + duration))
