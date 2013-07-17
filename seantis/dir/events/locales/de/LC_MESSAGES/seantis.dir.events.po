@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-07-16 14:34+0000\n"
+"POT-Creation-Date: 2013-07-17 12:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -108,7 +108,7 @@ msgstr "Koordinaten"
 msgid "Date"
 msgstr "Datum"
 
-#: ./dates.py:283
+#: ./dates.py:287
 msgid "Day after Tomorrow"
 msgstr "Übermorgen"
 
@@ -209,35 +209,35 @@ msgstr "Abschliessen"
 msgid "Fr"
 msgstr "Fr"
 
-#: ./dates.py:300
+#: ./dates.py:304
 msgid "From 4pm next Friday until 12pm next Sunday"
 msgstr "Vom nächstem Freitag 16 Uhr bis nächsten Sonntag Nacht"
 
-#: ./dates.py:292
+#: ./dates.py:296
 msgid "From 4pm this Friday until 12pm this Sunday"
 msgstr "Von diesem Freitag 16 Uhr bis diesen Sonntag Nacht"
 
-#: ./dates.py:319
+#: ./dates.py:323
 msgid "From next Monday until the following Sunday"
 msgstr "Vom nächsten Montag bis zum folgenden Sonntag"
 
-#: ./dates.py:345
+#: ./dates.py:349
 msgid "From the beginning of next month until the end"
 msgstr "Vom nächsten Monatsbeginn bis Monatsende"
 
-#: ./dates.py:310
+#: ./dates.py:314
 msgid "From today until 12pm this Sunday"
 msgstr "Von Heute bis Sonntag Nacht"
 
-#: ./dates.py:378
+#: ./dates.py:382
 msgid "From today until the end of next year"
 msgstr "Von Heute bis Ende nächstes Jahr"
 
-#: ./dates.py:338
+#: ./dates.py:342
 msgid "From today until the end of the month"
 msgstr "Von Heute bis Monatsende"
 
-#: ./dates.py:355
+#: ./dates.py:359
 msgid "From today until the end of this year"
 msgstr "Von Heute bis Jahresende"
 
@@ -298,31 +298,39 @@ msgstr "Lange Beschreibung"
 msgid "Map"
 msgstr "Karte"
 
-#: ./submission.py:26
+#: ./submission.py:34
 msgid "Missing end date"
 msgstr "Fehlendes End-Datum"
 
-#: ./submission.py:23
+#: ./submission.py:28
+msgid "Missing end time"
+msgstr "Fehlende End-Zeit"
+
+#: ./submission.py:22
 msgid "Missing start date"
 msgstr "Fehlendes Start-Datum"
+
+#: ./submission.py:26
+msgid "Missing start time"
+msgstr "Fehlende Start-Zeit"
 
 #: ./interfaces.py:31
 msgid "Mo"
 msgstr "Mo"
 
-#: ./dates.py:345
+#: ./dates.py:349
 msgid "Next Month"
 msgstr "Nächsten Monat"
 
-#: ./dates.py:319
+#: ./dates.py:323
 msgid "Next Week"
 msgstr "Nächste Woche"
 
-#: ./dates.py:300
+#: ./dates.py:304
 msgid "Next Weekend"
 msgstr "Nächstes Wochenende"
 
-#: ./dates.py:366
+#: ./dates.py:370
 msgid "Next Year"
 msgstr "Nächstes Jahr"
 
@@ -411,7 +419,7 @@ msgstr "Alle Wiederholungen anzeigen"
 msgid "Start date"
 msgstr "Von Datum"
 
-#: ./submission.py:29
+#: ./submission.py:52
 msgid "Start date after end date"
 msgstr "Start-Datum nach End-Datum"
 
@@ -477,27 +485,27 @@ msgstr "Allgemeine Geschäftsbedingungen"
 msgid "Th"
 msgstr "Do"
 
-#: ./dates.py:366
+#: ./dates.py:370
 msgid "The whole next year"
 msgstr "Das ganze nächste Jahr"
 
-#: ./dates.py:338
+#: ./dates.py:342
 msgid "This Month"
 msgstr "Diesen Monat"
 
-#: ./dates.py:310
+#: ./dates.py:314
 msgid "This Week"
 msgstr "Diese Woche"
 
-#: ./dates.py:292
+#: ./dates.py:296
 msgid "This Weekend"
 msgstr "Dieses Wochenende"
 
-#: ./dates.py:355
+#: ./dates.py:359
 msgid "This Year"
 msgstr "Dieses Jahr"
 
-#: ./dates.py:378
+#: ./dates.py:382
 msgid "This and Next Year"
 msgstr "Dieses und nächstes Jahr"
 
@@ -518,11 +526,11 @@ msgstr "Ticket / Registrations Webseite"
 msgid "Title of event"
 msgstr "Titel der Veranstaltung"
 
-#: ./dates.py:131
+#: ./dates.py:135
 msgid "Today"
 msgstr "Heute"
 
-#: ./dates.py:134
+#: ./dates.py:138
 msgid "Tomorrow"
 msgstr "Morgen"
 
@@ -566,7 +574,7 @@ msgstr "Wann wird diese Veranstaltungen stattfinden?"
 msgid "Where"
 msgstr "Wo"
 
-#: ./dates.py:149
+#: ./dates.py:153
 msgid "Whole Day"
 msgstr "Ganztags"
 
@@ -574,7 +582,7 @@ msgstr "Ganztags"
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr "Sie müssen den Allgemeinen Geschäftsbedingungen zustimmen bevor Sie diese Veranstaltung melden"
 
-#: ./submission.py:38
+#: ./submission.py:61
 msgid "You may not add more than ${max} occurences"
 msgstr "Sie dürfen nicht mehr als ${max} Wiederholungen erfassen"
 

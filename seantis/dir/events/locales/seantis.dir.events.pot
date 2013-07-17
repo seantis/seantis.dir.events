@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-07-16 14:34+0000\n"
+"POT-Creation-Date: 2013-07-17 12:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -111,7 +111,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: ./dates.py:283
+#: ./dates.py:287
 msgid "Day after Tomorrow"
 msgstr ""
 
@@ -212,35 +212,35 @@ msgstr ""
 msgid "Fr"
 msgstr ""
 
-#: ./dates.py:300
+#: ./dates.py:304
 msgid "From 4pm next Friday until 12pm next Sunday"
 msgstr ""
 
-#: ./dates.py:292
+#: ./dates.py:296
 msgid "From 4pm this Friday until 12pm this Sunday"
 msgstr ""
 
-#: ./dates.py:319
+#: ./dates.py:323
 msgid "From next Monday until the following Sunday"
 msgstr ""
 
-#: ./dates.py:345
+#: ./dates.py:349
 msgid "From the beginning of next month until the end"
 msgstr ""
 
-#: ./dates.py:310
+#: ./dates.py:314
 msgid "From today until 12pm this Sunday"
 msgstr ""
 
-#: ./dates.py:378
+#: ./dates.py:382
 msgid "From today until the end of next year"
 msgstr ""
 
-#: ./dates.py:338
+#: ./dates.py:342
 msgid "From today until the end of the month"
 msgstr ""
 
-#: ./dates.py:355
+#: ./dates.py:359
 msgid "From today until the end of this year"
 msgstr ""
 
@@ -301,31 +301,39 @@ msgstr ""
 msgid "Map"
 msgstr ""
 
-#: ./submission.py:26
+#: ./submission.py:34
 msgid "Missing end date"
 msgstr ""
 
-#: ./submission.py:23
+#: ./submission.py:28
+msgid "Missing end time"
+msgstr ""
+
+#: ./submission.py:22
 msgid "Missing start date"
+msgstr ""
+
+#: ./submission.py:26
+msgid "Missing start time"
 msgstr ""
 
 #: ./interfaces.py:31
 msgid "Mo"
 msgstr ""
 
-#: ./dates.py:345
+#: ./dates.py:349
 msgid "Next Month"
 msgstr ""
 
-#: ./dates.py:319
+#: ./dates.py:323
 msgid "Next Week"
 msgstr ""
 
-#: ./dates.py:300
+#: ./dates.py:304
 msgid "Next Weekend"
 msgstr ""
 
-#: ./dates.py:366
+#: ./dates.py:370
 msgid "Next Year"
 msgstr ""
 
@@ -414,7 +422,7 @@ msgstr ""
 msgid "Start date"
 msgstr ""
 
-#: ./submission.py:29
+#: ./submission.py:52
 msgid "Start date after end date"
 msgstr ""
 
@@ -480,27 +488,27 @@ msgstr ""
 msgid "Th"
 msgstr ""
 
-#: ./dates.py:366
+#: ./dates.py:370
 msgid "The whole next year"
 msgstr ""
 
-#: ./dates.py:338
+#: ./dates.py:342
 msgid "This Month"
 msgstr ""
 
-#: ./dates.py:310
+#: ./dates.py:314
 msgid "This Week"
 msgstr ""
 
-#: ./dates.py:292
+#: ./dates.py:296
 msgid "This Weekend"
 msgstr ""
 
-#: ./dates.py:355
+#: ./dates.py:359
 msgid "This Year"
 msgstr ""
 
-#: ./dates.py:378
+#: ./dates.py:382
 msgid "This and Next Year"
 msgstr ""
 
@@ -521,11 +529,11 @@ msgstr ""
 msgid "Title of event"
 msgstr ""
 
-#: ./dates.py:131
+#: ./dates.py:135
 msgid "Today"
 msgstr ""
 
-#: ./dates.py:134
+#: ./dates.py:138
 msgid "Tomorrow"
 msgstr ""
 
@@ -569,7 +577,7 @@ msgstr ""
 msgid "Where"
 msgstr ""
 
-#: ./dates.py:149
+#: ./dates.py:153
 msgid "Whole Day"
 msgstr ""
 
@@ -577,7 +585,7 @@ msgstr ""
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 
-#: ./submission.py:38
+#: ./submission.py:61
 msgid "You may not add more than ${max} occurences"
 msgstr ""
 

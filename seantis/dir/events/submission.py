@@ -14,10 +14,33 @@ ANNOTATION_KEY = 'seantis.dir.events.submission-data'
 
 def validate_event_submission(data):
 
-    start, end, whole_day, recurrence = get_event_dates_from_submission(data)
-
     def fail(msg):
         raise ActionExecutionError(Invalid(msg))
+
+    if data['submission_date_type'] == ['date']:
+        if not data.get('submission_date'):
+            fail(_(u'Missing start date'))
+
+        if not data.get('submission_whole_day', False):
+            if not data.get('submission_start_time'):
+                fail(_(u'Missing start time'))
+            if not data.get('submission_end_time'):
+                fail(_(u'Missing end time'))
+    
+    if data['submission_date_type'] == ['range']:
+        if not data.get('submission_range_start_date'):
+            fail(_(u'Missing start date'))
+        if not data.get('submission_range_end_date'):
+            fail(_(u'Missing end date'))
+
+        if not data.get('submission_whole_day', False):
+            if not data.get('submission_range_start_time'):
+                fail(_(u'Missing start time'))
+            if not data.get('submission_range_end_time'):
+                fail(_(u'Missing end time'))
+
+
+    start, end, whole_day, recurrence = get_event_dates_from_submission(data)
 
     if not start:
         fail(_(u'Missing start date'))
