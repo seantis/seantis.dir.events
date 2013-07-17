@@ -14,6 +14,7 @@ tests_require = [
     'collective.betterbrowser>=0.3',
     'collective.testcaselayer',
     'plone.app.testing',
+    'mock'
 ]
 
 setup(name='seantis.dir.events',
@@ -55,14 +56,12 @@ setup(name='seantis.dir.events',
           'zope.proxy',
           'pytz',
           'python-magic',
-          'mock',
           'M2Crypto',
           'lxml',
           'blist',
           'functools32',
           'isodate',
           'icalendar',
-          'collective.betterbrowser'
       ],
       extras_require=dict(
           zug=zug_require,
