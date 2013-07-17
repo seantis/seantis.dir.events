@@ -11,12 +11,16 @@ default_daterange = 'this_year'
 
 
 def eventrange():
-    """ Returns the daterange (start, end) in which the events are visible. """
+    """ Returns the daterange (start, end) in which events may exist. """
     now = default_now()
     this_morning = datetime(now.year, now.month, now.day)
 
+    # to work in all timezones the lowest timezone has to be considered
+    # for the morning (the last place where day x is still occurring)
+    # according to http://en.wikipedia.org/wiki/List_of_UTC_time_offsets this
+    # is Baker / Howland Island with an UTC Offset of -12
     return (
-        this_morning,
+        this_morning - timedelta(seconds=60*60*12),
         this_morning + timedelta(days=365 * 2)
     )
 

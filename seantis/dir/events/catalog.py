@@ -235,7 +235,11 @@ class EventIndex(object):
         # quite fast and it only happens for 10 items per request
 
         # still, I would prefer some kind of lookup here
-        for item in self.spawn_events([real]):
+
+        min_date = date - timedelta(days=1)
+        max_date = date + timedelta(days=1)
+
+        for item in self.spawn_events([real], min_date, max_date):
             if dates.to_utc(dates.delete_timezone(item.local_start)) == date:
                 return item
 

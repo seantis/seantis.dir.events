@@ -1,4 +1,7 @@
+import mock
+
 from datetime import datetime, timedelta
+from seantis.dir.events import dates
 from seantis.dir.events.tests import FunctionalTestCase
 
 
@@ -677,3 +680,57 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertFalse('finish' in browser.url)
         self.assertFalse('Terms and Conditions' in browser.contents)
         self.assertTrue('Event submitted' in browser.contents)
+
+    @mock.patch('seantis.dir.events.dates.default_timezone')
+    @mock.patch('seantis.dir.events.dates.default_now')
+    def test_whole_day_regression(self, default_now, default_timezone):
+        # recurring whole day events would lead to errors because the
+        # daterange applied in the catalog did not include 00:00 one day
+        # after creating the event
+
+        # the error only happens if the timezone of the event and the
+        # server differs
+
+        default_timezone.return_value = 'Europe/Vienna'
+        default_now.return_value = dates.as_timezone(
+            datetime.now(), 'Europe/Vienna'
+        )
+
+        browser = self.admin_browser
+
+        # create the event in europe/vienna timezone
+        browser.open(
+            '/veranstaltungen/++add++seantis.dir.events.item'
+        )
+
+        browser.set_widget('title', 'Title')
+        browser.set_widget('short_description', 'Short')
+
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
+
+        browser.set_widget('submission_date_type', ['range'])
+
+        start = datetime.now()
+        end = datetime.now() + timedelta(days=2)
+
+        browser.set_date('submission_range_start_date', start)
+        browser.set_date('submission_range_end_date', end)
+        browser.getControl('All day').selected = True
+
+        browser.getControl('Continue').click()
+        browser.getControl('Continue').click()
+
+        browser.set_widget('submitter', 'test')
+        browser.set_widget('submitter_email', 'test@example.com')
+
+        browser.getControl('Submit').click()
+
+        # view the event the next day in UTC
+        default_timezone.return_value = 'UTC'
+        default_now.return_value = dates.as_timezone(
+            datetime.now() + timedelta(days=1), 'Europe/Vienna'
+        )
+
+        # this used to throw an error
+        browser.open('/veranstaltungen?state=submitted')
