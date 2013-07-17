@@ -11,7 +11,7 @@ teamraum_require = [
     'plonetheme.teamraum'
 ]
 tests_require = [
-    'collective.betterbrowser>=0.3',
+    'collective.betterbrowser>=0.4',
     'collective.testcaselayer',
     'plone.app.testing',
     'mock'
@@ -49,7 +49,7 @@ setup(name='seantis.dir.events',
           'plone.event>=1.0rc1',
           'plone.app.dexterity',
           'plone.formwidget.recurrence[z3cform]>=1.0b9',
-          'plone.formwidget.datetime[z3cform]>=1.0b5',
+          'plone.formwidget.datetime[z3cform]==1.0b4',  # b5 is buggy
           'collective.autopermission',
           'collective.dexteritytextindexer',
           'collective.z3cform.mapwidget',

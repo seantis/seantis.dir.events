@@ -154,20 +154,21 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('Send us your events' in fourchan.contents)
 
         # create a recurring event
-        fourchan.set_widget('title', 'Recurring')
-        fourchan.set_widget('short_description', 'Every Day')
-        fourchan.set_widget('locality', 'at home')
+        fourchan.widget('title').value = 'Recurring'
+        fourchan.widget('short_description').value = 'Every Day'
+        fourchan.widget('locality').value = 'at home'
 
         fourchan.set_date('submission_date', datetime.now())
-        fourchan.set_widget('submission_start_time', '08:00 AM')
-        fourchan.set_widget('submission_end_time', '04:00 PM')
+
+        fourchan.widget('submission_start_time').value = '08:00 AM'
+        fourchan.widget('submission_end_time').value = '04:00 PM'
 
         fourchan.getControl('Category1').selected = True
         fourchan.getControl('Category2').selected = True
 
-        fourchan.set_widget(
-            'submission_recurrence', 'RRULE:FREQ=DAILY;COUNT=7'
-        )
+        fourchan.widget(
+            'submission_recurrence'
+        ).value = 'RRULE:FREQ=DAILY;COUNT=7'
 
         fourchan.getControl('Continue').click()
         self.assertTrue('preview' in fourchan.url)
@@ -183,9 +184,10 @@ class BrowserTestCase(FunctionalTestCase):
         # update the recurrence and check back
         fourchan.getControl('Adjust').click()
 
-        fourchan.set_widget(
-            'submission_recurrence', 'RRULE:FREQ=DAILY;COUNT=365'
-        )
+        fourchan.widget(
+            'submission_recurrence'
+        ).value = 'RRULE:FREQ=DAILY;COUNT=365'
+
         fourchan.getControl('Continue').click()
 
         self.assertEqual(fourchan.contents.count('"eventgroup"'), 365)
@@ -193,16 +195,16 @@ class BrowserTestCase(FunctionalTestCase):
         # remove the recurrence, ensuring that one event remains
         fourchan.getControl('Adjust').click()
 
-        fourchan.set_widget('submission_recurrence', '')
+        fourchan.widget('submission_recurrence').value = ''
         fourchan.getControl('Continue').click()
 
         self.assertEqual(fourchan.contents.count('"eventgroup"'), 1)
 
         # ensure that no more than 365 occurrences may be entered
         fourchan.getControl('Adjust').click()
-        fourchan.set_widget(
-            'submission_recurrence', 'RRULE:FREQ=DAILY;COUNT=366'
-        )
+        fourchan.widget(
+            'submission_recurrence'
+        ).value = 'RRULE:FREQ=DAILY;COUNT=366'
 
         fourchan.getControl('Continue').click()
 
@@ -213,19 +215,19 @@ class BrowserTestCase(FunctionalTestCase):
         # regression test for an issue where occurrences in the future
         # were not counted correctly
         fourchan.set_date('submission_date', datetime(2020, 1, 1, 0, 0))
-        fourchan.set_widget('submission_start_time', '10:00 AM')
-        fourchan.set_widget('submission_end_time', '11:00 AM')
+        fourchan.widget('submission_start_time').value = '10:00 AM'
+        fourchan.widget('submission_end_time').value = '11:00 AM'
 
-        fourchan.set_widget(
-            'submission_recurrence', 'RRULE:FREQ=DAILY;UNTIL=20201231T000000'
-        )
+        fourchan.widget(
+            'submission_recurrence'
+        ).value = 'RRULE:FREQ=DAILY;UNTIL=20201231T000000'
 
         fourchan.getControl('Continue').click()  # ok
         fourchan.getControl('Adjust').click()
 
-        fourchan.set_widget(
-            'submission_recurrence', 'RRULE:FREQ=DAILY;UNTIL=20210101T000000'
-        )
+        fourchan.widget(
+            'submission_recurrence'
+        ).value = 'RRULE:FREQ=DAILY;UNTIL=20210101T000000'
 
         fourchan.getControl('Continue').click()  # not okay
 
@@ -415,21 +417,21 @@ class BrowserTestCase(FunctionalTestCase):
         browser = self.admin_browser
         browser.open('/veranstaltungen/++add++seantis.dir.events.item')
 
-        browser.set_widget('title', 'Testtitle')
-        browser.set_widget('short_description', 'Testdescription')
+        browser.widget('title').value = 'Testtitle'
+        browser.widget('short_description').value = 'Testdescription'
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
 
-        browser.set_widget('submission_date_type', ['range'])
+        browser.widget('submission_date_type').value = ['range']
 
         start = datetime.today()
         end = start + timedelta(days=2)
 
         browser.set_date('submission_range_start_date', start)
         browser.set_date('submission_range_end_date', end)
-        browser.set_widget('submission_range_start_time', '2:00 PM')
-        browser.set_widget('submission_range_end_time', '4:00 PM')
+        browser.widget('submission_range_start_time').value = '2:00 PM'
+        browser.widget('submission_range_end_time').value = '4:00 PM'
 
         browser.getControl('Continue').click()
 
@@ -444,18 +446,19 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('2 Occurrences' in browser.contents)
 
         browser.getControl('Adjust').click()
-        browser.set_widget('submission_date_type', ['date'])
+
+        browser.widget('submission_date_type').value = ['date']
         browser.set_date('submission_date', start)
-        browser.set_widget('submission_start_time', '2:00 PM')
-        browser.set_widget('submission_end_time', '4:00 PM')
-        browser.set_widget('submission_recurrence', '')
+        browser.widget('submission_start_time').value = '2:00 PM'
+        browser.widget('submission_end_time').value = '4:00 PM'
+        browser.widget('submission_recurrence').value = ''
 
         browser.getControl('Continue').click()
 
         self.assertTrue('No Occurrences' in browser.contents)
 
         browser.getControl('Adjust').click()
-        browser.set_widget('submission_date_type', ['range'])
+        browser.widget('submission_date_type').value = ['range']
         browser.set_date('submission_range_start_date', start)
         browser.set_date('submission_range_end_date', start)
 
@@ -467,13 +470,13 @@ class BrowserTestCase(FunctionalTestCase):
         browser = self.admin_browser
         browser.open('/veranstaltungen/++add++seantis.dir.events.item')
 
-        browser.set_widget('title', 'Testtitle')
-        browser.set_widget('short_description', 'Testdescription')
+        browser.widget('title').value = 'Testtitle'
+        browser.widget('short_description').value = 'Testdescription'
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
 
-        browser.set_widget('submission_date_type', ['range'])
+        browser.widget('submission_date_type').value = ['range']
 
         # get a monday to test with
         start = datetime.now()
@@ -484,21 +487,21 @@ class BrowserTestCase(FunctionalTestCase):
 
         browser.set_date('submission_range_start_date', start)
         browser.set_date('submission_range_end_date', end)
-        browser.set_widget('submission_range_start_time', '2:00 PM')
-        browser.set_widget('submission_range_end_time', '4:00 PM')
-        browser.set_widget('submission_days:list', ['MO', 'SU'])
+        browser.widget('submission_range_start_time').value = '2:00 PM'
+        browser.widget('submission_range_end_time').value = '4:00 PM'
+        browser.widget('submission_days:list').value = ['MO', 'SU']
 
         browser.getControl('Continue').click()
         self.assertTrue('2 Occurrences' in browser.contents)
 
         browser.getControl('Adjust').click()
-        browser.set_widget('submission_days:list', ['MO', 'WE', 'SU'])
+        browser.widget('submission_days:list').value = ['MO', 'WE', 'SU']
 
         browser.getControl('Continue').click()
         self.assertTrue('3 Occurrences' in browser.contents)
 
         browser.getControl('Adjust').click()
-        browser.set_widget('submission_days:list', [])
+        browser.widget('submission_days:list').value = []
 
         browser.getControl('Continue').click()
         self.assertTrue('No Occurrences' in browser.contents)
@@ -703,13 +706,13 @@ class BrowserTestCase(FunctionalTestCase):
             '/veranstaltungen/++add++seantis.dir.events.item'
         )
 
-        browser.set_widget('title', 'Title')
-        browser.set_widget('short_description', 'Short')
+        browser.widget('title').value = 'Title'
+        browser.widget('short_description').value = 'Short'
 
         browser.getControl('Category1').selected = True
         browser.getControl('Category2').selected = True
 
-        browser.set_widget('submission_date_type', ['range'])
+        browser.widget('submission_date_type').value = ['range']
 
         start = datetime.now()
         end = datetime.now() + timedelta(days=2)
@@ -721,8 +724,8 @@ class BrowserTestCase(FunctionalTestCase):
         browser.getControl('Continue').click()
         browser.getControl('Continue').click()
 
-        browser.set_widget('submitter', 'test')
-        browser.set_widget('submitter_email', 'test@example.com')
+        browser.widget('submitter').value = 'test'
+        browser.widget('submitter_email').value = 'test@example.com'
 
         browser.getControl('Submit').click()
 
