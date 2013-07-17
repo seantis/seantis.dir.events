@@ -5,6 +5,7 @@
         <dependency>profile-plone.app.event:default</dependency>
         <dependency>profile-plone.app.event.dx:default</dependency>
         <dependency>profile-plone.formwidget.recurrence:default</dependency>
+        <dependency>profile-collective.js.underscore:default</dependency>
         <dependency>profile-collective.geo.openlayers:default</dependency>
         <dependency>profile-collective.geo.geographer:default</dependency>
         <dependency>profile-collective.geo.contentlocations:default</dependency>

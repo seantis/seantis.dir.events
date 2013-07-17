@@ -143,6 +143,11 @@ def upgrade_1004_to_1005(context):
         'profile-seantis.dir.events:default', 'typeinfo'
     )
 
+    # add underscore.js
+    setup.runAllImportStepsFromProfile(
+        'profile-collective.js.underscore:default'
+    )
+
     # upgrade javascript
     setup.runImportStepFromProfile(
         'profile-seantis.dir.events:default', 'jsregistry'

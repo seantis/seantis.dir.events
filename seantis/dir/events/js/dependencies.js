@@ -34,42 +34,60 @@
 */
 
 var load_libraries = function(libraries, success) {
+    "use strict";
 
-    var libraries_loaded = function() {
-        for (var i=0; i<libraries.length; i++) {
-            if (typeof(libraries[i]) == 'string') {
-                try {
-                    var lib = eval(libraries[i]);
-                    if (typeof(lib) === 'undefined') {
-                        return false;
-                    } else {
-                        libraries[i] = lib;
-                    }
-                } catch (ReferenceError) {
-                    return false;
-                }
+    var load_library = function(library) {
+        if (!_.isString(library)) return library;
+
+        try {
+            var lib = eval(library);
+            if (! _.isUndefined(lib)) {
+                return lib;
             }
-        }
+        } catch (ReferenceError) { /* pass */}
 
-        return true;
+        return library; // keep as is
+    };
+
+    var load_libraries = function() {
+        libraries = _.map(libraries, load_library);
+    };
+
+    var done_loading = function() {
+        load_libraries();
+
+        return _.every(libraries, function(lib) {
+            return ! _.isString(lib);
+        });
     };
 
     limited_tries(function() {
-        if (libraries_loaded()) {
-            success.apply(window, libraries);
+        if (done_loading()) {
+            _.defer(function() {
+                success.apply(window, libraries);
+            });
             return true;
         } else {
             return false;
         }
-    }, 25, 1000);
+    });
 
 };
 
-var limited_tries = function(callback, timeout, max_tries) {
+var limited_tries = function(callback) {
+    "use strict";
+
+    var timeout = 25;
+    var max_tries = 500; // amounts to over a minute of trying
     var current_try = 0;
 
     var check = function() {
         current_try += 1;
+
+        // get slower over time
+        if (current_try % 50 === 0) {
+            timeout = timeout * 2;
+        }
 
         if (callback()) {
             return; // done

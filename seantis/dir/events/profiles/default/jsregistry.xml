@@ -3,6 +3,7 @@
 
     <javascript id="++resource++seantis.dir.events.javascript/dependencies.js"
         enabled="True"
+        insert-after="++resource++collective.js.underscore/underscore.min.js"
     />
 
     <javascript id="++resource++seantis.dir.events.javascript/overlay.js"
