@@ -214,20 +214,25 @@ class BrowserTestCase(FunctionalTestCase):
 
         # regression test for an issue where occurrences in the future
         # were not counted correctly
-        fourchan.set_date('submission_date', datetime(2020, 1, 1, 0, 0))
+        fourchan.set_date('submission_date', datetime(2021, 1, 1, 0, 0))
         fourchan.widget('submission_start_time').value = '10:00 AM'
         fourchan.widget('submission_end_time').value = '11:00 AM'
 
         fourchan.widget(
             'submission_recurrence'
-        ).value = 'RRULE:FREQ=DAILY;UNTIL=20201231T000000'
+        ).value = 'RRULE:FREQ=DAILY;UNTIL=20211231T000000'
 
         fourchan.getControl('Continue').click()  # ok
+
+        self.assertFalse(
+            'You may not add more than 365 occurences' in fourchan.contents
+        )
+
         fourchan.getControl('Adjust').click()
 
         fourchan.widget(
             'submission_recurrence'
-        ).value = 'RRULE:FREQ=DAILY;UNTIL=20210101T000000'
+        ).value = 'RRULE:FREQ=DAILY;UNTIL=20220101T000000'
 
         fourchan.getControl('Continue').click()  # not okay
 
