@@ -396,3 +396,12 @@ input.required[type="radio"] {
 input.required[type="radio"]:after {
     display: none !important;   
 }
+
+#formfield-form-widgets-submission_start_time input,
+#formfield-form-widgets-submission_end_time input,
+#formfield-form-widgets-submission_range_start_time input,
+#formfield-form-widgets-submission_range_end_time input {
+    width: 200px;   
+}
+}
+
