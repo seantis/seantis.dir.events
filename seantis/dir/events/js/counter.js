@@ -16,6 +16,10 @@ var inputtext_countdown = function($, input, label, template, maxlength) {
         return;
     }
 
+    // ensure that the elements exist
+    if ($(input).length === 0) return;
+    if ($(label).length === 0) return;
+
     var $input = $(input);
     var $label = $(label);
     var initial_text = $label.text();

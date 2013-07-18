@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.0a1'
+version = '1.0a2'
 
 zug_require = [
     'ftw.contentmenu',
@@ -48,8 +48,9 @@ setup(name='seantis.dir.events',
           'plone.app.event[ploneintegration, dexterity]>=1.0rc1',
           'plone.event>=1.0rc1',
           'plone.app.dexterity',
+          'plone.autoform>=1.4',
           'plone.formwidget.recurrence[z3cform]>=1.0b9',
-          'plone.formwidget.datetime[z3cform]==1.0b4',  # b5 is buggy
+          'plone.formwidget.datetime[z3cform]>=1.0b5',
           'collective.autopermission',
           'collective.dexteritytextindexer',
           'collective.z3cform.mapwidget',

@@ -3,6 +3,7 @@
 from copy import copy
 from five import grok
 from collections import OrderedDict
+from datetime import date
 
 from Acquisition import aq_inner, aq_base
 from Acquisition.interfaces import IAcquirer
@@ -10,9 +11,7 @@ from Acquisition.interfaces import IAcquirer
 from plone.directives import form
 from plone.z3cform.fieldsets import extensible
 from plone.dexterity.utils import createContent, addContentToContainer
-from plone.formwidget.recurrence.z3cform.widget import (
-    RecurrenceWidget, ParameterizedWidgetFactory
-)
+from plone.formwidget.recurrence.z3cform.widget import RecurrenceWidget
 
 from Products.statusmessages.interfaces import IStatusMessage
 
@@ -60,6 +59,31 @@ from seantis.dir.events import utils, dates
 from seantis.dir.events.submission import validate_event_submission
 from seantis.dir.events.recurrence import occurrences, grouped_occurrences
 from seantis.dir.events import _
+
+
+# plone.formwidget.recurrence got rid of the parameterized widget
+# in favor ofusing plone.autoform. unfortunately, plone.autoform seems
+# incapable of dealing with groups instead forms.
+#
+# I hate form libs.
+from z3c.form.interfaces import IFieldWidget
+from z3c.form.widget import FieldWidget
+
+
+class ParameterizedFieldWidget(object):
+    implements(IFieldWidget)
+
+    def __new__(cls, field, request):
+        widget = FieldWidget(field, cls.widget(request))
+        for k, v in cls.kw.items():
+            setattr(widget, k, v)
+        return widget
+
+
+def ParameterizedWidgetFactory(widget, **kw):
+    return type('%sFactory' % widget.__name__,
+                (ParameterizedFieldWidget,),
+                {'widget': widget, 'kw': kw})
 
 
 class EventBaseGroup(group.Group):
@@ -285,6 +309,11 @@ class DateGroup(EventBaseGroup):
             )
 
         self.fields['submission_days'].widgetFactory = CheckBoxFieldWidget
+
+        default_date = date.today()
+        self.fields['submission_date'].field.default = default_date
+        self.fields['submission_range_start_date'].field.default = default_date
+        self.fields['submission_range_end_date'].field.default = default_date
 
 
 class LocationGroup(EventBaseGroup):
