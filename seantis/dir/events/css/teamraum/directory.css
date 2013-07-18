@@ -193,21 +193,21 @@
 
 /* submit event */
 .your-event {
-    font-size: 1.5em;
+    font-size: 1.2em;
     margin-top: 20px;
-    padding: 30px;
-    text-align: center;
-    background-color: #00518c;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    color: white;
+    padding: 30px 25px;
+    text-align: right;
+    border-width: 0;
+    color: #444444;
+    border-color: #efeda4;
 }
 
 #content .your-event a,
 #content .your-event a:hover {
-    color: white;
+    color: #448944;
     text-decoration: underline;
     border-color: white;
+    font-weight: bold;
     border-width: 0 0 4px 0;
 }
 
