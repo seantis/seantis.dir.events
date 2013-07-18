@@ -313,6 +313,11 @@ input.required[type="radio"]:after {
     margin-right: 0;   
 }
 
+/* event preview form */
+.event-preview-form {
+    margin-top: 10px;
+}
+
 /* 
 
     the recurrence widget looks awful by default
