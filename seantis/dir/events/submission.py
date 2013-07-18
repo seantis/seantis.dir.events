@@ -80,6 +80,10 @@ def get_event_dates_from_submission(data, timezone=None):
             data['submission_recurrence']
         )
 
+        if whole_day:
+            start = time(0, 0, 0)
+            end = time(23, 59, 59)
+
         start, end = map(
             in_timezone, dates.combine_daterange(date, start, end)
         )
