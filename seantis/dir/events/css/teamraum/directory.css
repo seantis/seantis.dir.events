@@ -306,7 +306,11 @@ input.required[type="radio"]:after {
 
 #formfield-form-widgets-submission_days .option {
     float: left;
-    margin-right: 1.5em;
+    margin-right: 0.75em;
+}
+
+#formfield-form-widgets-submission_days .option input {
+    margin-right: 0;   
 }
 
 /* 
