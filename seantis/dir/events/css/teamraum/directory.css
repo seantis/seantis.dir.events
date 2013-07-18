@@ -45,116 +45,16 @@
     }
 }
 
-/* 
-
-    the recurrence widget looks awful by default
-    
-*/
-
-/* the headers are too big and prominent */
-.riform h1, .riform h2 {
-    color: #333 !important;
-    font-size: 14px !important;
+/* event highlighting */
+#directoryResultList .groupSelection {
+    -webkit-box-shadow: none !important;
+    -moz-box-shadow: none !important;
+    box-shadow: none !important;
 }
-
-/* the lower headers have different distances to their borders */
-.rioccurancesheader {
-    height: 23px;
+#directoryResultList .groupSelection h3 {
+    background-color: #fff7b5;
+    border-radius: 1px;
 }
-
-/* the font is too small */
-.riform {
-    font-size: 13px !important;   
-}
-
-/* the date field in the recurrence section is badly aligned */
-#riformfields .date {
-    width: 85px !important;
-    position: relative;
-    left: 5px;
-    top: -1px;
-}
-
-/* the labels are too small (text is wrapped) and they are too heavy */
-.riform .label {
-    width: 150px !important;
-    font-weight: normal !important;
-}
-
-/* the select field looks off */
-div.riform select {
-    position: relative;
-    top: -2px;   
-}
-
-/* the fields are smashed too close together */
-#riformfields .label, #riformfields .field {
-    margin-top: 8px;
-}
-
-#rirangeoptions div {
-    margin-bottom: 10px;   
-}
-
-/* the trash symbols are scattered all over the place */
-.rioccurrences .occurrence .action {
-    position: absolute;
-    right: 6px;
-}
-
-.rioccurrences .occurrence .action a {
-    float: none;
-    display: inline-block;
-    position: relative;
-    top: -3px;
-}
-
-/* the refresh button is badly aligned */
-.rirefreshbutton {
-    position: relative;
-    left: 5px;
-    top: -8px;   
-}
-
-/* the add date button is weirdly shown under the date */
-.riform #adddate {
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: 290px !important;
-}
-
-/* the small 'beginning of recurrence'-label is unreadable and positioned awfully*/
-.riform .start .rlabel {
-    color: #37911b !important;   
-    font-weight: normal !important;
-    font-size: 13px !important;
-    float: right;
-    position: relative;
-    left: 4px;
-}
-
-/* the first occurrence's top border clashes with the header */
-.rioccurrences .occurrence:hover {
-    border-color: white !important;
-    background-color: #efefef;
-}
-
-/* the batching is, you guessed it, way too small to be readable */
-.riform .batching {
-    font-size: 13px !important;
-}
-
-/* the cancel button animates away on hover (I'm not making this up) */
-input.ricancelbutton {
-    background-position: 0 !important
-}
-
-/*
-
-    end of recurrence widget fixes
-
-*/
-
 /* event navigation */
 
 .event-navigation ul {
@@ -405,3 +305,112 @@ input.required[type="radio"]:after {
 }
 }
 
+/* 
+
+    the recurrence widget looks awful by default
+    
+*/
+
+/* the headers are too big and prominent */
+.riform h1, .riform h2 {
+    color: #333 !important;
+    font-size: 14px !important;
+}
+
+/* the lower headers have different distances to their borders */
+.rioccurancesheader {
+    height: 23px;
+}
+
+/* the font is too small */
+.riform {
+    font-size: 13px !important;   
+}
+
+/* the date field in the recurrence section is badly aligned */
+#riformfields .date {
+    width: 85px !important;
+    position: relative;
+    left: 5px;
+    top: -1px;
+}
+
+/* the labels are too small (text is wrapped) and they are too heavy */
+.riform .label {
+    width: 150px !important;
+    font-weight: normal !important;
+}
+
+/* the select field looks off */
+div.riform select {
+    position: relative;
+    top: -2px;   
+}
+
+/* the fields are smashed too close together */
+#riformfields .label, #riformfields .field {
+    margin-top: 8px;
+}
+
+#rirangeoptions div {
+    margin-bottom: 10px;   
+}
+
+/* the trash symbols are scattered all over the place */
+.rioccurrences .occurrence .action {
+    position: absolute;
+    right: 6px;
+}
+
+.rioccurrences .occurrence .action a {
+    float: none;
+    display: inline-block;
+    position: relative;
+    top: -3px;
+}
+
+/* the refresh button is badly aligned */
+.rirefreshbutton {
+    position: relative;
+    left: 5px;
+    top: -8px;   
+}
+
+/* the add date button is weirdly shown under the date */
+.riform #adddate {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 290px !important;
+}
+
+/* the small 'beginning of recurrence'-label is unreadable and positioned awfully*/
+.riform .start .rlabel {
+    color: #37911b !important;   
+    font-weight: normal !important;
+    font-size: 13px !important;
+    float: right;
+    position: relative;
+    left: 4px;
+}
+
+/* the first occurrence's top border clashes with the header */
+.rioccurrences .occurrence:hover {
+    border-color: white !important;
+    background-color: #efefef;
+}
+
+/* the batching is, you guessed it, way too small to be readable */
+.riform .batching {
+    font-size: 13px !important;
+}
+
+/* the cancel button animates away on hover (I'm not making this up) */
+input.ricancelbutton {
+    background-position: 0 !important
+}
+
+/*
+
+    end of recurrence widget fixes
+
+*/
