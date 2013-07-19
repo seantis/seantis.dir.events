@@ -183,4 +183,16 @@ def upgrade_1004_to_1005(context):
             submission.submission_range_end_time = event.local_end.time()
             submission.submission_whole_day = event.whole_day
 
-        event.reindexObject()
+
+def upgrade_1005_to_1006(context):
+    setup = getToolByName(context, 'portal_setup')
+
+    profiles = [
+        'teamraum', 'sunburst', 'izug_basetheme'
+    ]
+
+    for profile in profiles:
+        full_profile = 'profile-seantis.dir.events:{}'.format(profile)
+
+        if setup.getProfileImportDate(full_profile):
+            setup.runImportStepFromProfile(full_profile, 'cssregistry')

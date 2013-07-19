@@ -142,6 +142,15 @@
        handler=".upgrades.upgrade_1004_to_1005"
        />
 
+    <genericsetup:upgradeStep
+       source="1005"
+       destination="1006"
+       title="Remove media='all' from cssregistry"
+       description=""
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1005_to_1006"
+       />
+
     <!-- Advanced Theme Adjustments through Diazo -->
     <plone:static name="seantis.dir.events.izug-theme" 
       directory="themes/izug-theme" type="theme" 
