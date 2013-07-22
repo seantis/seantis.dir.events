@@ -112,6 +112,8 @@ def events(offer):
 
         if not any((start_time, end_time)):
             event['whole_day'] = True
+        else:
+            event['whole_day'] = False
 
         if start_time:
             event['start'] = parse(start_time, default=event['start'])
