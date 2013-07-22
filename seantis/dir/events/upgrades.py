@@ -171,7 +171,6 @@ def upgrade_1004_to_1005(context):
             submission.submission_date = event.local_start.date()
             submission.submission_start_time = event.local_start.time()
             submission.submission_end_time = event.local_end.time()
-            submission.submission_whole_day = event.whole_day
             submission.submission_recurrence = event.recurrence
         else:
             # eventual recurrence is lost here, it's no longer possible
@@ -181,7 +180,12 @@ def upgrade_1004_to_1005(context):
             submission.submission_range_end_date = event.local_end.date()
             submission.submission_range_start_time = event.local_start.time()
             submission.submission_range_end_time = event.local_end.time()
+
+        # the guidle import had bug where whole_day was not set at all times
+        if hasattr(event, 'whole_day'):
             submission.submission_whole_day = event.whole_day
+        else:
+            submission.submission_whole_day = False
 
 
 def upgrade_1005_to_1006(context):
