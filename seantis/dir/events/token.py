@@ -1,11 +1,10 @@
+from os import urandom
 from uuid import UUID
 from five import grok
 
 from zope.component.hooks import getSite
 from zope.component import getAdapter
 from zExceptions import NotFound
-
-from M2Crypto.m2 import rand_bytes
 
 from Products.CMFCore.utils import getToolByName
 
@@ -21,7 +20,7 @@ class TokenAccess(grok.Adapter):
     def attach_token(self, token=None):
         assert token != 'missing'
 
-        self.context.access_token = token or UUID(bytes=rand_bytes(16)).hex
+        self.context.access_token = token or UUID(bytes=urandom(16)).hex
         store_on_session(self.context)
 
     def has_access(self, request):
