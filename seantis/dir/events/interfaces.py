@@ -6,7 +6,6 @@ import magic
 
 from collective.dexteritytextindexer import searchable
 from plone.namedfile.field import NamedImage, NamedFile
-from plone.app.event.dx import ParameterizedWidgetFactory
 from plone.app.event.dx.behaviors import first_weekday_sun0
 from plone.directives import form
 from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
@@ -316,16 +315,14 @@ class IEventSubmissionData(form.Schema):
         default=days.keys
     )
 
-
-alsoProvides(IEventSubmissionData, IFormFieldProvider)
-
-IEventSubmissionData.setTaggedValue('plone.autoform.widgets', {
-    'submission_recurrence': ParameterizedWidgetFactory(
-        RecurrenceWidget,
+    form.widget(
+        'submission_recurrence', RecurrenceWidget,
         start_field='IEventSubmissionData.submission_date',
         first_day=first_weekday_sun0
     )
-})
+
+
+alsoProvides(IEventSubmissionData, IFormFieldProvider)
 
 
 # force the user to select at least one value for each category

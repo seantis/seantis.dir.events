@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from five import grok
 
 from itertools import ifilter
-from plone.app.event.ical import construct_calendar
+from plone.app.event.base import construct_calendar
 from plone.memoize import instance
 
 from zope.interface import implements
