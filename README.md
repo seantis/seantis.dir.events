@@ -11,16 +11,16 @@ seantis.dir.events builds on seantis.dir.base, adding information about upcoming
 
 # Dependencies
 
-seantis.dir.events relies on Plone 4.2+ with dexterity and seantis.dir.base.
+seantis.dir.events relies on Plone 4.3+ with dexterity and seantis.dir.base.
 
 python-magic is used to identify the type of uploaded files which requires the 'libmagic' library.
 
 # Installation
 
-1. Use Plone 4.2 or newer
+1. Use Plone 4.3 or newer
 
         extends =
-            http://dist.plone.org/release/4.2/versions.cfg
+            http://dist.plone.org/release/4.3/versions.cfg
 
 2. Add the module to your instance eggs
 
