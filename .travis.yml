@@ -6,8 +6,4 @@ install:
     - mkdir -p buildout-cache/downloads
     - python bootstrap.py -c travis.cfg
     - bin/buildout -N -t 3 -c travis.cfg
-# Required for M2Crypto
-before_install:
-    - sudo apt-get update
-    - sudo apt-get install swig libssl-dev libssl0.9.8
 script: bin/test -s seantis.dir.events
