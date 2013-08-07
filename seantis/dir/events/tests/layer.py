@@ -39,14 +39,6 @@ class Fixture(PloneSandboxLayer):
     def setUpPloneSite(self, portal):
         self.applyProfile(portal, 'seantis.dir.events:default')
 
-        # should probably go to metadata.xml
-        self.applyProfile(portal, 'plone.app.event:default')
-        self.applyProfile(portal, 'collective.geo.geographer:default')
-        self.applyProfile(portal, 'collective.geo.mapwidget:default')
-        self.applyProfile(portal, 'collective.geo.contentlocations:default')
-        self.applyProfile(portal, 'collective.geo.kml:default')
-        self.applyProfile(portal, 'collective.geo.settings:default')
-
 
 FIXTURE = Fixture()
 INTEGRATION_TESTING = IntegrationTesting(
