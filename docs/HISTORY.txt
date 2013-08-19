@@ -1,6 +1,11 @@
 
 # Changelog
 
+1.0a3
+-----
+
+- Fixes errors when using plone.app.event 1.0rc2
+
 1.0a2
 -----
 

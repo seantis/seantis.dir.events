@@ -200,3 +200,13 @@ def upgrade_1005_to_1006(context):
 
         if setup.getProfileImportDate(full_profile):
             setup.runImportStepFromProfile(full_profile, 'cssregistry')
+
+
+def upgrade_1006_to_1007(context):
+    setup = getToolByName(context, 'portal_setup')
+
+    # For some reason this profile was not imported on some older events
+    # installations. This leads to exceptions.
+    setup.runImportStepFromProfile(
+        'profile-plone.app.event:default', 'browserlayer'
+    )

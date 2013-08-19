@@ -151,6 +151,15 @@
        handler=".upgrades.upgrade_1005_to_1006"
        />
 
+    <genericsetup:upgradeStep
+       source="1006"
+       destination="1007"
+       title="Import plone.app.event browserlayer"
+       description=""
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1006_to_1007"
+       />
+
     <!-- Advanced Theme Adjustments through Diazo -->
     <plone:static name="seantis.dir.events.izug-theme" 
       directory="themes/izug-theme" type="theme" 
