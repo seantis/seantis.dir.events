@@ -4,6 +4,8 @@
 1.0a3
 -----
 
+- Bind event reindexing directly to the transaction
+
 - Fixes errors when using plone.app.event 1.0rc2
 
 1.0a2

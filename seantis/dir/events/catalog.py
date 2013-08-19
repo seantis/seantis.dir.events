@@ -70,23 +70,11 @@ class ReindexDataManager(object):
         return AbortSavepoint(self, transaction.get())
 
 
-@grok.subscribe(IEventsDirectoryItem, IObjectRemovedEvent)
-def onRemovedItem(item, event):
+def attach_reindex_to_transaction(directory):
+    request = getattr(directory, 'REQUEST', None)
 
-    request = getattr(item, 'REQUEST', None)
     if request:
-        directory = event.oldParent
         transaction.get().join(ReindexDataManager(request, directory))
-
-
-def may_reindex_item(item):
-    if not item:
-        return False
-
-    if not IEventsDirectoryItem.providedBy(item):
-        return False
-
-    return True
 
 
 def may_reindex_directory(directory):
@@ -107,25 +95,21 @@ def reindex_directory(directory):
         utils.get_catalog(directory).reindex()
 
 
-def reindex_item(directory, item):
-    if may_reindex_item(item) and may_reindex_directory(directory):
-        utils.get_catalog(directory).reindex([item])
+@grok.subscribe(IEventsDirectoryItem, IObjectRemovedEvent)
+def onRemovedItem(item, event):
+    attach_reindex_to_transaction(event.oldParent)
 
 
 @grok.subscribe(IEventsDirectoryItem, IObjectMovedEvent)
 def onMovedItem(item, event):
-    reindex_item(event.oldParent, item)
-    reindex_item(event.newParent, item)
+    attach_reindex_to_transaction(event.oldParent)
+    attach_reindex_to_transaction(event.newParent)
 
 
 @grok.subscribe(IEventsDirectoryItem, IObjectModifiedEvent)
-def onModifiedItem(item, event):
-    reindex_item(item.get_parent(), item)
-
-
 @grok.subscribe(IEventsDirectoryItem, IActionSucceededEvent)
-def onChangedWorkflowState(item, event):
-    reindex_item(item.get_parent(), item)
+def onModifiedItem(item, event):
+    attach_reindex_to_transaction(item.get_parent())
 
 
 class LazyList(object):
@@ -274,11 +258,10 @@ class EventOrderIndex(EventIndex):
 
         return self.event_by_id_and_date(id, date)
 
-    def reindex(self, events=[]):
+    def reindex(self):
 
-        if not events:
-            events = self.catalog.query(review_state=self.state)
-            self.index = sortedset()
+        events = self.catalog.query(review_state=self.state)
+        self.index = sortedset()
 
         self.update(events)
         self.generate_metadata()
@@ -425,9 +408,9 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     def index_for_state(self, state):
         return EventOrderIndex(self, state)
 
-    def reindex(self, events=[]):
+    def reindex(self):
         for ix in self.indices.values():
-            ix.reindex(events)
+            ix.reindex()
 
     @property
     def submitted_count(self):

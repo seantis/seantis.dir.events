@@ -1,3 +1,5 @@
+import transaction
+
 from datetime import date
 from seantis.dir.events.tests import IntegrationTestCase
 
@@ -48,47 +50,67 @@ class TestEventIndex(IntegrationTestCase):
         self.assertEqual(len(published.index), 0)
 
         event = self.create_event()
+        transaction.commit()
 
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 0)
 
         event.submit()
+        transaction.commit()
 
         self.assertEqual(len(submitted.index), 1)
         self.assertEqual(len(published.index), 0)
 
         event.publish()
+        transaction.commit()
 
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 1)
 
         event.archive()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
+
+    def test_event_order_index_recurrence(self):
+        self.login_testuser()
+
+        submitted = self.catalog.indices['submitted']
+        published = self.catalog.indices['published']
 
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 0)
 
         event = self.create_event(recurrence='RRULE:FREQ=DAILY;COUNT=10')
+        transaction.commit()
 
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 0)
 
         event.submit()
+        transaction.commit()
 
         self.assertEqual(len(submitted.index), 10)
         self.assertEqual(len(published.index), 0)
 
         event.publish()
+        transaction.commit()
 
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 10)
 
         event.recurrence = ''
+        transaction.commit()
+
+        event.reindexObject()
         event.reindex()
 
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 1)
 
         event.archive()
+        transaction.commit()
 
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 0)

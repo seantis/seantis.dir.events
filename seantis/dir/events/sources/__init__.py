@@ -98,7 +98,7 @@ class FetchView(grok.View, DirectoryCatalogMixin):
         self.context.reindexObject()
 
         # reindex in the Events Catalog
-        IDirectoryCatalog(self.context).reindex(imported)
+        IDirectoryCatalog(self.context).reindex()
 
         runtime = datetime.now() - start
         minutes = runtime.total_seconds() // 60
