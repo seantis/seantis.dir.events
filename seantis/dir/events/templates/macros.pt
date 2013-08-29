@@ -38,7 +38,7 @@
     <metal:define define-macro="event-list">
       <div id="directoryResultList">
         <tal:block repeat="group python: groups.items()">
-          <div class="eventgroup-title" tal:content="python: group[0]"></div>
+          <h2 class="eventgroup-title" tal:content="python: group[0]"></h2>
           <div class="eventgroup">
             <div tal:repeat="item python: group[1]" tal:attributes="id item/id; class python: 'directoryResult event event-state-%s' % item.state">
               <metal:use use-macro="context/@@seantis-dir-macros/macros/map-marker"></metal:use>

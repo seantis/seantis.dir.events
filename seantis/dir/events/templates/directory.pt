@@ -29,21 +29,21 @@
           
             <div class="event-navigation">
               <div class="event-navigation-admin" tal:condition="view/show_state_filters">
-                <h3 i18n:translate="">State</h3>
+                <h2 i18n:translate="">State</h2>
                 <ul>
                   <li tal:repeat="filter view/state_filter_list"><a tal:content="python: filter[1]" tal:attributes="href python: view.state_url(filter[0]); class python: filter[0] == view.selected_state and 'selected event-navigation-link' or 'event-navigation-link'"></a></li>
                 </ul>
               </div>
               
               <div class="event-navigation-dates">
-                  <h3 i18n:translate="">Date</h3>
+                  <h2 i18n:translate="">Date</h2>
                   <ul>
                       <li tal:repeat="method view/dateranges"><a tal:content="python: method[1]" tal:attributes="href python: view.daterange_url(method[0]); class python: method[0] == view.selected_daterange and 'selected event-navigation-link' or 'event-navigation-link'; title python: method[2]"></a></li>
                   </ul>
               </div>
 
               <div class="event-navigation-ical">
-                <h3 i18n:translate="">Calendar Export</h3>
+                <h2 i18n:translate="">Calendar Export</h2>
                 <ul>
                   <li tal:condition="python: not view.ical_url(for_all=False)">
                     <span class="link-webcal">
