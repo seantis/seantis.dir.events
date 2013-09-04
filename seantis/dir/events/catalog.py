@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from five import grok
 
 from itertools import ifilter
-from plone.app.event.base import construct_calendar
+from plone.app.event.ical.exporter import construct_icalendar
 from plone.memoize import instance
 
 from zope.interface import implements
@@ -540,4 +540,4 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         else:
             items = super(EventsDirectoryCatalog, self).items()
 
-        return construct_calendar(self.directory, items)
+        return construct_icalendar(self.directory, items)
