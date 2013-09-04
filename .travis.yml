@@ -9,7 +9,7 @@ install:
     - python bootstrap.py -c travis.cfg
     - bin/buildout -N -t 3 -c travis.cfg
 
-script: bin/coverage bin/test -s seantis.dir.events
+script: bin/coverage run bin/test -s seantis.dir.events
 
 after_success:
     - pip install coveralls
