@@ -9,7 +9,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.statusmessages.interfaces import IStatusMessage
 
 from plone.memoize import view
-from plone.app.event.base import construct_calendar
+from plone.app.event.ical.exporter import construct_icalendar
 from plone.event.interfaces import IICalendarEventComponent
 from plone.app.event.ical import ICalendarEventComponent
 from OFS.interfaces import IObjectClonedEvent
@@ -208,14 +208,14 @@ class View(core.View):
             return self._template.render(self)
         else:
             if self.date:
-                calendar = construct_calendar(
+                calendar = construct_icalendar(
                     self.context, [self.occurrence]
                 )
                 for component in calendar.subcomponents:
                     if 'RRULE' in component:
                         del component['RRULE']
             else:
-                calendar = construct_calendar(
+                calendar = construct_icalendar(
                     self.context, [self.context]
                 )
 
