@@ -9,9 +9,22 @@
     text-align: center;
 }
 
+/* hide the faulty kml download marker */
+#document-action-kml_download {
+    display: none;
+}
+
 /* right align the directory marker */
+.directoryResult {
+    position: relative;
+    padding-left: 10px !important;
+}
+
 .directoryMarker {
-    right: 0;
+    right: auto;
+    left: -6px;
+    top: 2px; 
+    position: absolute;
 }
 
 #directoryInfo {
@@ -510,13 +523,6 @@ form.change-event {
 .your-event a:before {
     content: "";
 
-}
-
-/* map marker */
-.directoryMarker {
-    right: auto;
-    left: -3px !important;
-    top: 2px !important; 
 }
 
 /* events list */
