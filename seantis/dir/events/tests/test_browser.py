@@ -1,3 +1,4 @@
+import re
 import mock
 
 from datetime import datetime, timedelta
@@ -623,6 +624,10 @@ class BrowserTestCase(FunctionalTestCase):
 
         browser.open(first_url)
         self.assertTrue('Today' in browser.contents)
+
+        # replace the date in the url with an invalid date -> 404
+        first_url = re.sub('\d{4}-\d{2}-\d{2}', r'2000-01-01', first_url)
+        browser.assert_notfound(first_url)
 
     def test_terms(self):
         browser = self.admin_browser

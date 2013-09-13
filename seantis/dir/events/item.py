@@ -13,6 +13,7 @@ from plone.app.event.ical.exporter import construct_icalendar
 from plone.event.interfaces import IICalendarEventComponent
 from plone.app.event.ical import ICalendarEventComponent
 from OFS.interfaces import IObjectClonedEvent
+from zExceptions import NotFound
 
 from seantis.dir.base import item
 from seantis.dir.base import core
@@ -203,7 +204,14 @@ class View(core.View):
     def is_ical_export(self):
         return self.request.get('type') == 'ical'
 
+    @property
+    def is_valid_date(self):
+        return self.occurrence is not None
+
     def render(self):
+        if not self.is_valid_date:
+            raise NotFound()
+
         if not self.is_ical_export:
             return self._template.render(self)
         else:
