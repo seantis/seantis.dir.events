@@ -1,10 +1,10 @@
 /* Teamraum Styles for Seantis Dir Events */
 
 /* directory search header */
-#directorySearch {
+.portaltype-seantis-dir-events-directory #directorySearch {
     background-color: #efefef;
     border-color: #ddd;border-width: 0 1px 1px 1px;
-    margin-top: -12px;
+    padding: 1em 1.5em;
 }
 
 /* header description */
@@ -97,6 +97,7 @@
     border: none !important;
     border-bottom: 1px solid #ddd !important;
     margin-left: 23px;
+    position: relative;
 }
 
 .directoryResult:last-child {
@@ -104,6 +105,7 @@
 }
 
 .directoryMarker {
+    position: absolute;
     left: -26px !important;
     top: -2px;   
 }
