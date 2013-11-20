@@ -405,7 +405,7 @@ msgstr "Veranstaltung speichern"
 
 #: ./form.py:408
 msgid "Send us your events and we will publish them"
-msgstr "Senden Sie uns Ihre Veransteltungen und wir werden sie veröffentlichen"
+msgstr "Senden Sie uns Ihre Veranstaltung und wir werden sie veröffentlichen"
 
 #: ./interfaces.py:136
 msgid "Short Description"
@@ -568,7 +568,7 @@ msgstr "Was"
 
 #: ./interfaces.py:256
 msgid "When will this event occur?"
-msgstr "Wann wird diese Veranstaltungen stattfinden?"
+msgstr "Wann wird diese Veranstaltung stattfinden?"
 
 #: ./directory.py:40
 msgid "Where"
