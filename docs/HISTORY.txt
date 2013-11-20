@@ -1,10 +1,12 @@
 
 # Changelog
 
-1.0a4
------
+1.0rc1 (unreleased)
+------
 
-- Fixes ical export error
+- Fixes ical export error [href]
+- Fixes typos in add event form [msom]
+
 
 1.0a3
 -----
