@@ -6,7 +6,7 @@
 
 - Fixes ical export error [href]
 - Fixes typos in add event form [msom]
-
+- Fixes date formating with superfluous point [msom]
 
 1.0a3
 -----

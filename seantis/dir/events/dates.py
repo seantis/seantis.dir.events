@@ -143,7 +143,7 @@ def human_date(date, request):
     if now.year == date.year:
         return weekday + ' ' + date.strftime('%d.%m.')
     else:
-        return weekday + ' ' + date.strftime('%d.%m.%Y.')
+        return weekday + ' ' + date.strftime('%d.%m.%Y')
 
 
 def human_daterange(start, end, request):
