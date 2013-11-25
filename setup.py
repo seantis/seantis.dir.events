@@ -1,7 +1,21 @@
 from setuptools import setup, find_packages
 import os
 
+name = 'seantis.dir.events'
+description = (
+    "Directory of upcoming Events."
+)
 version = '1.0rc1'
+
+def get_long_description():
+    readme = open('README.rst').read()
+    history = open(os.path.join('docs', 'HISTORY.rst')).read()
+    contributors = open(os.path.join('docs', 'CONTRIBUTORS.rst')).read()
+
+    # cut the part before the description to avoid repetition on pypi
+    readme = readme[readme.index(description) + len(description):]
+
+    return '\n'.join((readme, contributors, history))
 
 zug_require = [
     'ftw.contentmenu',
@@ -17,17 +31,8 @@ tests_require = [
     'mock'
 ]
 
-setup(name='seantis.dir.events',
-      version=version,
-      description="Directory of upcoming Events",
-      long_description="\n".join(
-          (
-              open("README.md").read(),
-              open(os.path.join("docs", "HISTORY.txt")).read()
-          )
-      ),
-      # Get more strings from
-      # http://pypi.python.org/pypi?:action=list_classifiers
+setup(name=name, version=version, description=description,
+      long_description=get_long_description(),
       classifiers=[
           "Framework :: Plone",
           "Programming Language :: Python",

@@ -1,23 +1,24 @@
 
-# Changelog
+Changelog
+---------
 
-1.0rc1 (unreleased)
-------
+1.0rc1
+~~~~~~
 
 - Fixes ical export error [href]
 - Fixes typos in add event form [msom]
 - Fixes date formating with superfluous point [msom]
-- Upgrade to seantis.dir.base 1.7
+- Upgrade to seantis.dir.base 1.7 [msom]
 
 1.0a3
------
+~~~~~~
 
 - Bind event reindexing directly to the transaction
 
 - Fixes errors when using plone.app.event 1.0rc2
 
 1.0a2
------
+~~~~~~
 
 - It is now easier to enter common events like events which happen on a single
   day, or events which happen on different days.
@@ -35,6 +36,6 @@
 - Event submission now works in IE7/IE8 on Windows XP
 
 1.0a1
------
+~~~~~~
 
 - Initial release
