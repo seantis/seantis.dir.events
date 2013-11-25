@@ -7,6 +7,7 @@
 - Fixes ical export error [href]
 - Fixes typos in add event form [msom]
 - Fixes date formating with superfluous point [msom]
+- Upgrade to seantis.dir.base 1.7
 
 1.0a3
 -----

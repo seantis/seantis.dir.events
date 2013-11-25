@@ -28,6 +28,7 @@
     <element value="plone.app.event.dx.behaviors.IEventRecurrence"/>
     <element value="seantis.dir.base.interfaces.IDirectoryCategorized" />
     <element value="seantis.dir.events.interfaces.IEventSubmissionData" />
+    <element value="collective.geo.behaviour.interfaces.ICoordinates" />
  </property>
  
  <!-- View information -->
