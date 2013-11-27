@@ -929,3 +929,38 @@ class BrowserTestCase(FunctionalTestCase):
         browser.open('/veranstaltungen/test2?type=ical')
         self.assertTrue('text/calendar' in browser.headers['Content-type'])
         self.assertTrue('test2' in browser.contents)
+
+    def test_filter_and_search(self):
+        # Add events
+        self.addBasicEvent(title='test1', description='desc1')
+        self.addBasicEvent(title='test2', description='desc2',
+                           cat1='Category1_2', cat2='Category2_2')
+
+        browser = self.new_browser()
+
+        # No categories, no filter
+        browser.open('/veranstaltungen')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        # Filter (&filter=&cat1=&cat2=)
+        browser.open('/veranstaltungen?filter=true&cat1=Category1')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        browser.open('/veranstaltungen?filter=true&cat1=Category1_2')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        browser.open('/veranstaltungen?filter=true&cat2=Category2_2')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        # Search (search=&searchtext=)
+        browser.open('/veranstaltungen?search=true&searchtext=test1')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        browser.open('/veranstaltungen?search=true&searchtext=test2')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' in browser.contents)
