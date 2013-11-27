@@ -22,10 +22,10 @@ class BrowserTestCase(FunctionalTestCase):
         browser.getControl(name='form.widgets.title').value = 'Veranstaltungen'
         browser.getControl(
             name='form.widgets.cat1_suggestions'
-        ).value = "Category1"
+        ).value = "Category1\nCategory1_2"
         browser.getControl(
             name='form.widgets.cat2_suggestions'
-        ).value = "Category2"
+        ).value = "Category2\nCategory2_2"
         browser.getControl('Save').click()
 
         self.assertTrue('Veranstaltungen' in browser.contents)
@@ -747,3 +747,115 @@ class BrowserTestCase(FunctionalTestCase):
 
         # this used to throw an error
         browser.open('/veranstaltungen?state=submitted')
+
+    def addBasicEvent(self, title='title', description='description',
+                      cat1='Category1', cat2='Category2',
+                      date=datetime.today(), start='2:00 PM', end='4:00 PM',
+                      submitter='submitter', email='submitter@example.com'):
+        browser = self.admin_browser
+
+        # Add form
+        browser.open('/veranstaltungen/++add++seantis.dir.events.item')
+        browser.widget('title').value = title
+        browser.widget('short_description').value = description
+        browser.getControl(cat1).selected = True
+        browser.getControl(cat2).selected = True
+        browser.widget('submission_date_type').value = ['date']
+        browser.set_date('submission_date', date)
+        browser.widget('submission_start_time').value = start
+        browser.widget('submission_end_time').value = end
+        browser.widget('submission_recurrence').value = ''
+        browser.getControl('Continue').click()
+
+        # Preview
+        browser.getControl('Continue').click()
+
+        # Confirm
+        browser.getControl(name='form.widgets.submitter').value = submitter
+        browser.getControl(name='form.widgets.submitter_email').value = email
+        browser.getControl('Submit').click()
+
+        # Check if submitted
+        browser.open('/veranstaltungen?state=submitted')
+        self.assertTrue(title in browser.contents)
+        self.assertTrue(description in browser.contents)
+        self.assertTrue(cat1 in browser.contents)
+        self.assertTrue(cat2 in browser.contents)
+
+        # Publish
+        browser.open('/veranstaltungen?state=submitted')
+        browser.getLink('Publish', index=1).click()
+
+        # Check if published
+        browser.open('/veranstaltungen?state=published')
+        self.assertTrue(title in browser.contents)
+        self.assertTrue(description in browser.contents)
+        self.assertTrue(cat1 in browser.contents)
+        self.assertTrue(cat2 in browser.contents)
+
+    def test_json_export(self):
+        # Add events
+        self.addBasicEvent(title='test1', description='desc1')
+        self.addBasicEvent(title='test2', description='desc2',
+                           cat1='Category1_2', cat2='Category2_2')
+
+        browser = self.new_browser()
+
+        # Export all
+        browser.open('/veranstaltungen?type=json')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+        self.assertTrue('desc1' in browser.contents)
+        self.assertTrue('desc2' in browser.contents)
+        self.assertTrue('Category1' in browser.contents)
+        self.assertTrue('Category1_2' in browser.contents)
+        self.assertTrue('Category2' in browser.contents)
+        self.assertTrue('Category2_2' in browser.contents)
+
+        # Export by using filter (&filter=&cat1=&cat2=)
+        browser.open('/veranstaltungen?type=json&filter=true&cat1=Category1')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        browser.open('/veranstaltungen?type=json&filter=true&cat1=Category1_2')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        browser.open('/veranstaltungen?type=json&filter=true&cat2=Category2_2')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        browser.open('/veranstaltungen?type=json&filter=true&cat1=C1&cat2=C2')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        browser.open('/veranstaltungen?type=json&cat1=Category1')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        # Export by using search (search=&searchtext=)
+        browser.open('/veranstaltungen?type=json&search=true&searchtext=test1')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        browser.open('/veranstaltungen?type=json&search=true&searchtext=test2')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        browser.open('/veranstaltungen?type=json&search=true&searchtext=test7')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        browser.open('/veranstaltungen?type=json&searchtext=test1')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)

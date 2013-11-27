@@ -142,6 +142,11 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         """ Returns true if the current request is an ical request. """
         return self.request.get('type') == 'ical'
 
+    @property
+    def is_json_export(self):
+        """ Returns true if the current request is an json request. """
+        return self.request.get('type') == 'json'
+
     def get_last_daterange(self):
         """ Returns the last selected daterange. """
         return session.get_session(self.context, 'daterange') \
@@ -182,22 +187,22 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         return len(self.batch) > 0
 
     def render(self):
-        """ Renders the ical if asked, or the usual template. """
-        if not self.is_ical_export:
-            return self._template.render(self)
-        else:
-            if 'search' in self.request.keys():
-                calendar = self.catalog.calendar(
-                    search=self.request.get('searchtext')
-                )
-            elif 'filter' in self.request.keys():
-                calendar = self.catalog.calendar(
-                    filter=self.get_filter_terms()
-                )
-            else:
-                calendar = self.catalog.calendar()
+        """ Renders the ical/json if asked, or the usual template. """
+        search = 'search' in self.request.keys() \
+            and self.request.get('searchtext') or None
+        filter = 'filter' in self.request.keys() \
+            and self.get_filter_terms() or None
 
-            utils.render_ical_response(self.request, self.context, calendar)
+        if self.is_ical_export:
+            calendar = self.catalog.calendar(search=search, filter=filter)
+            return utils.render_ical_response(self.request, self.context, calendar)
+
+        elif self.is_json_export:
+            export = self.catalog.export(search=search, filter=filter)
+            return utils.render_json_response(self.request, export)
+
+        else:
+            return self._template.render(self)
 
     def update(self, **kwargs):
         daterange = self.request.get('range', self.get_last_daterange())
@@ -220,7 +225,7 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         self.catalog.state = state
         self.catalog.daterange = daterange
 
-        if not self.is_ical_export:
+        if not self.is_ical_export and not self.is_json_export:
             super(EventsDirectoryView, self).update(**kwargs)
 
     def groups(self, items):

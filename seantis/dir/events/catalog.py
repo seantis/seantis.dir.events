@@ -532,7 +532,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
             self.spawn(self.hide_blocked(self.subset)), key=self.sortkey()
         )
 
-    def calendar(self, search=None, filter=None):
+    def export(self, search=None, filter=None):
         if search:
             items = super(EventsDirectoryCatalog, self).search(search)
         elif filter:
@@ -540,4 +540,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         else:
             items = super(EventsDirectoryCatalog, self).items()
 
+        return items
+
+    def calendar(self, search=None, filter=None):
+        items = self.export(search, filter)
         return construct_icalendar(self.directory, items)

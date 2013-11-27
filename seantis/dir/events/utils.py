@@ -1,5 +1,8 @@
 import functools
 import time
+import json
+
+from datetime import datetime
 
 from Products.CMFCore.utils import getToolByName
 
@@ -8,6 +11,10 @@ from seantis.dir.base.interfaces import IDirectoryCatalog
 from zope.component import getMultiAdapter, getAdapter
 from zope.component.hooks import getSite
 from zope import i18n
+
+from plone.namedfile import NamedFile
+
+from collective.geo.geographer.interfaces import IGeoreferenced
 
 
 def get_catalog(directory):
@@ -31,9 +38,62 @@ def render_ical_response(request, context, calendar):
     name = '%s.ics' % context.getId()
     request.RESPONSE.setHeader('Content-Type', 'text/calendar; charset=UTF-8')
     request.RESPONSE.setHeader('Content-Disposition',
-        'attachment; filename="%s"' % name
-    )
-    request.RESPONSE.write(calendar.to_ical())
+                               'attachment; filename="%s"' % name)
+    return calendar.to_ical()
+
+
+def render_json_response(request, items):
+    request.response.setHeader("Content-Type", "application/json")
+    # request.response.setHeader("Access-Control-Allow-Origin", "*") # CORS
+
+    result = []
+    for item in items:
+        origin = item.getObject()
+        event = {}
+
+        event['origin'] = item.getURL()
+        event['id'] = origin.id
+        event['title'] = origin.title
+        event['short_description'] = origin.short_description
+        event['long_description'] = origin.long_description
+        event['cat1'] = origin.cat1
+        event['cat2'] = origin.cat2
+        event['start'] = origin.start.isoformat()
+        event['end'] = origin.end.isoformat()
+        event['recurrence'] = origin.recurrence
+        event['whole_day'] = origin.whole_day
+        event['timezone'] = origin.timezone
+        event['locality'] = origin.locality
+        event['street'] = origin.street
+        event['housenumber'] = origin.housenumber
+        event['zipcode'] = origin.zipcode
+        event['town'] = origin.town
+        event['location_url'] = origin.location_url
+        event['organizer'] = origin.organizer
+        event['contact_name'] = origin.contact_name
+        event['contact_email'] = origin.contact_email
+        event['contact_phone'] = origin.contact_phone
+        event['prices'] = origin.prices
+        event['event_url'] = origin.event_url
+        event['registration'] = origin.registration
+        event['image'] = isinstance(origin.image, NamedFile) \
+            and 'image' or None
+        event['attachment_1'] = isinstance(origin.attachment_1, NamedFile) \
+            and 'attachment_1' or None
+        event['attachment_2'] = isinstance(origin.attachment_2, NamedFile) \
+            and 'attachment_2' or None
+        event['submitter'] = origin.submitter
+        event['submitter_email'] = origin.submitter_email
+
+        try:
+            geo = IGeoreferenced(item.getObject())
+            event['coordinates'] = geo.coordinates
+        except TypeError:
+            event['coordinates'] = None
+
+        result.append(event)
+
+    return json.dumps(result, sort_keys=True)
 
 
 def workflow_tool():
