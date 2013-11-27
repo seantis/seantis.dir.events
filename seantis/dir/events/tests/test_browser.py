@@ -920,3 +920,12 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('text/calendar' in browser.headers['Content-type'])
         self.assertTrue('test1' in browser.contents)
         self.assertTrue('test2' in browser.contents)
+
+        # Export via item view
+        browser.open('/veranstaltungen/test1?type=ical')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+
+        browser.open('/veranstaltungen/test2?type=ical')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test2' in browser.contents)

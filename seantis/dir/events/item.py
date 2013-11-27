@@ -227,7 +227,7 @@ class View(core.View):
                     self.context, [self.context]
                 )
 
-            utils.render_ical_response(self.request, self.context, calendar)
+            return utils.render_ical_response(self.request, self.context, calendar)
 
     @utils.webcal
     def ical_url(self, only_this):
