@@ -859,3 +859,64 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertEqual(browser.headers['Content-type'], 'application/json')
         self.assertTrue('test1' in browser.contents)
         self.assertTrue('test2' in browser.contents)
+
+    def test_ical_export(self):
+        # Add events
+        self.addBasicEvent(title='test1', description='desc1')
+        self.addBasicEvent(title='test2', description='desc2',
+                           cat1='Category1_2', cat2='Category2_2')
+
+        browser = self.new_browser()
+
+        # Export all
+        browser.open('/veranstaltungen?type=ical')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        # Export by using filter (&filter=&cat1=&cat2=)
+        browser.open('/veranstaltungen?type=ical&filter=true&cat1=Category1')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        browser.open('/veranstaltungen?type=ical&filter=true&cat1=Category1_2')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        browser.open('/veranstaltungen?type=ical&filter=true&cat2=Category2_2')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        browser.open('/veranstaltungen?type=ical&filter=true&cat1=C1&cat2=C2')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        browser.open('/veranstaltungen?type=ical&cat1=Category1')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        # Export by using search (search=&searchtext=)
+        browser.open('/veranstaltungen?type=ical&search=true&searchtext=test1')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        browser.open('/veranstaltungen?type=ical&search=true&searchtext=test2')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        browser.open('/veranstaltungen?type=ical&search=true&searchtext=test7')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        browser.open('/veranstaltungen?type=ical&searchtext=test1')
+        self.assertTrue('text/calendar' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)
