@@ -182,6 +182,18 @@ class TestEventIndex(IntegrationTestCase):
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 10)
 
+        event.archive()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
+
+        event.publish()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 10)
+
         event.recurrence = ''
         transaction.commit()
 
@@ -192,6 +204,24 @@ class TestEventIndex(IntegrationTestCase):
         self.assertEqual(len(published.index), 1)
 
         event.archive()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
+
+        denied = self.create_event(recurrence='RRULE:FREQ=DAILY;COUNT=10')
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
+
+        denied.submit()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 10)
+        self.assertEqual(len(published.index), 0)
+
+        denied.do_action("deny")
         transaction.commit()
 
         self.assertEqual(len(submitted.index), 0)
