@@ -73,6 +73,30 @@ class TestEventIndex(IntegrationTestCase):
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 0)
 
+        event.publish()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 1)
+
+        denied = self.create_event()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 1)
+
+        denied.submit()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 1)
+        self.assertEqual(len(published.index), 1)
+
+        denied.do_action("deny")
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 1)
+
     def test_event_order_index_recurrence(self):
         self.login_testuser()
 
