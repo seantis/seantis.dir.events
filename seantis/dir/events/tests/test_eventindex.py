@@ -227,6 +227,64 @@ class TestEventIndex(IntegrationTestCase):
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 0)
 
+    def test_event_order_index_recurrence_more(self):
+
+        self.login_testuser()
+
+        submitted = self.catalog.indices['submitted']
+        published = self.catalog.indices['published']
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
+
+        events = LazyList(lambda i: self.create_event(
+            recurrence='RRULE:FREQ=DAILY;COUNT=' + str(i)), 50)
+
+        num_submitted = 0
+        num_published = 0
+
+        for new_idx, new_event in enumerate(events):
+
+            if new_idx > 0:
+
+                for old_idx, old_event in enumerate(events[:new_idx - 1]):
+
+                    if old_event.state == 'preview':
+
+                        if (old_idx % 13 != 0):
+                            old_event.submit()
+                            transaction.commit()
+                            num_submitted += old_idx
+
+                    elif old_event.state == 'submitted':
+
+                        if (old_idx % 7 != 0):
+                            old_event.publish()
+                            transaction.commit()
+                            num_submitted -= old_idx
+                            num_published += old_idx
+                        else:
+                            old_event.do_action("deny")
+                            transaction.commit()
+                            num_submitted -= old_idx
+
+                    elif old_event.state == 'published':
+
+                        if (old_idx % 5 != 0):
+                            old_event.archive()
+                            transaction.commit()
+                            num_published -= old_idx
+
+                    elif old_event.state == 'archived':
+
+                        if (old_idx % 11 == 0):
+                            old_event.publish()
+                            transaction.commit()
+                            num_published += old_idx
+
+                    self.assertEqual(len(submitted.index), num_submitted)
+                    self.assertEqual(len(published.index), num_published)
+
     def test_eventorder_metadata(self):
 
         class MockCatalog(object):
