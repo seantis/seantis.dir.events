@@ -975,3 +975,40 @@ class BrowserTestCase(FunctionalTestCase):
         browser.open('/veranstaltungen?search=true&searchtext=test2')
         self.assertTrue('test1' not in browser.contents)
         self.assertTrue('test2' in browser.contents)
+
+    def test_eventindex_view(self):
+        # Test unauthorized access
+        anonymous = self.new_browser()
+        anonymous.assert_unauthorized('/veranstaltungen/eventindex')
+
+        browser = self.admin_browser
+
+        # Test eventindex
+        browser.open('/veranstaltungen/eventindex')
+        self.assertTrue('text/plain' in browser.headers['Content-type'])
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        self.addBasicEvent(title='test1')
+        browser.open('/veranstaltungen/eventindex')
+        self.assertTrue('text/plain' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        self.addBasicEvent(title='test2')
+        browser.open('/veranstaltungen/eventindex')
+        self.assertTrue('text/plain' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        # reindex
+        browser.open('/veranstaltungen/eventindex?reindex')
+        self.assertTrue('text/plain' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        # rebuild
+        browser.open('/veranstaltungen/eventindex?rebuild')
+        self.assertTrue('text/plain' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)

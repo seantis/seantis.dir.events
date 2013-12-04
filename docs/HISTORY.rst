@@ -2,13 +2,29 @@
 Changelog
 ---------
 
+1.0rc2 (unreleased)
+~~~~~~~~~~~~~~~~~~~
+
+- Stops event reindexing from running more than once per transaction.
+  [href]
+
+- Makes event reindexing threadsafe.
+  [href]
+
 1.0rc1
 ~~~~~~
 
-- Fixes ical export error [href]
-- Fixes typos in add event form [msom]
-- Fixes date formating with superfluous point [msom]
-- Upgrade to seantis.dir.base 1.7 [msom]
+- Fixes ical export error
+  [href]
+
+- Fixes typos in add event form
+  [msom]
+
+- Fixes date formating with superfluous point
+  [msom]
+
+- Upgrade to seantis.dir.base 1.7
+  [msom]
 
 1.0a3
 ~~~~~~
