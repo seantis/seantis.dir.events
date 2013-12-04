@@ -416,6 +416,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     grok.context(IEventsDirectory)
     grok.provides(IDirectoryCatalog)
 
+    _lock = Lock()
+
     def __init__(self, *args, **kwargs):
         self._daterange = dates.default_daterange
         self._state = 'published'
@@ -433,6 +435,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     def index_for_state(self, state):
         return EventOrderIndex(self, state)
 
+    @synchronized(_lock)
     def reindex(self):
         for ix in self.indices.values():
             ix.reindex()
