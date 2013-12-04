@@ -981,7 +981,7 @@ class BrowserTestCase(FunctionalTestCase):
         browser = self.admin_browser
 
         self.addEvent(title='whole-day-event-today',
-                      whole_day=True, date=datetime.today(),
+                      whole_day=True,
                       check_submitted=False, do_publish=False)
 
         browser.open('/veranstaltungen?state=submitted')
@@ -993,3 +993,23 @@ class BrowserTestCase(FunctionalTestCase):
         # ... or not be counted in the number of submitted events
         self.assertTrue('whole-day-event-today' not in browser.contents)
         self.assertTrue('Submitted (0)' in browser.contents)
+
+        # This does not happen, if another event is submitted with start/end
+        self.addEvent(title='timed-event-today',
+                      check_submitted=False, do_publish=False)
+        self.assertTrue('whole-day-event-today' in browser.contents)
+        self.assertTrue('timed-event-today' in browser.contents)
+        self.assertTrue('Submitted (2)' in browser.contents)
+
+        # Happens also if the all-day event is published
+        browser.open('/veranstaltungen?state=submitted')
+        browser.getLink('Publish', index=1).click()
+        browser.open('/veranstaltungen?state=published')
+        self.assertTrue('whole-day-event-today' in browser.contents)
+
+        # Becomes visible by publishing the other event
+        browser.open('/veranstaltungen?state=submitted')
+        browser.getLink('Publish', index=1).click()
+        browser.open('/veranstaltungen?state=published')
+        self.assertTrue('whole-day-event-today' in browser.contents)
+        self.assertTrue('timed-event-today' in browser.contents)
