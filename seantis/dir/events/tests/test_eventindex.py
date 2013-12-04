@@ -3,7 +3,12 @@ import transaction
 from datetime import date
 from seantis.dir.events.tests import IntegrationTestCase
 
-from seantis.dir.events.catalog import LazyList, EventOrderIndex
+from seantis.dir.events.catalog import (
+    LazyList,
+    EventOrderIndex,
+    attach_reindex_to_transaction,
+    ReindexDataManager
+)
 
 from mock import Mock
 
@@ -362,3 +367,23 @@ class TestEventIndex(IntegrationTestCase):
         self.assertEqual(dateindex[date(2013, 07, 04)], 0)
         self.assertEqual(dateindex[date(2013, 07, 05)], 1)
         self.assertEqual(dateindex[date(2013, 07, 06)], 5)
+
+    def test_attach_reindex_idempotence(self):
+
+        # attaching the reindex to the request multiple times should
+        # result in only one call to the reindex function on the catalog
+
+        # because we cannot let the transaction go through in the test
+        # we need to inspect the content of the transaction
+        def number_of_data_managers():
+            resources = transaction.get()._resources
+            return len(
+                [m for m in resources if isinstance(m, ReindexDataManager)]
+            )
+
+        attach_reindex_to_transaction(self.directory)
+        self.assertEqual(1, number_of_data_managers())
+        attach_reindex_to_transaction(self.directory)
+        self.assertEqual(1, number_of_data_managers())
+        attach_reindex_to_transaction(self.directory)
+        self.assertEqual(1, number_of_data_managers())

@@ -1,3 +1,6 @@
+import logging
+log = logging.getLogger('seantis.dir.events')
+
 import transaction
 from transaction.interfaces import ISavepointDataManager
 from transaction._transaction import AbortSavepoint
@@ -8,6 +11,9 @@ from five import grok
 from itertools import ifilter
 from plone.app.event.ical.exporter import construct_icalendar
 from plone.memoize import instance
+
+from threading import Lock
+from plone.synchronize import synchronized
 
 from zope.interface import implements
 from zope.annotation.interfaces import IAnnotations
@@ -70,11 +76,28 @@ class ReindexDataManager(object):
         return AbortSavepoint(self, transaction.get())
 
 
+def reindex_already_attached():
+    for resource in transaction.get()._resources:
+        if isinstance(resource, ReindexDataManager):
+            return True
+
+    return False
+
+
+_attach_lock = Lock()
+
+
+@synchronized(_attach_lock)
 def attach_reindex_to_transaction(directory):
+    assert directory is not None
+
     request = getattr(directory, 'REQUEST', None)
 
-    if request:
+    if request and not reindex_already_attached():
         transaction.get().join(ReindexDataManager(request, directory))
+
+    if not request:
+        log.warn('request not found')
 
 
 def may_reindex_directory(directory):
@@ -102,8 +125,10 @@ def onRemovedItem(item, event):
 
 @grok.subscribe(IEventsDirectoryItem, IObjectMovedEvent)
 def onMovedItem(item, event):
-    attach_reindex_to_transaction(event.oldParent)
-    attach_reindex_to_transaction(event.newParent)
+    if event.oldParent is not None:
+        attach_reindex_to_transaction(event.oldParent)
+    if event.newParent is not None:
+        attach_reindex_to_transaction(event.newParent)
 
 
 @grok.subscribe(IEventsDirectoryItem, IObjectModifiedEvent)
