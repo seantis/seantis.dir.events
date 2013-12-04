@@ -975,3 +975,21 @@ class BrowserTestCase(FunctionalTestCase):
         browser.open('/veranstaltungen?search=true&searchtext=test2')
         self.assertTrue('test1' not in browser.contents)
         self.assertTrue('test2' in browser.contents)
+
+    def test_browser_issue14(self):
+
+        browser = self.admin_browser
+
+        self.addEvent(title='whole-day-event-today',
+                      whole_day=True, date=datetime.today(),
+                      check_submitted=False, do_publish=False)
+
+        browser.open('/veranstaltungen?state=submitted')
+
+        # Either the event should be visible ...
+        self.assertTrue('whole-day-event-today' in browser.contents)
+        self.assertTrue('Submitted (1)' in browser.contents)
+
+        # ... or not be counted in the number of submitted events
+        self.assertTrue('whole-day-event-today' not in browser.contents)
+        self.assertTrue('Submitted (0)' in browser.contents)
