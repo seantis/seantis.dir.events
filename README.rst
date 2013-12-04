@@ -55,7 +55,7 @@ Installation
 Build Status
 ------------
 
-.. image:: https://travis-ci.org/seantis/seantis.dir.events.png   
+.. image:: https://api.travis-ci.org/seantis/seantis.dir.events.png?branch=master
   :target: https://travis-ci.org/seantis/seantis.dir.events
   :alt: Build Status
 
