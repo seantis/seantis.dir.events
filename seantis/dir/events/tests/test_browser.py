@@ -43,6 +43,62 @@ class BrowserTestCase(FunctionalTestCase):
         self.admin_browser.getControl('Delete').click()
         self.admin_browser.assert_notfound('/veranstaltungen')
 
+    def addEvent(self, title='title', description='description',
+                 cat1='Category1', cat2='Category2',
+                 whole_day=False,
+                 date=datetime.today(), start='2:00 PM', end='4:00 PM',
+                 submitter='submitter', email='submitter@example.com',
+                 check_submitted=True, do_publish=True, check_published=True):
+
+        browser = self.admin_browser
+
+        # Add form
+        browser.open('/veranstaltungen/++add++seantis.dir.events.item')
+        # browser.show()
+        browser.widget('title').value = title
+        browser.widget('short_description').value = description
+        browser.getControl(cat1).selected = True
+        browser.getControl(cat2).selected = True
+        browser.widget('submission_date_type').value = ['date']
+        browser.set_date('submission_date', date)
+        browser.widget('submission_recurrence').value = ''
+        if whole_day:
+            browser.getControl('All day').selected = True
+        else:
+            browser.widget('submission_start_time').value = start
+            browser.widget('submission_end_time').value = end
+        browser.getControl('Continue').click()
+
+        # Preview
+        browser.getControl('Continue').click()
+
+        # Confirm
+        browser.getControl(name='form.widgets.submitter').value = submitter
+        browser.getControl(name='form.widgets.submitter_email').value = email
+        browser.getControl('Submit').click()
+
+        # Check if submitted
+        if check_submitted:
+            browser.open('/veranstaltungen?state=submitted')
+            self.assertTrue(title in browser.contents)
+            self.assertTrue(description in browser.contents)
+            self.assertTrue(cat1 in browser.contents)
+            self.assertTrue(cat2 in browser.contents)
+
+        if do_publish:
+
+            # Publish
+            browser.open('/veranstaltungen?state=submitted')
+            browser.getLink('Publish', index=1).click()
+
+            # Check if published
+            if check_published:
+                browser.open('/veranstaltungen?state=published')
+                self.assertTrue(title in browser.contents)
+                self.assertTrue(description in browser.contents)
+                self.assertTrue(cat1 in browser.contents)
+                self.assertTrue(cat2 in browser.contents)
+
     def test_workflow(self):
 
         # anonymous browser
@@ -748,56 +804,11 @@ class BrowserTestCase(FunctionalTestCase):
         # this used to throw an error
         browser.open('/veranstaltungen?state=submitted')
 
-    def addBasicEvent(self, title='title', description='description',
-                      cat1='Category1', cat2='Category2',
-                      date=datetime.today(), start='2:00 PM', end='4:00 PM',
-                      submitter='submitter', email='submitter@example.com'):
-        browser = self.admin_browser
-
-        # Add form
-        browser.open('/veranstaltungen/++add++seantis.dir.events.item')
-        browser.widget('title').value = title
-        browser.widget('short_description').value = description
-        browser.getControl(cat1).selected = True
-        browser.getControl(cat2).selected = True
-        browser.widget('submission_date_type').value = ['date']
-        browser.set_date('submission_date', date)
-        browser.widget('submission_start_time').value = start
-        browser.widget('submission_end_time').value = end
-        browser.widget('submission_recurrence').value = ''
-        browser.getControl('Continue').click()
-
-        # Preview
-        browser.getControl('Continue').click()
-
-        # Confirm
-        browser.getControl(name='form.widgets.submitter').value = submitter
-        browser.getControl(name='form.widgets.submitter_email').value = email
-        browser.getControl('Submit').click()
-
-        # Check if submitted
-        browser.open('/veranstaltungen?state=submitted')
-        self.assertTrue(title in browser.contents)
-        self.assertTrue(description in browser.contents)
-        self.assertTrue(cat1 in browser.contents)
-        self.assertTrue(cat2 in browser.contents)
-
-        # Publish
-        browser.open('/veranstaltungen?state=submitted')
-        browser.getLink('Publish', index=1).click()
-
-        # Check if published
-        browser.open('/veranstaltungen?state=published')
-        self.assertTrue(title in browser.contents)
-        self.assertTrue(description in browser.contents)
-        self.assertTrue(cat1 in browser.contents)
-        self.assertTrue(cat2 in browser.contents)
-
     def test_json_export(self):
         # Add events
-        self.addBasicEvent(title='test1', description='desc1')
-        self.addBasicEvent(title='test2', description='desc2',
-                           cat1='Category1_2', cat2='Category2_2')
+        self.addEvent(title='test1', description='desc1')
+        self.addEvent(title='test2', description='desc2',
+                      cat1='Category1_2', cat2='Category2_2')
 
         browser = self.new_browser()
 
@@ -862,9 +873,9 @@ class BrowserTestCase(FunctionalTestCase):
 
     def test_ical_export(self):
         # Add events
-        self.addBasicEvent(title='test1', description='desc1')
-        self.addBasicEvent(title='test2', description='desc2',
-                           cat1='Category1_2', cat2='Category2_2')
+        self.addEvent(title='test1', description='desc1')
+        self.addEvent(title='test2', description='desc2',
+                      cat1='Category1_2', cat2='Category2_2')
 
         browser = self.new_browser()
 
@@ -932,9 +943,9 @@ class BrowserTestCase(FunctionalTestCase):
 
     def test_filter_and_search(self):
         # Add events
-        self.addBasicEvent(title='test1', description='desc1')
-        self.addBasicEvent(title='test2', description='desc2',
-                           cat1='Category1_2', cat2='Category2_2')
+        self.addEvent(title='test1', description='desc1')
+        self.addEvent(title='test2', description='desc2',
+                      cat1='Category1_2', cat2='Category2_2')
 
         browser = self.new_browser()
 
