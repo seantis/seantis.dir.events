@@ -989,13 +989,13 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('test1' not in browser.contents)
         self.assertTrue('test2' not in browser.contents)
 
-        self.addBasicEvent(title='test1')
+        self.addEvent(title='test1')
         browser.open('/veranstaltungen/eventindex')
         self.assertTrue('text/plain' in browser.headers['Content-type'])
         self.assertTrue('test1' in browser.contents)
         self.assertTrue('test2' not in browser.contents)
 
-        self.addBasicEvent(title='test2')
+        self.addEvent(title='test2')
         browser.open('/veranstaltungen/eventindex')
         self.assertTrue('text/plain' in browser.headers['Content-type'])
         self.assertTrue('test1' in browser.contents)
