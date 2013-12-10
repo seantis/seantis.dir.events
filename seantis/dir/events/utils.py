@@ -44,7 +44,7 @@ def render_ical_response(request, context, calendar):
 
 def render_json_response(request, items):
     request.response.setHeader("Content-Type", "application/json")
-    # request.response.setHeader("Access-Control-Allow-Origin", "*") # CORS
+    request.response.setHeader("Access-Control-Allow-Origin", "*") # CORS
 
     result = []
     for item in items:
