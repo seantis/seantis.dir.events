@@ -892,6 +892,7 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertEqual(browser.headers['Content-type'], 'application/json')
         self.assertTrue('test1' in browser.contents)
         self.assertTrue('test2' not in browser.contents)
+        self.assertTrue('test3' not in browser.contents)
 
     def test_ical_export(self):
         # Add events
