@@ -7,6 +7,7 @@ description = (
 )
 version = '1.0rc1'
 
+
 def get_long_description():
     readme = open('README.rst').read()
     history = open(os.path.join('docs', 'HISTORY.rst')).read()
@@ -50,7 +51,6 @@ setup(name=name, version=version, description=description,
           'setuptools',
           'Plone>=4.3',
           'python-dateutil',
-          'plone.api',
           'plone.app.event[ploneintegration, dexterity]>=1.0.3',
           'plone.event>=1.0',
           'plone.app.dexterity',

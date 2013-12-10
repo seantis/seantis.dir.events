@@ -8,8 +8,7 @@ from transaction._transaction import AbortSavepoint
 from datetime import datetime, timedelta
 from five import grok
 
-from itertools import ifilter
-from plone import api
+from itertools import ifilter, islice
 from plone.app.event.ical.exporter import construct_icalendar
 from plone.memoize import instance
 
@@ -562,20 +561,33 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         )
 
     def export(self, search=None, filter=None, max=None):
-        items = []
-        with api.env.adopt_roles(['Anonymous']):
-            if search:
-                items = super(EventsDirectoryCatalog, self).search(search)
-            elif filter:
-                items = super(EventsDirectoryCatalog, self).filter(filter)
-            else:
-                items = super(EventsDirectoryCatalog, self).items()
+        # Find subset
+        if search:
+            subset = super(EventsDirectoryCatalog, self).search(search)
+        elif filter:
+            subset = super(EventsDirectoryCatalog, self).filter(filter)
+        else:
+            subset = super(EventsDirectoryCatalog, self).items()
 
-        if isinstance(max, (int,long)) and (max>0):
-            items = items[:max]
+        if not subset:
+            return []
 
-        return items
+        # Get lazy list from indexer using the subset
+        start, end = getattr(dates.DateRanges(), 'this_and_next_year')
+        ll = self.ix_published.lazy_list(start, end, subset)
+
+        # Check if upper limit is valid
+        if not isinstance(max, (int, long)) or (max <= 0):
+            max = len(ll)
+
+        return islice(ll, max)
 
     def calendar(self, search=None, filter=None):
-        items = self.export(search, filter)
+        if search:
+            items = super(EventsDirectoryCatalog, self).search(search)
+        elif filter:
+            items = super(EventsDirectoryCatalog, self).filter(filter)
+        else:
+            items = super(EventsDirectoryCatalog, self).items()
+
         return construct_icalendar(self.directory, items)

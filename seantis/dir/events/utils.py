@@ -44,56 +44,54 @@ def render_ical_response(request, context, calendar):
 
 def render_json_response(request, items):
     request.response.setHeader("Content-Type", "application/json")
-    request.response.setHeader("Access-Control-Allow-Origin", "*") # CORS
+    request.response.setHeader("Access-Control-Allow-Origin", "*")  # CORS
 
     result = []
-    for item in items:
-        origin = item.getObject()
+    for idx, item in enumerate(items):
         event = {}
 
-        event['origin'] = item.getURL()
-        event['id'] = origin.id
-        event['title'] = origin.title
-        event['short_description'] = origin.short_description
-        event['long_description'] = origin.long_description
-        event['cat1'] = origin.cat1
-        event['cat2'] = origin.cat2
-        event['start'] = origin.start.isoformat()
-        event['end'] = origin.end.isoformat()
-        event['recurrence'] = origin.recurrence
-        event['whole_day'] = origin.whole_day
-        event['timezone'] = origin.timezone
-        event['locality'] = origin.locality
-        event['street'] = origin.street
-        event['housenumber'] = origin.housenumber
-        event['zipcode'] = origin.zipcode
-        event['town'] = origin.town
-        event['location_url'] = origin.location_url
-        event['organizer'] = origin.organizer
-        event['contact_name'] = origin.contact_name
-        event['contact_email'] = origin.contact_email
-        event['contact_phone'] = origin.contact_phone
-        event['prices'] = origin.prices
-        event['event_url'] = origin.event_url
-        event['registration'] = origin.registration
-        event['image'] = isinstance(origin.image, NamedFile) \
+        event['id'] = item.id
+        event['title'] = item.title
+        event['short_description'] = item.short_description
+        event['long_description'] = item.long_description
+        event['cat1'] = item.cat1
+        event['cat2'] = item.cat2
+        event['start'] = item.start.isoformat()
+        event['end'] = item.end.isoformat()
+        event['recurrence'] = item.recurrence
+        event['whole_day'] = item.whole_day
+        event['timezone'] = item.timezone
+        event['locality'] = item.locality
+        event['street'] = item.street
+        event['housenumber'] = item.housenumber
+        event['zipcode'] = item.zipcode
+        event['town'] = item.town
+        event['location_url'] = item.location_url
+        event['organizer'] = item.organizer
+        event['contact_name'] = item.contact_name
+        event['contact_email'] = item.contact_email
+        event['contact_phone'] = item.contact_phone
+        event['prices'] = item.prices
+        event['event_url'] = item.event_url
+        event['registration'] = item.registration
+        event['image'] = isinstance(item.image, NamedFile) \
             and 'image' or None
-        event['attachment_1'] = isinstance(origin.attachment_1, NamedFile) \
+        event['attachment_1'] = isinstance(item.attachment_1, NamedFile) \
             and 'attachment_1' or None
-        event['attachment_2'] = isinstance(origin.attachment_2, NamedFile) \
+        event['attachment_2'] = isinstance(item.attachment_2, NamedFile) \
             and 'attachment_2' or None
-        event['submitter'] = origin.submitter
-        event['submitter_email'] = origin.submitter_email
+        event['submitter'] = item.submitter
+        event['submitter_email'] = item.submitter_email
 
         try:
-            geo = IGeoreferenced(item.getObject())
+            geo = IGeoreferenced(item)
             event['coordinates'] = geo.coordinates
         except TypeError:
             event['coordinates'] = None
 
         result.append(event)
 
-    return json.dumps(result, sort_keys=True)
+    return json.dumps(result)
 
 
 def workflow_tool():
