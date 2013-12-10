@@ -871,6 +871,12 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('test1' in browser.contents)
         self.assertTrue('test2' in browser.contents)
 
+        # Export only first event
+        browser.open('/veranstaltungen?type=json&max=1')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
     def test_ical_export(self):
         # Add events
         self.addEvent(title='test1', description='desc1')

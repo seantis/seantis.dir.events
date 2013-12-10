@@ -561,7 +561,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
             self.spawn(self.hide_blocked(self.subset)), key=self.sortkey()
         )
 
-    def export(self, search=None, filter=None):
+    def export(self, search=None, filter=None, max=None):
         items = []
         with api.env.adopt_roles(['Anonymous']):
             if search:
@@ -570,6 +570,9 @@ class EventsDirectoryCatalog(DirectoryCatalog):
                 items = super(EventsDirectoryCatalog, self).filter(filter)
             else:
                 items = super(EventsDirectoryCatalog, self).items()
+
+        if isinstance(max, (int,long)) and (max>0):
+            items = items[:max]
 
         return items
 
