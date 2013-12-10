@@ -877,6 +877,22 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('test1' in browser.contents)
         self.assertTrue('test2' not in browser.contents)
 
+    def test_issue_17(self):
+        self.addEvent(title='test1')
+        self.addEvent(title='test2', date=datetime.today() - timedelta(days=2),
+                      check_submitted=False, do_publish=False)
+        self.addEvent(title='test3', date=datetime.today() - timedelta(days=4),
+                      check_submitted=False, do_publish=False)
+        self.admin_browser.open(
+            '/veranstaltungen/test3/do-action?action=publish')
+
+        # Past events (submitted or published) should not be exported
+        browser = self.new_browser()
+        browser.open('/veranstaltungen?type=json')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
     def test_ical_export(self):
         # Add events
         self.addEvent(title='test1', description='desc1')
