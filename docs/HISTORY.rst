@@ -2,14 +2,23 @@
 Changelog
 ---------
 
-1.0rc2 (unreleased)
-~~~~~~~~~~~~~~~~~~~
+1.0rc3
+~~~~~~
+
+- Add JSON export.
+  [msom]
+
+1.0rc2
+~~~~~~
 
 - Stops event reindexing from running more than once per transaction.
   [href]
 
 - Makes event reindexing threadsafe.
   [href]
+
+- Add tests.
+  [msom]
 
 1.0rc1
 ~~~~~~
