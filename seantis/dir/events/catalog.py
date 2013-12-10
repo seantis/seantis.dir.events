@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 from five import grok
 
 from itertools import ifilter
+from plone import api
 from plone.app.event.ical.exporter import construct_icalendar
 from plone.memoize import instance
 
@@ -561,12 +562,14 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         )
 
     def export(self, search=None, filter=None):
-        if search:
-            items = super(EventsDirectoryCatalog, self).search(search)
-        elif filter:
-            items = super(EventsDirectoryCatalog, self).filter(filter)
-        else:
-            items = super(EventsDirectoryCatalog, self).items()
+        items = []
+        with api.env.adopt_roles(['Anonymous']):
+            if search:
+                items = super(EventsDirectoryCatalog, self).search(search)
+            elif filter:
+                items = super(EventsDirectoryCatalog, self).filter(filter)
+            else:
+                items = super(EventsDirectoryCatalog, self).items()
 
         return items
 
