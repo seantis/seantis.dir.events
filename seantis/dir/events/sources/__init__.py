@@ -8,9 +8,12 @@ import pytz
 
 from functools32 import lru_cache
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib import urlopen
 from itertools import groupby
+
+from threading import Lock
+from plone.synchronize import synchronized
 
 from collective.geo.geographer.interfaces import IWriteGeoreferenced
 from Products.CMFCore.utils import getToolByName
@@ -34,6 +37,12 @@ class ExternalEventImporter(object):
 
     def __init__(self, context):
         self.context = context
+
+    def sources(self):
+        return IDirectoryCatalog(self.context).catalog(
+            object_provides=IExternalEventSource.__identifier__,
+            review_state=('published', )
+        )
 
     @lru_cache(maxsize=50)
     def download(self, url):
@@ -312,16 +321,9 @@ class ExternalEventImporter(object):
 
     def fetch_all(self, limit=0, reimport=False, source_ids=[]):
 
-        # Find all items in the directory which implement IExternalEventSource
-        # and which are published
-        sources = IDirectoryCatalog(self.context).catalog(
-            object_provides=IExternalEventSource.__identifier__,
-            review_state=('published', )
-        )
-
         # Let the sources collect its events
         fetched = []
-        for source in sources:
+        for source in self.sources():
             fetched.append(source.getURL())
             self.fetch_one(
                 source.getURL(),
@@ -332,3 +334,31 @@ class ExternalEventImporter(object):
         IDirectoryCatalog(self.context).reindex()
 
         return fetched
+
+
+class ExternalEventImportScheduler(object):
+
+    _lock = Lock()
+
+    def __init__(self, default_interval=timedelta(minutes=60)):
+        self.default_interval = default_interval
+        self.last_run = 0
+
+    @synchronized(_lock)
+    def run(self, context, limit=0, reimport=False, source_ids=[],
+            force_run=False):
+
+        interval = context.importInterval and timedelta(
+            minutes=context.importInterval) or self.default_interval
+        last_run = self.last_run and self.last_run or datetime.now() - interval
+
+        if ((last_run + interval) < datetime.now()) or force_run or limit:
+            importer = ExternalEventImporter(context)
+            fetched = importer.fetch_all(limit, reimport, source_ids)
+            self.last_run = datetime.now()
+            return fetched
+        else:
+            log.info('No import necessary yet')
+
+
+scheduler = ExternalEventImportScheduler()

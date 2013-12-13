@@ -11,7 +11,7 @@ from plone.directives import form
 from plone.app.z3cform.wysiwyg import WysiwygFieldWidget
 from plone.autoform.interfaces import IFormFieldProvider
 from plone.formwidget.recurrence.z3cform.widget import RecurrenceWidget
-from zope.schema import Text, TextLine, Bool, List, Choice, Time, Date
+from zope.schema import Text, TextLine, Bool, List, Choice, Time, Date, Int
 from zope.interface import Invalid, Interface, Attribute, alsoProvides
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
@@ -92,6 +92,15 @@ class IEventsDirectory(IDirectory):
         default=None
     )
     form.widget(terms=WysiwygFieldWidget)
+
+    importInterval = Int(
+        title=_(u'Import interval'),
+        description=_(
+            u'Defines the number of minutes between periodically '
+            u'imports of external events'),
+        required=False,
+        min=1
+    )
 
 # Hide all categories as they are predefined
 IEventsDirectory.setTaggedValue(
