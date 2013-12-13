@@ -325,6 +325,26 @@ class IEventSubmissionData(form.Schema):
 alsoProvides(IEventSubmissionData, IFormFieldProvider)
 
 
+class IExternalEventSource(form.Schema):
+    """Marker for external event sources (content type)"""
+
+
+class IExternalEventSourceGuidle(IExternalEventSource):
+    """Guidle source."""
+
+    url = AutoProtocolURI(
+        title=_(u'Guidle URL to download from'),
+        required=True
+    )
+
+
+class IExternalEventCollector(Interface):
+    """Interface for exernal event sources (adapter)"""
+
+    def fetch(self):
+        """Generator function returning all items to import"""
+
+
 # force the user to select at least one value for each category
 @form.validator(field=IDirectoryItemCategories['cat1'])
 @form.validator(field=IDirectoryItemCategories['cat2'])

@@ -1,4 +1,5 @@
 <object name="portal_types">
     <object name="seantis.dir.events.item" meta_type="Dexterity FTI" />
+    <object name="seantis.dir.events.sourceguidle" meta_type="Dexterity FTI" />
     <object name="seantis.dir.events.directory" meta_type="Dexterity FTI" />
 </object>

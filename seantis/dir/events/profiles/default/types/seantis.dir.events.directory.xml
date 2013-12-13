@@ -10,7 +10,8 @@
  <property name="global_allow">True</property>
  <property name="filter_content_types">True</property>
  <property name="allowed_content_types">
-     <element value="seantis.dir.events.item" />  
+     <element value="seantis.dir.events.item" />
+     <element value="seantis.dir.events.sourceguidle" />
  </property>
  
  <!-- schema interface -->

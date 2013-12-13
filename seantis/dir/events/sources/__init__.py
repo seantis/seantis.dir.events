@@ -2,7 +2,6 @@ import logging
 log = logging.getLogger('seantis.dir.events')
 
 import hashlib
-import inspect
 import transaction
 import isodate
 import pytz
@@ -29,32 +28,10 @@ from seantis.dir.base.interfaces import (
 from seantis.dir.base.directory import DirectoryCatalogMixin
 from seantis.dir.events.interfaces import (
     IEventsDirectory,
-    IExternalEvent
+    IExternalEvent,
+    IExternalEventCollector,
+    IExternalEventSource
 )
-
-
-signature_method = 'fetch_events'
-
-
-def available_sources():
-    """ Search through the available modules of seantis.dir.events.sources
-    and make available the ones which implement the signature_method.
-
-    The result is a dictionary (name of source => function).
-
-    """
-
-    from seantis.dir.events import sources
-
-    callables = {}
-
-    for name, module in inspect.getmembers(sources, inspect.ismodule):
-        functions = dict(inspect.getmembers(module, inspect.isfunction))
-
-        if signature_method in functions:
-            callables[name] = functions[signature_method]
-
-    return callables
 
 
 class FetchView(grok.View, DirectoryCatalogMixin):
@@ -134,7 +111,7 @@ class FetchView(grok.View, DirectoryCatalogMixin):
     ):
 
         events = sorted(
-            function(self.context, self.request),
+            function(),
             key=lambda e: (e['last_update'], e['source_id'])
         )
 
@@ -199,7 +176,7 @@ class FetchView(grok.View, DirectoryCatalogMixin):
                 categories[cat] |= event[cat]
 
             # for testing
-            if limit and len(imported) > limit and not limit_reached_id:
+            if limit and len(imported) >= limit and not limit_reached_id:
                 log.info('reached limit of %i events' % limit)
                 # don't quit right away, all events of the same source_id
                 # need to be imported first since they have the same
@@ -211,7 +188,7 @@ class FetchView(grok.View, DirectoryCatalogMixin):
                 transaction.savepoint(True)
 
             log.info('importing %i/%i %s @ %s' % (
-                len(imported), total, event['title'],
+                (len(imported) + 1), total, event['title'],
                 event['start'].strftime('%d.%m.%Y %H:%M')
             ))
 
@@ -305,6 +282,10 @@ class FetchView(grok.View, DirectoryCatalogMixin):
 
             setattr(self.context, key, sorted(new))
 
+            diff = categories[category] - existing
+            if len(diff):
+                log.info('added to %s %s' % (category, diff))
+
         log.info('committing events for %s' % source)
         transaction.commit()
 
@@ -335,18 +316,24 @@ class FetchView(grok.View, DirectoryCatalogMixin):
         return ids
 
     def render(self):
-        source = self.request.get('source')
-        sources = available_sources()
-
-        assert source in sources
 
         limit = int(self.request.get('limit', 0))
         reimport = bool(self.request.get('reimport', False))
         ids = self.request.get('source-ids', '').split(',')
 
-        self.source = source
-        self.fetch(
-            source, sources[source], limit, reimport, all(ids) and ids or None
+        # Find all items in the directory which implement IExternalEventSource
+        # and which are published
+        sources = IDirectoryCatalog(self.context).catalog(
+            object_provides=IExternalEventSource.__identifier__,
+            review_state=('published', )
         )
+
+        # Let the sources collect its events
+        for source in sources:
+            self.fetch(
+                source.getURL(),
+                IExternalEventCollector(source.getObject()).fetch,
+                limit, reimport, all(ids) and ids or None
+            )
 
         IDirectoryCatalog(self.context).reindex()
