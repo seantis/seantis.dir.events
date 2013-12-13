@@ -2,13 +2,7 @@ import logging
 log = logging.getLogger('seantis.dir.events')
 
 from five import grok
-from pytz import timezone
 
-from datetime import datetime
-from datetime import date as datetime_date
-from urllib import urlopen
-from icalendar import Calendar
-from plone.dexterity.utils import createContent, addContentToContainer
 from zope.component import queryAdapter
 from zope.component.hooks import getSite
 from Products.CMFPlone.PloneBatch import Batch
@@ -32,6 +26,7 @@ from AccessControl import getSecurityManager
 from Products.CMFCore import permissions
 
 from seantis.dir.events import pages
+from seantis.dir.events.sources import ExternalEventImporter
 
 
 class EventsDirectory(directory.Directory, pages.CustomPageHook):
@@ -120,6 +115,29 @@ class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
                     result.append('%s -> %s' % (
                         date.strftime('%y.%m.%d'), dateindex[date])
                     )
+
+        return '\n'.join(result)
+
+
+class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
+
+    grok.name('fetch')
+    grok.context(IEventsDirectory)
+    grok.require('cmf.ManagePortal')
+
+    template = None
+
+    def render(self):
+
+        self.request.response.setHeader("Content-type", "text/plain")
+
+        limit = int(self.request.get('limit', 0))
+        reimport = bool(self.request.get('reimport', False))
+        ids = self.request.get('source-ids', '').split(',')
+
+        importer = ExternalEventImporter(self.context)
+
+        result = importer.fetch_all(limit, reimport, all(ids) and ids or None)
 
         return '\n'.join(result)
 

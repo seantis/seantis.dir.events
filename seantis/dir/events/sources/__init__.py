@@ -12,8 +12,6 @@ from datetime import datetime
 from urllib import urlopen
 from itertools import groupby
 
-from five import grok
-
 from collective.geo.geographer.interfaces import IWriteGeoreferenced
 from Products.CMFCore.utils import getToolByName
 from plone.namedfile import NamedFile, NamedImage
@@ -25,20 +23,17 @@ from seantis.dir.base.interfaces import (
     IDirectoryCatalog,
     IDirectoryCategorized
 )
-from seantis.dir.base.directory import DirectoryCatalogMixin
 from seantis.dir.events.interfaces import (
-    IEventsDirectory,
     IExternalEvent,
     IExternalEventCollector,
     IExternalEventSource
 )
 
 
-class FetchView(grok.View, DirectoryCatalogMixin):
+class ExternalEventImporter(object):
 
-    grok.name('fetch')
-    grok.context(IEventsDirectory)
-    grok.require('cmf.ManagePortal')
+    def __init__(self, context):
+        self.context = context
 
     @lru_cache(maxsize=50)
     def download(self, url):
@@ -49,41 +44,6 @@ class FetchView(grok.View, DirectoryCatalogMixin):
 
     def enable_indexing(self):
         self.context._v_fetching = False
-
-    def fetch(
-        self, source, function, limit=None, reimport=False, source_ids=[]
-    ):
-
-        start = datetime.now()
-        log.info('begin fetching events for %s' % source)
-
-        self.disable_indexing()
-
-        try:
-            imported = self._fetch(
-                source, function, limit, reimport, source_ids
-            )
-        finally:
-            self.enable_indexing()
-
-        log.info('reindexing commited events')
-
-        # reindex in the ZCatalog
-        for event in imported:
-            event.reindexObject()
-
-        self.context.reindexObject()
-
-        # reindex in the Events Catalog
-        IDirectoryCatalog(self.context).reindex()
-
-        runtime = datetime.now() - start
-        minutes = runtime.total_seconds() // 60
-        seconds = runtime.seconds - minutes * 60
-
-        log.info('imported %i events in %i minutes, %i seconds' % (
-            len(imported), minutes, seconds
-        ))
 
     def get_last_update_time(self):
         assert self.annotation_key
@@ -105,6 +65,30 @@ class FetchView(grok.View, DirectoryCatalogMixin):
         # doesn't cause problems in the future
         annotations = IAnnotations(self.context)
         annotations[self.annotation_key] = isodate.datetime_isoformat(dt)
+
+    def existing_events(self, source):
+
+        catalog = getToolByName(self.context, 'portal_catalog')
+        candidates = catalog(object_provides=IExternalEvent.__identifier__)
+
+        events = []
+        for obj in (c.getObject() for c in candidates):
+            if obj.source == source:
+                events.append(obj)
+
+        return events
+
+    def groupby_source_id(self, events):
+
+        ids = {}
+
+        keyfn = lambda e: e.source_id
+        events.sort(key=keyfn)
+
+        for key, items in groupby(events, lambda e: e.source_id):
+            ids[key] = [e for e in items]
+
+        return ids
 
     def _fetch(
         self, source, function, limit=None, reimport=False, source_ids=[]
@@ -291,35 +275,42 @@ class FetchView(grok.View, DirectoryCatalogMixin):
 
         return imported
 
-    def existing_events(self, source):
+    def fetch_one(
+        self, source, function, limit=None, reimport=False, source_ids=[]
+    ):
 
-        catalog = getToolByName(self.context, 'portal_catalog')
-        candidates = catalog(object_provides=IExternalEvent.__identifier__)
+        start = datetime.now()
+        log.info('begin fetching events for %s' % source)
 
-        events = []
-        for obj in (c.getObject() for c in candidates):
-            if obj.source == source:
-                events.append(obj)
+        self.disable_indexing()
 
-        return events
+        try:
+            imported = self._fetch(
+                source, function, limit, reimport, source_ids
+            )
+        finally:
+            self.enable_indexing()
 
-    def groupby_source_id(self, events):
+        log.info('reindexing commited events')
 
-        ids = {}
+        # reindex in the ZCatalog
+        for event in imported:
+            event.reindexObject()
 
-        keyfn = lambda e: e.source_id
-        events.sort(key=keyfn)
+        self.context.reindexObject()
 
-        for key, items in groupby(events, lambda e: e.source_id):
-            ids[key] = [e for e in items]
+        # reindex in the Events Catalog
+        IDirectoryCatalog(self.context).reindex()
 
-        return ids
+        runtime = datetime.now() - start
+        minutes = runtime.total_seconds() // 60
+        seconds = runtime.seconds - minutes * 60
 
-    def render(self):
+        log.info('imported %i events in %i minutes, %i seconds' % (
+            len(imported), minutes, seconds
+        ))
 
-        limit = int(self.request.get('limit', 0))
-        reimport = bool(self.request.get('reimport', False))
-        ids = self.request.get('source-ids', '').split(',')
+    def fetch_all(self, limit=0, reimport=False, source_ids=[]):
 
         # Find all items in the directory which implement IExternalEventSource
         # and which are published
@@ -329,11 +320,15 @@ class FetchView(grok.View, DirectoryCatalogMixin):
         )
 
         # Let the sources collect its events
+        fetched = []
         for source in sources:
-            self.fetch(
+            fetched.append(source.getURL())
+            self.fetch_one(
                 source.getURL(),
                 IExternalEventCollector(source.getObject()).fetch,
-                limit, reimport, all(ids) and ids or None
+                limit, reimport, source_ids
             )
 
         IDirectoryCatalog(self.context).reindex()
+
+        return fetched
