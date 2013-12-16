@@ -3,7 +3,7 @@ from DateTime.DateTime import DateTime
 
 from seantis.dir.events.dates import to_utc
 from seantis.dir.events.tests import IntegrationTestCase
-from seantis.dir.events import maintenance
+from seantis.dir.events.cleanup import cleanup_scheduler
 
 
 class TestMaintenance(IntegrationTestCase):
@@ -21,7 +21,7 @@ class TestMaintenance(IntegrationTestCase):
         preview = self.create_event()
         self.assertEqual(preview.state, 'preview')
 
-        run = lambda: maintenance.remove_stale_previews(
+        run = lambda: cleanup_scheduler.remove_stale_previews(
             self.directory, dryrun=True
         )
 
@@ -40,7 +40,7 @@ class TestMaintenance(IntegrationTestCase):
 
     def test_archive_past_events(self):
 
-        run = lambda: maintenance.archive_past_events(
+        run = lambda: cleanup_scheduler.archive_past_events(
             self.directory, dryrun=True
         )
 
@@ -81,7 +81,7 @@ class TestMaintenance(IntegrationTestCase):
 
     def test_remove_archived_events(self):
 
-        run = lambda: maintenance.remove_archived_events(
+        run = lambda: cleanup_scheduler.remove_archived_events(
             self.directory, dryrun=True
         )
 
