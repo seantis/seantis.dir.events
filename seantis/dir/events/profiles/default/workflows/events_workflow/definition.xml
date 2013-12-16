@@ -44,6 +44,7 @@
 
     <state state_id="published" title="Published" i18n:attributes="title">
         <exit-transition transition_id="archive" />
+        <exit-transition transition_id="hide" />
 
         <permission-map name="View" acquired="True">
             <permission-role>Anonymous</permission-role>
@@ -56,6 +57,20 @@
     </state>
 
     <state state_id="archived" title="Archived" i18n:attributes="title">
+        <exit-transition transition_id="publish" />
+
+        <permission-map name="View" acquired="False">
+            <permission-role>Manager</permission-role>
+            <permission-role>Reviewer</permission-role>
+        </permission-map>
+
+        <permission-map name="Modify portal content" acquired="False">
+            <permission-role>Manager</permission-role>
+            <permission-role>Reviewer</permission-role>
+        </permission-map>
+    </state>
+
+    <state state_id="hidden" title="Hidden" i18n:attributes="title">
         <exit-transition transition_id="publish" />
 
         <permission-map name="View" acquired="False">
@@ -98,6 +113,14 @@
         <guard>
             <guard-permission>Review portal content</guard-permission>
             <guard-expression>python: here.allow_action('archive')</guard-expression>
+        </guard>
+    </transition>
+
+    <transition transition_id="hide" title="Hide Event" new_state="hidden" trigger="USER" before_script="" after_script="" i18n:attributes="title">
+        <action url="%(content_url)s/content_status_modify?workflow_action=hide" category="workflow" icon="" i18n:translate="">Hide</action>
+        <guard>
+            <guard-permission>Review portal content</guard-permission>
+            <guard-expression>python: here.allow_action('hide')</guard-expression>
         </guard>
     </transition>
 

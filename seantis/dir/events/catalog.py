@@ -258,7 +258,7 @@ class EventIndex(object):
 class EventOrderIndex(EventIndex):
 
     def __init__(self, catalog, state, initial_index=None):
-        assert state in ('submitted', 'published', 'archived')
+        assert state in ('submitted', 'published', 'archived', 'hidden')
         self.state = state
         super(EventOrderIndex, self).__init__(catalog, initial_index)
 
@@ -428,8 +428,10 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
         self.ix_submitted = self.index_for_state('submitted')
         self.ix_published = self.index_for_state('published')
+        self.ix_hidden = self.index_for_state('hidden')
         self.indices = dict(
-            submitted=self.ix_submitted, published=self.ix_published
+            submitted=self.ix_submitted, published=self.ix_published,
+            hidden=self.ix_hidden
         )
 
     def index_for_state(self, state):
@@ -484,7 +486,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         # as an added security measure it is not yet possible to
         # query for previewed events as they should only be availble
         # to the user with the right token (see form.py)
-        assert state in ('submitted', 'published', 'archived')
+        assert state in ('submitted', 'published', 'archived', 'hidden')
 
         self._state = state
 

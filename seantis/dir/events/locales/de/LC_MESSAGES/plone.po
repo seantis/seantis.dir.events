@@ -22,6 +22,15 @@ msgstr "Veranstaltung archivieren"
 msgid "Archived"
 msgstr "Archiviert"
 
+msgid "Hide"
+msgstr "Verstecken"
+
+msgid "Hide Event"
+msgstr "Veranstaltung verstecken"
+
+msgid "Hidden"
+msgstr "Versteckt"
+
 msgid "Previewed"
 msgstr "Vorgeschaut"
 

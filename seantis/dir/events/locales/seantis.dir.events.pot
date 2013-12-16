@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-12-16 09:09+0000\n"
+"POT-Creation-Date: 2013-12-16 15:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr ""
 
-#: ./interfaces.py:379
+#: ./interfaces.py:389
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:422
+#: ./interfaces.py:432
 #: ./templates/macros.pt:175
 msgid "Attachments"
 msgstr ""
@@ -188,6 +188,10 @@ msgstr ""
 msgid "Event was archived"
 msgstr ""
 
+#: ./item.py:171
+msgid "Event was hidden"
+msgstr ""
+
 #: ./item.py:168
 msgid "Event was published"
 msgstr ""
@@ -264,6 +268,10 @@ msgstr ""
 msgid "Guidle URL to download from"
 msgstr ""
 
+#: ./directory.py:296
+msgid "Hidden"
+msgstr ""
+
 #: ./interfaces.py:177
 msgid "Housenumber"
 msgstr ""
@@ -280,7 +288,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:396
+#: ./interfaces.py:406
 msgid "Images"
 msgstr ""
 
@@ -365,11 +373,11 @@ msgstr ""
 msgid "No changes were applied"
 msgstr ""
 
-#: ./directory.py:186
+#: ./directory.py:183
 msgid "No events for the current daterange"
 msgstr ""
 
-#: ./directory.py:188
+#: ./directory.py:185
 msgid "No events for the current state"
 msgstr ""
 
@@ -390,15 +398,15 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:401
+#: ./interfaces.py:411
 msgid "PDF"
 msgstr ""
 
-#: ./interfaces.py:363
+#: ./interfaces.py:373
 msgid "Please choose at least one category"
 msgstr ""
 
-#: ./interfaces.py:371
+#: ./interfaces.py:381
 msgid "Please enter at least one suggestion"
 msgstr ""
 
@@ -410,7 +418,7 @@ msgstr ""
 msgid "Publication of event was denied"
 msgstr ""
 
-#: ./directory.py:294
+#: ./directory.py:295
 msgid "Published"
 msgstr ""
 
@@ -478,7 +486,7 @@ msgstr ""
 msgid "Submit Your Event"
 msgstr ""
 
-#: ./directory.py:289
+#: ./directory.py:290
 msgid "Submitted"
 msgstr ""
 
@@ -503,7 +511,7 @@ msgstr ""
 msgid "Suggested Values for the Where-Category"
 msgstr ""
 
-#: ./directory.py:339
+#: ./directory.py:341
 #: ./interfaces.py:86
 msgid "Terms and Conditions"
 msgstr ""
@@ -569,11 +577,11 @@ msgstr ""
 msgid "Tu"
 msgstr ""
 
-#: ./interfaces.py:394
+#: ./interfaces.py:404
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:416
+#: ./interfaces.py:426
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
@@ -589,7 +597,7 @@ msgstr ""
 msgid "We"
 msgstr ""
 
-#: ./directory.py:35
+#: ./directory.py:40
 msgid "What"
 msgstr ""
 
@@ -597,7 +605,7 @@ msgstr ""
 msgid "When will this event occur?"
 msgstr ""
 
-#: ./directory.py:35
+#: ./directory.py:40
 msgid "Where"
 msgstr ""
 
@@ -605,7 +613,7 @@ msgstr ""
 msgid "Whole Day"
 msgstr ""
 
-#: ./interfaces.py:435
+#: ./interfaces.py:445
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 

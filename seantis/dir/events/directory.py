@@ -13,7 +13,7 @@ from seantis.dir.base import session
 from seantis.dir.base.utils import cached_property
 
 from seantis.dir.events.interfaces import (
-    IEventsDirectory, IActionGuard, IResourceViewedEvent
+    IEventsDirectory, IActionGuard, IResourceViewedEvent, IExternalEvent
 )
 
 from seantis.dir.events.recurrence import grouped_occurrences
@@ -54,16 +54,27 @@ class EventsDirectory(directory.Directory, pages.CustomPageHook):
         with every person having its own group of events which he or she is
         responsible for.
 
-        There's no actual implementation of that in seantis.dir.events
-        but client specific packages like izug.seantis.dir.events may
-        use a custom adapter to implement such a thing.
-        """
-        guard = queryAdapter(self, IActionGuard)
+        Per default, only external events may be hidden and only internal
+        events archived. 
 
+        A client specific packages like izug.seantis.dir.events may
+        use a custom adapter to override the default behaviour.
+        """
+        result = True
+
+        try:
+            IExternalEvent(item_brain)
+            external_event = True
+        except:
+            external_event = False
+
+        if (action == 'archive' and external_event) or (action == 'hide' and not external_event):
+            result = False
+
+        guard = queryAdapter(self, IActionGuard)
         if guard:
-            return guard.allow_action(action, item_brain)
-        else:
-            return True
+            result = guard.allow_action(action, item_brain)
+        return result
 
 
 class ExtendedDirectoryViewlet(grok.Viewlet, pages.CustomDirectory):
@@ -225,7 +236,7 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         state = self.request.get('state', self.get_last_state())
 
         if not self.show_state_filters or state not in (
-            'submitted', 'published', 'archived'
+            'submitted', 'published', 'archived', 'hidden'
         ):
             state = 'published'
         else:
@@ -281,7 +292,8 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
         return [
             ('submitted', submitted),
-            ('published', _(u'Published'))
+            ('published', _(u'Published')),
+            ('hidden', _(u'Hidden'))
         ]
 
     def state_url(self, method):
