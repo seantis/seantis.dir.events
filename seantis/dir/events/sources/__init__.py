@@ -340,31 +340,35 @@ class ExternalEventImportScheduler(object):
 
     _lock = Lock()
 
-    def __init__(self, default_interval=timedelta(minutes=60)):
-        self.default_interval = default_interval
-        self.last_run = 0
+    def __init__(self):
+        self.next_run = {}
+
+    def get_next_run(self, interval):
+        now = datetime.today()
+        next_run = datetime(now.year, now.month, now.day) + timedelta(days=1)
+        if interval == 'hourly':
+            next_run = datetime(now.year, now.month, now.day, now.hour)
+            next_run += timedelta(hours=1)
+        return next_run
 
     @synchronized(_lock)
     def run(self, context, limit=0, reimport=False, source_ids=[],
             force_run=False):
-        interval = context.importInterval and timedelta(
-            minutes=context.importInterval) or self.default_interval
 
-        if not self.last_run:
-            # This is the first run, only give back the interval
-            self.last_run = datetime.now()
-            return interval
+        importer = ExternalEventImporter(context)
+        for source in importer.sources():
+            path = source.getPath()
+            interval = source.getObject().interval
 
-        if ((self.last_run + interval) < datetime.now()) or force_run:
-            importer = ExternalEventImporter(context)
-            fetched = importer.fetch_all(limit, reimport, source_ids)
-            self.last_run = datetime.now()
-            return fetched
-        else:
-            log.info('No import necessary yet (interval: %i minute(s))'
-                     % (interval.seconds / 60))
+            if not path in self.next_run:
+                self.next_run[path] = self.get_next_run(interval)
 
-        return interval
+            if (datetime.today() > self.next_run[path]) or force_run:
+                importer.fetch_one(
+                    path,
+                    IExternalEventCollector(source.getObject()).fetch,
+                    limit, reimport, source_ids)
+                self.next_run[path] = self.get_next_run(interval)
 
 
 import_scheduler = ExternalEventImportScheduler()

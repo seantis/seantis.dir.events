@@ -93,14 +93,6 @@ class IEventsDirectory(IDirectory):
     )
     form.widget(terms=WysiwygFieldWidget)
 
-    importInterval = Int(
-        title=_(u'Import interval'),
-        description=_(
-            u'Defines the number of minutes between periodically '
-            u'imports of external events'),
-        required=False,
-        min=1
-    )
 
 # Hide all categories as they are predefined
 IEventsDirectory.setTaggedValue(
@@ -336,6 +328,15 @@ alsoProvides(IEventSubmissionData, IFormFieldProvider)
 
 class IExternalEventSource(form.Schema):
     """Marker for external event sources (content type)"""
+
+    interval = Choice(
+        title=_(u'Import interval'),
+        required=True,
+        vocabulary=SimpleVocabulary([
+            SimpleTerm(value='daily', title=_(u'Every day')),
+            SimpleTerm(value='hourly', title=_(u'Every hour'))
+        ]),
+    )
 
 
 class IExternalEventSourceGuidle(IExternalEventSource):
