@@ -29,7 +29,9 @@ class CleanupScheduler(object):
 
     def get_next_run(self):
         now = datetime.today()
-        next_run = datetime(now.year, now.month, now.day) + timedelta(days=1)
+        # Schedule next run tomorrow at 0:30
+        next_run = datetime(now.year, now.month, now.day) + timedelta(
+            days=1, minutes=30)
         return next_run
 
     @synchronized(_lock)

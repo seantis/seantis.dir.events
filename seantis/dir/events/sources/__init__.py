@@ -352,8 +352,11 @@ class ExternalEventImportScheduler(object):
 
     def get_next_run(self, interval):
         now = datetime.today()
-        next_run = datetime(now.year, now.month, now.day) + timedelta(days=1)
+        # Schedule next run tomorrow 1:30
+        next_run = datetime(now.year, now.month, now.day) + timedelta(
+            days=1, hours=1, minutes=30)
         if interval == 'hourly':
+            # Schedule next run at xx:00
             next_run = datetime(now.year, now.month, now.day, now.hour)
             next_run += timedelta(hours=1)
         return next_run
