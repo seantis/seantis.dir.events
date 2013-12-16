@@ -4,29 +4,34 @@ log = logging.getLogger('seantis.dir.events')
 from five import grok
 
 from zope.component import queryAdapter
-from zope.component.hooks import getSite
+from zope.interface import implements
+from zope.event import notify
 from Products.CMFPlone.PloneBatch import Batch
 
 from seantis.dir.base import directory
 from seantis.dir.base import session
 from seantis.dir.base.utils import cached_property
 
-from seantis.dir.events.unrestricted import execute_under_special_role
 from seantis.dir.events.interfaces import (
-    IEventsDirectory, IActionGuard
+    IEventsDirectory, IActionGuard, IResourceViewedEvent
 )
 
 from seantis.dir.events.recurrence import grouped_occurrences
 from seantis.dir.events import dates
 from seantis.dir.events import utils
-from seantis.dir.events import maintenance
 from seantis.dir.events import _
 
 from AccessControl import getSecurityManager
 from Products.CMFCore import permissions
 
 from seantis.dir.events import pages
-from seantis.dir.events.sources import import_scheduler
+
+
+class ResourceViewedEvent(object):
+    implements(IResourceViewedEvent)
+
+    def __init__(self, context):
+        self.context = context
 
 
 class EventsDirectory(directory.Directory, pages.CustomPageHook):
@@ -119,29 +124,6 @@ class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
         return '\n'.join(result)
 
 
-class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
-
-    grok.name('fetch')
-    grok.context(IEventsDirectory)
-
-    template = None
-
-    def render(self):
-
-        self.request.response.setHeader("Content-type", "text/plain")
-
-        limit = int(self.request.get('limit', 0))
-        reimport = bool(self.request.get('reimport', False))
-        ids = self.request.get('source-ids', '').split(',')
-        force_run = bool(self.request.get('force', False))
-
-        execute_under_special_role(
-            getSite(), 'Manager',
-            import_scheduler.run, self.context, limit, reimport,
-            all(ids) and ids or None, force_run
-        )
-
-
 class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
     grok.name('view')
@@ -150,6 +132,8 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
     template = None
     _template = grok.PageTemplateFile('templates/directory.pt')
+
+    fired_event = False
 
     @property
     def title(self):
@@ -253,6 +237,10 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         if not self.is_ical_export and not self.is_json_export:
             super(EventsDirectoryView, self).update(**kwargs)
 
+        if not self.fired_event:
+            notify(ResourceViewedEvent(self.context))
+            self.fired_event = True
+
     def groups(self, items):
         """ Returns the given occurrences grouped by human_date. """
         groups = grouped_occurrences(items, self.request)
@@ -340,25 +328,3 @@ class TermsView(grok.View):
 
     label = _(u'Terms and Conditions')
     template = grok.PageTemplateFile('templates/terms.pt')
-
-
-class CleanupView(grok.View):
-
-    grok.name('cleanup')
-    grok.context(IEventsDirectory)
-    grok.require('zope2.View')
-
-    def render(self):
-
-        # dryrun must be disabled explicitly using &run=1
-        dryrun = not self.request.get('run') == '1'
-
-        # this maintenance feature may be run unrestricted as it does not
-        # leak any information and it's behavior cannot be altered by the
-        # user. This allows for easy use via cronjobs.
-        execute_under_special_role(
-            getSite(), 'Manager',
-            maintenance.cleanup_directory, self.context, dryrun
-        )
-
-        return u''

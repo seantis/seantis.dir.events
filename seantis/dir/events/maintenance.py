@@ -1,123 +1,85 @@
-from datetime import datetime, timedelta
-
 from logging import getLogger
 log = getLogger('seantis.dir.events')
 
-from seantis.dir.base.interfaces import IDirectoryCatalog
+import re
+import threading
 
-from seantis.dir.events.dates import to_utc
-from seantis.dir.events.interfaces import IEventsDirectoryItem
-from seantis.dir.events.recurrence import has_future_occurrences
+from five import grok
 
+from ZServer.ClockServer import ClockServer
 
-def remove_stale_previews(directory, dryrun=False):
-
-    catalog = IDirectoryCatalog(directory)
-    query = catalog.catalog.unrestrictedSearchResults
-
-    log.info('searching for stale previews')
-
-    past = to_utc(datetime.utcnow() - timedelta(days=2))
-    stale_previews = query(
-        path={'query': directory.getPhysicalPath(), 'depth': 2},
-        object_provides=IEventsDirectoryItem.__identifier__,
-        review_state=('preview'),
-        modified={'query': past, 'range': 'max'}
-    )
-    stale_previews = [p.id for p in stale_previews]
-
-    if stale_previews:
-        log.info('deleting stale previews -> %s' % str(stale_previews))
-        if not dryrun:
-            directory.manage_delObjects(stale_previews)
-    else:
-        log.info('no stale previews found')
-
-    return stale_previews
+from seantis.dir.events.interfaces import IResourceViewedEvent
 
 
-def archive_past_events(directory, dryrun=False):
-
-    catalog = IDirectoryCatalog(directory)
-    query = catalog.catalog
-
-    log.info('archiving past events')
-
-    # events are in the past if they have been over for two days
-    # (not one, to ensure that they are really over in all timezones)
-    past = to_utc(datetime.utcnow() - timedelta(days=2))
-    published_events = query(
-        path={'query': directory.getPhysicalPath(), 'depth': 2},
-        object_provides=IEventsDirectoryItem.__identifier__,
-        review_state=('published', ),
-        start={'query': past, 'range': 'max'},
-        end={'query': past, 'range': 'max'}
-    )
-
-    past_events = []
-
-    for event in published_events:
-        event = event.getObject()
-
-        assert event.start < past
-        assert event.end < past
-
-        # recurring events may be in the past with one of
-        # their occurrences in the future
-        if not has_future_occurrences(event, past):
-            past_events.append(event)
-
-    ids = [p.id for p in past_events]
-
-    if past_events:
-        log.info('archiving past events -> %s' % str(ids))
-
-        if not dryrun:
-            for event in past_events:
-                event.archive()
-    else:
-        log.info('no past events found')
-
-    return ids
+_clockservers = dict()  # list of registered Zope Clockservers
+_lock = threading.Lock()
 
 
-def remove_archived_events(directory, dryrun=False):
-
-    catalog = IDirectoryCatalog(directory)
-    query = catalog.catalog
-
-    log.info('removing archived events')
-
-    past = datetime.utcnow() - timedelta(days=30)
-    archived_events = query(
-        path={'query': directory.getPhysicalPath(), 'depth': 2},
-        object_provides=IEventsDirectoryItem.__identifier__,
-        review_state=('archived', ),
-        start={'query': past, 'range': 'max'},
-        end={'query': past, 'range': 'max'}
-    )
-    archived_events = [e.id for e in archived_events]
-
-    if archived_events:
-        log.info('removing archived events -> %s' % str(archived_events))
-
-        if not dryrun:
-            directory.manage_delObjects(archived_events)
-    else:
-        log.info('no archived events to remove')
-
-    return archived_events
+# The primary hook to setup maintenance clockservers is the reservation view
+# event. It's invoked way too often, but the invocation is fast and it is
+# guaranteed to be run on a plone site with seantis.events installed,
+# setup and in use. Other events like zope startup and traversal events are
+# not safe enough to use if one has to rely on a site being setup.
+@grok.subscribe(IResourceViewedEvent)
+def on_resource_viewed(event):
+    path = '/'.join(event.context.getPhysicalPath())
+    register(path + '/fetch', 15 * 60)
+    register(path + '/cleanup?run=1', 60 * 60)
 
 
-def cleanup_directory(directory, dryrun=True):
+def clear_clockservers():
+    """ Clears the clockservers and connections for testing. """
 
-    if dryrun:
-        log.info('starting dry run cleanup on %s' % directory.absolute_url())
-    else:
-        log.info('starting real cleanup on %s' % directory.absolute_url())
+    with _lock:
+        for cs in _clockservers.values():
+            cs.close()
+        _clockservers.clear()
 
-    remove_stale_previews(directory, dryrun)
-    archive_past_events(directory, dryrun)
-    remove_archived_events(directory, dryrun)
 
-    log.info('finished cleanup on %s' % directory.absolute_url())
+def register(method, period):
+    """ Registers the given method with a clockserver.
+
+    Note that due to it's implementation there's no guarantee that the method
+    will be called on time every time. The clockserver checks if a call is due
+    every time a request comes in, or every 30 seconds when the asyncore.pollss
+    method reaches it's timeout (see Lifetime/__init__.py and
+    Python Stdlib/asyncore.py).
+
+    """
+
+    if method not in _clockservers:
+        with _lock:
+            _clockservers[method] = ClockServer(
+                method, period, host='localhost', logger=ClockLogger(method)
+            )
+
+    return _clockservers[method]
+
+
+logexpr = re.compile(r'GET [^\s]+ HTTP/[^\s]+ ([0-9]+)')
+
+
+class ClockLogger(object):
+
+    """ Logs the clock runs by evaluating the log strings. Looks for http
+    return codes to do so.
+
+    """
+
+    def __init__(self, method):
+        self.method = method
+
+    def return_code(self, msg):
+        groups = re.findall(logexpr, msg)
+        return groups and int(groups[0]) or None
+
+    def log(self, msg):
+        code = self.return_code(msg)
+
+        if not code:
+            log.error("ClockServer for %s returned nothing" % self.method)
+
+        if code == 200:
+            log.info("ClockServer for %s run successfully" % self.method)
+        else:
+            log.warn("ClockServer for %s returned %i" % (self.method, code))

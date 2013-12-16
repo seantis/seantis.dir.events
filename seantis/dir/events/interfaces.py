@@ -355,6 +355,16 @@ class IExternalEventCollector(Interface):
         """Generator function returning all items to import"""
 
 
+class IResourceViewedEvent(Interface):
+    """ Event triggered when a seantis.events resource is viewed. Pretty
+    useful if you need a hook which is guaranteed to be triggered on a plone
+    site where seantis.events is active.
+
+    """
+
+    context = Attribute("The IResourceBase context object")
+
+
 # force the user to select at least one value for each category
 @form.validator(field=IDirectoryItemCategories['cat1'])
 @form.validator(field=IDirectoryItemCategories['cat2'])

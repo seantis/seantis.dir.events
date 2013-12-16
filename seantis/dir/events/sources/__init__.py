@@ -8,12 +8,16 @@ import pytz
 
 from functools32 import lru_cache
 
+from five import grok
+
 from datetime import datetime, timedelta
 from urllib import urlopen
 from itertools import groupby
 
 from threading import Lock
 from plone.synchronize import synchronized
+
+from zope.component.hooks import getSite
 
 from collective.geo.geographer.interfaces import IWriteGeoreferenced
 from Products.CMFCore.utils import getToolByName
@@ -22,6 +26,7 @@ from plone.dexterity.utils import createContentInContainer
 from zope.interface import alsoProvides
 from zope.annotation.interfaces import IAnnotations
 
+from seantis.dir.base import directory
 from seantis.dir.base.interfaces import (
     IDirectoryCatalog,
     IDirectoryCategorized
@@ -29,8 +34,10 @@ from seantis.dir.base.interfaces import (
 from seantis.dir.events.interfaces import (
     IExternalEvent,
     IExternalEventCollector,
-    IExternalEventSource
+    IExternalEventSource,
+    IEventsDirectory
 )
+from seantis.dir.events.unrestricted import execute_under_special_role
 
 
 class ExternalEventImporter(object):
@@ -364,11 +371,36 @@ class ExternalEventImportScheduler(object):
                 self.next_run[path] = self.get_next_run(interval)
 
             if (datetime.today() > self.next_run[path]) or force_run:
+                self.next_run[path] = self.get_next_run(interval)
                 importer.fetch_one(
                     path,
                     IExternalEventCollector(source.getObject()).fetch,
                     limit, reimport, source_ids)
-                self.next_run[path] = self.get_next_run(interval)
 
 
 import_scheduler = ExternalEventImportScheduler()
+
+
+class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
+
+    grok.name('fetch')
+    grok.context(IEventsDirectory)
+
+    template = None
+
+    def render(self):
+
+        self.request.response.setHeader("Content-type", "text/plain")
+
+        limit = int(self.request.get('limit', 0))
+        reimport = bool(self.request.get('reimport', False))
+        ids = self.request.get('source-ids', '').split(',')
+        force_run = bool(self.request.get('force', False))
+
+        execute_under_special_role(
+            getSite(), 'Manager',
+            import_scheduler.run, self.context, limit, reimport,
+            all(ids) and ids or None, force_run
+        )
+
+        return u''
