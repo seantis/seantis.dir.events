@@ -164,6 +164,8 @@ class CleanupView(grok.View):
 
     def render(self):
 
+        self.request.response.setHeader("Content-type", "text/plain")
+
         # dryrun must be disabled explicitly using &run=1
         dryrun = not self.request.get('run') == '1'
         force_run = bool(self.request.get('force', False))
