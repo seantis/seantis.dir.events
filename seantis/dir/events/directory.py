@@ -123,7 +123,6 @@ class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
 
     grok.name('fetch')
     grok.context(IEventsDirectory)
-    grok.require('cmf.ManagePortal')
 
     template = None
 
@@ -136,8 +135,11 @@ class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
         ids = self.request.get('source-ids', '').split(',')
         force_run = bool(self.request.get('force', False))
 
-        import_scheduler.run(self.context, limit, reimport,
-                             all(ids) and ids or None, force_run)
+        execute_under_special_role(
+            getSite(), 'Manager',
+            import_scheduler.run, self.context, limit, reimport,
+            all(ids) and ids or None, force_run
+        )
 
 
 class EventsDirectoryView(directory.View, pages.CustomDirectory):
