@@ -347,18 +347,24 @@ class ExternalEventImportScheduler(object):
     @synchronized(_lock)
     def run(self, context, limit=0, reimport=False, source_ids=[],
             force_run=False):
-
         interval = context.importInterval and timedelta(
             minutes=context.importInterval) or self.default_interval
-        last_run = self.last_run and self.last_run or datetime.now() - interval
 
-        if ((last_run + interval) < datetime.now()) or force_run or limit:
+        if not self.last_run:
+            # This is the first run, only give back the interval
+            self.last_run = datetime.now()
+            return interval
+
+        if ((self.last_run + interval) < datetime.now()) or force_run:
             importer = ExternalEventImporter(context)
             fetched = importer.fetch_all(limit, reimport, source_ids)
             self.last_run = datetime.now()
             return fetched
         else:
-            log.info('No import necessary yet')
+            log.info('No import necessary yet (interval: %i minute(s))'
+                     % (interval.seconds / 60))
+
+        return interval
 
 
-scheduler = ExternalEventImportScheduler()
+import_scheduler = ExternalEventImportScheduler()

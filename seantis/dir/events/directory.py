@@ -26,7 +26,7 @@ from AccessControl import getSecurityManager
 from Products.CMFCore import permissions
 
 from seantis.dir.events import pages
-from seantis.dir.events.sources import ExternalEventImporter, scheduler
+from seantis.dir.events.sources import import_scheduler
 
 
 class EventsDirectory(directory.Directory, pages.CustomPageHook):
@@ -136,8 +136,8 @@ class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
         ids = self.request.get('source-ids', '').split(',')
         force_run = bool(self.request.get('force', False))
 
-        scheduler.run(self.context, limit, reimport, all(ids) and ids or None,
-                      force_run)
+        import_scheduler.run(self.context, limit, reimport,
+                             all(ids) and ids or None, force_run)
 
 
 class EventsDirectoryView(directory.View, pages.CustomDirectory):
