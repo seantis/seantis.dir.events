@@ -338,6 +338,12 @@ class IExternalEventSource(form.Schema):
         ]),
     )
 
+    enabled = Bool(
+        title=_(u'Enabled'),
+        required=True,
+        default=False
+    )
+
 
 class IExternalEventSourceGuidle(IExternalEventSource):
     """Guidle source."""

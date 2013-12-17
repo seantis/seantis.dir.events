@@ -46,10 +46,15 @@ class ExternalEventImporter(object):
         self.context = context
 
     def sources(self):
-        return IDirectoryCatalog(self.context).catalog(
-            object_provides=IExternalEventSource.__identifier__,
-            review_state=('published', )
+        result = []
+        sources = IDirectoryCatalog(self.context).catalog(
+            object_provides=IExternalEventSource.__identifier__
         )
+        for source in sources:
+            if source.getObject().enabled:
+                result.append(source)
+
+        return result
 
     @lru_cache(maxsize=50)
     def download(self, url):

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-12-16 15:58+0000\n"
+"POT-Creation-Date: 2013-12-17 07:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr ""
 
-#: ./interfaces.py:389
+#: ./interfaces.py:395
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:432
+#: ./interfaces.py:438
 #: ./templates/macros.pt:175
 msgid "Attachments"
 msgstr ""
@@ -125,6 +125,10 @@ msgstr ""
 
 #: ./templates/directory.pt:75
 msgid "Dou you have an event to share?"
+msgstr ""
+
+#: ./interfaces.py:342
+msgid "Enabled"
 msgstr ""
 
 #: ./interfaces.py:288
@@ -264,7 +268,7 @@ msgstr ""
 msgid "Guidle Import"
 msgstr ""
 
-#: ./interfaces.py:346
+#: ./interfaces.py:352
 msgid "Guidle URL to download from"
 msgstr ""
 
@@ -288,7 +292,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:406
+#: ./interfaces.py:412
 msgid "Images"
 msgstr ""
 
@@ -398,15 +402,15 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:411
+#: ./interfaces.py:417
 msgid "PDF"
 msgstr ""
 
-#: ./interfaces.py:373
+#: ./interfaces.py:379
 msgid "Please choose at least one category"
 msgstr ""
 
-#: ./interfaces.py:381
+#: ./interfaces.py:387
 msgid "Please enter at least one suggestion"
 msgstr ""
 
@@ -577,11 +581,11 @@ msgstr ""
 msgid "Tu"
 msgstr ""
 
-#: ./interfaces.py:404
+#: ./interfaces.py:410
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:426
+#: ./interfaces.py:432
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
@@ -613,7 +617,7 @@ msgstr ""
 msgid "Whole Day"
 msgstr ""
 
-#: ./interfaces.py:445
+#: ./interfaces.py:451
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 
