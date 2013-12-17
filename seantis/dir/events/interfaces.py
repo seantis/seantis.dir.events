@@ -329,6 +329,10 @@ alsoProvides(IEventSubmissionData, IFormFieldProvider)
 class IExternalEventSource(form.Schema):
     """Marker for external event sources (content type)"""
 
+    title = TextLine(
+        title=_(u'Name'),
+    )
+
     interval = Choice(
         title=_(u'Import interval'),
         required=True,

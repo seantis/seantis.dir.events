@@ -15,12 +15,16 @@
  <property name="schema">seantis.dir.events.sources.guidle.IExternalEventSourceGuidle</property>
  
  <!-- class used for content items -->
- <!-- <property name="klass">seantis.dir.events.sources.guidle.EventsSourceGuidle</property> -->
- <property name="klass">plone.dexterity.content.Item</property>
+  <property name="klass">plone.dexterity.content.Item</property>
  
  <!-- add permission -->
  <property name="add_permission">cmf.AddPortalContent</property>
- 
+
+ <!-- enabled behaviors -->
+ <property name="behaviors">
+     <element value="plone.app.content.interfaces.INameFromTitle" />
+ </property>
+  
  <!-- View information -->
  <property name="default_view">view</property>
  <property name="default_view_fallback">False</property>
