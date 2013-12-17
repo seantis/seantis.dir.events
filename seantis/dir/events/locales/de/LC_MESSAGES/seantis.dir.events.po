@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-12-17 07:47+0000\n"
+"POT-Creation-Date: 2013-12-17 09:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr "${chars} Zeichen übrig"
 
-#: ./interfaces.py:395
+#: ./interfaces.py:399
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
@@ -50,7 +50,7 @@ msgstr "Anhang 1"
 msgid "Attachment 2"
 msgstr "Anhang 2"
 
-#: ./interfaces.py:438
+#: ./interfaces.py:442
 #: ./templates/macros.pt:175
 msgid "Attachments"
 msgstr "Anhänge"
@@ -86,6 +86,10 @@ msgstr "Abbrechen"
 #: ./form.py:650
 msgid "Cancel Event Submission"
 msgstr "Abbrechen"
+
+#: ./templates/directory.pt:79
+msgid "Configure import sources"
+msgstr "Importquellen konfigurieren"
 
 #: ./interfaces.py:219
 msgid "Contact Email"
@@ -124,7 +128,7 @@ msgstr "Details-Vorschau"
 msgid "Dou you have an event to share?"
 msgstr "Sie organisieren eine Veranstaltung?"
 
-#: ./interfaces.py:342
+#: ./interfaces.py:346
 msgid "Enabled"
 msgstr "Aktiviert"
 
@@ -209,11 +213,11 @@ msgstr "Veranstaltungs-Verzeichnis Eintrag"
 msgid "Events matching the current filter"
 msgstr "Veranstaltungen die dem aktuellen Filter entsprechen"
 
-#: ./interfaces.py:336
+#: ./interfaces.py:340
 msgid "Every day"
 msgstr "Täglich"
 
-#: ./interfaces.py:337
+#: ./interfaces.py:341
 msgid "Every hour"
 msgstr "Stündlich"
 
@@ -265,11 +269,11 @@ msgstr "Von Heute bis Jahresende"
 msgid "Guidle Import"
 msgstr "Guidle Import"
 
-#: ./interfaces.py:352
+#: ./interfaces.py:356
 msgid "Guidle URL to download from"
 msgstr "Guidle-URL"
 
-#: ./directory.py:296
+#: ./directory.py:307
 msgid "Hidden"
 msgstr "Versteckt"
 
@@ -289,11 +293,11 @@ msgstr "Erfasser von Veranstaltungen müssen diesen Allgemeinen Geschäftsbeding
 msgid "Image"
 msgstr "Bild"
 
-#: ./interfaces.py:412
+#: ./interfaces.py:416
 msgid "Images"
 msgstr "Bilder"
 
-#: ./interfaces.py:333
+#: ./interfaces.py:337
 msgid "Import interval"
 msgstr "Intervall für den Veranstaltungs-Import"
 
@@ -354,6 +358,10 @@ msgstr "Fehlende Start-Zeit"
 msgid "Mo"
 msgstr "Mo"
 
+#: ./interfaces.py:333
+msgid "Name"
+msgstr "Name"
+
 #: ./dates.py:349
 msgid "Next Month"
 msgstr "Nächsten Monat"
@@ -374,11 +382,11 @@ msgstr "Nächstes Jahr"
 msgid "No changes were applied"
 msgstr "Keine Änderungen"
 
-#: ./directory.py:183
+#: ./directory.py:185
 msgid "No events for the current daterange"
 msgstr "Keine Veranstaltungen für das gewählte Datum"
 
-#: ./directory.py:185
+#: ./directory.py:187
 msgid "No events for the current state"
 msgstr "Keine Veranstaltungen für den gewählten Status"
 
@@ -399,15 +407,15 @@ msgstr "An diesen Tagen"
 msgid "Organizer"
 msgstr "Organisator"
 
-#: ./interfaces.py:417
+#: ./interfaces.py:421
 msgid "PDF"
 msgstr "PDF"
 
-#: ./interfaces.py:379
+#: ./interfaces.py:383
 msgid "Please choose at least one category"
 msgstr "Bitte wählen Sie mindestens eine Kategorie"
 
-#: ./interfaces.py:387
+#: ./interfaces.py:391
 msgid "Please enter at least one suggestion"
 msgstr "Bitte geben Sie mindestens einen Vorschlag ein"
 
@@ -419,7 +427,7 @@ msgstr "Preise"
 msgid "Publication of event was denied"
 msgstr "Die Veranstaltung wurde abgelehnt"
 
-#: ./directory.py:295
+#: ./directory.py:306
 msgid "Published"
 msgstr "Veröffentlicht"
 
@@ -487,7 +495,7 @@ msgstr "Melden"
 msgid "Submit Your Event"
 msgstr "Veranstaltung melden"
 
-#: ./directory.py:290
+#: ./directory.py:301
 msgid "Submitted"
 msgstr "Gemeldet"
 
@@ -512,7 +520,7 @@ msgstr "Vorgeschlagene Werte für die Was-Kategorie"
 msgid "Suggested Values for the Where-Category"
 msgstr "Vorgeschlagene Werte für die Wo-Kategorie"
 
-#: ./directory.py:341
+#: ./directory.py:352
 #: ./interfaces.py:86
 msgid "Terms and Conditions"
 msgstr "Allgemeine Geschäftsbedingungen"
@@ -578,11 +586,11 @@ msgstr "Ort"
 msgid "Tu"
 msgstr "Di"
 
-#: ./interfaces.py:410
+#: ./interfaces.py:414
 msgid "Unknown image format"
 msgstr "Unbekanntes Bild-Format"
 
-#: ./interfaces.py:432
+#: ./interfaces.py:436
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 
@@ -598,7 +606,7 @@ msgstr "Kontrollieren"
 msgid "We"
 msgstr "Mi"
 
-#: ./directory.py:40
+#: ./directory.py:41
 msgid "What"
 msgstr "Was"
 
@@ -606,7 +614,7 @@ msgstr "Was"
 msgid "When will this event occur?"
 msgstr "Wann wird diese Veranstaltung stattfinden?"
 
-#: ./directory.py:40
+#: ./directory.py:41
 msgid "Where"
 msgstr "Wo"
 
@@ -614,7 +622,7 @@ msgstr "Wo"
 msgid "Whole Day"
 msgstr "Ganztags"
 
-#: ./interfaces.py:451
+#: ./interfaces.py:455
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr "Sie müssen den Allgemeinen Geschäftsbedingungen zustimmen bevor Sie diese Veranstaltung melden"
 

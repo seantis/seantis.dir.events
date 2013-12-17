@@ -165,6 +165,7 @@
 /* directory map */
 #directoryResultMap {
     margin-top: 26px;
+    margin-bottom: 26px;
 }
 
 #default-cgmap {
@@ -200,6 +201,7 @@
 .your-event {
     font-size: 1.2em;
     margin-top: 20px;
+    margin-bottom: 20px;
     padding: 30px 25px;
     text-align: right;
     border-width: 0;

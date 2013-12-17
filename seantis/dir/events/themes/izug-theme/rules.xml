@@ -71,6 +71,7 @@
             </div>
 
             <xsl:copy-of select="//*[@id='directoryResultMap']" />
+            <xsl:copy-of select="//*[@id='event-sources']" />
         </div>
     </xsl:template>
 

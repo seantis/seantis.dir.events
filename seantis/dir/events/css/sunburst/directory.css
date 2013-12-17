@@ -154,7 +154,8 @@
 
 /* directory map */
 #directoryResultMap {
-    margin-top: 26px;   
+    margin-top: 26px;
+    margin-bottom: 26px;
 }
 
 /* tags */
@@ -187,6 +188,7 @@
 .your-event {
     font-size: 1.8em;
     margin-top: 20px;
+    margin-bottom: 20px;
     padding: 30px;
     background-color: #0383be;
     color: white;

@@ -68,7 +68,8 @@ class EventsDirectory(directory.Directory, pages.CustomPageHook):
         except:
             external_event = False
 
-        if (action == 'archive' and external_event) or (action == 'hide' and not external_event):
+        if ((action == 'archive' and external_event) or
+                (action == 'hide' and not external_event)):
             result = False
 
         guard = queryAdapter(self, IActionGuard)
@@ -198,6 +199,17 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
     @property
     def has_results(self):
         return len(self.batch) > 0
+
+    @property
+    def import_sources(self):
+        return [(source.getObject().title, source.getURL(
+        ) + '/edit') for source in self.catalog.import_sources()]
+
+    @property
+    def show_import_sources(self):
+        return getSecurityManager().checkPermission(
+            permissions.ReviewPortalContent, self.context
+        )
 
     def render(self):
         """ Renders the ical/json if asked, or the usual template. """

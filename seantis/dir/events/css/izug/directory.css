@@ -275,7 +275,7 @@ a.event-navigation-link.selected,
 /* submit your own event box */
 
 .your-event {
-    margin: 20px 0 0 0;
+    margin: 20px 0 20px 0;
     padding: 15px 20px 20px 20px;
     border: 1px solid #ccc;
     border-width: 1px 1px 1px 10px;
@@ -466,6 +466,7 @@ form.change-event {
     width: 100% !important;
     height: 300px !important;
     float: none !important;
+    margin-bottom: 26px;
 }
 
 #directoryResultMap #default-cgmap {

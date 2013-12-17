@@ -32,7 +32,7 @@ from seantis.dir.events import utils
 from seantis.dir.events import dates
 from seantis.dir.events import recurrence
 from seantis.dir.events.interfaces import (
-    IEventsDirectory, IEventsDirectoryItem
+    IEventsDirectory, IEventsDirectoryItem, IExternalEventSource
 )
 
 from blist import sortedset
@@ -593,3 +593,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
             items = super(EventsDirectoryCatalog, self).items()
 
         return construct_icalendar(self.directory, items)
+
+    def import_sources(self):
+        return self.catalog(
+            object_provides=IExternalEventSource.__identifier__
+        )
