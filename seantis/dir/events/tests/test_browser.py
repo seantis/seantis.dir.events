@@ -990,6 +990,10 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('test1' not in browser.contents)
         self.assertTrue('test2' in browser.contents)
 
+        browser.open('/veranstaltungen?filter=true&cat1=Category2_2')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
         # Search (search=&searchtext=)
         browser.open('/veranstaltungen?search=true&searchtext=test1')
         self.assertTrue('test1' in browser.contents)
@@ -998,6 +1002,10 @@ class BrowserTestCase(FunctionalTestCase):
         browser.open('/veranstaltungen?search=true&searchtext=test2')
         self.assertTrue('test1' not in browser.contents)
         self.assertTrue('test2' in browser.contents)
+
+        browser.open('/veranstaltungen?search=true&searchtext=token')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
 
     def test_eventindex_view(self):
         # Test unauthorized access

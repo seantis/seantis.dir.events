@@ -397,7 +397,7 @@ class EventOrderIndex(EventIndex):
 
     def limit_to_subset(self, index, subset):
 
-        if not subset:
+        if subset is None:
             return index
 
         ids = set(brain.id for brain in subset)
@@ -570,9 +570,6 @@ class EventsDirectoryCatalog(DirectoryCatalog):
             subset = super(EventsDirectoryCatalog, self).filter(filter)
         else:
             subset = super(EventsDirectoryCatalog, self).items()
-
-        if not subset:
-            return []
 
         # Get lazy list from indexer using the subset
         start, end = getattr(dates.DateRanges(), 'this_and_next_year')
