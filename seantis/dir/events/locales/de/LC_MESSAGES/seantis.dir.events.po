@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-12-17 14:01+0000\n"
+"POT-Creation-Date: 2013-12-17 15:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,8 +88,8 @@ msgid "Cancel Event Submission"
 msgstr "Abbrechen"
 
 #: ./templates/directory.pt:88
-msgid "Configure Import Sources"
-msgstr "Importquellen konfigurieren"
+msgid "Configure Imports"
+msgstr "Imports konfigurieren"
 
 #: ./interfaces.py:219
 msgid "Contact Email"
@@ -298,8 +298,8 @@ msgid "Images"
 msgstr "Bilder"
 
 #: ./templates/directory.pt:46
-msgid "Import Source"
-msgstr "Importquellen"
+msgid "Import"
+msgstr "Import"
 
 #: ./interfaces.py:337
 msgid "Import interval"

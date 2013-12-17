@@ -43,7 +43,7 @@
               </div>
 
               <div class="event-navigation-sources" tal:condition="view/show_import_sources">
-                  <h2 i18n:translate="">Import Source</h2>
+                  <h2 i18n:translate="">Import</h2>
                   <ul>
                       <li tal:repeat="source view/import_sources">
                         <a tal:content="python: source[0]" tal:attributes="href python: view.import_source_url(source[1]); class python: source[1] == view.selected_import_source and 'selected event-navigation-link' or 'event-navigation-link'; title python: source[0]"></a>
@@ -85,7 +85,7 @@
                 <a i18n:translate="" tal:attributes="href python: context.absolute_url() + '/@@submit'">Submit Your Event</a>
               </div>
               <div id="event-sources" tal:condition="view/show_import_sources">
-                <h2 i18n:translate="">Configure Import Sources</h2>
+                <h2 i18n:translate="">Configure Imports</h2>
                 <ul>
                   <li tal:repeat="source view/import_sources_config">
                     <a tal:content="python: source[0]" tal:attributes="href python: source[1]"></a>
