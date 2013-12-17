@@ -178,6 +178,15 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         """ Store the last selected event state on the session. """
         session.set_session(self.context, 'state', method)
 
+    def get_last_import_source(self):
+        """ Returns the last selected import source. """
+        return session.get_session(self.context, 'source') \
+            or ''
+
+    def set_last_import_source(self, source):
+        """ Store the last selected import source on the session. """
+        session.set_session(self.context, 'source', source)
+
     @property
     def no_events_helptext(self):
         if 'published' == self.catalog.state:
@@ -201,15 +210,29 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         return len(self.batch) > 0
 
     @property
-    def import_sources(self):
-        return [(source.getObject().title, source.getURL(
-        ) + '/edit') for source in self.catalog.import_sources()]
-
-    @property
     def show_import_sources(self):
         return getSecurityManager().checkPermission(
             permissions.ReviewPortalContent, self.context
         )
+
+    @property
+    def import_sources(self):
+        sources = [(source.Title, source.id) for
+                   source in self.catalog.import_sources()]
+        sources.insert(0, (u'-', ''))
+        return sources
+
+    def import_source_url(self, source):
+        return self.directory.absolute_url() + '?source=' + source
+
+    @property
+    def selected_import_source(self):
+        return self.catalog.import_source
+
+    @property
+    def import_sources_config(self):
+        return [(source.Title, source.getURL() + '/edit')
+                for source in self.catalog.import_sources()]
 
     def render(self):
         """ Renders the ical/json if asked, or the usual template. """
@@ -246,7 +269,6 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
             self.set_last_daterange(daterange)
 
         state = self.request.get('state', self.get_last_state())
-
         if not self.show_state_filters or state not in (
             'submitted', 'published', 'archived', 'hidden'
         ):
@@ -254,8 +276,15 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         else:
             self.set_last_state(state)
 
-        self.catalog.state = state
+        source = self.request.get('source', self.get_last_import_source())
+        if not self.show_import_sources:
+            source = ''
+        else:
+            self.set_last_import_source(source)
+
         self.catalog.daterange = daterange
+        self.catalog.state = state
+        self.catalog.import_source = source
 
         if not self.is_ical_export and not self.is_json_export:
             super(EventsDirectoryView, self).update(**kwargs)
