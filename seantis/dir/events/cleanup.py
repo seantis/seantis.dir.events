@@ -27,22 +27,25 @@ class CleanupScheduler(object):
     def __init__(self):
         self.next_run = 0
 
-    def get_next_run(self):
-        now = datetime.today()
+    def get_next_run(self, now=datetime.today()):
         # Schedule next run tomorrow at 0:30
+        days = 1
+        if now.hour < 1 and now.minute < 30:
+            days = 0
         next_run = datetime(now.year, now.month, now.day) + timedelta(
-            days=1, minutes=30)
+            days=days, minutes=30)
         return next_run
 
     @synchronized(_lock)
-    def run(self, directory, dryrun=False, force_run=False):
+    def run(self, directory, dryrun=False, force_run=False,
+            now=datetime.today()):
 
         if not self.next_run:
-            self.next_run = self.get_next_run()
+            self.next_run = self.get_next_run(now)
 
-        if (datetime.today() > self.next_run) or force_run:
-            self.next_run = self.get_next_run()
-            self.cleanup_directory(directory, dryrun=True)
+        if (now > self.next_run) or force_run:
+            self.next_run = self.get_next_run(now)
+            self.cleanup_directory(directory, dryrun=dryrun)
 
     def remove_stale_previews(self, directory, dryrun=False):
 

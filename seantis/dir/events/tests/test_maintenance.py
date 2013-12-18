@@ -1,109 +1,43 @@
-from datetime import datetime, timedelta
-from DateTime.DateTime import DateTime
+from mock import Mock
 
-from seantis.dir.events.dates import to_utc
 from seantis.dir.events.tests import IntegrationTestCase
-from seantis.dir.events.cleanup import cleanup_scheduler
+from seantis.dir.events import maintenance
 
 
 class TestMaintenance(IntegrationTestCase):
 
     def setUp(self):
         super(TestMaintenance, self).setUp()
-        # login to gain the right to create events
-        self.login_admin()
+        self.old_logger = maintenance.log
+        maintenance.log = Mock()
 
     def tearDown(self):
         super(TestMaintenance, self).tearDown()
-        self.logout()
+        maintenance.log = self.old_logger
 
-    def test_remove_stale_previews(self):
-        preview = self.create_event()
-        self.assertEqual(preview.state, 'preview')
+    def test_register_clock_server(self):
+        result = maintenance.register('method', 60 * 60)
+        self.assertEquals(result.method, 'method')
+        self.assertTrue('method' in maintenance._clockservers)
 
-        run = lambda: cleanup_scheduler.remove_stale_previews(
-            self.directory, dryrun=True
-        )
+        maintenance.clear_clockservers()
+        self.assertTrue('method' not in maintenance._clockservers)
 
-        self.assertEqual(run(), [])
+    def test_clock_logger(self):
+        logger = maintenance.ClockLogger('method')
 
-        preview.modification_date = DateTime(
-            datetime.utcnow() - timedelta(days=2, microseconds=1)
-        )
-        preview.reindexObject(idxs=['modified'])
+        logger.log('GET http://localhost:888/method HTTP/1.1 200')
+        self.assertTrue('call.info' in str(maintenance.log.method_calls))
 
-        self.assertEqual(run(), [preview.id])
+        logger.log('GET http://localhost:888/method HTTP/1.1 500')
+        self.assertTrue('call.warn' in str(maintenance.log.method_calls))
+        self.assertTrue('500' in str(maintenance.log.method_calls))
 
-        preview.submit()
+        logger.log('GET http://localhost:888/method HTTP/1.1')
+        self.assertTrue('call.error' in str(maintenance.log.method_calls))
 
-        self.assertEqual(run(), [])
+        logger.log('')
+        self.assertTrue(len(maintenance.log.method_calls) == 4)
 
-    def test_archive_past_events(self):
-
-        run = lambda: cleanup_scheduler.archive_past_events(
-            self.directory, dryrun=True
-        )
-
-        published = self.create_event()
-        self.assertEqual(run(), [])
-
-        published.submit()
-        self.assertEqual(run(), [])
-
-        published.publish()
-        self.assertEqual(run(), [])
-
-        published.start = to_utc(datetime.utcnow() - timedelta(days=3))
-        published.end = to_utc(datetime.utcnow() - timedelta(days=3))
-        published.reindexObject(idxs=['start', 'end'])
-
-        self.assertEqual(run(), [published.id])
-
-        published.start += timedelta(days=2)
-        published.end += timedelta(days=2)
-        published.reindexObject(idxs=['start', 'end'])
-        self.assertEqual(run(), [])
-
-        published.start = to_utc(datetime.utcnow() - timedelta(days=3))
-        published.end = to_utc(datetime.utcnow() - timedelta(days=3))
-        published.reindexObject(idxs=['start', 'end'])
-        self.assertEqual(run(), [published.id])
-
-        published.recurrence = 'RRULE:FREQ=WEEKLY;COUNT=10'
-        self.assertEqual(run(), [])
-
-        published.start = to_utc(datetime.utcnow() - timedelta(days=100))
-        published.end = to_utc(datetime.utcnow() - timedelta(days=100))
-        published.recurrence = 'RRULE:FREQ=WEEKLY;COUNT=3'
-        published.reindexObject(idxs=['start', 'end'])
-
-        self.assertEqual(run(), [published.id])
-
-    def test_remove_archived_events(self):
-
-        run = lambda: cleanup_scheduler.remove_archived_events(
-            self.directory, dryrun=True
-        )
-
-        archived = self.create_event()
-        self.assertEqual(run(), [])
-
-        archived.submit()
-        self.assertEqual(run(), [])
-
-        archived.publish()
-        self.assertEqual(run(), [])
-
-        archived.start = to_utc(datetime.utcnow() - timedelta(days=31))
-        archived.end = to_utc(datetime.utcnow() - timedelta(days=31))
-        archived.reindexObject(idxs=['start', 'end'])
-        self.assertEqual(run(), [])
-
-        archived.archive()
-        self.assertEqual(run(), [archived.id])
-
-        archived.start = to_utc(datetime.utcnow() - timedelta(days=10))
-        archived.end = to_utc(datetime.utcnow() - timedelta(days=10))
-        archived.reindexObject(idxs=['start', 'end'])
-
-        self.assertEqual(run(), [])
+        logger.log('abcd')
+        self.assertTrue(len(maintenance.log.method_calls) == 5)

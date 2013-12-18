@@ -48,7 +48,8 @@ class BrowserTestCase(FunctionalTestCase):
                  whole_day=False,
                  date=datetime.today(), start='2:00 PM', end='4:00 PM',
                  submitter='submitter', email='submitter@example.com',
-                 check_submitted=True, do_publish=True, check_published=True):
+                 do_submit=True, check_submitted=True,
+                 do_publish=True, check_published=True):
 
         browser = self.admin_browser
 
@@ -72,32 +73,35 @@ class BrowserTestCase(FunctionalTestCase):
         # Preview
         browser.getControl('Continue').click()
 
-        # Confirm
-        browser.getControl(name='form.widgets.submitter').value = submitter
-        browser.getControl(name='form.widgets.submitter_email').value = email
-        browser.getControl('Submit').click()
+        if do_submit:
 
-        # Check if submitted
-        if check_submitted:
-            browser.open('/veranstaltungen?state=submitted')
-            self.assertTrue(title in browser.contents)
-            self.assertTrue(description in browser.contents)
-            self.assertTrue(cat1 in browser.contents)
-            self.assertTrue(cat2 in browser.contents)
+            # Submit
+            browser.getControl(name='form.widgets.submitter').value = submitter
+            browser.getControl(
+                name='form.widgets.submitter_email').value = email
+            browser.getControl('Submit').click()
 
-        if do_publish:
-
-            # Publish
-            browser.open('/veranstaltungen?state=submitted')
-            browser.getLink('Publish', index=1).click()
-
-            # Check if published
-            if check_published:
-                browser.open('/veranstaltungen?state=published')
+            # Check if submitted
+            if check_submitted:
+                browser.open('/veranstaltungen?state=submitted')
                 self.assertTrue(title in browser.contents)
                 self.assertTrue(description in browser.contents)
                 self.assertTrue(cat1 in browser.contents)
                 self.assertTrue(cat2 in browser.contents)
+
+            if do_publish:
+
+                # Publish
+                browser.open('/veranstaltungen?state=submitted')
+                browser.getLink('Publish', index=1).click()
+
+                # Check if published
+                if check_published:
+                    browser.open('/veranstaltungen?state=published')
+                    self.assertTrue(title in browser.contents)
+                    self.assertTrue(description in browser.contents)
+                    self.assertTrue(cat1 in browser.contents)
+                    self.assertTrue(cat2 in browser.contents)
 
     def test_workflow(self):
 
@@ -1043,3 +1047,7 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('text/plain' in browser.headers['Content-type'])
         self.assertTrue('test1' in browser.contents)
         self.assertTrue('test2' in browser.contents)
+
+    def test_cleanup_view(self):
+        browser = self.admin_browser
+        browser.open('veranstaltungen/cleanup?run=1')

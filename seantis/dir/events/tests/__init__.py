@@ -16,6 +16,7 @@ from zope.component.hooks import getSite
 from seantis.dir.base.interfaces import IDirectoryCatalog
 from seantis.dir.events.tests.layer import INTEGRATION_TESTING
 from seantis.dir.events.tests.layer import FUNCTIONAL_TESTING
+from seantis.dir.events.maintenance import clear_clockservers
 
 
 class IntegrationTestCase(unittest.TestCase):
@@ -37,6 +38,7 @@ class IntegrationTestCase(unittest.TestCase):
         self.logout()
 
     def tearDown(self):
+        clear_clockservers()
         testing.logout()
 
     def login_admin(self):
