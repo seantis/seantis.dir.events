@@ -68,9 +68,12 @@ class EventsDirectory(directory.Directory, pages.CustomPageHook):
         except:
             external_event = False
 
-        if ((action == 'archive' and external_event) or
-                (action == 'hide' and not external_event)):
-            result = False
+        if external_event:
+            if action not in ['hide', 'publish']:
+                result = False
+        else:
+            if action == 'hide':
+                result = False
 
         guard = queryAdapter(self, IActionGuard)
         if guard:

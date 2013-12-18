@@ -104,11 +104,17 @@ class EventsDirectoryItem(item.DirectoryItem):
     def submit(self):
         self.do_action("submit")
 
+    def deny(self):
+        self.do_action("deny")
+
     def publish(self):
         self.do_action("publish")
 
     def archive(self):
         self.do_action("archive")
+
+    def hide(self):
+        self.do_action("hide")
 
     def reindex(self):
         utils.get_catalog(self.get_parent()).reindex()

@@ -1,5 +1,8 @@
-from seantis.dir.events.tests import IntegrationTestCase
 from Products.CMFCore.WorkflowCore import WorkflowException
+from zope.interface import alsoProvides
+
+from seantis.dir.events.interfaces import IExternalEvent
+from seantis.dir.events.tests import IntegrationTestCase
 
 
 class TestWorkflow(IntegrationTestCase):
@@ -20,54 +23,92 @@ class TestWorkflow(IntegrationTestCase):
         self.assertEqual(event.state, 'preview')
 
         # go through the states
-        event.do_action('submit')
+        event.submit()
         self.assertEqual(event.state, 'submitted')
 
-        event.do_action('publish')
-        self.assertEqual(event.state, 'published')
-
-        event.do_action('archive')
+        event.deny()
         self.assertEqual(event.state, 'archived')
 
-        event.do_action('publish')
+        event = self.create_event()
+        self.assertEqual(event.state, 'preview')
+
+        event.submit()
+        self.assertEqual(event.state, 'submitted')
+
+        event.publish()
+        self.assertEqual(event.state, 'published')
+
+        event.archive()
+        self.assertEqual(event.state, 'archived')
+
+        event.publish()
+        self.assertEqual(event.state, 'published')
+
+        alsoProvides(event, IExternalEvent)
+
+        event.hide()
+        self.assertEqual(event.state, 'hidden')
+
+        event.publish()
         self.assertEqual(event.state, 'published')
 
         # try some impossible changes
         event = self.create_event()
         action = lambda a: event.do_action(a)
 
+        self.assertRaises(WorkflowException, action, 'archive')
+        self.assertRaises(WorkflowException, action, 'deny')
+        self.assertRaises(WorkflowException, action, 'hide')
         self.assertRaises(WorkflowException, action, 'publish')
+
+        event.submit()
+
         self.assertRaises(WorkflowException, action, 'archive')
-
-        event.do_action('submit')
-
-        self.assertRaises(WorkflowException, action, 'archive')
-
-        event.do_action('publish')
-
+        self.assertRaises(WorkflowException, action, 'hide')
         self.assertRaises(WorkflowException, action, 'submit')
 
-        event.do_action('archive')
+        event.publish()
 
+        self.assertRaises(WorkflowException, action, 'deny')
+        self.assertRaises(WorkflowException, action, 'hide')
+        self.assertRaises(WorkflowException, action, 'publish')
         self.assertRaises(WorkflowException, action, 'submit')
 
-        # try denying an event (skipping the publication)
-        event = self.create_event()
+        event.archive()
 
-        event.do_action('submit')
-        self.assertEqual(event.state, 'submitted')
+        self.assertRaises(WorkflowException, action, 'archive')
+        self.assertRaises(WorkflowException, action, 'deny')
+        self.assertRaises(WorkflowException, action, 'hide')
+        self.assertRaises(WorkflowException, action, 'submit')
 
-        event.do_action('deny')
-        self.assertEqual(event.state, 'archived')
+        event.publish()
+        alsoProvides(event, IExternalEvent)
+        event.hide()
+
+        self.assertRaises(WorkflowException, action, 'archive')
+        self.assertRaises(WorkflowException, action, 'deny')
+        self.assertRaises(WorkflowException, action, 'hide')
+        self.assertRaises(WorkflowException, action, 'submit')
 
     def test_access_guard(self):
-        actions = ['submit', 'publish', 'deny', 'archive']
 
-        # the default access guard has no limits
+        # normal events
         event = self.create_event()
-
-        for action in actions:
+        allow = ['submit', 'publish', 'deny', 'archive']
+        deny = ['hide']
+        for action in allow:
             self.assertTrue(event.allow_action(action))
+        for action in deny:
+            self.assertFalse(event.allow_action(action))
+
+        # imported events
+        alsoProvides(event, IExternalEvent)
+        allow = ['hide', 'publish']
+        deny = ['submit', 'deny', 'archive']
+        for action in allow:
+            self.assertTrue(event.allow_action(action))
+        for action in deny:
+            self.assertFalse(event.allow_action(action))
 
         # use a custom guard to ensure that the guards are actually
         # set in the definition xml file
