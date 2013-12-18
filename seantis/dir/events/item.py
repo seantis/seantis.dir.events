@@ -28,7 +28,7 @@ from seantis.dir.events import recurrence
 from seantis.dir.events import utils
 from seantis.dir.events.token import verify_token
 from seantis.dir.events.interfaces import (
-    IEventsDirectory, IEventsDirectoryItem
+    IEventsDirectory, IEventsDirectoryItem, IExternalEvent
 )
 
 from AccessControl import getSecurityManager
@@ -154,6 +154,10 @@ class EventsDirectoryItem(item.DirectoryItem):
                 ))
 
         return tags
+
+    @property
+    def allow_edit(self):
+        return not IExternalEvent.providedBy(self)
 
 
 class DoActionView(grok.View):

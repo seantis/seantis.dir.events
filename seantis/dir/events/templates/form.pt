@@ -15,8 +15,13 @@
 
 <metal:block use-macro="context/@@seantis-dir-events-macros/macros/form-navigation" />
 
-<div class="event-submit-form" data-countdown-template="${chars} characters left" i18n:attributes="data-countdown-template">
+<div class="event-submit-form" data-countdown-template="${chars} characters left" i18n:attributes="data-countdown-template" tal:condition="view/allow_edit">
     <metal:block use-macro="context/@@ploneform-macros/titlelessform" />
+</div>
+
+<div tal:condition="not:view/allow_edit">
+    <p i18n:translate="">This is an imported event and not editable.</p>
+    <p><a tal:attributes="href view/import_source" i18n:translate="">View the source of this event</a></p>
 </div>
 
 </tal:main-macro>

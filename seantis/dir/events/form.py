@@ -43,7 +43,8 @@ from seantis.dir.events.interfaces import (
     IEventsDirectory,
     IEventsDirectoryItem,
     ITerms,
-    IEventSubmissionData
+    IEventSubmissionData,
+    IExternalEvent
 )
 
 from seantis.dir.events.token import (
@@ -625,6 +626,14 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         self.add(obj)
         return obj
 
+    @property
+    def allow_edit(self):
+        return True
+
+    @property
+    def import_source(self):
+        return ""
+
 
 class EventEditForm(EventSubmitForm):
 
@@ -633,6 +642,18 @@ class EventEditForm(EventSubmitForm):
     grok.name('edit')
     grok.require('cmf.ModifyPortalContent')
     grok.context(IEventsDirectoryItem)
+
+    @property
+    def allow_edit(self):
+        return not IExternalEvent.providedBy(self.context)
+
+    @property
+    def import_source(self):
+        try:
+            result = IExternalEvent(self.context).source
+        except:
+            result = ""
+        return result
 
     def setup_form(self):
         self.buttons = button.Buttons()
@@ -655,6 +676,11 @@ class EventEditForm(EventSubmitForm):
         self.handlers.addHandler(cancel, cancel_handler)
 
     def handle_save(self, action):
+        if not self.allow_edit:
+            self.message(_(u'Imported events may not be edited, '
+                           u'no changes where applied'))
+            return
+
         data, errors = self.extractData()
         validate_event_submission(data)
 
