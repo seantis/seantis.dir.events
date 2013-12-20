@@ -1051,3 +1051,7 @@ class BrowserTestCase(FunctionalTestCase):
     def test_cleanup_view(self):
         browser = self.admin_browser
         browser.open('veranstaltungen/cleanup?run=1')
+
+    def test_fetch_view(self):
+        browser = self.admin_browser
+        browser.open('veranstaltungen/fetch?limit=1')

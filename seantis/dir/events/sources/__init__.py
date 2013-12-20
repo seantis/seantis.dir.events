@@ -111,7 +111,7 @@ class ExternalEventImporter(object):
 
         return ids
 
-    def _fetch(
+    def _fetch_one(
         self, source, function, limit=None, reimport=False, source_ids=[]
     ):
 
@@ -178,6 +178,8 @@ class ExternalEventImporter(object):
 
             # keep a set of all categories for the suggestions
             for cat in categories:
+                if cat not in event:
+                    event[cat] = set()
                 categories[cat] |= event[cat]
 
             # for testing
@@ -189,7 +191,7 @@ class ExternalEventImporter(object):
                 limit_reached_id = event['source_id']
 
             # flush to disk every 500th event to keep memory usage low
-            if len(imported) % 500 == 0:
+            if len(imported) != 0 and len(imported) % 500 == 0:
                 transaction.savepoint(True)
 
             log.info('importing %i/%i %s @ %s' % (
@@ -237,10 +239,10 @@ class ExternalEventImporter(object):
             # latitude and longitude are set through the interface
             lat, lon = event.get('latitude'), event.get('longitude')
 
-            if lat:
+            if lat is not None:
                 del event['latitude']
 
-            if lon:
+            if lon is not None:
                 del event['longitude']
 
             # so are categories
@@ -282,7 +284,8 @@ class ExternalEventImporter(object):
         # add categories to suggestions
         for category in categories:
             key = '%s_suggestions' % category
-            existing = set(getattr(self.context, key))
+            existing = getattr(self.context, key)
+            existing = set(existing) if existing is not None else set()
             new = categories[category] | existing
 
             setattr(self.context, key, sorted(new))
@@ -306,7 +309,7 @@ class ExternalEventImporter(object):
         self.disable_indexing()
 
         try:
-            imported = self._fetch(
+            imported = self._fetch_one(
                 source, function, limit, reimport, source_ids
             )
         finally:
@@ -330,6 +333,8 @@ class ExternalEventImporter(object):
         log.info('imported %i events in %i minutes, %i seconds' % (
             len(imported), minutes, seconds
         ))
+
+        return len(imported)
 
     def fetch_all(self, limit=0, reimport=False, source_ids=[]):
 
@@ -355,20 +360,21 @@ class ExternalEventImportScheduler(object):
     def __init__(self):
         self.next_run = {}
 
-    def get_next_run(self, interval):
-        now = datetime.today()
-        # Schedule next run tomorrow 1:30
-        next_run = datetime(now.year, now.month, now.day) + timedelta(
-            days=1, hours=1, minutes=30)
+    def get_next_run(self, interval='daily', now=datetime.today()):
         if interval == 'hourly':
-            # Schedule next run at xx:00
+            # 'hourly': Schedule next run at xx:00
             next_run = datetime(now.year, now.month, now.day, now.hour)
             next_run += timedelta(hours=1)
+        else:
+            # 'daily': Schedule next run tomorrow 2:00
+            days = 0 if (now.hour < 2) else 1
+            next_run = datetime(now.year, now.month, now.day) + timedelta(
+                days=days, hours=2)
         return next_run
 
     @synchronized(_lock)
     def run(self, context, limit=0, reimport=False, source_ids=[],
-            force_run=False):
+            force_run=False, now=datetime.today()):
 
         importer = ExternalEventImporter(context)
         for source in importer.sources():
@@ -376,10 +382,10 @@ class ExternalEventImportScheduler(object):
             interval = source.getObject().interval
 
             if not path in self.next_run:
-                self.next_run[path] = self.get_next_run(interval)
+                self.next_run[path] = self.get_next_run(interval, now)
 
             if (datetime.today() > self.next_run[path]) or force_run:
-                self.next_run[path] = self.get_next_run(interval)
+                self.next_run[path] = self.get_next_run(interval, now)
                 importer.fetch_one(
                     path,
                     IExternalEventCollector(source.getObject()).fetch,
