@@ -100,3 +100,100 @@ class FunctionalTestCase(IntegrationTestCase):
 
     def tearDown(self):
         pass
+
+class BrowserTestCase(FunctionalTestCase):
+
+    def setUp(self):
+        super(BrowserTestCase, self).setUp()
+
+        self.baseurl = self.portal.absolute_url()
+
+        browser = self.new_browser()
+        browser.login_admin()
+
+        # create an events directory
+        browser.open('/++add++seantis.dir.events.directory')
+
+        browser.getControl(name='form.widgets.title').value = 'Veranstaltungen'
+        browser.getControl(
+            name='form.widgets.cat1_suggestions'
+        ).value = "Category1\nCategory1_2"
+        browser.getControl(
+            name='form.widgets.cat2_suggestions'
+        ).value = "Category2\nCategory2_2"
+        browser.getControl('Save').click()
+
+        self.assertTrue('Veranstaltungen' in browser.contents)
+
+        # the directory needs to be published for the anonymous
+        # user to submit events
+        browser.open(
+            browser.url + '/../content_status_modify?workflow_action=publish'
+        )
+
+        self.admin_browser = browser
+
+    def tearDown(self):
+        self.admin_browser.open('/veranstaltungen/delete_confirmation')
+        self.admin_browser.getControl('Delete').click()
+        self.admin_browser.assert_notfound('/veranstaltungen')
+
+    def addEvent(self, title='title', description='description',
+                 cat1='Category1', cat2='Category2',
+                 whole_day=False,
+                 date=datetime.today(), start='2:00 PM', end='4:00 PM',
+                 submitter='submitter', email='submitter@example.com',
+                 do_submit=True, check_submitted=True,
+                 do_publish=True, check_published=True):
+
+        browser = self.admin_browser
+
+        # Add form
+        browser.open('/veranstaltungen/++add++seantis.dir.events.item')
+        # browser.show()
+        browser.widget('title').value = title
+        browser.widget('short_description').value = description
+        browser.getControl(cat1).selected = True
+        browser.getControl(cat2).selected = True
+        browser.widget('submission_date_type').value = ['date']
+        browser.set_date('submission_date', date)
+        browser.widget('submission_recurrence').value = ''
+        if whole_day:
+            browser.getControl('All day').selected = True
+        else:
+            browser.widget('submission_start_time').value = start
+            browser.widget('submission_end_time').value = end
+        browser.getControl('Continue').click()
+
+        # Preview
+        browser.getControl('Continue').click()
+
+        if do_submit:
+
+            # Submit
+            browser.getControl(name='form.widgets.submitter').value = submitter
+            browser.getControl(
+                name='form.widgets.submitter_email').value = email
+            browser.getControl('Submit').click()
+
+            # Check if submitted
+            if check_submitted:
+                browser.open('/veranstaltungen?state=submitted')
+                self.assertTrue(title in browser.contents)
+                self.assertTrue(description in browser.contents)
+                self.assertTrue(cat1 in browser.contents)
+                self.assertTrue(cat2 in browser.contents)
+
+            if do_publish:
+
+                # Publish
+                browser.open('/veranstaltungen?state=submitted')
+                browser.getLink('Publish', index=1).click()
+
+                # Check if published
+                if check_published:
+                    browser.open('/veranstaltungen?state=published')
+                    self.assertTrue(title in browser.contents)
+                    self.assertTrue(description in browser.contents)
+                    self.assertTrue(cat1 in browser.contents)
+                    self.assertTrue(cat2 in browser.contents)

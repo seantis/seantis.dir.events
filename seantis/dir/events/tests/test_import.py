@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 
+from collective.geo.geographer.interfaces import IGeoreferenced
+from plone.app.event.base import default_timezone
 from plone.dexterity.utils import createContentInContainer
 from zope.interface import alsoProvides
-from collective.geo.geographer.interfaces import IGeoreferenced
 
 from seantis.dir.events.catalog import reindex_directory
 from seantis.dir.events.dates import default_now
@@ -78,7 +79,7 @@ class TestImport(IntegrationTestCase):
             'start': datetime.today() + timedelta(days=10),
             'end': datetime.today() + timedelta(days=10, hours=1),
             'whole_day': False,
-            'timezone': 'Europe/Zurich',
+            'timezone': default_timezone(),
 
             # From IEventRecurrence
             'recurrence': '',
@@ -327,14 +328,14 @@ class TestImport(IntegrationTestCase):
             'source_id', 'fetch_id'
         ]
         now = default_now().replace(microsecond=0)
-        then = datetime.today() + timedelta(days=10)
+        then = now + timedelta(days=10)
 
         event = {s: s for s in string_values}
 
         event['last_update'] = now
         event['start'] = then
         event['end'] = then + timedelta(hours=1)
-        event['timezone'] = 'Europe/Zurich'
+        event['timezone'] = default_timezone()
         event['whole_day'] = False
         event['recurrence'] = 'RRULE:FREQ=DAILY;COUNT=2'
 
