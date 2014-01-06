@@ -133,9 +133,10 @@ class EventsSourceGuidle(grok.Adapter):
 
         return categories
 
-    def fetch(self):
+    def fetch(self, xml=None):
 
-        xml = urlopen(self.context.url).read()
+        if xml is None:
+            xml = urlopen(self.context.url).read()
         root = objectify.fromstring(xml)
 
         offers = root.xpath(

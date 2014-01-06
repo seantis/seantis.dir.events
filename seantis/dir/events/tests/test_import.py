@@ -10,7 +10,14 @@ from seantis.dir.events.dates import default_now
 from seantis.dir.events.sources import (
     import_scheduler, ExternalEventImporter, IExternalEvent
 )
+from seantis.dir.events.sources.guidle import EventsSourceGuidle
 from seantis.dir.events.tests import IntegrationTestCase
+
+
+class DummyGuidleContext():
+
+    def __init__(self, url):
+        self.url = url
 
 
 class TestImport(IntegrationTestCase):
@@ -346,9 +353,9 @@ class TestImport(IntegrationTestCase):
         event['latitude'] = 46.6859853
 
         # :TODO: test image and attachement download
-        # event['image'] = 
-        # event['attachment_1'] = 
-        # event['attachment_2'] = 
+        # event['image'] =
+        # event['attachment_1'] =
+        # event['attachment_2'] =
 
         imports = importer.fetch_one('source', lambda: [event])
         imported = self.catalog.query()
@@ -372,3 +379,89 @@ class TestImport(IntegrationTestCase):
 
         self.assertEquals(IGeoreferenced(imported).coordinates,
                           [7.8673189, 46.6859853])
+
+    def test_guidle_import(self):
+        xml = """<?xml version="1.0" encoding="UTF-8"?>
+<guidle:exportData xmlns:guidle="http://www.guidle.com">
+  <guidle:groupSet>
+    <guidle:group>
+      <guidle:offer id="123">
+        <guidle:lastUpdateDate>2013-07-26T16:00:43.208+02:00</guidle:lastUpdateDate>
+        <guidle:offerDetail>
+          <guidle:title>Title</guidle:title>
+          <guidle:shortDescription>Description</guidle:shortDescription>
+          <guidle:longDescription>Long Descritption</guidle:longDescription>
+          <guidle:homepage>http://www.example.ch</guidle:homepage>
+          <guidle:images>
+            <guidle:image>
+              <guidle:url>http://www.example.ch/1.png</guidle:url>
+            </guidle:image>
+          </guidle:images>
+        </guidle:offerDetail>
+        <guidle:address>
+          <guidle:company>Address</guidle:company>
+          <guidle:zip>1234</guidle:zip>
+          <guidle:city>City</guidle:city>
+          <guidle:country>Country</guidle:country>
+          <guidle:latitude>1.0</guidle:latitude>
+          <guidle:longitude>2.0</guidle:longitude>
+        </guidle:address>
+        <guidle:contact>
+          <guidle:email>info@example.ch</guidle:email>
+          <guidle:telephone_1>000 111 22 33</guidle:telephone_1>
+          <guidle:company>Company</guidle:company>
+        </guidle:contact>
+        <guidle:schedules>
+          <guidle:date>
+            <guidle:startDate>2017-08-25</guidle:startDate>
+            <guidle:endDate>2017-09-03</guidle:endDate>
+            <guidle:weekdays>
+              <guidle:day>Mo</guidle:day>
+              <guidle:day>Tu</guidle:day>
+            </guidle:weekdays>
+          </guidle:date>
+        </guidle:schedules>
+        <guidle:classifications>
+          <guidle:classification name="class">
+          </guidle:classification>
+        </guidle:classifications>
+      </guidle:offer>
+    </guidle:group>
+  </guidle:groupSet>
+</guidle:exportData>"""
+
+        context = DummyGuidleContext('url')
+        source = EventsSourceGuidle(context)
+        events = [event for event in source.fetch(xml)]
+        self.assertEquals(len(events), 1)
+
+        self.assertEquals(str(events[0]['last_update']),
+                          '2013-07-26 16:00:43+02:00')
+        self.assertEquals(events[0]['fetch_id'], 'url')
+        self.assertEquals(events[0]['id'], '123')
+        self.assertEquals(events[0]['source_id'], '123')
+
+        self.assertEquals(events[0]['title'], 'Title')
+        self.assertEquals(events[0]['short_description'], 'Description')
+        self.assertEquals(events[0]['long_description'], 'Long Descritption')
+        self.assertEquals(events[0]['location_url'], 'http://www.example.ch')
+        self.assertEquals(events[0]['image'], 'http://www.example.ch/1.png')
+
+        self.assertEquals(events[0]['organizer'], 'Company')
+        self.assertEquals(events[0]['locality'], 'Address')
+        self.assertEquals(events[0]['zipcode'], '1234')
+        self.assertEquals(events[0]['town'], 'City')
+        self.assertEquals(events[0]['contact_email'], 'info@example.ch')
+        self.assertEquals(events[0]['contact_phone'], '000 111 22 33')
+        self.assertEquals(events[0]['latitude'], '1.0')
+        self.assertEquals(events[0]['longitude'], '2.0')
+
+        self.assertEquals(events[0]['start'], datetime(2017, 8, 25, 0, 0))
+        self.assertEquals(events[0]['end'], datetime(2017, 8, 25, 0, 0))
+        self.assertEquals(events[0]['recurrence'],
+                          'RRULE:FREQ=WEEKLY;BYDAY=MO,TU;UNTIL=20170904T0000Z')
+        self.assertEquals(events[0]['whole_day'], True)
+        self.assertEquals(events[0]['timezone'], 'Europe/Zurich')
+
+        self.assertEquals(events[0]['cat1'], set(['class']))
+        self.assertEquals(events[0]['cat2'], set(['City']))
