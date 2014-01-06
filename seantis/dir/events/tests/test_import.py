@@ -426,6 +426,43 @@ class TestImport(IntegrationTestCase):
           </guidle:classification>
         </guidle:classifications>
       </guidle:offer>
+      <guidle:offer id="234">
+        <guidle:lastUpdateDate>2013-07-26T16:00:43.208+02:00</guidle:lastUpdateDate>
+        <guidle:offerDetail>
+          <guidle:title>Title</guidle:title>
+          <guidle:shortDescription>Description</guidle:shortDescription>
+          <guidle:longDescription>Long Descritption</guidle:longDescription>
+          <guidle:homepage>http://www.example.ch</guidle:homepage>
+          <guidle:images>
+            <guidle:image>
+              <guidle:url>http://www.example.ch/1.png</guidle:url>
+            </guidle:image>
+          </guidle:images>
+        </guidle:offerDetail>
+        <guidle:address>
+          <guidle:company>Address</guidle:company>
+          <guidle:zip>1234</guidle:zip>
+          <guidle:city>City</guidle:city>
+          <guidle:country>Country</guidle:country>
+        </guidle:address>
+        <guidle:contact>
+          <guidle:email>info@example.ch</guidle:email>
+          <guidle:telephone_1>000 111 22 33</guidle:telephone_1>
+          <guidle:company>Company</guidle:company>
+        </guidle:contact>
+        <guidle:schedules>
+          <guidle:date>
+            <guidle:startDate>2017-08-25</guidle:startDate>
+            <guidle:endDate>2017-08-25</guidle:endDate>
+            <guidle:startTime>09:15:00</guidle:startTime>
+            <guidle:endTime>20:50:00</guidle:endTime>
+          </guidle:date>
+        </guidle:schedules>
+        <guidle:classifications>
+          <guidle:classification name="class">
+          </guidle:classification>
+        </guidle:classifications>
+      </guidle:offer>
     </guidle:group>
   </guidle:groupSet>
 </guidle:exportData>"""
@@ -433,20 +470,18 @@ class TestImport(IntegrationTestCase):
         context = DummyGuidleContext('url')
         source = EventsSourceGuidle(context)
         events = [event for event in source.fetch(xml)]
-        self.assertEquals(len(events), 1)
+        self.assertEquals(len(events), 2)
 
         self.assertEquals(str(events[0]['last_update']),
                           '2013-07-26 16:00:43+02:00')
         self.assertEquals(events[0]['fetch_id'], 'url')
         self.assertEquals(events[0]['id'], '123')
         self.assertEquals(events[0]['source_id'], '123')
-
         self.assertEquals(events[0]['title'], 'Title')
         self.assertEquals(events[0]['short_description'], 'Description')
         self.assertEquals(events[0]['long_description'], 'Long Descritption')
         self.assertEquals(events[0]['location_url'], 'http://www.example.ch')
         self.assertEquals(events[0]['image'], 'http://www.example.ch/1.png')
-
         self.assertEquals(events[0]['organizer'], 'Company')
         self.assertEquals(events[0]['locality'], 'Address')
         self.assertEquals(events[0]['zipcode'], '1234')
@@ -455,13 +490,37 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(events[0]['contact_phone'], '000 111 22 33')
         self.assertEquals(events[0]['latitude'], '1.0')
         self.assertEquals(events[0]['longitude'], '2.0')
-
         self.assertEquals(events[0]['start'], datetime(2017, 8, 25, 0, 0))
         self.assertEquals(events[0]['end'], datetime(2017, 8, 25, 0, 0))
         self.assertEquals(events[0]['recurrence'],
                           'RRULE:FREQ=WEEKLY;BYDAY=MO,TU;UNTIL=20170904T0000Z')
         self.assertEquals(events[0]['whole_day'], True)
         self.assertEquals(events[0]['timezone'], 'Europe/Zurich')
-
         self.assertEquals(events[0]['cat1'], set(['class']))
         self.assertEquals(events[0]['cat2'], set(['City']))
+
+        self.assertEquals(str(events[1]['last_update']),
+                          '2013-07-26 16:00:43+02:00')
+        self.assertEquals(events[1]['fetch_id'], 'url')
+        self.assertEquals(events[1]['id'], '234')
+        self.assertEquals(events[1]['source_id'], '234')
+        self.assertEquals(events[1]['title'], 'Title')
+        self.assertEquals(events[1]['short_description'], 'Description')
+        self.assertEquals(events[1]['long_description'], 'Long Descritption')
+        self.assertEquals(events[1]['location_url'], 'http://www.example.ch')
+        self.assertEquals(events[1]['image'], 'http://www.example.ch/1.png')
+        self.assertEquals(events[1]['organizer'], 'Company')
+        self.assertEquals(events[1]['locality'], 'Address')
+        self.assertEquals(events[1]['zipcode'], '1234')
+        self.assertEquals(events[1]['town'], 'City')
+        self.assertEquals(events[1]['contact_email'], 'info@example.ch')
+        self.assertEquals(events[1]['contact_phone'], '000 111 22 33')
+        self.assertTrue('latitude' not in events[1])
+        self.assertTrue('longitude' not in events[1])
+        self.assertEquals(events[1]['start'], datetime(2017, 8, 25, 9, 15))
+        self.assertEquals(events[1]['end'], datetime(2017, 8, 25, 20, 50))
+        self.assertEquals(events[1]['recurrence'], '')
+        self.assertEquals(events[1]['whole_day'], False)
+        self.assertEquals(events[1]['timezone'], 'Europe/Zurich')
+        self.assertEquals(events[1]['cat1'], set(['class']))
+        self.assertEquals(events[1]['cat2'], set(['City']))
