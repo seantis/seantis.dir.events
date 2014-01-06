@@ -1,16 +1,75 @@
-import re
 import mock
 
 from datetime import datetime, timedelta
-from seantis.dir.events import dates
+
+from plone.app.event.base import default_timezone
+
 from seantis.dir.events.tests import BrowserTestCase
+from seantis.dir.events.dates import default_now
 
 
 class CommonBrowserTests(BrowserTestCase):
 
+    def create_fetch_entry(self, **kw):
+        def_start = datetime.today().replace(second=0) + timedelta(days=10)
+        def_end = def_start + timedelta(hours=1)
+        defaults = {
+            # from IDirectoryItem
+            # description not used
+            'title': '',
+
+            # from IEventsDirectoryItem
+            # submitter, submitter_email not used
+            'short_description': '',
+            'long_description': '',
+            'image': '',
+            'attachment_1': '',
+            'attachment_2': '',
+            'locality': '',
+            'street': '',
+            'housenumber': '',
+            'zipcode': '',
+            'town': '',
+            'location_url': '',
+            'event_url': '',
+            'organizer': '',
+            'contact_name': '',
+            'contact_email': '',
+            'contact_phone': '',
+            'prices': '',
+            'registration': '',
+
+            # from IExternalEvent
+            # source not used (filled in by ExternalEventImporter)
+            'source_id': 'id-1',
+
+            # From IEventBasic
+            'start': def_start,
+            'end': def_end,
+            'whole_day': False,
+            'timezone': default_timezone(),
+
+            # From IEventRecurrence
+            'recurrence': '',
+
+            # additional attributes used to control import
+            'fetch_id': 'fetch-1',
+            'last_update': default_now().replace(microsecond=0),
+            'latitude': '',
+            'longitude': '',
+            'cat1': set(),
+            'cat2': set(),
+        }
+
+        for attr in defaults:
+            if not attr in kw:
+                kw[attr] = defaults[attr]
+
+        return kw
+
     def addGuidleSource(
-        self, title='title', url='http://localhost:8888/',
-        interval='daily', enabled=True, do_check_saved=True):
+        self, title='Guidle Source', url='http://localhost:8888/',
+            interval='daily', enabled=True, do_check_saved=True):
 
         browser = self.admin_browser
 
@@ -31,5 +90,68 @@ class CommonBrowserTests(BrowserTestCase):
         browser.open('/veranstaltungen/')
         self.assertTrue(title in browser.contents)
 
-    def test_browser_add_guidle_source(self):
-        self.addGuidleSource(url='')
+    @mock.patch('seantis.dir.events.sources.guidle.EventsSourceGuidle.fetch')
+    def test_browser_import_guidle(self, fetch):
+        anom = self.new_browser()
+        admin = self.admin_browser
+
+        self.addGuidleSource(title='GS1')
+        self.addGuidleSource(title='GS2')
+        self.addGuidleSource(title='GS3')
+
+        # Import events (two for each source)
+        fetch.return_value = [
+            self.create_fetch_entry(title='event1'),
+            self.create_fetch_entry(title='event2'),
+        ]
+        anom.open('/veranstaltungen/fetch?limit=1&force=true')
+
+        # Anonymous users can't see import filters and sources
+        anom.open('/veranstaltungen/')
+        self.assertTrue('GS1' not in anom.contents)
+        self.assertTrue('GS2' not in anom.contents)
+        self.assertTrue('GS3' not in anom.contents)
+
+        # Admins can see filters and sources
+        admin.open('/veranstaltungen/')
+        self.assertTrue('GS1' in admin.contents)
+        self.assertTrue('GS2' in admin.contents)
+        self.assertTrue('GS3' in admin.contents)
+        self.assertTrue('/gs1/edit' in admin.contents)
+        self.assertTrue('/gs2/edit' in admin.contents)
+        self.assertTrue('/gs3/edit' in admin.contents)
+
+        # Filters
+        admin.open('/veranstaltungen?source=gs1')
+        self.assertTrue('/event1' in admin.contents)
+        self.assertTrue('/event1-1' not in admin.contents)
+        self.assertTrue('/event1-2' not in admin.contents)
+        admin.open('/veranstaltungen?source=gs2')
+        self.assertTrue('/event2-1' in admin.contents)
+        self.assertTrue('/event2-2' not in admin.contents)
+        admin.open('/veranstaltungen?source=')
+
+        # Imported Events can be hidden
+        admin.open('/veranstaltungen')
+        self.assertTrue('Hide' in admin.contents)
+        self.assertTrue('Archive' not in admin.contents)
+
+        # Hide an event
+        admin.open('/veranstaltungen/event1-2/do-action?action=hide')
+        admin.open('/veranstaltungen')
+        self.assertTrue('/event1-2' not in admin.contents)
+        admin.open('/veranstaltungen?state=hidden')
+        self.assertTrue('Publish' in admin.contents)
+        self.assertTrue('/event1-2' in admin.contents)
+
+        # Re-publish it
+        admin.open('/veranstaltungen/event1-2/do-action?action=publish')
+        admin.open('/veranstaltungen?state=published')
+        self.assertTrue('/event1-2' in admin.contents)
+
+        # Imported events may not be edited
+        admin.open('/veranstaltungen/event2/edit')
+        self.assertTrue('/gs1' in admin.contents)
+        self.assertTrue('Title' not in admin.contents)
+        self.assertTrue('Description' not in admin.contents)
+        self.assertTrue('Save Event' not in admin.contents)
