@@ -104,7 +104,7 @@ class CommonBrowserTests(BrowserTestCase):
             self.create_fetch_entry(title='event1'),
             self.create_fetch_entry(title='event2'),
         ]
-        anom.open('/veranstaltungen/fetch?limit=1&force=true')
+        anom.open('/veranstaltungen/fetch?force=true')
 
         # Anonymous users can't see import filters and sources
         anom.open('/veranstaltungen/')

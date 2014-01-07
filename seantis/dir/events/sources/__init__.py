@@ -336,22 +336,6 @@ class ExternalEventImporter(object):
 
         return len(imported)
 
-    def fetch_all(self, limit=0, reimport=False, source_ids=[]):
-
-        # Let the sources collect its events
-        fetched = []
-        for source in self.sources():
-            fetched.append(source.getURL())
-            self.fetch_one(
-                source.getURL(),
-                IExternalEventCollector(source.getObject()).fetch,
-                limit, reimport, source_ids
-            )
-
-        IDirectoryCatalog(self.context).reindex()
-
-        return fetched
-
 
 class ExternalEventImportScheduler(object):
 
@@ -376,6 +360,7 @@ class ExternalEventImportScheduler(object):
     def run(self, context, limit=0, reimport=False, source_ids=[],
             force_run=False, now=datetime.today()):
 
+        fetched = False
         importer = ExternalEventImporter(context)
         for source in importer.sources():
             path = source.getPath()
@@ -385,11 +370,15 @@ class ExternalEventImportScheduler(object):
                 self.next_run[path] = self.get_next_run(interval, now)
 
             if (datetime.today() > self.next_run[path]) or force_run:
+                fetched = True
                 self.next_run[path] = self.get_next_run(interval, now)
                 importer.fetch_one(
                     path,
                     IExternalEventCollector(source.getObject()).fetch,
                     limit, reimport, source_ids)
+
+        if fetched:
+            IDirectoryCatalog(context).reindex()
 
 
 import_scheduler = ExternalEventImportScheduler()
