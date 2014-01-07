@@ -1,9 +1,12 @@
 from datetime import datetime, timedelta
 from DateTime.DateTime import DateTime
 
-from seantis.dir.events.dates import to_utc
-from seantis.dir.events.tests import IntegrationTestCase
+from zope.interface import alsoProvides
+
 from seantis.dir.events.cleanup import cleanup_scheduler
+from seantis.dir.events.dates import to_utc
+from seantis.dir.events.interfaces import IExternalEvent
+from seantis.dir.events.tests import IntegrationTestCase
 
 
 class TestCleanup(IntegrationTestCase):
@@ -135,6 +138,49 @@ class TestCleanup(IntegrationTestCase):
         archived.reindexObject(idxs=['start', 'end'])
 
         self.assertEqual(len(self.catalog.catalog()), 2)
+        self.assertEqual(run(), [])
+        self.assertEqual(len(self.catalog.catalog()), 1)
+
+    def test_remove_past_imported_events(self):
+
+        run_dry = lambda: cleanup_scheduler.remove_past_imported_events(
+            self.directory, dryrun=True
+        )
+        run = lambda: cleanup_scheduler.remove_past_imported_events(
+            self.directory, dryrun=False
+        )
+
+        imported = self.create_event()
+        imported.submit()
+        imported.publish()
+        alsoProvides(imported, IExternalEvent)
+        imported.reindexObject()
+        self.assertEqual(run(), [])
+
+        hidden = self.create_event()
+        hidden.submit()
+        hidden.publish()
+        alsoProvides(hidden, IExternalEvent)
+        hidden.hide()
+        hidden.reindexObject()
+        self.assertEqual(run(), [])
+
+        # Age events
+        imported.start = to_utc(datetime.utcnow() - timedelta(days=10))
+        imported.end = to_utc(datetime.utcnow() - timedelta(days=10))
+        imported.reindexObject(idxs=['start', 'end'])
+        hidden.start = to_utc(datetime.utcnow() - timedelta(days=10))
+        hidden.end = to_utc(datetime.utcnow() - timedelta(days=10))
+        hidden.reindexObject(idxs=['start', 'end'])
+
+        # Test dryruns
+        ids = run_dry()
+        self.assertEqual(len(ids), 2)
+        self.assertTrue(imported.id in ids)
+        self.assertTrue(hidden.id in ids)
+
+        # Test run
+        self.assertEqual(len(self.catalog.catalog()), 3)
         self.assertEqual(run(), [])
         self.assertEqual(len(self.catalog.catalog()), 1)
 

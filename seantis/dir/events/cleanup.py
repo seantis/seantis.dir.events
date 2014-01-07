@@ -14,7 +14,7 @@ from zope.component.hooks import getSite
 from seantis.dir.base.interfaces import IDirectoryCatalog
 from seantis.dir.events.dates import to_utc
 from seantis.dir.events.interfaces import (
-    IEventsDirectoryItem, IEventsDirectory
+    IEventsDirectoryItem, IEventsDirectory, IExternalEvent
 )
 from seantis.dir.events.recurrence import has_future_occurrences
 from seantis.dir.events.unrestricted import execute_under_special_role
@@ -52,7 +52,7 @@ class CleanupScheduler(object):
         catalog = IDirectoryCatalog(directory)
         query = catalog.catalog.unrestrictedSearchResults
 
-        log.info('searching for stale previews')
+        log.info('searching for stale previews (> 2 days old)')
 
         past = to_utc(datetime.utcnow() - timedelta(days=2))
         stale_previews = query(
@@ -77,7 +77,7 @@ class CleanupScheduler(object):
         catalog = IDirectoryCatalog(directory)
         query = catalog.catalog
 
-        log.info('archiving past events')
+        log.info('archiving past events (> 2 days old)')
 
         # events are in the past if they have been over for two days
         # (not one, to ensure that they are really over in all timezones)
@@ -101,7 +101,9 @@ class CleanupScheduler(object):
             # recurring events may be in the past with one of
             # their occurrences in the future
             if not has_future_occurrences(event, past):
-                past_events.append(event)
+                # published events may be imported events
+                if not IExternalEvent.providedBy(event):
+                    past_events.append(event)
 
         ids = [p.id for p in past_events]
 
@@ -121,7 +123,7 @@ class CleanupScheduler(object):
         catalog = IDirectoryCatalog(directory)
         query = catalog.catalog
 
-        log.info('removing archived events')
+        log.info('removing archived events (> 30 days old)')
 
         past = datetime.utcnow() - timedelta(days=30)
         archived_events = query(
@@ -143,6 +145,49 @@ class CleanupScheduler(object):
 
         return archived_events
 
+    def remove_past_imported_events(self, directory, dryrun=False):
+
+        catalog = IDirectoryCatalog(directory)
+        query = catalog.catalog
+
+        log.info('remove past imported events (> 2 days old)')
+
+        # events are in the past if they have been over for two days
+        # (not one, to ensure that they are really over in all timezones)
+        past = to_utc(datetime.utcnow() - timedelta(days=2))
+        imported_events = query(
+            path={'query': directory.getPhysicalPath(), 'depth': 2},
+            object_provides=IExternalEvent.__identifier__,
+            start={'query': past, 'range': 'max'},
+            end={'query': past, 'range': 'max'}
+        )
+
+        past_events = []
+
+        for event in imported_events:
+            event = event.getObject()
+
+            assert event.start < past
+            assert event.end < past
+
+            # recurring events may be in the past with one of
+            # their occurrences in the future
+            if not has_future_occurrences(event, past):
+                past_events.append(event)
+
+        past_events = [p.id for p in past_events]
+
+        if past_events:
+            log.info('removing past imported events -> %s' % str(past_events))
+
+            if not dryrun:
+                directory.manage_delObjects(past_events)
+                pass
+        else:
+            log.info('no past imported events found')
+
+        return past_events
+
     def cleanup_directory(self, directory, dryrun=True):
 
         if dryrun:
@@ -154,6 +199,7 @@ class CleanupScheduler(object):
         self.remove_stale_previews(directory, dryrun)
         self.archive_past_events(directory, dryrun)
         self.remove_archived_events(directory, dryrun)
+        self.remove_past_imported_events(directory, dryrun)
 
         log.info('finished cleanup on %s' % directory.absolute_url())
 
