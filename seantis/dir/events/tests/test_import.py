@@ -13,6 +13,7 @@ from seantis.dir.events.sources import (
 from seantis.dir.events.sources.guidle import EventsSourceGuidle
 from seantis.dir.events.tests import IntegrationTestCase
 
+import transaction
 
 class DummyGuidleContext():
 
@@ -50,6 +51,14 @@ class TestImport(IntegrationTestCase):
         return createContentInContainer(
             self.directory, 'seantis.dir.events.sourceguidle', **kw
         )
+
+    def cleanup_after_fetch_one(self):
+        """ fetch_one does a transaction.commit which causes the test folder
+        and imported events to be persistent.
+        """
+        self.directory.manage_delObjects(self.directory.keys())
+        self.portal.manage_delObjects([self.directory.id])
+        transaction.commit()
 
     def create_fetch_entry(self, **kw):
         defaults = {
@@ -291,6 +300,9 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(imports, 4)
         self.assertEquals(len(self.catalog.query()), 8)
 
+        # Clean up (transaction has been commited)
+        self.cleanup_after_fetch_one()
+
     def test_importer_update_category_suggestions(self):
         importer = ExternalEventImporter(self.directory)
 
@@ -318,6 +330,9 @@ class TestImport(IntegrationTestCase):
         self.assertTrue('cat2-1' in self.directory.cat2_suggestions)
         self.assertTrue('cat2-2' in self.directory.cat2_suggestions)
         self.assertTrue('cat2-3' in self.directory.cat2_suggestions)
+
+        # Clean up (transaction has been commited)
+        self.cleanup_after_fetch_one()
 
     def test_importer_values(self):
         importer = ExternalEventImporter(self.directory)
@@ -376,6 +391,9 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(IGeoreferenced(imported).coordinates,
                           [7.8673189, 46.6859853])
 
+        # Clean up (transaction has been commited)
+        self.cleanup_after_fetch_one()
+
     def test_importer_keep_hidden(self):
         # Import event
         importer = ExternalEventImporter(self.directory)
@@ -404,6 +422,9 @@ class TestImport(IntegrationTestCase):
         event = brains[0].getObject()
         self.assertTrue(event.modification_date != hidden.modification_date)
         self.assertEquals(event.review_state, 'hidden')
+
+        # Clean up (transaction has been commited)
+        self.cleanup_after_fetch_one()
 
     def test_guidle_import(self):
         xml = """<?xml version="1.0" encoding="UTF-8"?>
