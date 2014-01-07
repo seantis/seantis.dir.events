@@ -376,6 +376,35 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(IGeoreferenced(imported).coordinates,
                           [7.8673189, 46.6859853])
 
+    def test_importer_keep_hidden(self):
+        # Import event
+        importer = ExternalEventImporter(self.directory)
+        event = self.create_fetch_entry(source_id='s', fetch_id='f')
+        imports = importer.fetch_one('source', lambda: [event])
+        self.assertEquals(imports, 1)
+
+        # Hide event
+        brains = self.catalog.catalog(
+            object_provides=IExternalEvent.__identifier__
+        )
+        self.assertEquals(len(brains), 1)
+        hidden = brains[0].getObject()
+        hidden.hide()
+
+        # Re-import event
+        imports = importer.fetch_one('source', lambda: [event])
+        self.assertEquals(imports, 0)
+        imports = importer.fetch_one('source', lambda: [event], reimport=True)
+        self.assertEquals(imports, 1)
+
+        brains = self.catalog.catalog(
+            object_provides=IExternalEvent.__identifier__
+        )
+        self.assertEquals(len(brains), 1)
+        event = brains[0].getObject()
+        self.assertTrue(event.modification_date != hidden.modification_date)
+        self.assertEquals(event.review_state, 'hidden')
+
     def test_guidle_import(self):
         xml = """<?xml version="1.0" encoding="UTF-8"?>
 <guidle:exportData xmlns:guidle="http://www.guidle.com">

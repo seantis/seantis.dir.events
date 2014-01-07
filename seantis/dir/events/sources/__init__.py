@@ -201,6 +201,12 @@ class ExternalEventImporter(object):
 
             event['source'] = source
 
+            # If the existing event has been hidden, we keep it hidden
+            hide_event = False
+            if event['source_id'] in existing:
+                for e in existing[event['source_id']]:
+                    hide_event |= e.review_state == 'hidden'
+
             # source id's are not necessarily unique as a single external
             # event might have to be represented as more than one event in
             # seantis.dir.events - therefore updating is done through
@@ -277,6 +283,10 @@ class ExternalEventImporter(object):
                 getattr(obj, download)
 
             alsoProvides(obj, IExternalEvent)
+
+            if hide_event:
+                workflowTool.doActionFor(obj, 'hide')
+
             imported.append(obj)
 
         self.set_last_update_time(last_update_in_run)
