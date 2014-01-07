@@ -166,10 +166,6 @@ class TestImport(IntegrationTestCase):
         next_run = import_scheduler.get_next_run(interval='hourly', now=now)
         self.assertEqual(next_run, today + timedelta(days=3, hours=18))
 
-    def test_import_scheduler_run(self):
-        # :TODO:
-        pass
-
     def test_importer_sources(self):
         self.create_guidle_source(enabled=True)
         self.create_guidle_source(enabled=False)
