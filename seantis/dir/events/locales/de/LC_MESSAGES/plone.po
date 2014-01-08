@@ -45,3 +45,6 @@ msgstr "Veranstaltung melden"
 
 msgid "Submitted"
 msgstr "Gemeldet"
+
+msgid "Event Import Source"
+msgstr "Veranstaltung: Importquelle"

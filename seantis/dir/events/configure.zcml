@@ -10,6 +10,8 @@
     <i18n:registerTranslations directory="locales" />
 
     <include package="plone.behavior" file="meta.zcml" />
+    <include package="plone.contentrules" />
+    <include package="plone.contentrules" file="meta.zcml" />
     <include package="plone.directives.form" file="meta.zcml" />
     <include package="plone.directives.form" />
 
@@ -53,7 +55,6 @@
         for=".interfaces.IEventsDirectoryItem"
     />
 
-
     <!-- Profiles -->
     <genericsetup:registerProfile 
         name="default"
@@ -86,6 +87,33 @@
          directory="profiles/teamraum"
          provides="Products.GenericSetup.interfaces.EXTENSION"
     />
+
+    <!-- Content rule conditions -->
+    <adapter factory=".conditions.SourceConditionExecutor" />
+
+    <browser:page 
+      for="plone.app.contentrules.browser.interfaces.IRuleConditionAdding"
+      name="seantis.dir.events.conditions.source_add"
+      class=".conditions.SourceConditionAddForm"
+      permission="cmf.ManagePortal"
+      />
+
+    <browser:page 
+      for=".interfaces.ISourceCondition"
+      name="seantis.dir.events.conditions.source_edit"
+      class=".conditions.SourceConditionEditForm"
+      permission="cmf.ManagePortal"
+      />
+
+    <plone:ruleCondition
+        name="seantis.dir.events.conditions.source"
+        title="Event Import Source"
+        description="Apply only when the current content object has the given source"
+        for="*"
+        event="zope.component.interfaces.IObjectEvent"
+        addview="seantis.dir.events.conditions.source_add"
+        editview="seantis.dir.events.conditions.source_edit"
+        />
 
     <!-- Upgrades -->
     <genericsetup:upgradeStep

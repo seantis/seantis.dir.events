@@ -365,6 +365,20 @@ class IExternalEventCollector(Interface):
         """Generator function returning all items to import"""
 
 
+class ISourceCondition(Interface):
+    """Interface for the configurable aspects of a source condition of a 
+    content rule.
+    
+    This is also used to create add and edit forms, below.
+    """
+    
+    source = TextLine(
+        title=_(u'Source'),
+        description=_(u"The source id to check for. Leave empty for any source."),
+        required=False
+    )
+
+
 class IResourceViewedEvent(Interface):
     """ Event triggered when a seantis.events resource is viewed. Pretty
     useful if you need a hook which is guaranteed to be triggered on a plone

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-12-18 08:03+0000\n"
+"POT-Creation-Date: 2014-01-08 10:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,15 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr "${chars} Zeichen übrig"
 
-#: ./interfaces.py:399
+#: ./interfaces.py:413
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
-#: ./form.py:843
+#: ./conditions.py:72
+msgid "Add import source condition"
+msgstr "Importquellenbedingung hinzufügen"
+
+#: ./form.py:851
 msgid "Adjust"
 msgstr "Korrigieren"
 
@@ -38,7 +42,11 @@ msgstr "Ganztags"
 msgid "Allows to import events from guidle.com"
 msgstr "Erlabut den Import von Veranstaltungen von guidle.com"
 
-#: ./item.py:121
+#: ./conditions.py:73
+msgid "An import source condition makes the rule apply only to content with the given import source."
+msgstr "Eine Importquellenbedingung überprüft einen Inhalt auf dessen Import-Quelle."
+
+#: ./item.py:127
 msgid "Attachment ${number}"
 msgstr "Anhang ${number}"
 
@@ -50,12 +58,12 @@ msgstr "Anhang 1"
 msgid "Attachment 2"
 msgstr "Anhang 2"
 
-#: ./interfaces.py:442
+#: ./interfaces.py:456
 #: ./templates/macros.pt:175
 msgid "Attachments"
 msgstr "Anhänge"
 
-#: ./form.py:898
+#: ./form.py:906
 msgid "Back"
 msgstr "Zurück"
 
@@ -83,13 +91,17 @@ msgstr "Kalender (iCal)"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ./form.py:663
+#: ./form.py:671
 msgid "Cancel Event Submission"
 msgstr "Abbrechen"
 
 #: ./templates/directory.pt:88
 msgid "Configure Imports"
 msgstr "Imports konfigurieren"
+
+#: ./conditions.py:76
+msgid "Configure source condition"
+msgstr "Importquellenbedingung bearbeiten"
 
 #: ./interfaces.py:219
 msgid "Contact Email"
@@ -120,13 +132,17 @@ msgstr "Datum"
 msgid "Day after Tomorrow"
 msgstr "Übermorgen"
 
-#: ./form.py:752
+#: ./form.py:760
 msgid "Detail Preview"
 msgstr "Details-Vorschau"
 
 #: ./templates/directory.pt:84
 msgid "Dou you have an event to share?"
 msgstr "Sie organisieren eine Veranstaltung?"
+
+#: ./conditions.py:89
+msgid "Edit import source condition"
+msgstr "Importquellenbedingung bearbeiten"
 
 #: ./interfaces.py:346
 msgid "Enabled"
@@ -156,11 +172,11 @@ msgstr "Veranstaltung"
 msgid "Event Preview Updated"
 msgstr "Veranstaltungs Vorschau Aktualisiert"
 
-#: ./form.py:692
+#: ./form.py:700
 msgid "Event Saved"
 msgstr "Veranstaltung gespeichert"
 
-#: ./form.py:869
+#: ./form.py:877
 msgid "Event Submission Finish"
 msgstr "Veranstaltung melden"
 
@@ -168,7 +184,7 @@ msgstr "Veranstaltung melden"
 msgid "Event Submission Form"
 msgstr "Veranstaltung erfassen"
 
-#: ./form.py:821
+#: ./form.py:829
 msgid "Event Submission Preview"
 msgstr "Veranstaltungs-Vorschau"
 
@@ -185,19 +201,19 @@ msgstr "Veranstaltungs-Datum"
 msgid "Event submission cancelled"
 msgstr "Veranstaltungs-Meldung abgebrochen"
 
-#: ./form.py:895
+#: ./form.py:903
 msgid "Event submitted"
 msgstr "Veranstaltung gemeldet"
 
-#: ./item.py:169
+#: ./item.py:179
 msgid "Event was archived"
 msgstr "Die Veranstaltung wurde archiviert"
 
-#: ./item.py:171
+#: ./item.py:181
 msgid "Event was hidden"
 msgstr "Die Veranstaltung wurde versteckt"
 
-#: ./item.py:168
+#: ./item.py:178
 msgid "Event was published"
 msgstr "Die Veranstaltung wurde veröffentlicht"
 
@@ -273,7 +289,7 @@ msgstr "Guidle Import"
 msgid "Guidle URL to download from"
 msgstr "Guidle-URL"
 
-#: ./directory.py:337
+#: ./directory.py:340
 msgid "Hidden"
 msgstr "Versteckt"
 
@@ -281,7 +297,7 @@ msgstr "Versteckt"
 msgid "Housenumber"
 msgstr "Hausnummer"
 
-#: ./form.py:801
+#: ./form.py:809
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr "Ich stimme den <a target='_blank' href='${url}'>Allgemeinen Geschäftsbedingungen</a> zu"
 
@@ -293,7 +309,7 @@ msgstr "Erfasser von Veranstaltungen müssen diesen Allgemeinen Geschäftsbeding
 msgid "Image"
 msgstr "Bild"
 
-#: ./interfaces.py:416
+#: ./interfaces.py:430
 msgid "Images"
 msgstr "Bilder"
 
@@ -305,7 +321,7 @@ msgstr "Import"
 msgid "Import interval"
 msgstr "Intervall für den Veranstaltungs-Import"
 
-#: ./form.py:672
+#: ./form.py:680
 msgid "Imported events may not be edited, no changes where applied"
 msgstr "Importierte Veranstaltungen können nicht editiert werden. Es wurden keine Änderungen gespeichert."
 
@@ -313,15 +329,15 @@ msgstr "Importierte Veranstaltungen können nicht editiert werden. Es wurden kei
 msgid "Information"
 msgstr "Informationen"
 
-#: ./form.py:765
+#: ./form.py:773
 msgid "List Preview"
 msgstr "Listen-Vorschau"
 
-#: ./form.py:773
+#: ./form.py:781
 msgid "List Preview (${number} Occurrences)"
 msgstr "Listen-Vorschau (${number} Wiederholungen)"
 
-#: ./form.py:777
+#: ./form.py:785
 msgid "List Preview (No Occurrences)"
 msgstr "Listen-Vorschau (Keine Wiederholungen)"
 
@@ -390,11 +406,11 @@ msgstr "Nächstes Jahr"
 msgid "No changes were applied"
 msgstr "Keine Änderungen"
 
-#: ./directory.py:193
+#: ./directory.py:196
 msgid "No events for the current daterange"
 msgstr "Keine Veranstaltungen für das gewählte Datum"
 
-#: ./directory.py:195
+#: ./directory.py:198
 msgid "No events for the current state"
 msgstr "Keine Veranstaltungen für den gewählten Status"
 
@@ -415,15 +431,15 @@ msgstr "An diesen Tagen"
 msgid "Organizer"
 msgstr "Organisator"
 
-#: ./interfaces.py:421
+#: ./interfaces.py:435
 msgid "PDF"
 msgstr "PDF"
 
-#: ./interfaces.py:383
+#: ./interfaces.py:397
 msgid "Please choose at least one category"
 msgstr "Bitte wählen Sie mindestens eine Kategorie"
 
-#: ./interfaces.py:391
+#: ./interfaces.py:405
 msgid "Please enter at least one suggestion"
 msgstr "Bitte geben Sie mindestens einen Vorschlag ein"
 
@@ -431,11 +447,11 @@ msgstr "Bitte geben Sie mindestens einen Vorschlag ein"
 msgid "Prices"
 msgstr "Preise"
 
-#: ./item.py:170
+#: ./item.py:180
 msgid "Publication of event was denied"
 msgstr "Die Veranstaltung wurde abgelehnt"
 
-#: ./directory.py:336
+#: ./directory.py:339
 msgid "Published"
 msgstr "Veröffentlicht"
 
@@ -451,7 +467,7 @@ msgstr "Wiederholende Veranstaltung"
 msgid "Sa"
 msgstr "Sa"
 
-#: ./form.py:654
+#: ./form.py:662
 msgid "Save Event"
 msgstr "Veranstaltung speichern"
 
@@ -466,6 +482,14 @@ msgstr "Kurzbeschrieb"
 #: ./templates/macros.pt:207
 msgid "Show all occurrences"
 msgstr "Alle Wiederholungen anzeigen"
+
+#: ./interfaces.py:376
+msgid "Source"
+msgstr "Quelle"
+
+#: ./conditions.py:32
+msgid "Source contains: ${source}"
+msgstr "Quelle enthält: ${source}"
 
 #: ./interfaces.py:283
 msgid "Start date"
@@ -495,7 +519,7 @@ msgstr "Strasse"
 msgid "Su"
 msgstr "So"
 
-#: ./form.py:883
+#: ./form.py:891
 msgid "Submit"
 msgstr "Melden"
 
@@ -503,11 +527,11 @@ msgstr "Melden"
 msgid "Submit Your Event"
 msgstr "Veranstaltung melden"
 
-#: ./directory.py:331
+#: ./directory.py:334
 msgid "Submitted"
 msgstr "Gemeldet"
 
-#: ./form.py:782
+#: ./form.py:790
 #: ./templates/macros.pt:213
 msgid "Submitter"
 msgstr "Erfasser"
@@ -528,7 +552,7 @@ msgstr "Vorgeschlagene Werte für die Was-Kategorie"
 msgid "Suggested Values for the Where-Category"
 msgstr "Vorgeschlagene Werte für die Wo-Kategorie"
 
-#: ./directory.py:382
+#: ./directory.py:385
 #: ./interfaces.py:86
 msgid "Terms and Conditions"
 msgstr "Allgemeine Geschäftsbedingungen"
@@ -536,6 +560,10 @@ msgstr "Allgemeine Geschäftsbedingungen"
 #: ./interfaces.py:33
 msgid "Th"
 msgstr "Do"
+
+#: ./interfaces.py:377
+msgid "The source id to check for. Leave empty for any source."
+msgstr "Die ID der zu überprüfende Quelle. Alle Quellen, falls leer."
 
 #: ./dates.py:370
 msgid "The whole next year"
@@ -565,7 +593,7 @@ msgstr "Dieses und nächstes Jahr"
 msgid "This is a recurring event"
 msgstr "Dies ist eine sich wiederholende Veranstaltung"
 
-#: ./templates/form.pt:24
+#: ./templates/form.pt:23
 msgid "This is an imported event and not editable."
 msgstr "Dies ist eine importierte Veranstaltung und kann nicht editiert werden."
 
@@ -598,11 +626,11 @@ msgstr "Ort"
 msgid "Tu"
 msgstr "Di"
 
-#: ./interfaces.py:414
+#: ./interfaces.py:428
 msgid "Unknown image format"
 msgstr "Unbekanntes Bild-Format"
 
-#: ./interfaces.py:436
+#: ./interfaces.py:450
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 
@@ -614,7 +642,7 @@ msgstr "Bis zu 140 Zeichen"
 msgid "Verify"
 msgstr "Kontrollieren"
 
-#: ./templates/form.pt:25
+#: ./templates/form.pt:24
 msgid "View the source of this event"
 msgstr "Quelle, welche diese Veranstaltung importiert hat"
 
@@ -638,7 +666,7 @@ msgstr "Wo"
 msgid "Whole Day"
 msgstr "Ganztags"
 
-#: ./interfaces.py:455
+#: ./interfaces.py:469
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr "Sie müssen den Allgemeinen Geschäftsbedingungen zustimmen bevor Sie diese Veranstaltung melden"
 

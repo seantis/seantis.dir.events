@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-12-18 08:03+0000\n"
+"POT-Creation-Date: 2014-01-08 10:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,11 +21,15 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr ""
 
-#: ./interfaces.py:399
+#: ./interfaces.py:413
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
-#: ./form.py:843
+#: ./conditions.py:72
+msgid "Add import source condition"
+msgstr ""
+
+#: ./form.py:851
 msgid "Adjust"
 msgstr ""
 
@@ -41,7 +45,11 @@ msgstr ""
 msgid "Allows to import events from guidle.com"
 msgstr ""
 
-#: ./item.py:121
+#: ./conditions.py:73
+msgid "An import source condition makes the rule apply only to content with the given import source."
+msgstr ""
+
+#: ./item.py:127
 msgid "Attachment ${number}"
 msgstr ""
 
@@ -53,12 +61,12 @@ msgstr ""
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:442
+#: ./interfaces.py:456
 #: ./templates/macros.pt:175
 msgid "Attachments"
 msgstr ""
 
-#: ./form.py:898
+#: ./form.py:906
 msgid "Back"
 msgstr ""
 
@@ -86,12 +94,16 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: ./form.py:663
+#: ./form.py:671
 msgid "Cancel Event Submission"
 msgstr ""
 
 #: ./templates/directory.pt:88
 msgid "Configure Imports"
+msgstr ""
+
+#: ./conditions.py:76
+msgid "Configure source condition"
 msgstr ""
 
 #: ./interfaces.py:219
@@ -123,12 +135,16 @@ msgstr ""
 msgid "Day after Tomorrow"
 msgstr ""
 
-#: ./form.py:752
+#: ./form.py:760
 msgid "Detail Preview"
 msgstr ""
 
 #: ./templates/directory.pt:84
 msgid "Dou you have an event to share?"
+msgstr ""
+
+#: ./conditions.py:89
+msgid "Edit import source condition"
 msgstr ""
 
 #: ./interfaces.py:346
@@ -159,11 +175,11 @@ msgstr ""
 msgid "Event Preview Updated"
 msgstr ""
 
-#: ./form.py:692
+#: ./form.py:700
 msgid "Event Saved"
 msgstr ""
 
-#: ./form.py:869
+#: ./form.py:877
 msgid "Event Submission Finish"
 msgstr ""
 
@@ -171,7 +187,7 @@ msgstr ""
 msgid "Event Submission Form"
 msgstr ""
 
-#: ./form.py:821
+#: ./form.py:829
 msgid "Event Submission Preview"
 msgstr ""
 
@@ -188,19 +204,19 @@ msgstr ""
 msgid "Event submission cancelled"
 msgstr ""
 
-#: ./form.py:895
+#: ./form.py:903
 msgid "Event submitted"
 msgstr ""
 
-#: ./item.py:169
+#: ./item.py:179
 msgid "Event was archived"
 msgstr ""
 
-#: ./item.py:171
+#: ./item.py:181
 msgid "Event was hidden"
 msgstr ""
 
-#: ./item.py:168
+#: ./item.py:178
 msgid "Event was published"
 msgstr ""
 
@@ -276,7 +292,7 @@ msgstr ""
 msgid "Guidle URL to download from"
 msgstr ""
 
-#: ./directory.py:337
+#: ./directory.py:340
 msgid "Hidden"
 msgstr ""
 
@@ -284,7 +300,7 @@ msgstr ""
 msgid "Housenumber"
 msgstr ""
 
-#: ./form.py:801
+#: ./form.py:809
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr ""
 
@@ -296,7 +312,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:416
+#: ./interfaces.py:430
 msgid "Images"
 msgstr ""
 
@@ -308,7 +324,7 @@ msgstr ""
 msgid "Import interval"
 msgstr ""
 
-#: ./form.py:672
+#: ./form.py:680
 msgid "Imported events may not be edited, no changes where applied"
 msgstr ""
 
@@ -316,15 +332,15 @@ msgstr ""
 msgid "Information"
 msgstr ""
 
-#: ./form.py:765
+#: ./form.py:773
 msgid "List Preview"
 msgstr ""
 
-#: ./form.py:773
+#: ./form.py:781
 msgid "List Preview (${number} Occurrences)"
 msgstr ""
 
-#: ./form.py:777
+#: ./form.py:785
 msgid "List Preview (No Occurrences)"
 msgstr ""
 
@@ -393,11 +409,11 @@ msgstr ""
 msgid "No changes were applied"
 msgstr ""
 
-#: ./directory.py:193
+#: ./directory.py:196
 msgid "No events for the current daterange"
 msgstr ""
 
-#: ./directory.py:195
+#: ./directory.py:198
 msgid "No events for the current state"
 msgstr ""
 
@@ -418,15 +434,15 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:421
+#: ./interfaces.py:435
 msgid "PDF"
 msgstr ""
 
-#: ./interfaces.py:383
+#: ./interfaces.py:397
 msgid "Please choose at least one category"
 msgstr ""
 
-#: ./interfaces.py:391
+#: ./interfaces.py:405
 msgid "Please enter at least one suggestion"
 msgstr ""
 
@@ -434,11 +450,11 @@ msgstr ""
 msgid "Prices"
 msgstr ""
 
-#: ./item.py:170
+#: ./item.py:180
 msgid "Publication of event was denied"
 msgstr ""
 
-#: ./directory.py:336
+#: ./directory.py:339
 msgid "Published"
 msgstr ""
 
@@ -454,7 +470,7 @@ msgstr ""
 msgid "Sa"
 msgstr ""
 
-#: ./form.py:654
+#: ./form.py:662
 msgid "Save Event"
 msgstr ""
 
@@ -468,6 +484,14 @@ msgstr ""
 
 #: ./templates/macros.pt:207
 msgid "Show all occurrences"
+msgstr ""
+
+#: ./interfaces.py:376
+msgid "Source"
+msgstr ""
+
+#: ./conditions.py:32
+msgid "Source contains: ${source}"
 msgstr ""
 
 #: ./interfaces.py:283
@@ -498,7 +522,7 @@ msgstr ""
 msgid "Su"
 msgstr ""
 
-#: ./form.py:883
+#: ./form.py:891
 msgid "Submit"
 msgstr ""
 
@@ -506,11 +530,11 @@ msgstr ""
 msgid "Submit Your Event"
 msgstr ""
 
-#: ./directory.py:331
+#: ./directory.py:334
 msgid "Submitted"
 msgstr ""
 
-#: ./form.py:782
+#: ./form.py:790
 #: ./templates/macros.pt:213
 msgid "Submitter"
 msgstr ""
@@ -531,13 +555,17 @@ msgstr ""
 msgid "Suggested Values for the Where-Category"
 msgstr ""
 
-#: ./directory.py:382
+#: ./directory.py:385
 #: ./interfaces.py:86
 msgid "Terms and Conditions"
 msgstr ""
 
 #: ./interfaces.py:33
 msgid "Th"
+msgstr ""
+
+#: ./interfaces.py:377
+msgid "The source id to check for. Leave empty for any source."
 msgstr ""
 
 #: ./dates.py:370
@@ -568,7 +596,7 @@ msgstr ""
 msgid "This is a recurring event"
 msgstr ""
 
-#: ./templates/form.pt:24
+#: ./templates/form.pt:23
 msgid "This is an imported event and not editable."
 msgstr ""
 
@@ -601,11 +629,11 @@ msgstr ""
 msgid "Tu"
 msgstr ""
 
-#: ./interfaces.py:414
+#: ./interfaces.py:428
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:436
+#: ./interfaces.py:450
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
@@ -617,7 +645,7 @@ msgstr ""
 msgid "Verify"
 msgstr ""
 
-#: ./templates/form.pt:25
+#: ./templates/form.pt:24
 msgid "View the source of this event"
 msgstr ""
 
@@ -641,7 +669,7 @@ msgstr ""
 msgid "Whole Day"
 msgstr ""
 
-#: ./interfaces.py:455
+#: ./interfaces.py:469
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 

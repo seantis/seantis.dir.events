@@ -155,3 +155,61 @@ class CommonBrowserTests(BrowserTestCase):
         self.assertTrue('Title' not in admin.contents)
         self.assertTrue('Description' not in admin.contents)
         self.assertTrue('Save Event' not in admin.contents)
+
+    def addSourceContentRule(self, title='rule', source=''):
+        browser = self.admin_browser
+
+        # Add rule
+        browser.open('/+rule/plone.ContentRule')
+        browser.getControl('Title').value = title
+        browser.getControl('Object added to this container').selected = True
+        browser.getControl('Save').click()
+
+        # Add rule condition
+        self.assertTrue('Event Import Source' in browser.contents)
+        browser.getControl('Event Import Source').selected = True
+        browser.getControl(name='form.button.AddCondition').click()
+        self.assertTrue('The source id to check for.' in browser.contents)
+        browser.getControl(name='form.source').value = source
+        browser.getControl('Save').click()
+
+        # Add rule action
+        message = 'message_' + title + '_' + source
+        browser.getControl('Notify user').selected = True
+        browser.getControl(name='form.button.AddAction').click()
+        browser.getControl(name='form.message').value = message
+        browser.getControl('Save').click()
+
+        # Assign rule
+        browser.getControl('Apply rule on the whole site').click()
+
+        # Check if saved
+        browser.open('/@@rules-controlpanel')
+        self.assertTrue(title in browser.contents)
+
+    @mock.patch('seantis.dir.events.sources.guidle.EventsSourceGuidle.fetch')
+    def test_browser_import_content_rule(self, fetch):
+        browser = self.admin_browser
+
+        # Add first guidle source
+        self.addGuidleSource(title='gs1')
+
+        # Add rules
+        self.addSourceContentRule(title='all')
+        self.addSourceContentRule(title='gs2', source='gs2')
+
+        # Import events (one for each source)
+        fetch.return_value = [
+            self.create_fetch_entry(title='event'),
+        ]
+        browser.open('/veranstaltungen/fetch?force=true')
+        browser.open('/veranstaltungen')
+        self.assertTrue('message_all_' in browser.contents)
+        self.assertTrue('message_gs2_' not in browser.contents)
+
+        # Add second guidle source
+        self.addGuidleSource(title='gs2')
+        browser.open('/veranstaltungen/fetch?force=true')
+        browser.open('/veranstaltungen')
+        self.assertTrue('message_all_' in browser.contents)
+        self.assertTrue('message_gs2_' in browser.contents)
