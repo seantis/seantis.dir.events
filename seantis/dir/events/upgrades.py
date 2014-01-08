@@ -211,17 +211,18 @@ def upgrade_1006_to_1007(context):
         'profile-plone.app.event:default', 'browserlayer'
     )
 
+
 def upgrade_1007_to_1008(context):
     # add collective.geo.behaviour
     setup = getToolByName(context, 'portal_setup')
     setup.runAllImportStepsFromProfile(
         'profile-collective.geo.behaviour:default'
     )
- 
+
     add_behavior_to_item(
         context, 'seantis.dir.events', IEventsDirectoryItem
     )
- 
+
     # update css and js
     getToolByName(context, 'portal_css').cookResources()
     getToolByName(context, 'portal_javascripts').cookResources()
@@ -232,3 +233,10 @@ def upgrade_1008_to_1009(context):
     profile = 'profile-seantis.dir.events:default'
     setup.runImportStepFromProfile(profile, 'typeinfo')
     setup.runImportStepFromProfile(profile, 'workflow')
+
+    # Add source to index
+    setup.runImportStepFromProfile(profile, 'catalog')
+    catalog = getToolByName(context, 'portal_catalog')
+    if 'source' not in catalog.indexes():
+        catalog.addIndex('source', 'FieldIndex')
+        catalog.manage_reindexIndex(ids=['source'])
