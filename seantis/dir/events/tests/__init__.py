@@ -27,6 +27,11 @@ class IntegrationTestCase(unittest.TestCase):
         self.app = self.layer['app']
         self.portal = self.layer['portal']
 
+        # catalog = self.portal.portal_catalog
+        # if 'source' not in catalog.indexes():
+        #     catalog.addIndex('source', 'FieldIndex')
+        #     catalog.manage_reindexIndex(ids=['source'])
+
         # create a default directory for events
         self.login_admin()
         self.directory = createContentInContainer(
@@ -101,6 +106,7 @@ class FunctionalTestCase(IntegrationTestCase):
     def tearDown(self):
         pass
 
+
 class BrowserTestCase(FunctionalTestCase):
 
     def setUp(self):
@@ -110,6 +116,16 @@ class BrowserTestCase(FunctionalTestCase):
 
         browser = self.new_browser()
         browser.login_admin()
+
+        browser.open(
+            '/portal_catalog/manage_addProduct/PluginIndexes/addFieldIndex'
+        )
+        browser.getControl(name='id').value = 'source'
+        browser.getControl(
+            name='extra.indexed_attrs:record:string'
+        ).value = 'source'
+        browser.getControl('Add').click()
+        self.assertTrue('source' in browser.contents)
 
         # create an events directory
         browser.open('/++add++seantis.dir.events.directory')
