@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-01-08 10:28+0000\n"
+"POT-Creation-Date: 2014-01-14 14:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr "${chars} Zeichen übrig"
 
-#: ./interfaces.py:413
+#: ./interfaces.py:415
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
@@ -58,7 +58,7 @@ msgstr "Anhang 1"
 msgid "Attachment 2"
 msgstr "Anhang 2"
 
-#: ./interfaces.py:456
+#: ./interfaces.py:458
 #: ./templates/macros.pt:175
 msgid "Attachments"
 msgstr "Anhänge"
@@ -144,7 +144,7 @@ msgstr "Sie organisieren eine Veranstaltung?"
 msgid "Edit import source condition"
 msgstr "Importquellenbedingung bearbeiten"
 
-#: ./interfaces.py:346
+#: ./interfaces.py:348
 msgid "Enabled"
 msgstr "Aktiviert"
 
@@ -230,8 +230,12 @@ msgid "Events matching the current filter"
 msgstr "Veranstaltungen die dem aktuellen Filter entsprechen"
 
 #: ./interfaces.py:340
-msgid "Every day"
-msgstr "Täglich"
+msgid "Every day at 02:00"
+msgstr "Täglich um 02:00"
+
+#: ./interfaces.py:343
+msgid "Every few minutes a few events"
+msgstr "Alle paar Minuten wenige Veranstaltungen"
 
 #: ./interfaces.py:341
 msgid "Every hour"
@@ -285,7 +289,7 @@ msgstr "Von Heute bis Jahresende"
 msgid "Guidle Import"
 msgstr "Guidle Import"
 
-#: ./interfaces.py:356
+#: ./interfaces.py:358
 msgid "Guidle URL to download from"
 msgstr "Guidle-URL"
 
@@ -309,7 +313,7 @@ msgstr "Erfasser von Veranstaltungen müssen diesen Allgemeinen Geschäftsbeding
 msgid "Image"
 msgstr "Bild"
 
-#: ./interfaces.py:430
+#: ./interfaces.py:432
 msgid "Images"
 msgstr "Bilder"
 
@@ -431,15 +435,15 @@ msgstr "An diesen Tagen"
 msgid "Organizer"
 msgstr "Organisator"
 
-#: ./interfaces.py:435
+#: ./interfaces.py:437
 msgid "PDF"
 msgstr "PDF"
 
-#: ./interfaces.py:397
+#: ./interfaces.py:399
 msgid "Please choose at least one category"
 msgstr "Bitte wählen Sie mindestens eine Kategorie"
 
-#: ./interfaces.py:405
+#: ./interfaces.py:407
 msgid "Please enter at least one suggestion"
 msgstr "Bitte geben Sie mindestens einen Vorschlag ein"
 
@@ -483,7 +487,7 @@ msgstr "Kurzbeschrieb"
 msgid "Show all occurrences"
 msgstr "Alle Wiederholungen anzeigen"
 
-#: ./interfaces.py:376
+#: ./interfaces.py:378
 msgid "Source"
 msgstr "Quelle"
 
@@ -561,7 +565,7 @@ msgstr "Allgemeine Geschäftsbedingungen"
 msgid "Th"
 msgstr "Do"
 
-#: ./interfaces.py:377
+#: ./interfaces.py:379
 msgid "The source id to check for. Leave empty for any source."
 msgstr "Die ID der zu überprüfende Quelle. Alle Quellen, falls leer."
 
@@ -626,11 +630,11 @@ msgstr "Ort"
 msgid "Tu"
 msgstr "Di"
 
-#: ./interfaces.py:428
+#: ./interfaces.py:430
 msgid "Unknown image format"
 msgstr "Unbekanntes Bild-Format"
 
-#: ./interfaces.py:450
+#: ./interfaces.py:452
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 
@@ -666,7 +670,7 @@ msgstr "Wo"
 msgid "Whole Day"
 msgstr "Ganztags"
 
-#: ./interfaces.py:469
+#: ./interfaces.py:471
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr "Sie müssen den Allgemeinen Geschäftsbedingungen zustimmen bevor Sie diese Veranstaltung melden"
 

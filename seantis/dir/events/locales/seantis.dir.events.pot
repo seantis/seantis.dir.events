@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-01-08 10:28+0000\n"
+"POT-Creation-Date: 2014-01-14 14:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr ""
 
-#: ./interfaces.py:413
+#: ./interfaces.py:415
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:456
+#: ./interfaces.py:458
 #: ./templates/macros.pt:175
 msgid "Attachments"
 msgstr ""
@@ -147,7 +147,7 @@ msgstr ""
 msgid "Edit import source condition"
 msgstr ""
 
-#: ./interfaces.py:346
+#: ./interfaces.py:348
 msgid "Enabled"
 msgstr ""
 
@@ -233,7 +233,11 @@ msgid "Events matching the current filter"
 msgstr ""
 
 #: ./interfaces.py:340
-msgid "Every day"
+msgid "Every day at 02:00"
+msgstr ""
+
+#: ./interfaces.py:343
+msgid "Every few minutes a few events"
 msgstr ""
 
 #: ./interfaces.py:341
@@ -288,7 +292,7 @@ msgstr ""
 msgid "Guidle Import"
 msgstr ""
 
-#: ./interfaces.py:356
+#: ./interfaces.py:358
 msgid "Guidle URL to download from"
 msgstr ""
 
@@ -312,7 +316,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:430
+#: ./interfaces.py:432
 msgid "Images"
 msgstr ""
 
@@ -434,15 +438,15 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:435
+#: ./interfaces.py:437
 msgid "PDF"
 msgstr ""
 
-#: ./interfaces.py:397
+#: ./interfaces.py:399
 msgid "Please choose at least one category"
 msgstr ""
 
-#: ./interfaces.py:405
+#: ./interfaces.py:407
 msgid "Please enter at least one suggestion"
 msgstr ""
 
@@ -486,7 +490,7 @@ msgstr ""
 msgid "Show all occurrences"
 msgstr ""
 
-#: ./interfaces.py:376
+#: ./interfaces.py:378
 msgid "Source"
 msgstr ""
 
@@ -564,7 +568,7 @@ msgstr ""
 msgid "Th"
 msgstr ""
 
-#: ./interfaces.py:377
+#: ./interfaces.py:379
 msgid "The source id to check for. Leave empty for any source."
 msgstr ""
 
@@ -629,11 +633,11 @@ msgstr ""
 msgid "Tu"
 msgstr ""
 
-#: ./interfaces.py:428
+#: ./interfaces.py:430
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:450
+#: ./interfaces.py:452
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
@@ -669,7 +673,7 @@ msgstr ""
 msgid "Whole Day"
 msgstr ""
 
-#: ./interfaces.py:469
+#: ./interfaces.py:471
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 

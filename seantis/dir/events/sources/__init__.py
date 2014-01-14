@@ -355,11 +355,11 @@ class ExternalEventImportScheduler(object):
         self.next_run = {}
         self.interval = {}
 
-    def get_next_run(self, interval='daily', now=None):
-        if now is None:
-            now = datetime.now()
+    def get_next_run(self, interval, now):
+        if interval == 'continuous':
+            next_run = now
 
-        if interval == 'hourly':
+        elif interval == 'hourly':
             # 'hourly': Schedule next run at xx:00
             next_run = datetime(now.year, now.month, now.day, now.hour)
             next_run += timedelta(hours=1)
@@ -381,6 +381,10 @@ class ExternalEventImportScheduler(object):
         for source in importer.sources():
             path = source.getPath()
             interval = source.getObject().interval
+
+            # Continuous import imports only a few events
+            if interval == 'continuous':
+                limit = 10
 
             # Check if initial run
             if not path in self.next_run:
