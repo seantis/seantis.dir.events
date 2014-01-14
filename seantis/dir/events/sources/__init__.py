@@ -170,10 +170,10 @@ class ExternalEventImporter(object):
 
             if changed_offers_only and event['source_id'] in existing:
                 if event['last_update'] <= last_update:
-                    log.info('skipping %s @ %s' % (
-                        event['title'],
-                        event['start'].strftime('%d.%m.%Y %H:%M')
-                    ))
+                    # log.info('skipping %s @ %s' % (
+                    #     event['title'],
+                    #     event['start'].strftime('%d.%m.%Y %H:%M')
+                    # ))
                     continue
 
             # keep a set of all categories for the suggestions
