@@ -122,56 +122,56 @@ class TestImport(IntegrationTestCase):
         tomorrow = today + timedelta(days=1)
 
         # Test daily interval
-        next_run = import_scheduler.get_next_run(now=today)
+        next_run = import_scheduler.get_next_run('daily',today)
         self.assertEqual(next_run, today + timedelta(hours=2))
 
         now = today + timedelta(minutes=10)
-        next_run = import_scheduler.get_next_run(now=now)
+        next_run = import_scheduler.get_next_run('daily',now)
         self.assertEqual(next_run, today + timedelta(hours=2))
 
         now = today + timedelta(hours=1, minutes=59)
-        next_run = import_scheduler.get_next_run(now=now)
+        next_run = import_scheduler.get_next_run('daily',now)
         self.assertEqual(next_run, today + timedelta(hours=2))
 
         now = today + timedelta(hours=2)
-        next_run = import_scheduler.get_next_run(now=now)
+        next_run = import_scheduler.get_next_run('daily',now)
         self.assertEqual(next_run, tomorrow + timedelta(hours=2))
 
         now = today + timedelta(hours=2, minutes=30)
-        next_run = import_scheduler.get_next_run(now=now)
+        next_run = import_scheduler.get_next_run('daily',now)
         self.assertEqual(next_run, tomorrow + timedelta(hours=2))
 
         now = today + timedelta(hours=4)
-        next_run = import_scheduler.get_next_run(now=now)
+        next_run = import_scheduler.get_next_run('daily',now)
         self.assertEqual(next_run, tomorrow + timedelta(hours=2))
 
         now = today + timedelta(hours=12)
-        next_run = import_scheduler.get_next_run(now=now)
+        next_run = import_scheduler.get_next_run('daily',now)
         self.assertEqual(next_run, tomorrow + timedelta(hours=2))
 
         # Test hourly interval
         now = today + timedelta(minutes=10)
-        next_run = import_scheduler.get_next_run(interval='hourly', now=now)
+        next_run = import_scheduler.get_next_run('hourly', now)
         self.assertEqual(next_run, today + timedelta(hours=1))
 
         now = today + timedelta(minutes=40)
-        next_run = import_scheduler.get_next_run(interval='hourly', now=now)
+        next_run = import_scheduler.get_next_run('hourly', now)
         self.assertEqual(next_run, today + timedelta(hours=1))
 
         now = today + timedelta(minutes=59)
-        next_run = import_scheduler.get_next_run(interval='hourly', now=now)
+        next_run = import_scheduler.get_next_run('hourly', now)
         self.assertEqual(next_run, today + timedelta(hours=1))
 
         now = today + timedelta(hours=1, minutes=1)
-        next_run = import_scheduler.get_next_run(interval='hourly', now=now)
+        next_run = import_scheduler.get_next_run('hourly', now)
         self.assertEqual(next_run, today + timedelta(hours=2))
 
         now = today + timedelta(hours=23, minutes=59)
-        next_run = import_scheduler.get_next_run(interval='hourly', now=now)
+        next_run = import_scheduler.get_next_run('hourly', now)
         self.assertEqual(next_run, tomorrow)
 
         now = today + timedelta(days=3, hours=17, minutes=28)
-        next_run = import_scheduler.get_next_run(interval='hourly', now=now)
+        next_run = import_scheduler.get_next_run('hourly', now)
         self.assertEqual(next_run, today + timedelta(days=3, hours=18))
 
     def test_importer_sources(self):

@@ -594,6 +594,82 @@ class CommonBrowserTests(BrowserTestCase):
         first_url = re.sub('\d{4}-\d{2}-\d{2}', r'2000-01-01', first_url)
         browser.assert_notfound(first_url)
 
+    def test_wrong_dates(self):
+        browser = self.admin_browser
+
+        # Missing start time
+        browser.open('/veranstaltungen/@@submit')
+        browser.widget('title').value = 'Title'
+        browser.widget('short_description').value = 'Description'
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
+        browser.set_date('form.widgets.submission_date',
+                         datetime.now() + timedelta(days=2))
+        browser.getControl(
+            name='form.widgets.submission_end_time'
+        ).value = '12:00 PM'
+        browser.getControl('Continue').click()
+        self.assertTrue('Missing start time' in browser.contents)
+
+        # Missing end time
+        browser.open('/veranstaltungen/@@submit')
+        browser.widget('title').value = 'Title'
+        browser.widget('short_description').value = 'Description'
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
+        browser.set_date('form.widgets.submission_date',
+                         datetime.now() + timedelta(days=2))
+        browser.getControl(
+            name='form.widgets.submission_start_time'
+        ).value = '08:00 AM'
+        browser.getControl('Continue').click()
+        self.assertTrue('Missing end time' in browser.contents)
+
+    def test_coordinates(self):
+        browser = self.admin_browser
+
+        # Invalid coordinates
+        browser.open('/veranstaltungen/@@submit')
+        browser.widget('title').value = 'event with coordinates'
+        browser.widget('short_description').value = 'Short'
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
+        browser.set_date('form.widgets.submission_date',
+                         datetime.now() + timedelta(days=2))
+        browser.getControl('All day').selected = True
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
+        browser.getControl(
+            name="form.widgets.wkt"
+        ).value = "PINT (8.3156129 47.05033479999997)"
+        click = lambda: browser.getControl('Continue').click()
+        self.assertRaises(Exception, click)
+
+        # Valid coordinates
+        browser.open('/veranstaltungen/@@submit')
+        browser.widget('title').value = 'event with coordinates'
+        browser.widget('short_description').value = 'Short'
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
+        browser.set_date('form.widgets.submission_date',
+                         datetime.now() + timedelta(days=2))
+        browser.getControl('All day').selected = True
+        browser.getControl('Category1').selected = True
+        browser.getControl('Category2').selected = True
+        browser.getControl(
+            name="form.widgets.wkt"
+        ).value = "POINT (8.3156129 47.05033479999997)"
+        browser.getControl('Continue').click()
+        browser.getControl('Continue').click()
+        browser.getControl('Submitter Name').value = 'Submitter'
+        browser.getControl('Submitter Email').value = 'submit@example.com'
+        browser.getControl('Submit').click()
+
+        browser.open('/veranstaltungen/event-with-coordinates/edit')
+        self.assertTrue(
+            "POINT (8.3156129 47.05033479999997)" in browser.contents
+        )
+
     def test_terms(self):
         browser = self.admin_browser
 
