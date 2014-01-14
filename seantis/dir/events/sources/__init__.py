@@ -344,7 +344,7 @@ class ExternalEventImporter(object):
             len(imported), minutes, seconds
         ))
 
-        return len(imported)
+        return len(imported), runtime
 
 
 class ExternalEventImportScheduler(object):
@@ -353,6 +353,7 @@ class ExternalEventImportScheduler(object):
 
     def __init__(self):
         self.next_run = {}
+        self.interval = {}
 
     def get_next_run(self, interval='daily', now=datetime.today()):
         if interval == 'hourly':
@@ -370,24 +371,41 @@ class ExternalEventImportScheduler(object):
     def run(self, context, limit=0, reimport=False, source_ids=[],
             force_run=False, now=datetime.today()):
 
-        fetched = False
+        count = 0
         importer = ExternalEventImporter(context)
         for source in importer.sources():
             path = source.getPath()
             interval = source.getObject().interval
 
+            # Check if initial run
             if not path in self.next_run:
                 self.next_run[path] = self.get_next_run(interval, now)
+                self.interval[path] = interval
+                log.info('Initial run for source %s scheduled @ %s' % (
+                    path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
+                ))
 
-            if (datetime.today() > self.next_run[path]) or force_run:
-                fetched = True
+            # Check if interval changed
+            if interval != self.interval[path]:
                 self.next_run[path] = self.get_next_run(interval, now)
-                importer.fetch_one(
+                self.interval[path] = interval
+                log.info('New interval for source %s, now scheduled @ %s' % (
+                    path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
+                ))
+
+            # Run
+            if (datetime.today() > self.next_run[path]) or force_run:
+                count, time = importer.fetch_one(
                     path,
                     IExternalEventCollector(source.getObject()).fetch,
                     limit, reimport, source_ids)
+                self.next_run[path] = self.get_next_run(interval, now + time)
+                self.interval[path] = interval
+                log.info('Source %s imported, next run scheduled @ %s' % (
+                    path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
+                ))
 
-        if fetched:
+        if count != 0:
             IDirectoryCatalog(context).reindex()
 
 

@@ -15,6 +15,7 @@ from seantis.dir.events.tests import IntegrationTestCase
 
 import transaction
 
+
 class DummyGuidleContext():
 
     def __init__(self, url):
@@ -149,8 +150,6 @@ class TestImport(IntegrationTestCase):
         self.assertEqual(next_run, tomorrow + timedelta(hours=2))
 
         # Test hourly interval
-        import_scheduler.next_run = 0
-
         now = today + timedelta(minutes=10)
         next_run = import_scheduler.get_next_run(interval='hourly', now=now)
         self.assertEqual(next_run, today + timedelta(hours=1))
@@ -266,37 +265,39 @@ class TestImport(IntegrationTestCase):
         ids = ['event1', 'event2', 'event3', 'event4',
                'event5', 'event6', 'event7', 'event8']
         events = from_ids(ids[:4])
-        imports = importer.fetch_one('source', fetch)
+        imports, runtime = importer.fetch_one('source', fetch)
         self.assertEquals(imports, 4)
         imported = [i.getObject().source_id for i in self.catalog.query()]
         self.assertEquals(ids[:4], imported)
 
         # Import with limit
         events = from_ids(ids[4:])
-        imports = importer.fetch_one('source', fetch, limit=2)
+        imports, runtime = importer.fetch_one('source', fetch, limit=2)
         self.assertEquals(imports, 3)
         self.assertEquals(len(self.catalog.query()), 7)
-        imports = importer.fetch_one('source', fetch)
+        imports, runtime = importer.fetch_one('source', fetch)
         self.assertEquals(imports, 1)
         self.assertEquals(len(self.catalog.query()), 8)
 
         # Force reimport
-        imports = importer.fetch_one('source', fetch)
+        imports, runtime = importer.fetch_one('source', fetch)
         self.assertEquals(imports, 0)
         self.assertEquals(len(self.catalog.query()), 8)
-        imports = importer.fetch_one('source', fetch, reimport=True)
+        imports, runtime = importer.fetch_one('source', fetch, reimport=True)
         self.assertEquals(imports, 4)
         self.assertEquals(len(self.catalog.query()), 8)
 
         # Reimport updated events
         events = from_ids(ids)
-        imports = importer.fetch_one('source', fetch)
+        imports, runtime = importer.fetch_one('source', fetch)
         self.assertEquals(imports, 8)
         self.assertEquals(len(self.catalog.query()), 8)
 
         # Test import of given source IDs only
         events = from_ids(ids)
-        imports = importer.fetch_one('source', fetch, source_ids=ids[2:6])
+        imports, runtime = importer.fetch_one(
+            'source', fetch, source_ids=ids[2:6]
+        )
         self.assertEquals(imports, 4)
         self.assertEquals(len(self.catalog.query()), 8)
 
@@ -322,7 +323,7 @@ class TestImport(IntegrationTestCase):
             cat1=set(), cat2=set(['cat2-1', 'cat2-2', 'cat2-3'])
         ))
 
-        imports = importer.fetch_one('source', fetch)
+        imports, runtime = importer.fetch_one('source', fetch)
         self.assertEquals(imports, 3)
         self.assertTrue('cat1-1' in self.directory.cat1_suggestions)
         self.assertTrue('cat1-2' in self.directory.cat1_suggestions)
@@ -368,7 +369,7 @@ class TestImport(IntegrationTestCase):
         # event['attachment_1'] =
         # event['attachment_2'] =
 
-        imports = importer.fetch_one('source', lambda: [event])
+        imports, runtime = importer.fetch_one('source', lambda: [event])
         imported = self.catalog.query()
         self.assertEquals(imports, 1)
         self.assertEquals(len(imported), 1)
@@ -398,7 +399,7 @@ class TestImport(IntegrationTestCase):
         # Import event
         importer = ExternalEventImporter(self.directory)
         event = self.create_fetch_entry(source_id='s', fetch_id='f')
-        imports = importer.fetch_one('source', lambda: [event])
+        imports, runtime = importer.fetch_one('source', lambda: [event])
         self.assertEquals(imports, 1)
 
         # Hide event
@@ -410,9 +411,11 @@ class TestImport(IntegrationTestCase):
         hidden.hide()
 
         # Re-import event
-        imports = importer.fetch_one('source', lambda: [event])
+        imports, runtime = importer.fetch_one('source', lambda: [event])
         self.assertEquals(imports, 0)
-        imports = importer.fetch_one('source', lambda: [event], reimport=True)
+        imports, runtime = importer.fetch_one(
+            'source', lambda: [event], reimport=True
+        )
         self.assertEquals(imports, 1)
 
         brains = self.catalog.catalog(
