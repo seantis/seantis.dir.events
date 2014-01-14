@@ -355,7 +355,10 @@ class ExternalEventImportScheduler(object):
         self.next_run = {}
         self.interval = {}
 
-    def get_next_run(self, interval='daily', now=datetime.today()):
+    def get_next_run(self, interval='daily', now=None):
+        if now is None:
+            now = datetime.now()
+
         if interval == 'hourly':
             # 'hourly': Schedule next run at xx:00
             next_run = datetime(now.year, now.month, now.day, now.hour)
@@ -369,8 +372,10 @@ class ExternalEventImportScheduler(object):
 
     @synchronized(_lock)
     def run(self, context, limit=0, reimport=False, source_ids=[],
-            force_run=False, now=datetime.today()):
+            force_run=False, now=None):
 
+        if now is None:
+            now = datetime.now()
         count = 0
         importer = ExternalEventImporter(context)
         for source in importer.sources():
@@ -394,7 +399,7 @@ class ExternalEventImportScheduler(object):
                 ))
 
             # Run
-            if (datetime.today() > self.next_run[path]) or force_run:
+            if (datetime.now() > self.next_run[path]) or force_run:
                 count, time = importer.fetch_one(
                     path,
                     IExternalEventCollector(source.getObject()).fetch,
