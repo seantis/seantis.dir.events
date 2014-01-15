@@ -1,6 +1,7 @@
 import functools
 import time
 import json
+import pytz
 
 from datetime import datetime
 
@@ -60,7 +61,7 @@ def render_json_response(request, items):
         event['end'] = item.end.isoformat()
         event['recurrence'] = item.recurrence
         event['whole_day'] = item.whole_day
-        event['timezone'] = item.timezone
+        event['timezone'] = 'UTC'
         event['locality'] = item.locality
         event['street'] = item.street
         event['housenumber'] = item.housenumber
@@ -74,20 +75,26 @@ def render_json_response(request, items):
         event['prices'] = item.prices
         event['event_url'] = item.event_url
         event['registration'] = item.registration
-        event['image'] = isinstance(item.image, NamedFile) \
-            and 'image' or None
-        event['attachment_1'] = isinstance(item.attachment_1, NamedFile) \
-            and 'attachment_1' or None
-        event['attachment_2'] = isinstance(item.attachment_2, NamedFile) \
-            and 'attachment_2' or None
         event['submitter'] = item.submitter
         event['submitter_email'] = item.submitter_email
 
+        event['image'] = None
+        event['attachment_1'] = None
+        event['attachment_2'] = None
+        if isinstance(item.image, NamedFile):
+            event['image'] = item.absolute_url() + '/@@images/image'
+        if isinstance(item.attachment_1, NamedFile):
+            event['attachment_1'] = item.absolute_url() + '/@@download/attachment_1'
+        if isinstance(item.attachment_2, NamedFile):
+            event['attachment_2'] = item.absolute_url() + '/@@download/attachment_2'
+
         try:
             geo = IGeoreferenced(item)
-            event['coordinates'] = geo.coordinates
+            event['longitude'] = geo.coordinates[0]
+            event['latitude'] = geo.coordinates[1]
         except TypeError:
-            event['coordinates'] = None
+            event['longitude'] = None
+            event['latitude'] = None
 
         result.append(event)
 

@@ -360,6 +360,15 @@ class IExternalEventSourceGuidle(IExternalEventSource):
     )
 
 
+class IExternalEventSourceSeantisJson(IExternalEventSource):
+    """Seantis events directory source."""
+
+    url = AutoProtocolURI(
+        title=_(u'Events directory URL'),
+        required=True
+    )
+
+
 class IExternalEventCollector(Interface):
     """Interface for exernal event sources (adapter)"""
 

@@ -13,15 +13,10 @@ from seantis.dir.events.sources import (
     import_scheduler, ExternalEventImporter, IExternalEvent
 )
 from seantis.dir.events.sources.guidle import EventsSourceGuidle
+from seantis.dir.events.sources.seantis_json import EventsSourceSeantisJson
 from seantis.dir.events.tests import IntegrationTestCase
 
 import transaction
-
-
-class DummyGuidleContext():
-
-    def __init__(self, url):
-        self.url = url
 
 
 class TestImport(IntegrationTestCase):
@@ -558,7 +553,9 @@ class TestImport(IntegrationTestCase):
   </guidle:groupSet>
 </guidle:exportData>"""
 
-        context = DummyGuidleContext('url')
+        context = mock.Mock()
+        context.url = 'url'
+
         source = EventsSourceGuidle(context)
         events = [event for event in source.fetch(xml)]
         self.assertEquals(len(events), 2)
@@ -615,3 +612,101 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(events[1]['timezone'], 'Europe/Zurich')
         self.assertEquals(events[1]['cat1'], set(['class']))
         self.assertEquals(events[1]['cat2'], set(['City']))
+
+    def test_seantis_import(self):
+        json_string = """[{
+            "id": "id1", "title": "title",
+            "short_description": "short_description",
+            "long_description": "h\u00e4nsel",
+            "cat1": ["cat12", "cat11"], "cat2": ["cat2"],
+            "event_url": "http://www.event.ch",
+            "timezone": "UTC",
+            "start": "2014-01-15T00:00:00+01:00",
+            "end": "2014-01-15T23:59:59+01:00",
+            "whole_day": true,
+            "recurrence": "RRULE:FREQ=WEEKLY;BYDAY=MO,TU;UNTIL=20150101T0000Z",
+            "locality": "locality",
+            "street": "street", "housenumber": "housenumber",
+            "zipcode": "1234", "town": "town",
+            "longitude": 2.0, "latitude": 1.0,
+            "location_url": "http://www.location.ch",
+            "contact_name": "contact_name",
+            "contact_phone": "+12 (3) 45 678 90 12",
+            "contact_email": "contact@ema.il",
+            "registration": "http://www.tickets.ch",
+            "organizer": "organizer",
+            "prices": "prices",
+            "image": "http://example.ch/1.png",
+            "attachment_1": "http://example.ch/1.pdf",
+            "attachment_2": "http://example.ch/2.pdf",
+            "submitter": "sumitter", "submitter_email": "submitter@ma.il"
+        },{
+            "id": "test", "title": "test",
+            "short_description": "test", "long_description": null,
+            "cat1": null, "cat2": null,
+            "event_url": null,
+            "timezone": "UTC",
+            "start": "2014-01-19T17:00:00+00:00",
+            "end": "2014-01-19T18:00:00+00:00",
+            "whole_day": false, "recurrence": null,
+            "locality": null, "street": null, "housenumber": null,
+            "zipcode": null, "town": null,
+            "longitude": null, "latitude": null,
+            "location_url": null,
+            "contact_name": null, "contact_phone": null, "contact_email": null,
+            "registration": null, "organizer": null, "prices": null,
+            "image": null, "attachment_1": null, "attachment_2": null,
+            "submitter": "cccc", "submitter_email": "submitter@ma.il"
+        }]"""
+
+        context = mock.Mock()
+        context.url = 'url'
+
+        source = EventsSourceSeantisJson(context)
+        events = [event for event in source.fetch(json_string)]
+        self.assertEquals(len(events), 2)
+
+        self.assertTrue(
+            default_now() - events[0]['last_update'] < timedelta(seconds=10)
+        )
+        self.assertEquals(events[0]['fetch_id'], 'url')
+        self.assertEquals(events[0]['id'], 'id1')
+        self.assertEquals(events[0]['source_id'], 'id1')
+        self.assertEquals(events[0]['title'], 'title')
+        self.assertEquals(events[0]['short_description'], u'short_description')
+        self.assertEquals(events[0]['long_description'], u'h\xe4nsel')
+        self.assertEquals(events[0]['event_url'], 'http://www.event.ch')
+        self.assertEquals(events[0]['registration'], 'http://www.tickets.ch')
+        self.assertEquals(events[0]['location_url'], 'http://www.location.ch')
+        self.assertEquals(events[0]['image'], 'http://example.ch/1.png')
+        self.assertEquals(events[0]['attachment_1'], 'http://example.ch/1.pdf')
+        self.assertEquals(events[0]['attachment_2'], 'http://example.ch/2.pdf')
+        self.assertEquals(events[0]['organizer'], 'organizer')
+        self.assertEquals(events[0]['street'], 'street')
+        self.assertEquals(events[0]['housenumber'], 'housenumber')
+        self.assertEquals(events[0]['locality'], 'locality')
+        self.assertEquals(events[0]['zipcode'], '1234')
+        self.assertEquals(events[0]['town'], 'town')
+        self.assertEquals(events[0]['contact_name'], 'contact_name')
+        self.assertEquals(events[0]['contact_email'], 'contact@ema.il')
+        self.assertEquals(events[0]['contact_phone'], '+12 (3) 45 678 90 12')
+        self.assertEquals(events[0]['latitude'], '1.0')
+        self.assertEquals(events[0]['longitude'], '2.0')
+        self.assertEquals(events[0]['timezone'], 'UTC')
+        self.assertEquals(events[0]['start'], datetime(2014, 1, 15, 0, 0))
+        self.assertEquals(events[0]['end'], datetime(2014, 1, 15, 23, 59, 59))
+        self.assertEquals(events[0]['recurrence'],
+                          'RRULE:FREQ=WEEKLY;BYDAY=MO,TU;UNTIL=20150101T0000Z')
+        self.assertEquals(events[0]['whole_day'], True)
+        self.assertEquals(events[0]['cat1'], set(['cat11', 'cat12']))
+        self.assertEquals(events[0]['cat2'], set(['cat2']))
+        self.assertEquals(events[0]['submitter'], 'sumitter')
+        self.assertEquals(events[0]['submitter_email'], 'submitter@ma.il')
+
+        self.assertEquals(events[1]['latitude'], None)
+        self.assertEquals(events[1]['longitude'], None)
+        self.assertEquals(events[1]['start'], datetime(2014, 1, 19, 17, 0))
+        self.assertEquals(events[1]['end'], datetime(2014, 1, 19, 18, 0))
+        self.assertEquals(events[1]['whole_day'], False)
+        self.assertEquals(events[1]['cat1'], set())
+        self.assertEquals(events[1]['cat2'], set())

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-01-14 14:13+0000\n"
+"POT-Creation-Date: 2014-01-15 16:10+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr "${chars} Zeichen übrig"
 
-#: ./interfaces.py:415
+#: ./interfaces.py:424
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
@@ -37,6 +37,10 @@ msgstr "Alle Veranstaltungen"
 #: ./interfaces.py:303
 msgid "All day"
 msgstr "Ganztags"
+
+#: ./profiles/default/types/seantis.dir.events.sourceseantisjson.xml
+msgid "Allows to import events from another events directory"
+msgstr "Erlaubt den Import von Veranstaltungen aus einem anderen Veranstaltungs-Verzeichnis"
 
 #: ./profiles/default/types/seantis.dir.events.sourceguidle.xml
 msgid "Allows to import events from guidle.com"
@@ -58,7 +62,7 @@ msgstr "Anhang 1"
 msgid "Attachment 2"
 msgstr "Anhang 2"
 
-#: ./interfaces.py:458
+#: ./interfaces.py:467
 #: ./templates/macros.pt:175
 msgid "Attachments"
 msgstr "Anhänge"
@@ -221,9 +225,17 @@ msgstr "Die Veranstaltung wurde veröffentlicht"
 msgid "Events Directory"
 msgstr "Veranstaltungs-Verzeichnis"
 
+#: ./profiles/default/types/seantis.dir.events.sourceseantisjson.xml
+msgid "Events Directory Import"
+msgstr "Veranstaltungs-Verzeichnis Import"
+
 #: ./profiles/default/types/seantis.dir.events.item.xml
 msgid "Events Directory Item"
 msgstr "Veranstaltungs-Verzeichnis Eintrag"
+
+#: ./interfaces.py:367
+msgid "Events directory URL"
+msgstr "URL des Veranstaltungs-Verzeichnis"
 
 #: ./templates/directory.pt:64
 msgid "Events matching the current filter"
@@ -313,7 +325,7 @@ msgstr "Erfasser von Veranstaltungen müssen diesen Allgemeinen Geschäftsbeding
 msgid "Image"
 msgstr "Bild"
 
-#: ./interfaces.py:432
+#: ./interfaces.py:441
 msgid "Images"
 msgstr "Bilder"
 
@@ -435,15 +447,15 @@ msgstr "An diesen Tagen"
 msgid "Organizer"
 msgstr "Organisator"
 
-#: ./interfaces.py:437
+#: ./interfaces.py:446
 msgid "PDF"
 msgstr "PDF"
 
-#: ./interfaces.py:399
+#: ./interfaces.py:408
 msgid "Please choose at least one category"
 msgstr "Bitte wählen Sie mindestens eine Kategorie"
 
-#: ./interfaces.py:407
+#: ./interfaces.py:416
 msgid "Please enter at least one suggestion"
 msgstr "Bitte geben Sie mindestens einen Vorschlag ein"
 
@@ -487,7 +499,7 @@ msgstr "Kurzbeschrieb"
 msgid "Show all occurrences"
 msgstr "Alle Wiederholungen anzeigen"
 
-#: ./interfaces.py:378
+#: ./interfaces.py:387
 msgid "Source"
 msgstr "Quelle"
 
@@ -565,7 +577,7 @@ msgstr "Allgemeine Geschäftsbedingungen"
 msgid "Th"
 msgstr "Do"
 
-#: ./interfaces.py:379
+#: ./interfaces.py:388
 msgid "The source id to check for. Leave empty for any source."
 msgstr "Die ID der zu überprüfende Quelle. Alle Quellen, falls leer."
 
@@ -630,11 +642,11 @@ msgstr "Ort"
 msgid "Tu"
 msgstr "Di"
 
-#: ./interfaces.py:430
+#: ./interfaces.py:439
 msgid "Unknown image format"
 msgstr "Unbekanntes Bild-Format"
 
-#: ./interfaces.py:452
+#: ./interfaces.py:461
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 
@@ -670,7 +682,7 @@ msgstr "Wo"
 msgid "Whole Day"
 msgstr "Ganztags"
 
-#: ./interfaces.py:471
+#: ./interfaces.py:480
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr "Sie müssen den Allgemeinen Geschäftsbedingungen zustimmen bevor Sie diese Veranstaltung melden"
 
