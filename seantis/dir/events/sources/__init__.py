@@ -355,7 +355,12 @@ class ExternalEventImportScheduler(object):
         self.next_run = {}
         self.interval = {}
 
-    def get_next_run(self, interval, now):
+    def now(self):
+        return datetime.now()
+
+    def get_next_run(self, interval):
+        now = self.now()
+
         if interval == 'continuous':
             next_run = now
 
@@ -363,19 +368,18 @@ class ExternalEventImportScheduler(object):
             # 'hourly': Schedule next run at xx:00
             next_run = datetime(now.year, now.month, now.day, now.hour)
             next_run += timedelta(hours=1)
+
         else:
             # 'daily': Schedule next run tomorrow 2:00
             days = 0 if (now.hour < 2) else 1
             next_run = datetime(now.year, now.month, now.day) + timedelta(
                 days=days, hours=2)
+
         return next_run
 
     @synchronized(_lock)
     def run(self, context, limit=0, reimport=False, source_ids=[],
-            force_run=False, now=None):
-
-        if now is None:
-            now = datetime.now()
+            force_run=False):
         count = 0
         importer = ExternalEventImporter(context)
         for source in importer.sources():
@@ -388,7 +392,7 @@ class ExternalEventImportScheduler(object):
 
             # Check if initial run
             if not path in self.next_run:
-                self.next_run[path] = self.get_next_run(interval, now)
+                self.next_run[path] = self.get_next_run(interval)
                 self.interval[path] = interval
                 log.info('Initial run for source %s scheduled @ %s' % (
                     path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
@@ -396,19 +400,19 @@ class ExternalEventImportScheduler(object):
 
             # Check if interval changed
             if interval != self.interval[path]:
-                self.next_run[path] = self.get_next_run(interval, now)
+                self.next_run[path] = self.get_next_run(interval)
                 self.interval[path] = interval
                 log.info('New interval for source %s, now scheduled @ %s' % (
                     path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
                 ))
 
             # Run
-            if (datetime.now() > self.next_run[path]) or force_run:
+            if (self.now() > self.next_run[path]) or force_run:
                 count, time = importer.fetch_one(
                     path,
                     IExternalEventCollector(source.getObject()).fetch,
                     limit, reimport, source_ids)
-                self.next_run[path] = self.get_next_run(interval, now + time)
+                self.next_run[path] = self.get_next_run(interval)
                 self.interval[path] = interval
                 log.info('Source %s imported, next run scheduled @ %s' % (
                     path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
