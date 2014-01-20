@@ -112,7 +112,8 @@ class ExternalEventImporter(object):
         return ids
 
     def _fetch_one(
-        self, source, function, limit=None, reimport=False, source_ids=[]
+        self, source, function, limit=None, reimport=False, source_ids=[],
+        autoremove=False
     ):
         events = sorted(
             function(),
@@ -146,6 +147,22 @@ class ExternalEventImporter(object):
 
         total = len(events) if not limit else limit
         existing = self.groupby_source_id(self.existing_events(source))
+
+        # Autoremove externally deleted events
+        if autoremove:
+            new_ids = [event['source_id'] for event in events]
+            old_ids = existing.keys()
+            delta = list(set(old_ids) - set(new_ids))
+            if limit is not None:
+                delta = delta[:limit]
+            for rm_id in delta:
+                # source id's are not necessarily unique
+                for event in existing[rm_id]:
+                    log.info('Deleting %s @ %s' % (
+                        event.title,
+                        event.start.strftime('%d.%m.%Y %H:%M')
+                    ))
+                    self.context.manage_delObjects(event.id)
 
         workflowTool = getToolByName(self.context, 'portal_workflow')
 
@@ -307,7 +324,8 @@ class ExternalEventImporter(object):
         return imported
 
     def fetch_one(
-        self, source, function, limit=None, reimport=False, source_ids=[]
+        self, source, function, limit=None, reimport=False, source_ids=[],
+        autoremove=False
     ):
 
         start = datetime.now()
@@ -317,7 +335,7 @@ class ExternalEventImporter(object):
 
         try:
             imported = self._fetch_one(
-                source, function, limit, reimport, source_ids
+                source, function, limit, reimport, source_ids, autoremove
             )
         finally:
             self.enable_indexing()
@@ -407,7 +425,7 @@ class ExternalEventImportScheduler(object):
                 count, time = importer.fetch_one(
                     path,
                     IExternalEventCollector(source.getObject()).fetch,
-                    limit, reimport, source_ids)
+                    limit, reimport, source_ids, source.getObject().autoremove)
                 self.next_run[path] = self.get_next_run(interval)
                 self.interval[path] = interval
                 log.info('Source %s imported, next run scheduled @ %s' % (

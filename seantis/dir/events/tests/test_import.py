@@ -441,6 +441,42 @@ class TestImport(IntegrationTestCase):
             # Clean up (transaction has been commited)
             self.cleanup_after_fetch_one()
 
+    def test_importer_autoremove(self):
+        try:
+            importer = ExternalEventImporter(self.directory)
+
+            events = []
+            fetch = lambda: events
+
+            # First import
+            events.append(self.create_fetch_entry(source_id='source_id_1',
+                                                  fetch_id='fetch_id'))
+            events.append(self.create_fetch_entry(source_id='source_id_1',
+                                                  fetch_id='fetch_id'))
+            events.append(self.create_fetch_entry(source_id='source_id_2',
+                                                  fetch_id='fetch_id'))
+            imports, runtime = importer.fetch_one('source', fetch)
+            self.assertEquals(imports, 3)
+            self.assertEquals(len(self.directory.keys()), 3)
+
+            # Second import
+            events.pop(0)
+            events.pop(0)
+            events.append(self.create_fetch_entry(source_id='source_id_3',
+                                                  fetch_id='fetch_id'))
+
+            imports, runtime = importer.fetch_one('source', fetch,
+                                                  autoremove=True)
+            self.assertEquals(imports, 1)
+
+            ids = [item.source_id for id, item in self.directory.objectItems()]
+            self.assertEquals(len(ids), 2)
+            self.assertTrue('source_id_1' not in ids)
+
+        finally:
+            # Clean up (transaction has been commited)
+            self.cleanup_after_fetch_one()
+
     def test_importer_keep_hidden(self):
         try:
             # Import event

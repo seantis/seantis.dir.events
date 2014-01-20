@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-01-20 07:45+0000\n"
+"POT-Creation-Date: 2014-01-20 09:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr "${chars} Zeichen übrig"
 
-#: ./interfaces.py:443
+#: ./interfaces.py:457
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
@@ -62,10 +62,14 @@ msgstr "Anhang 1"
 msgid "Attachment 2"
 msgstr "Anhang 2"
 
-#: ./interfaces.py:486
+#: ./interfaces.py:500
 #: ./templates/macros.pt:175
 msgid "Attachments"
 msgstr "Anhänge"
+
+#: ./interfaces.py:354
+msgid "Automatically remove already imported events which have been deleted externally."
+msgstr "Lösche automatisch importierte Veranstaltungen, welche extern gelöscht wurden."
 
 #: ./form.py:906
 msgid "Back"
@@ -233,7 +237,7 @@ msgstr "Veranstaltungs-Verzeichnis Import"
 msgid "Events Directory Item"
 msgstr "Veranstaltungs-Verzeichnis Eintrag"
 
-#: ./interfaces.py:367
+#: ./interfaces.py:376
 msgid "Events directory URL"
 msgstr "URL des Veranstaltungs-Verzeichnis"
 
@@ -241,27 +245,27 @@ msgstr "URL des Veranstaltungs-Verzeichnis"
 msgid "Events matching the current filter"
 msgstr "Veranstaltungen die dem aktuellen Filter entsprechen"
 
-#: ./interfaces.py:340
+#: ./interfaces.py:342
 msgid "Every day at 02:00"
 msgstr "Täglich um 02:00"
 
-#: ./interfaces.py:343
+#: ./interfaces.py:341
 msgid "Every few minutes a few events"
 msgstr "Alle paar Minuten wenige Veranstaltungen"
 
-#: ./interfaces.py:341
+#: ./interfaces.py:343
 msgid "Every hour"
 msgstr "Stündlich"
 
-#: ./interfaces.py:372
+#: ./interfaces.py:381
 msgid "Filter events by category names"
 msgstr "Filtere Veranstaltungen mittels Kategorien"
 
-#: ./interfaces.py:378
+#: ./interfaces.py:387
 msgid "Filter: 1st category name"
 msgstr "Filter: Kategorie 1"
 
-#: ./interfaces.py:384
+#: ./interfaces.py:393
 msgid "Filter: 2nd category name"
 msgstr "Filter: Kategorie 2"
 
@@ -313,7 +317,7 @@ msgstr "Von Heute bis Jahresende"
 msgid "Guidle Import"
 msgstr "Guidle Import"
 
-#: ./interfaces.py:358
+#: ./interfaces.py:367
 msgid "Guidle URL to download from"
 msgstr "Guidle-URL"
 
@@ -337,7 +341,7 @@ msgstr "Erfasser von Veranstaltungen müssen diesen Allgemeinen Geschäftsbeding
 msgid "Image"
 msgstr "Bild"
 
-#: ./interfaces.py:460
+#: ./interfaces.py:474
 msgid "Images"
 msgstr "Bilder"
 
@@ -459,15 +463,15 @@ msgstr "An diesen Tagen"
 msgid "Organizer"
 msgstr "Organisator"
 
-#: ./interfaces.py:465
+#: ./interfaces.py:479
 msgid "PDF"
 msgstr "PDF"
 
-#: ./interfaces.py:427
+#: ./interfaces.py:441
 msgid "Please choose at least one category"
 msgstr "Bitte wählen Sie mindestens eine Kategorie"
 
-#: ./interfaces.py:435
+#: ./interfaces.py:449
 msgid "Please enter at least one suggestion"
 msgstr "Bitte geben Sie mindestens einen Vorschlag ein"
 
@@ -511,7 +515,7 @@ msgstr "Kurzbeschrieb"
 msgid "Show all occurrences"
 msgstr "Alle Wiederholungen anzeigen"
 
-#: ./interfaces.py:406
+#: ./interfaces.py:420
 msgid "Source"
 msgstr "Quelle"
 
@@ -589,7 +593,7 @@ msgstr "Allgemeine Geschäftsbedingungen"
 msgid "Th"
 msgstr "Do"
 
-#: ./interfaces.py:407
+#: ./interfaces.py:421
 msgid "The source id to check for. Leave empty for any source."
 msgstr "Die ID der zu überprüfende Quelle. Alle Quellen, falls leer."
 
@@ -654,11 +658,11 @@ msgstr "Ort"
 msgid "Tu"
 msgstr "Di"
 
-#: ./interfaces.py:458
+#: ./interfaces.py:472
 msgid "Unknown image format"
 msgstr "Unbekanntes Bild-Format"
 
-#: ./interfaces.py:480
+#: ./interfaces.py:494
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 
@@ -694,7 +698,7 @@ msgstr "Wo"
 msgid "Whole Day"
 msgstr "Ganztags"
 
-#: ./interfaces.py:499
+#: ./interfaces.py:513
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr "Sie müssen den Allgemeinen Geschäftsbedingungen zustimmen bevor Sie diese Veranstaltung melden"
 

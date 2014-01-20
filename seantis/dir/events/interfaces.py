@@ -350,6 +350,15 @@ class IExternalEventSource(form.Schema):
         default=False
     )
 
+    autoremove = Bool(
+        title=_(
+            u'Automatically remove already imported events which have been '
+            u'deleted externally.'
+        ),
+        required=False,
+        default=False
+    )
+
 
 class IExternalEventSourceGuidle(IExternalEventSource):
     """Guidle source."""
@@ -390,6 +399,11 @@ class IExternalEventSourceSeantisJson(IExternalEventSource):
 
 class IExternalEventCollector(Interface):
     """Interface for exernal event sources (adapter)"""
+
+    autoremove = Attribute("""
+        Automatically remove already imported events which have been deleted
+        externally.
+        """)
 
     def fetch(self):
         """Generator function returning all items to import"""
