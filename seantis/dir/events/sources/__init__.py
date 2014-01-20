@@ -246,12 +246,8 @@ class ExternalEventImporter(object):
 
             # latitude and longitude are set through the interface
             lat, lon = event.get('latitude'), event.get('longitude')
-
-            if lat is not None:
-                del event['latitude']
-
-            if lon is not None:
-                del event['longitude']
+            del event['latitude']
+            del event['longitude']
 
             # so are categories
             cats = map(event.get, ('cat1', 'cat2'))
@@ -269,7 +265,7 @@ class ExternalEventImporter(object):
             )
 
             # set coordinates now
-            if lat and lon:
+            if lat is not None and lon is not None:
                 IWriteGeoreferenced(obj).setGeoInterface(
                     'Point', map(float, (lon, lat))
                 )
