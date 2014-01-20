@@ -1,4 +1,5 @@
 import mock
+import pytz
 
 from datetime import datetime, timedelta
 
@@ -621,8 +622,8 @@ class TestImport(IntegrationTestCase):
             "cat1": ["cat12", "cat11"], "cat2": ["cat21"],
             "event_url": "http://www.event.ch",
             "timezone": "UTC",
-            "start": "2014-01-15T00:00:00+01:00",
-            "end": "2014-01-15T23:59:59+01:00",
+            "start": "2014-01-15T00:00:00+00:00",
+            "end": "2014-01-15T23:59:59+00:00",
             "whole_day": true,
             "recurrence": "RRULE:FREQ=WEEKLY;BYDAY=MO,TU;UNTIL=20150101T0000Z",
             "locality": "locality",
@@ -695,9 +696,11 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(events[0]['contact_phone'], '+12 (3) 45 678 90 12')
         self.assertEquals(events[0]['latitude'], '1.0')
         self.assertEquals(events[0]['longitude'], '2.0')
-        self.assertEquals(events[0]['timezone'], 'UTC')
-        self.assertEquals(events[0]['start'], datetime(2014, 1, 15, 0, 0))
-        self.assertEquals(events[0]['end'], datetime(2014, 1, 15, 23, 59, 59))
+        self.assertEquals(events[0]['timezone'], default_timezone())
+        self.assertEquals(events[0]['start'], datetime(2014, 1, 15, 0, 0,
+                                                       tzinfo=pytz.UTC))
+        self.assertEquals(events[0]['end'], datetime(2014, 1, 15, 23, 59, 59,
+                                                     tzinfo=pytz.UTC))
         self.assertEquals(events[0]['recurrence'],
                           'RRULE:FREQ=WEEKLY;BYDAY=MO,TU;UNTIL=20150101T0000Z')
         self.assertEquals(events[0]['whole_day'], True)
@@ -708,8 +711,10 @@ class TestImport(IntegrationTestCase):
 
         self.assertEquals(events[1]['latitude'], None)
         self.assertEquals(events[1]['longitude'], None)
-        self.assertEquals(events[1]['start'], datetime(2014, 1, 19, 17, 0))
-        self.assertEquals(events[1]['end'], datetime(2014, 1, 19, 18, 0))
+        self.assertEquals(events[1]['start'], datetime(2014, 1, 19, 17, 0,
+                                                       tzinfo=pytz.UTC))
+        self.assertEquals(events[1]['end'], datetime(2014, 1, 19, 18, 0,
+                                                     tzinfo=pytz.UTC))
         self.assertEquals(events[1]['whole_day'], False)
         self.assertEquals(events[1]['cat1'], set(['cat13', 'cat14']))
         self.assertEquals(events[1]['cat2'], set(['cat21', 'cat22', 'cat23']))
