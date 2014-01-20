@@ -213,10 +213,9 @@ class ExternalEventImporter(object):
             # event might have to be represented as more than one event in
             # seantis.dir.events - therefore updating is done through
             # deleting first, adding second
-
             if event['source_id'] in existing:
                 for e in existing[event['source_id']]:
-                    self.context._delObject(e.id, suppress_events=True)
+                    self.context.manage_delObjects(e.id)
                 del existing[event['source_id']]
 
             # image and attachments are downloaded
