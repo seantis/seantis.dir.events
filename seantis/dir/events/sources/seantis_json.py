@@ -7,6 +7,7 @@ log = getLogger('seantis.dir.events')
 from dateutil.parser import parse
 from five import grok
 from urllib import urlopen
+from plone.app.event.base import default_timezone
 
 from seantis.dir.events.dates import default_now
 from seantis.dir.events.interfaces import (
@@ -22,7 +23,6 @@ class EventsSourceSeantisJson(grok.Adapter):
     def build_url(self):
 
         url = self.context.url.strip() + '?'
-        # url += 'type=json&max=' + str(self.data.max_events) + '&' :TODO:
         url += 'type=json'
         if self.context.do_filter and (self.context.cat1 or self.context.cat2):
             url += '&filter=true'
@@ -83,11 +83,17 @@ class EventsSourceSeantisJson(grok.Adapter):
             e['long_description'] = event.get('long_description')
             e['cat1'] = cat1
             e['cat2'] = cat2
-            e['start'] = parse(event.get('start')).replace(tzinfo=None)
-            e['end'] = parse(event.get('end')).replace(tzinfo=None)
+
+            assert event.get('timezone') == 'UTC', """
+                We expect UTC times from our own exports
+            """
+
+            e['timezone'] = default_timezone()
+            e['start'] = parse(event.get('start'))
+            e['end'] = parse(event.get('end'))
             e['recurrence'] = event.get('recurrence')
             e['whole_day'] = event.get('whole_day')
-            e['timezone'] = event.get('timezone')
+
             e['locality'] = event.get('locality')
             e['street'] = event.get('street')
             e['housenumber'] = event.get('housenumber')
