@@ -102,8 +102,8 @@ class TestImport(IntegrationTestCase):
             # additional attributes used to control import
             'fetch_id': 'fetch-1',
             'last_update': default_now().replace(microsecond=0),
-            'latitude': '',
-            'longitude': '',
+            # 'latitude': '',
+            # 'longitude': '',
             'cat1': set(),
             'cat2': set(),
         }
