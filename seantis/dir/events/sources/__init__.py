@@ -378,7 +378,6 @@ class ExternalEventImportScheduler(object):
     @synchronized(_lock)
     def run(self, context, limit=0, reimport=False, source_ids=[],
             force_run=False):
-        count = 0
         importer = ExternalEventImporter(context)
         for source in importer.sources():
             path = source.getPath()
@@ -415,9 +414,6 @@ class ExternalEventImportScheduler(object):
                 log.info('Source %s imported, next run scheduled @ %s' % (
                     path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
                 ))
-
-        if count != 0:
-            IDirectoryCatalog(context).reindex()
 
 
 import_scheduler = ExternalEventImportScheduler()
