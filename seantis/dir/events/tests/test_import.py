@@ -292,180 +292,192 @@ class TestImport(IntegrationTestCase):
             self.assertEquals(len(groups[id]), ids.count(id))
 
     def test_importer_fetch_one(self):
-        importer = ExternalEventImporter(self.directory)
-        events = []
-        fetch = lambda: events
-        from_ids = lambda ids: [self.create_fetch_entry(source_id=id,
-                                                        fetch_id='f')
-                                for id in ids]
+        try:
+            importer = ExternalEventImporter(self.directory)
+            events = []
+            fetch = lambda: events
+            from_ids = lambda ids: [self.create_fetch_entry(source_id=id,
+                                                            fetch_id='f')
+                                    for id in ids]
 
-        # Simple import
-        ids = ['event1', 'event2', 'event3', 'event4',
-               'event5', 'event6', 'event7', 'event8']
-        events = from_ids(ids[:4])
-        imports, runtime = importer.fetch_one('source', fetch)
-        self.assertEquals(imports, 4)
-        imported = [i.getObject().source_id for i in self.catalog.query()]
-        self.assertEquals(ids[:4], imported)
+            # Simple import
+            ids = ['event1', 'event2', 'event3', 'event4',
+                   'event5', 'event6', 'event7', 'event8']
+            events = from_ids(ids[:4])
+            imports, runtime = importer.fetch_one('source', fetch)
+            self.assertEquals(imports, 4)
+            imported = [i.getObject().source_id for i in self.catalog.query()]
+            self.assertEquals(ids[:4], imported)
 
-        # Import with limit
-        events = from_ids(ids[4:])
-        imports, runtime = importer.fetch_one('source', fetch, limit=2)
-        self.assertEquals(imports, 3)
-        self.assertEquals(len(self.catalog.query()), 7)
-        imports, runtime = importer.fetch_one('source', fetch)
-        self.assertEquals(imports, 1)
-        self.assertEquals(len(self.catalog.query()), 8)
+            # Import with limit
+            events = from_ids(ids[4:])
+            imports, runtime = importer.fetch_one('source', fetch, limit=2)
+            self.assertEquals(imports, 3)
+            self.assertEquals(len(self.catalog.query()), 7)
+            imports, runtime = importer.fetch_one('source', fetch)
+            self.assertEquals(imports, 1)
+            self.assertEquals(len(self.catalog.query()), 8)
 
-        # Force reimport
-        imports, runtime = importer.fetch_one('source', fetch)
-        self.assertEquals(imports, 0)
-        self.assertEquals(len(self.catalog.query()), 8)
-        imports, runtime = importer.fetch_one('source', fetch, reimport=True)
-        self.assertEquals(imports, 4)
-        self.assertEquals(len(self.catalog.query()), 8)
+            # Force reimport
+            imports, runtime = importer.fetch_one('source', fetch)
+            self.assertEquals(imports, 0)
+            self.assertEquals(len(self.catalog.query()), 8)
+            imports, runtime = importer.fetch_one('source', fetch,
+                                                  reimport=True)
+            self.assertEquals(imports, 4)
+            self.assertEquals(len(self.catalog.query()), 8)
 
-        # Reimport updated events
-        events = from_ids(ids)
-        imports, runtime = importer.fetch_one('source', fetch)
-        self.assertEquals(imports, 8)
-        self.assertEquals(len(self.catalog.query()), 8)
+            # Reimport updated events
+            events = from_ids(ids)
+            imports, runtime = importer.fetch_one('source', fetch)
+            self.assertEquals(imports, 8)
+            self.assertEquals(len(self.catalog.query()), 8)
 
-        # Test import of given source IDs only
-        events = from_ids(ids)
-        imports, runtime = importer.fetch_one(
-            'source', fetch, source_ids=ids[2:6]
-        )
-        self.assertEquals(imports, 4)
-        self.assertEquals(len(self.catalog.query()), 8)
+            # Test import of given source IDs only
+            events = from_ids(ids)
+            imports, runtime = importer.fetch_one(
+                'source', fetch, source_ids=ids[2:6]
+            )
+            self.assertEquals(imports, 4)
+            self.assertEquals(len(self.catalog.query()), 8)
 
-        # Clean up (transaction has been commited)
-        self.cleanup_after_fetch_one()
+        finally:
+            # Clean up (transaction has been commited)
+            self.cleanup_after_fetch_one()
 
     def test_importer_update_category_suggestions(self):
-        importer = ExternalEventImporter(self.directory)
+        try:
+            importer = ExternalEventImporter(self.directory)
 
-        events = []
-        fetch = lambda: events
+            events = []
+            fetch = lambda: events
 
-        events.append(self.create_fetch_entry(
-            source_id='1', fetch_id='1',
-            cat1=set(['cat1-1']), cat2=set(['cat2-1'])
-        ))
-        events.append(self.create_fetch_entry(
-            source_id='2', fetch_id='1',
-            cat1=set(['cat1-2', 'cat1-4']), cat2=set(['cat2-1'])
-        ))
-        events.append(self.create_fetch_entry(
-            source_id='3', fetch_id='1',
-            cat1=set(), cat2=set(['cat2-1', 'cat2-2', 'cat2-3'])
-        ))
+            events.append(self.create_fetch_entry(
+                source_id='1', fetch_id='1',
+                cat1=set(['cat1-1']), cat2=set(['cat2-1'])
+            ))
+            events.append(self.create_fetch_entry(
+                source_id='2', fetch_id='1',
+                cat1=set(['cat1-2', 'cat1-4']), cat2=set(['cat2-1'])
+            ))
+            events.append(self.create_fetch_entry(
+                source_id='3', fetch_id='1',
+                cat1=set(), cat2=set(['cat2-1', 'cat2-2', 'cat2-3'])
+            ))
 
-        imports, runtime = importer.fetch_one('source', fetch)
-        self.assertEquals(imports, 3)
-        self.assertTrue('cat1-1' in self.directory.cat1_suggestions)
-        self.assertTrue('cat1-2' in self.directory.cat1_suggestions)
-        self.assertTrue('cat1-4' in self.directory.cat1_suggestions)
-        self.assertTrue('cat2-1' in self.directory.cat2_suggestions)
-        self.assertTrue('cat2-2' in self.directory.cat2_suggestions)
-        self.assertTrue('cat2-3' in self.directory.cat2_suggestions)
+            imports, runtime = importer.fetch_one('source', fetch)
+            self.assertEquals(imports, 3)
+            self.assertTrue('cat1-1' in self.directory.cat1_suggestions)
+            self.assertTrue('cat1-2' in self.directory.cat1_suggestions)
+            self.assertTrue('cat1-4' in self.directory.cat1_suggestions)
+            self.assertTrue('cat2-1' in self.directory.cat2_suggestions)
+            self.assertTrue('cat2-2' in self.directory.cat2_suggestions)
+            self.assertTrue('cat2-3' in self.directory.cat2_suggestions)
 
-        # Clean up (transaction has been commited)
-        self.cleanup_after_fetch_one()
+        finally:
+            # Clean up (transaction has been commited)
+            self.cleanup_after_fetch_one()
 
     def test_importer_values(self):
-        importer = ExternalEventImporter(self.directory)
+        try:
+            importer = ExternalEventImporter(self.directory)
 
-        string_values = [
-            'title', 'short_description', 'long_description',
-            'locality', 'street', 'housenumber', 'zipcode', 'town',
-            'location_url', 'event_url', 'organizer',
-            'contact_name', 'contact_email', 'contact_phone',
-            'prices', 'registration',
-            'source_id', 'fetch_id'
-        ]
-        now = default_now().replace(microsecond=0)
-        then = now + timedelta(days=10)
+            string_values = [
+                'title', 'short_description', 'long_description',
+                'locality', 'street', 'housenumber', 'zipcode', 'town',
+                'location_url', 'event_url', 'organizer',
+                'contact_name', 'contact_email', 'contact_phone',
+                'prices', 'registration',
+                'source_id', 'fetch_id'
+            ]
+            now = default_now().replace(microsecond=0)
+            then = now + timedelta(days=10)
 
-        event = {s: s for s in string_values}
+            event = {s: s for s in string_values}
 
-        event['last_update'] = now
-        event['start'] = then
-        event['end'] = then + timedelta(hours=1)
-        event['timezone'] = default_timezone()
-        event['whole_day'] = False
-        event['recurrence'] = 'RRULE:FREQ=DAILY;COUNT=2'
+            event['last_update'] = now
+            event['start'] = then
+            event['end'] = then + timedelta(hours=1)
+            event['timezone'] = default_timezone()
+            event['whole_day'] = False
+            event['recurrence'] = 'RRULE:FREQ=DAILY;COUNT=2'
 
-        event['cat1'] = set(['c1', 'c2'])
-        event['cat2'] = set(['c3', 'c4'])
+            event['cat1'] = set(['c1', 'c2'])
+            event['cat2'] = set(['c3', 'c4'])
 
-        event['longitude'] = 7.8673189
-        event['latitude'] = 46.6859853
+            event['longitude'] = 7.8673189
+            event['latitude'] = 46.6859853
 
-        # :TODO: test image and attachement download
-        # event['image'] =
-        # event['attachment_1'] =
-        # event['attachment_2'] =
+            # :TODO: test image and attachement download
+            # event['image'] =
+            # event['attachment_1'] =
+            # event['attachment_2'] =
 
-        imports, runtime = importer.fetch_one('source', lambda: [event])
-        imported = self.catalog.query()
-        self.assertEquals(imports, 1)
-        self.assertEquals(len(imported), 1)
+            imports, runtime = importer.fetch_one('source', lambda: [event])
+            imported = self.catalog.query()
+            self.assertEquals(imports, 1)
+            self.assertEquals(len(imported), 1)
 
-        imported = imported[0].getObject()
-        for s in string_values:
-            self.assertTrue(s in vars(imported))
-            self.assertTrue(vars(imported)[s] == s)
+            imported = imported[0].getObject()
+            for s in string_values:
+                self.assertTrue(s in vars(imported))
+                self.assertTrue(vars(imported)[s] == s)
 
-        self.assertEquals(imported.start, now + timedelta(days=10))
-        self.assertEquals(imported.end, now + timedelta(days=10, hours=1))
-        self.assertEquals(imported.recurrence, 'RRULE:FREQ=DAILY;COUNT=2')
-        self.assertFalse(imported.whole_day)
+            self.assertEquals(imported.start, now + timedelta(days=10))
+            self.assertEquals(imported.end, now + timedelta(days=10, hours=1))
+            self.assertEquals(imported.recurrence, 'RRULE:FREQ=DAILY;COUNT=2')
+            self.assertFalse(imported.whole_day)
 
-        self.assertTrue('c1' in imported.cat1)
-        self.assertTrue('c2' in imported.cat1)
-        self.assertTrue('c3' in imported.cat2)
-        self.assertTrue('c4' in imported.cat2)
+            self.assertTrue('c1' in imported.cat1)
+            self.assertTrue('c2' in imported.cat1)
+            self.assertTrue('c3' in imported.cat2)
+            self.assertTrue('c4' in imported.cat2)
 
-        self.assertEquals(IGeoreferenced(imported).coordinates,
-                          [7.8673189, 46.6859853])
+            self.assertEquals(
+                IGeoreferenced(imported).coordinates, [7.8673189, 46.6859853]
+            )
 
-        # Clean up (transaction has been commited)
-        self.cleanup_after_fetch_one()
+        finally:
+            # Clean up (transaction has been commited)
+            self.cleanup_after_fetch_one()
 
     def test_importer_keep_hidden(self):
-        # Import event
-        importer = ExternalEventImporter(self.directory)
-        event = self.create_fetch_entry(source_id='s', fetch_id='f')
-        imports, runtime = importer.fetch_one('source', lambda: [event])
-        self.assertEquals(imports, 1)
+        try:
+            # Import event
+            importer = ExternalEventImporter(self.directory)
+            event = self.create_fetch_entry(source_id='s', fetch_id='f')
+            imports, runtime = importer.fetch_one('source', lambda: [event])
+            self.assertEquals(imports, 1)
 
-        # Hide event
-        brains = self.catalog.catalog(
-            object_provides=IExternalEvent.__identifier__
-        )
-        self.assertEquals(len(brains), 1)
-        hidden = brains[0].getObject()
-        hidden.hide()
+            # Hide event
+            brains = self.catalog.catalog(
+                object_provides=IExternalEvent.__identifier__
+            )
+            self.assertEquals(len(brains), 1)
+            hidden = brains[0].getObject()
+            hidden.hide()
 
-        # Re-import event
-        imports, runtime = importer.fetch_one('source', lambda: [event])
-        self.assertEquals(imports, 0)
-        imports, runtime = importer.fetch_one(
-            'source', lambda: [event], reimport=True
-        )
-        self.assertEquals(imports, 1)
+            # Re-import event
+            imports, runtime = importer.fetch_one('source', lambda: [event])
+            self.assertEquals(imports, 0)
+            imports, runtime = importer.fetch_one(
+                'source', lambda: [event], reimport=True
+            )
+            self.assertEquals(imports, 1)
 
-        brains = self.catalog.catalog(
-            object_provides=IExternalEvent.__identifier__
-        )
-        self.assertEquals(len(brains), 1)
-        event = brains[0].getObject()
-        self.assertTrue(event.modification_date != hidden.modification_date)
-        self.assertEquals(event.review_state, 'hidden')
+            brains = self.catalog.catalog(
+                object_provides=IExternalEvent.__identifier__
+            )
+            self.assertEquals(len(brains), 1)
+            event = brains[0].getObject()
+            self.assertTrue(
+                event.modification_date != hidden.modification_date
+            )
+            self.assertEquals(event.review_state, 'hidden')
 
-        # Clean up (transaction has been commited)
-        self.cleanup_after_fetch_one()
+        finally:
+            # Clean up (transaction has been commited)
+            self.cleanup_after_fetch_one()
 
     def test_guidle_import(self):
         xml = """<?xml version="1.0" encoding="UTF-8"?>
