@@ -114,11 +114,14 @@ class ExternalEventImporter(object):
     def _fetch_one(
         self, source, function, limit=None, reimport=False, source_ids=[]
     ):
-
         events = sorted(
             function(),
             key=lambda e: (e['last_update'], e['source_id'])
         )
+
+        imported = []
+        if len(events) == 0:
+            return imported
 
         fetch_ids = set(event['fetch_id'] for event in events)
         assert len(fetch_ids) == 1, """
@@ -147,7 +150,6 @@ class ExternalEventImporter(object):
         workflowTool = getToolByName(self.context, 'portal_workflow')
 
         categories = dict(cat1=set(), cat2=set())
-        imported = []
 
         limit_reached_id = None
 
