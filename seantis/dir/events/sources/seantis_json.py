@@ -1,6 +1,9 @@
 import json
 import urllib
 
+from logging import getLogger
+log = getLogger('seantis.dir.events')
+
 from dateutil.parser import parse
 from five import grok
 from urllib import urlopen
@@ -40,7 +43,14 @@ class EventsSourceSeantisJson(grok.Adapter):
         if json_string is None:
             url = self.build_url()
             json_string = urlopen(url).read()
-        events = json.loads(json_string)
+
+        try:
+            events = json.loads(json_string)
+        except:
+            events = []
+            log.error(
+                'could not decode json string (%s)' % self.context.url
+            )
 
         for event in events:
 
