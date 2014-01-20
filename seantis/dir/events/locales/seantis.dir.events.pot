@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-01-15 16:10+0000\n"
+"POT-Creation-Date: 2014-01-20 07:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr ""
 
-#: ./interfaces.py:424
+#: ./interfaces.py:443
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
@@ -65,7 +65,7 @@ msgstr ""
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:467
+#: ./interfaces.py:486
 #: ./templates/macros.pt:175
 msgid "Attachments"
 msgstr ""
@@ -256,6 +256,18 @@ msgstr ""
 msgid "Every hour"
 msgstr ""
 
+#: ./interfaces.py:372
+msgid "Filter events by category names"
+msgstr ""
+
+#: ./interfaces.py:378
+msgid "Filter: 1st category name"
+msgstr ""
+
+#: ./interfaces.py:384
+msgid "Filter: 2nd category name"
+msgstr ""
+
 #: ./templates/directory.pt:64
 msgid "Filtered Events"
 msgstr ""
@@ -328,7 +340,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:441
+#: ./interfaces.py:460
 msgid "Images"
 msgstr ""
 
@@ -450,15 +462,15 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:446
+#: ./interfaces.py:465
 msgid "PDF"
 msgstr ""
 
-#: ./interfaces.py:408
+#: ./interfaces.py:427
 msgid "Please choose at least one category"
 msgstr ""
 
-#: ./interfaces.py:416
+#: ./interfaces.py:435
 msgid "Please enter at least one suggestion"
 msgstr ""
 
@@ -502,7 +514,7 @@ msgstr ""
 msgid "Show all occurrences"
 msgstr ""
 
-#: ./interfaces.py:387
+#: ./interfaces.py:406
 msgid "Source"
 msgstr ""
 
@@ -580,7 +592,7 @@ msgstr ""
 msgid "Th"
 msgstr ""
 
-#: ./interfaces.py:388
+#: ./interfaces.py:407
 msgid "The source id to check for. Leave empty for any source."
 msgstr ""
 
@@ -645,11 +657,11 @@ msgstr ""
 msgid "Tu"
 msgstr ""
 
-#: ./interfaces.py:439
+#: ./interfaces.py:458
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:461
+#: ./interfaces.py:480
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
@@ -685,7 +697,7 @@ msgstr ""
 msgid "Whole Day"
 msgstr ""
 
-#: ./interfaces.py:480
+#: ./interfaces.py:499
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 

@@ -618,7 +618,7 @@ class TestImport(IntegrationTestCase):
             "id": "id1", "title": "title",
             "short_description": "short_description",
             "long_description": "h\u00e4nsel",
-            "cat1": ["cat12", "cat11"], "cat2": ["cat2"],
+            "cat1": ["cat12", "cat11"], "cat2": ["cat21"],
             "event_url": "http://www.event.ch",
             "timezone": "UTC",
             "start": "2014-01-15T00:00:00+01:00",
@@ -643,7 +643,7 @@ class TestImport(IntegrationTestCase):
         },{
             "id": "test", "title": "test",
             "short_description": "test", "long_description": null,
-            "cat1": null, "cat2": null,
+            "cat1": ["cat13", "cat14"], "cat2": ["cat21", "cat22", "cat23"],
             "event_url": null,
             "timezone": "UTC",
             "start": "2014-01-19T17:00:00+00:00",
@@ -661,6 +661,9 @@ class TestImport(IntegrationTestCase):
 
         context = mock.Mock()
         context.url = 'url'
+        context.do_filter = False
+        context.cat1 = ''
+        context.cat2 = ''
 
         source = EventsSourceSeantisJson(context)
         events = [event for event in source.fetch(json_string)]
@@ -699,7 +702,7 @@ class TestImport(IntegrationTestCase):
                           'RRULE:FREQ=WEEKLY;BYDAY=MO,TU;UNTIL=20150101T0000Z')
         self.assertEquals(events[0]['whole_day'], True)
         self.assertEquals(events[0]['cat1'], set(['cat11', 'cat12']))
-        self.assertEquals(events[0]['cat2'], set(['cat2']))
+        self.assertEquals(events[0]['cat2'], set(['cat21']))
         self.assertEquals(events[0]['submitter'], 'sumitter')
         self.assertEquals(events[0]['submitter_email'], 'submitter@ma.il')
 
@@ -708,5 +711,102 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(events[1]['start'], datetime(2014, 1, 19, 17, 0))
         self.assertEquals(events[1]['end'], datetime(2014, 1, 19, 18, 0))
         self.assertEquals(events[1]['whole_day'], False)
-        self.assertEquals(events[1]['cat1'], set())
-        self.assertEquals(events[1]['cat2'], set())
+        self.assertEquals(events[1]['cat1'], set(['cat13', 'cat14']))
+        self.assertEquals(events[1]['cat2'], set(['cat21', 'cat22', 'cat23']))
+
+        # Filter by categories
+        context.do_filter = False
+        context.cat1 = 'cat5'
+        context.cat2 = 'cat6'
+        source = EventsSourceSeantisJson(context)
+        events = [event for event in source.fetch(json_string)]
+        self.assertEquals(len(events), 2)
+
+        context.do_filter = True
+
+        context.cat1 = ''
+        context.cat2 = ''
+        source = EventsSourceSeantisJson(context)
+        events = [event for event in source.fetch(json_string)]
+        self.assertEquals(len(events), 2)
+
+        context.cat1 = 'cat1'
+        context.cat2 = ''
+        source = EventsSourceSeantisJson(context)
+        events = [event for event in source.fetch(json_string)]
+        self.assertEquals(len(events), 0)
+
+        context.cat1 = 'cat11'
+        context.cat2 = ''
+        source = EventsSourceSeantisJson(context)
+        events = [event for event in source.fetch(json_string)]
+        self.assertEquals(len(events), 1)
+        self.assertEquals(events[0]['cat1'], set(['cat11', 'cat12']))
+
+        context.cat1 = 'cat12'
+        context.cat2 = ''
+        source = EventsSourceSeantisJson(context)
+        events = [event for event in source.fetch(json_string)]
+        self.assertEquals(len(events), 1)
+        self.assertEquals(events[0]['cat1'], set(['cat11', 'cat12']))
+
+        context.cat1 = ''
+        context.cat2 = 'cat23'
+        source = EventsSourceSeantisJson(context)
+        events = [event for event in source.fetch(json_string)]
+        self.assertEquals(len(events), 1)
+        self.assertEquals(events[0]['cat2'], set(['cat21', 'cat22', 'cat23']))
+
+        context.cat1 = ''
+        context.cat2 = 'cat24'
+        source = EventsSourceSeantisJson(context)
+        events = [event for event in source.fetch(json_string)]
+        self.assertEquals(len(events), 0)
+
+        context.do_filter = True
+        context.cat1 = 'cat11'
+        context.cat2 = 'cat21'
+        source = EventsSourceSeantisJson(context)
+        events = [event for event in source.fetch(json_string)]
+        self.assertEquals(len(events), 1)
+        self.assertEquals(events[0]['cat1'], set(['cat11', 'cat12']))
+        self.assertEquals(events[0]['cat2'], set(['cat21']))
+
+    def test_seantis_import_build_url(self):
+        context = mock.Mock()
+        context.url = '  http://www.ex.ch/ev/  '
+        context.do_filter = False
+        context.cat1 = ''
+        context.cat2 = ''
+        source = EventsSourceSeantisJson(context)
+        self.assertEquals(source.build_url(), 'http://www.ex.ch/ev/?type=json')
+
+        context.url = '  http://www.ex.ch/ev  '
+        source = EventsSourceSeantisJson(context)
+        self.assertEquals(source.build_url(), 'http://www.ex.ch/ev?type=json')
+
+        context.do_filter = True
+        source = EventsSourceSeantisJson(context)
+        self.assertEquals(source.build_url(), 'http://www.ex.ch/ev?type=json')
+
+        context.cat1 = 'cat1'
+        source = EventsSourceSeantisJson(context)
+        self.assertEquals(
+            source.build_url(),
+            'http://www.ex.ch/ev?type=json&filter=true&cat1=cat1'
+        )
+
+        context.cat1 = ''
+        context.cat2 = 'cat2'
+        source = EventsSourceSeantisJson(context)
+        self.assertEquals(
+            source.build_url(),
+            'http://www.ex.ch/ev?type=json&filter=true&cat2=cat2'
+        )
+
+        context.cat1 = 'cat1'
+        source = EventsSourceSeantisJson(context)
+        self.assertEquals(
+            source.build_url(),
+            'http://www.ex.ch/ev?type=json&filter=true&cat1=cat1&cat2=cat2'
+        )

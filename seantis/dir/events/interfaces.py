@@ -368,6 +368,25 @@ class IExternalEventSourceSeantisJson(IExternalEventSource):
         required=True
     )
 
+    do_filter = Bool(
+        title=_(u'Filter events by category names'),
+        required=False,
+        default=False
+    )
+
+    cat1 = TextLine(
+        title=_(u'Filter: 1st category name'),
+        required=False,
+        default=u''
+    )
+
+    cat2 = TextLine(
+        title=_(u'Filter: 2nd category name'),
+        required=False,
+        default=u''
+    )
+
+
 
 class IExternalEventCollector(Interface):
     """Interface for exernal event sources (adapter)"""

@@ -1,4 +1,5 @@
 import json
+import urllib
 
 from dateutil.parser import parse
 from five import grok
@@ -15,13 +16,51 @@ class EventsSourceSeantisJson(grok.Adapter):
     grok.context(IExternalEventSourceSeantisJson)
     grok.provides(IExternalEventCollector)
 
+    def build_url(self):
+
+        url = self.context.url.strip() + '?'
+        # url += 'type=json&max=' + str(self.data.max_events) + '&' :TODO:
+        url += 'type=json'
+        if self.context.do_filter and (self.context.cat1 or self.context.cat2):
+            url += '&filter=true'
+            if self.context.cat1:
+                cat = urllib.quote_plus(
+                    self.context.cat1.strip().encode('utf-8')
+                )
+                url += '&cat1=' + cat
+            if self.context.cat2:
+                cat = urllib.quote_plus(
+                    self.context.cat2.strip().encode('utf-8')
+                )
+                url += '&cat2=' + cat
+        return url
+
     def fetch(self, json_string=None):
 
         if json_string is None:
-            json_string = urlopen(self.context.url).read()
+            url = self.build_url()
+            json_string = urlopen(url).read()
         events = json.loads(json_string)
 
         for event in events:
+
+            cat1, cat2 = event.get('cat1'), event.get('cat2')
+            cat1 = set(cat1) if cat1 is not None else set()
+            cat2 = set(cat2) if cat2 is not None else set()
+
+            if self.context.do_filter:
+                if self.context.cat1:
+                    if self.context.cat1:
+                        if self.context.cat1 not in cat1:
+                            continue
+                    else:
+                        continue
+                if self.context.cat2:
+                    if self.context.cat2:
+                        if self.context.cat2 not in cat2:
+                            continue
+                    else:
+                        continue
 
             e = {}
             e['fetch_id'] = self.context.url
@@ -32,9 +71,8 @@ class EventsSourceSeantisJson(grok.Adapter):
             e['title'] = event.get('title')
             e['short_description'] = event.get('short_description')
             e['long_description'] = event.get('long_description')
-            cat1, cat2 = event.get('cat1'), event.get('cat2')
-            e['cat1'] = set(cat1) if cat1 is not None else set()
-            e['cat2'] = set(cat2) if cat2 is not None else set()
+            e['cat1'] = cat1
+            e['cat2'] = cat2
             e['start'] = parse(event.get('start')).replace(tzinfo=None)
             e['end'] = parse(event.get('end')).replace(tzinfo=None)
             e['recurrence'] = event.get('recurrence')
