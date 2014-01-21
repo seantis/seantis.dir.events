@@ -357,10 +357,12 @@ class ExternalEventImporter(object):
         for event in imported:
             event.reindexObject()
 
-        self.context.reindexObject()
+        if len(imported):
+            self.context.reindexObject()
 
         # reindex in the Events Catalog
-        IDirectoryCatalog(self.context).reindex()
+        if len(imported):
+            IDirectoryCatalog(self.context).reindex()
 
         runtime = datetime.now() - start
         minutes = runtime.total_seconds() // 60
