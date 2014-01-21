@@ -250,15 +250,23 @@ class ExternalEventImporter(object):
                 # whitelist the images that are known to work
                 # not working is *.bmp. We could convert but I'd rather
                 # force people to use a sane format
-                return url.lower().endswith(('png', 'jpg', 'jpeg'))
+                return url.lower().endswith((
+                    'png', 'jpg', 'jpeg', '@@images/image'
+                ))
 
             for download, method in downloads.items():
                 url = event.get(download)
+                name = download + '_name'
 
                 if not url or not allow_download(download, url):
                     event[download] = None
                 else:
                     event[download] = method(self.download(url))
+                    if name in event:
+                        event[download].filename = event[name]
+
+                if name in event:
+                    del event[name]
 
             # latitude and longitude are set through the interface
             lat, lon = event.get('latitude'), event.get('longitude')

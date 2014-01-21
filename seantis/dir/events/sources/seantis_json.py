@@ -128,6 +128,6 @@ class EventsSourceSeantisJson(grok.Adapter):
                 e['attachment_2'] = event['attachements'][1]['url']
                 e['attachment_2_name'] = event['attachements'][1]['name']
             except (TypeError, KeyError, IndexError):
-                e['attachment_1'] = None
+                e['attachment_2'] = None
 
             yield e
