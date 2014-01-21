@@ -90,12 +90,11 @@ class ExternalEventImporter(object):
     def existing_events(self, source):
 
         catalog = getToolByName(self.context, 'portal_catalog')
-        candidates = catalog(object_provides=IExternalEvent.__identifier__)
+        brains = catalog(
+            object_provides=IExternalEvent.__identifier__, source=source
+        )
 
-        events = []
-        for obj in (c.getObject() for c in candidates):
-            if obj.source == source:
-                events.append(obj)
+        events = [brain.getObject() for brain in brains]
 
         return events
 
