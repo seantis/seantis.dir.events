@@ -74,7 +74,8 @@ class EventsSourceSeantisJson(grok.Adapter):
 
             e = {}
             e['fetch_id'] = self.context.url
-            e['last_update'] = default_now()
+            updated = event.get('last_update')
+            e['last_update'] = parse(updated) if updated else default_now()
             e['source_id'] = event['id']
 
             e['id'] = event.get('id')

@@ -692,6 +692,7 @@ class TestImport(IntegrationTestCase):
             ],
             "submitter": "sumitter", "submitter_email": "submitter@ma.il"
         },{
+            "last_update": "2014-01-21T10:21:47+01:00",
             "id": "test", "title": "test",
             "short_description": "test", "long_description": null,
             "cat1": ["cat13", "cat14"], "cat2": ["cat21", "cat22", "cat23"],
@@ -762,6 +763,10 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(events[0]['submitter'], 'sumitter')
         self.assertEquals(events[0]['submitter_email'], 'submitter@ma.il')
 
+        self.assertEquals(
+            events[1]['last_update'],
+            datetime(2014, 1, 21, 9, 21, 47, tzinfo=pytz.UTC)
+        )
         self.assertEquals(events[1]['latitude'], None)
         self.assertEquals(events[1]['longitude'], None)
         self.assertEquals(events[1]['start'], datetime(2014, 1, 19, 17, 0,

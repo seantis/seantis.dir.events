@@ -51,6 +51,8 @@ def render_json_response(request, items):
     for idx, item in enumerate(items):
         event = {}
 
+        updated = item.modification_date.asdatetime().replace(microsecond=0)
+        event['last_update'] = updated.isoformat()
         event['id'] = item.id
         event['title'] = item.title
         event['short_description'] = item.short_description
