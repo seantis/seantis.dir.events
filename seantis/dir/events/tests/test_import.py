@@ -842,21 +842,30 @@ class TestImport(IntegrationTestCase):
         context.cat1 = ''
         context.cat2 = ''
         source = EventsSourceSeantisJson(context)
-        self.assertEquals(source.build_url(), 'http://www.ex.ch/ev/?type=json')
+        self.assertEquals(
+            source.build_url(),
+            'http://www.ex.ch/ev/?type=json&compact=true'
+        )
 
         context.url = '  http://www.ex.ch/ev  '
         source = EventsSourceSeantisJson(context)
-        self.assertEquals(source.build_url(), 'http://www.ex.ch/ev?type=json')
+        self.assertEquals(
+            source.build_url(),
+            'http://www.ex.ch/ev?type=json&compact=true'
+        )
 
         context.do_filter = True
         source = EventsSourceSeantisJson(context)
-        self.assertEquals(source.build_url(), 'http://www.ex.ch/ev?type=json')
+        self.assertEquals(
+            source.build_url(),
+            'http://www.ex.ch/ev?type=json&compact=true'
+        )
 
         context.cat1 = 'cat1'
         source = EventsSourceSeantisJson(context)
         self.assertEquals(
             source.build_url(),
-            'http://www.ex.ch/ev?type=json&filter=true&cat1=cat1'
+            'http://www.ex.ch/ev?type=json&compact=true&filter=true&cat1=cat1'
         )
 
         context.cat1 = ''
@@ -864,12 +873,13 @@ class TestImport(IntegrationTestCase):
         source = EventsSourceSeantisJson(context)
         self.assertEquals(
             source.build_url(),
-            'http://www.ex.ch/ev?type=json&filter=true&cat2=cat2'
+            'http://www.ex.ch/ev?type=json&compact=true&filter=true&cat2=cat2'
         )
 
         context.cat1 = 'cat1'
         source = EventsSourceSeantisJson(context)
         self.assertEquals(
             source.build_url(),
-            'http://www.ex.ch/ev?type=json&filter=true&cat1=cat1&cat2=cat2'
+            'http://www.ex.ch/ev?type=json&compact=true&filter=true'
+            '&cat1=cat1&cat2=cat2'
         )

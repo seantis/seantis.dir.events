@@ -43,12 +43,19 @@ def render_ical_response(request, context, calendar):
     return calendar.to_ical()
 
 
-def render_json_response(request, items):
+def render_json_response(request, items, compact):
     request.response.setHeader("Content-Type", "application/json")
     request.response.setHeader("Access-Control-Allow-Origin", "*")  # CORS
 
+    duplicates = set()
+
     result = []
     for idx, item in enumerate(items):
+        if compact:
+            if item.id in duplicates:
+                continue
+            duplicates.add(item.id)
+
         event = {}
 
         updated = item.modification_date.asdatetime().replace(microsecond=0)
@@ -61,7 +68,7 @@ def render_json_response(request, items):
         event['cat2'] = item.cat2
         event['start'] = item.start.isoformat()
         event['end'] = item.end.isoformat()
-        event['recurrence'] = item.recurrence
+        event['recurrence'] = item.recurrence if compact else ''
         event['whole_day'] = item.whole_day
         event['timezone'] = 'UTC'
         event['locality'] = item.locality

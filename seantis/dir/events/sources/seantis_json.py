@@ -23,7 +23,7 @@ class EventsSourceSeantisJson(grok.Adapter):
     def build_url(self):
 
         url = self.context.url.strip() + '?'
-        url += 'type=json'
+        url += 'type=json&compact=true'
         if self.context.do_filter and (self.context.cat1 or self.context.cat2):
             url += '&filter=true'
             if self.context.cat1:
