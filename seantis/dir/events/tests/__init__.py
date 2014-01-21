@@ -39,6 +39,11 @@ class IntegrationTestCase(unittest.TestCase):
         )
         self.catalog = getAdapter(self.directory, IDirectoryCatalog)
 
+        # Add missing indexes
+        if 'source' not in self.catalog.catalog.indexes():
+            self.catalog.catalog.addIndex('source', 'FieldIndex')
+            self.catalog.catalog.manage_reindexIndex(ids=['source'])
+
         self.directory.manage_setLocalRoles(testing.TEST_USER_ID, ('Manager',))
         self.logout()
 
