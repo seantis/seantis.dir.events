@@ -685,9 +685,11 @@ class TestImport(IntegrationTestCase):
             "registration": "http://www.tickets.ch",
             "organizer": "organizer",
             "prices": "prices",
-            "image": "http://example.ch/1.png",
-            "attachment_1": "http://example.ch/1.pdf",
-            "attachment_2": "http://example.ch/2.pdf",
+            "images": [{"url": "img_url", "name": "img_name"}],
+            "attachements": [
+                {"url": "a1_url", "name": "a1_name"},
+                {"url": "a2_url", "name": "a2_name"}
+            ],
             "submitter": "sumitter", "submitter_email": "submitter@ma.il"
         },{
             "id": "test", "title": "test",
@@ -704,7 +706,7 @@ class TestImport(IntegrationTestCase):
             "location_url": null,
             "contact_name": null, "contact_phone": null, "contact_email": null,
             "registration": null, "organizer": null, "prices": null,
-            "image": null, "attachment_1": null, "attachment_2": null,
+            "images": null, "attachments": [],
             "submitter": "cccc", "submitter_email": "submitter@ma.il"
         }]"""
 
@@ -730,9 +732,12 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(events[0]['event_url'], 'http://www.event.ch')
         self.assertEquals(events[0]['registration'], 'http://www.tickets.ch')
         self.assertEquals(events[0]['location_url'], 'http://www.location.ch')
-        self.assertEquals(events[0]['image'], 'http://example.ch/1.png')
-        self.assertEquals(events[0]['attachment_1'], 'http://example.ch/1.pdf')
-        self.assertEquals(events[0]['attachment_2'], 'http://example.ch/2.pdf')
+        self.assertEquals(events[0]['image'], 'img_url')
+        self.assertEquals(events[0]['image_name'], 'img_name')
+        self.assertEquals(events[0]['attachment_1'], 'a1_url')
+        self.assertEquals(events[0]['attachment_1_name'], 'a1_name')
+        self.assertEquals(events[0]['attachment_2'], 'a2_url')
+        self.assertEquals(events[0]['attachment_2_name'], 'a2_name')
         self.assertEquals(events[0]['organizer'], 'organizer')
         self.assertEquals(events[0]['street'], 'street')
         self.assertEquals(events[0]['housenumber'], 'housenumber')

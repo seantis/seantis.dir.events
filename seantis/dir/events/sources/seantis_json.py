@@ -110,10 +110,24 @@ class EventsSourceSeantisJson(grok.Adapter):
             e['prices'] = event.get('prices')
             e['event_url'] = event.get('event_url')
             e['registration'] = event.get('registration')
-            e['image'] = event.get('image')
-            e['attachment_1'] = event.get('attachment_1')
-            e['attachment_2'] = event.get('attachment_2')
             e['submitter'] = event.get('submitter')
             e['submitter_email'] = event.get('submitter_email')
+
+            try:
+                e['image'] = event['images'][0]['url']
+                e['image_name'] = event['images'][0]['name']
+            except (TypeError, KeyError, IndexError):
+                e['image'] = None
+
+            try:
+                e['attachment_1'] = event['attachements'][0]['url']
+                e['attachment_1_name'] = event['attachements'][0]['name']
+            except (TypeError, KeyError, IndexError):
+                e['attachment_1'] = None
+            try:
+                e['attachment_2'] = event['attachements'][1]['url']
+                e['attachment_2_name'] = event['attachements'][1]['name']
+            except (TypeError, KeyError, IndexError):
+                e['attachment_1'] = None
 
             yield e

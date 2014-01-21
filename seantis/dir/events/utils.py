@@ -78,15 +78,26 @@ def render_json_response(request, items):
         event['submitter'] = item.submitter
         event['submitter_email'] = item.submitter_email
 
-        event['image'] = None
-        event['attachment_1'] = None
-        event['attachment_2'] = None
+        event['images'] = []
         if isinstance(item.image, NamedFile):
-            event['image'] = item.absolute_url() + '/@@images/image'
+            image = {}
+            image['name'] = item.image.filename
+            image['url'] = item.absolute_url() + '/@@images/image'
+            event['images'].append(image)
+
+        event['attachements'] = []
         if isinstance(item.attachment_1, NamedFile):
-            event['attachment_1'] = item.absolute_url() + '/@@download/attachment_1'
+            attachement = {}
+            attachement['name'] = item.attachment_1.filename
+            attachement['url'] = item.absolute_url()
+            attachement['url'] += '/@@download/attachment_1'
+            event['attachements'].append(attachement)
         if isinstance(item.attachment_2, NamedFile):
-            event['attachment_2'] = item.absolute_url() + '/@@download/attachment_2'
+            attachement = {}
+            attachement['name'] = item.attachment_2.filename
+            attachement['url'] = item.absolute_url()
+            attachement['url'] += '/@@download/attachment_2'
+            event['attachements'].append(attachement)
 
         try:
             geo = IGeoreferenced(item)
