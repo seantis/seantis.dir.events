@@ -27,11 +27,6 @@ class IntegrationTestCase(unittest.TestCase):
         self.app = self.layer['app']
         self.portal = self.layer['portal']
 
-        # catalog = self.portal.portal_catalog
-        # if 'source' not in catalog.indexes():
-        #     catalog.addIndex('source', 'FieldIndex')
-        #     catalog.manage_reindexIndex(ids=['source'])
-
         # create a default directory for events
         self.login_admin()
         self.directory = createContentInContainer(

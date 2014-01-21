@@ -7,8 +7,9 @@ from transaction._transaction import AbortSavepoint
 
 from datetime import datetime, timedelta
 from five import grok
-
 from itertools import ifilter, islice
+from functools import partial
+
 from plone.app.event.ical.exporter import construct_icalendar
 from plone.memoize import instance
 
@@ -24,7 +25,7 @@ from zope.lifecycleevent.interfaces import (
 )
 from Products.CMFCore.interfaces import IActionSucceededEvent
 
-from seantis.dir.base.catalog import DirectoryCatalog
+from seantis.dir.base.catalog import DirectoryCatalog, is_exact_match
 from seantis.dir.base.interfaces import IDirectoryCatalog
 from seantis.dir.base.utils import previous_and_next, cached_property
 
@@ -231,7 +232,12 @@ class EventIndex(object):
 
     def event_by_id_and_date(self, id, date):
 
-        real = self.catalog.query(id=id)[0].getObject()
+        real = self.catalog.catalog(
+            path={'query': self.catalog.path, 'depth': 1},
+            object_provides=IEventsDirectoryItem.__identifier__,
+            review_state=self.state,
+            id=id
+        )[0].getObject()
 
         # there is currently no way to easily look up the event by date
         # if it has been split over dates already (which is what happens
@@ -590,14 +596,33 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         if self.import_source != '' and self.subset == None:
             self.subset = sorted(self.query(), key=self.sortkey())
 
-    def export(self, search=None, filter=None, max=None):
-        # Find subset
+    def export(self, search=None, term=None, max=None, **kw):
+        # Unfortunantely, the search/filter/items/query functions depend all
+        # on some view-state variables - we have to find the subset ourselves.
         if search:
-            subset = super(EventsDirectoryCatalog, self).search(search)
-        elif filter:
-            subset = super(EventsDirectoryCatalog, self).filter(filter)
-        else:
-            subset = super(EventsDirectoryCatalog, self).items()
+            search = search.replace('*', '')
+            search = '"{}"*'.format(search)
+            kw['SearchableText'] = search
+
+        elif term:
+            # import pdb; pdb.set_trace()
+            kw['categories'] = {
+                'query': term.values(),
+                'operator': 'and'
+            }
+
+        subset = self.catalog(
+            path={'query': self.path, 'depth': 1},
+            object_provides=IEventsDirectoryItem.__identifier__,
+            review_state='published',
+            **kw
+        )
+
+        if term:
+            filter_key = partial(is_exact_match, term=term)
+            subset = filter(filter_key, subset)
+
+        subset = sorted(subset, key=self.sortkey())
 
         # Get lazy list from indexer using the subset
         start, end = getattr(dates.DateRanges(), 'this_and_next_year')
@@ -609,11 +634,11 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
         return islice(ll, max)
 
-    def calendar(self, search=None, filter=None):
+    def calendar(self, search=None, term=None):
         if search:
             items = super(EventsDirectoryCatalog, self).search(search)
-        elif filter:
-            items = super(EventsDirectoryCatalog, self).filter(filter)
+        elif term:
+            items = super(EventsDirectoryCatalog, self).filter(term)
         else:
             items = super(EventsDirectoryCatalog, self).items()
 
