@@ -119,6 +119,25 @@ class ExternalEventImporter(object):
             key=lambda e: (e['last_update'], e['source_id'])
         )
 
+        existing = self.groupby_source_id(self.existing_events(source))
+
+        # Autoremove externally deleted events
+        if autoremove:
+            new_ids = [event['source_id'] for event in events]
+            old_ids = existing.keys()
+            delta = list(set(old_ids) - set(new_ids))
+            if limit is not None:
+                delta = delta[:limit]
+            for rm_id in delta:
+                # source id's are not necessarily unique
+                for event in existing[rm_id]:
+                    log.info('Deleting %s @ %s' % (
+                        event.title,
+                        event.start.strftime('%d.%m.%Y %H:%M')
+                    ))
+                    self.context.manage_delObjects(event.id)
+
+
         imported = []
         if len(events) == 0:
             return imported
@@ -145,23 +164,6 @@ class ExternalEventImporter(object):
             changed_offers_only = True
 
         total = len(events) if not limit else limit
-        existing = self.groupby_source_id(self.existing_events(source))
-
-        # Autoremove externally deleted events
-        if autoremove:
-            new_ids = [event['source_id'] for event in events]
-            old_ids = existing.keys()
-            delta = list(set(old_ids) - set(new_ids))
-            if limit is not None:
-                delta = delta[:limit]
-            for rm_id in delta:
-                # source id's are not necessarily unique
-                for event in existing[rm_id]:
-                    log.info('Deleting %s @ %s' % (
-                        event.title,
-                        event.start.strftime('%d.%m.%Y %H:%M')
-                    ))
-                    self.context.manage_delObjects(event.id)
 
         workflowTool = getToolByName(self.context, 'portal_workflow')
 

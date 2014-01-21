@@ -44,13 +44,7 @@ class EventsSourceSeantisJson(grok.Adapter):
             url = self.build_url()
             json_string = urlopen(url).read()
 
-        try:
-            events = json.loads(json_string)
-        except:
-            events = []
-            log.error(
-                'could not decode json string (%s)' % self.context.url
-            )
+        events = json.loads(json_string)
 
         for event in events:
 
