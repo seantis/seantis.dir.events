@@ -256,7 +256,10 @@ class EventIndex(object):
         max_date = date + timedelta(days=1)
 
         for item in self.spawn_events([real], min_date, max_date):
-            if dates.to_utc(dates.delete_timezone(item.local_start)) == date:
+            start = dates.to_utc(
+                dates.delete_timezone(item.local_start)
+            ).replace(second=0, microsecond=0)
+            if start == date:
                 return item
 
         assert False, "lookup for %s failed" % id
