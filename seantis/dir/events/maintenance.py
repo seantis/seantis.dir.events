@@ -78,5 +78,7 @@ class ClockLogger(object):
 
         if not code:
             log.error("ClockServer for %s returned nothing" % self.method)
+        elif code == 200:
+            pass
         else:
             log.warn("ClockServer for %s returned %i" % (self.method, code))

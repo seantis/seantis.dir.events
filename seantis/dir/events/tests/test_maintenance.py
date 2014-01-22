@@ -27,7 +27,7 @@ class TestMaintenance(IntegrationTestCase):
         logger = maintenance.ClockLogger('method')
 
         logger.log('GET http://localhost:888/method HTTP/1.1 200')
-        self.assertTrue('call.info' in str(maintenance.log.method_calls))
+        self.assertEquals(0, len(maintenance.log.method_calls))
 
         logger.log('GET http://localhost:888/method HTTP/1.1 500')
         self.assertTrue('call.warn' in str(maintenance.log.method_calls))
@@ -37,7 +37,7 @@ class TestMaintenance(IntegrationTestCase):
         self.assertTrue('call.error' in str(maintenance.log.method_calls))
 
         logger.log('')
-        self.assertTrue(len(maintenance.log.method_calls) == 4)
+        self.assertEquals(3, len(maintenance.log.method_calls))
 
         logger.log('abcd')
-        self.assertTrue(len(maintenance.log.method_calls) == 5)
+        self.assertEquals(4, len(maintenance.log.method_calls))
