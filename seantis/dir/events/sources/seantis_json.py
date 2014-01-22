@@ -12,7 +12,8 @@ from plone.app.event.base import default_timezone
 from seantis.dir.events.dates import default_now
 from seantis.dir.events.interfaces import (
     IExternalEventCollector,
-    IExternalEventSourceSeantisJson
+    IExternalEventSourceSeantisJson,
+    NoImportDataException
 )
 
 
@@ -40,11 +41,14 @@ class EventsSourceSeantisJson(grok.Adapter):
 
     def fetch(self, json_string=None):
 
-        if json_string is None:
-            url = self.build_url()
-            json_string = urlopen(url).read()
+        try:
+            if json_string is None:
+                url = self.build_url()
+                json_string = urlopen(url).read()
 
-        events = json.loads(json_string)
+            events = json.loads(json_string)
+        except:
+            raise NoImportDataException()
 
         for event in events:
 

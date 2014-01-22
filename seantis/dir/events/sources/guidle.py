@@ -13,7 +13,8 @@ from five import grok
 
 from seantis.dir.events.interfaces import (
     IExternalEventCollector,
-    IExternalEventSourceGuidle
+    IExternalEventSourceGuidle,
+    NoImportDataException
 )
 
 
@@ -135,14 +136,17 @@ class EventsSourceGuidle(grok.Adapter):
 
     def fetch(self, xml=None):
 
-        if xml is None:
-            xml = urlopen(self.context.url).read()
-        root = objectify.fromstring(xml)
+        try:
+            if xml is None:
+                xml = urlopen(self.context.url).read()
+            root = objectify.fromstring(xml)
 
-        offers = root.xpath(
-            '*//guidle:offer',
-            namespaces={'guidle': 'http://www.guidle.com'}
-        )
+            offers = root.xpath(
+                '*//guidle:offer',
+                namespaces={'guidle': 'http://www.guidle.com'}
+            )
+        except:
+            raise NoImportDataException()
 
         for offer in offers:
 

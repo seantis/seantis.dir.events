@@ -35,7 +35,8 @@ from seantis.dir.events.interfaces import (
     IExternalEvent,
     IExternalEventCollector,
     IExternalEventSource,
-    IEventsDirectory
+    IEventsDirectory,
+    NoImportDataException
 )
 from seantis.dir.events.unrestricted import execute_under_special_role
 
@@ -114,10 +115,16 @@ class ExternalEventImporter(object):
         self, source, function, limit=None, reimport=False, source_ids=[],
         autoremove=False
     ):
-        events = sorted(
-            function(),
-            key=lambda e: (e['last_update'], e['source_id'])
-        )
+        imported = []
+
+        try:
+            events = sorted(
+                function(),
+                key=lambda e: (e['last_update'], e['source_id'])
+            )
+        except NoImportDataException:
+            log.info('Nothing to import')
+            return imported
 
         existing = self.groupby_source_id(self.existing_events(source))
 
@@ -137,8 +144,6 @@ class ExternalEventImporter(object):
                     ))
                     self.context.manage_delObjects(event.id)
 
-
-        imported = []
         if len(events) == 0:
             return imported
 

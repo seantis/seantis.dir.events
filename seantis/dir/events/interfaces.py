@@ -396,6 +396,9 @@ class IExternalEventSourceSeantisJson(IExternalEventSource):
     )
 
 
+class NoImportDataException(Exception):
+    pass
+
 
 class IExternalEventCollector(Interface):
     """Interface for exernal event sources (adapter)"""
@@ -406,7 +409,11 @@ class IExternalEventCollector(Interface):
         """)
 
     def fetch(self):
-        """Generator function returning all items to import"""
+        """Generator function returning all items to import. If returning an
+        empty array, all already imported events will be deleted if autoremove
+        is set. To prevent importing anything, throw a NoImportDataException.
+
+        """
 
 
 class ISourceCondition(Interface):
@@ -418,7 +425,8 @@ class ISourceCondition(Interface):
     
     source = TextLine(
         title=_(u'Source'),
-        description=_(u"The source id to check for. Leave empty for any source."),
+        description=_(u"The source id to check for. "
+                      u"Leave empty for any source."),
         required=False
     )
 
