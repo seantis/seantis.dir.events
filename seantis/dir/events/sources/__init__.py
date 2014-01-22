@@ -123,7 +123,7 @@ class ExternalEventImporter(object):
                 key=lambda e: (e['last_update'], e['source_id'])
             )
         except NoImportDataException:
-            log.info('Nothing to import')
+            log.info('no data received for %s' % source)
             return imported
 
         existing = self.groupby_source_id(self.existing_events(source))
@@ -356,26 +356,25 @@ class ExternalEventImporter(object):
         finally:
             self.enable_indexing()
 
-        log.info('reindexing commited events')
-
-        # reindex in the ZCatalog
-        for event in imported:
-            event.reindexObject()
+        runtime = datetime.now() - start
 
         if len(imported):
+            # Reindex
+            log.info('reindexing commited events for %s' % source)
+
+            for event in imported:
+                event.reindexObject()
+
             self.context.reindexObject()
 
-        # reindex in the Events Catalog
-        if len(imported):
             IDirectoryCatalog(self.context).reindex()
 
-        runtime = datetime.now() - start
-        minutes = runtime.total_seconds() // 60
-        seconds = runtime.seconds - minutes * 60
-
-        log.info('imported %i events in %i minutes, %i seconds' % (
-            len(imported), minutes, seconds
-        ))
+            # Log runtime
+            minutes = runtime.total_seconds() // 60
+            seconds = runtime.seconds - minutes * 60
+            log.info('imported %i events in %i minutes, %i seconds' % (
+                len(imported), minutes, seconds
+            ))
 
         return len(imported), runtime
 
@@ -437,44 +436,48 @@ class ExternalEventImportScheduler(object):
             log.info('already importing')
             return
 
-        importer = ExternalEventImporter(context)
-        for source in importer.sources():
-            path = source.getPath()
-            interval = source.getObject().interval
+        try:
+            importer = ExternalEventImporter(context)
+            for source in importer.sources():
+                path = source.getPath()
+                interval = source.getObject().interval
 
-            # Continuous import imports only a few events
-            if interval == 'continuous':
-                limit = 10
+                # Continuous import imports only a few events
+                if interval == 'continuous':
+                    limit = 10
 
-            # Check if initial run
-            if not path in self.next_run:
-                self.next_run[path] = self.get_next_run(interval)
-                self.interval[path] = interval
-                log.info('Initial run for source %s scheduled @ %s' % (
-                    path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
-                ))
+                # Check if initial run
+                if not path in self.next_run:
+                    self.next_run[path] = self.get_next_run(interval)
+                    self.interval[path] = interval
+                    log.info('initial run for source %s scheduled @ %s' % (
+                        path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
+                    ))
 
-            # Check if interval changed
-            if interval != self.interval[path]:
-                self.next_run[path] = self.get_next_run(interval)
-                self.interval[path] = interval
-                log.info('New interval for source %s, now scheduled @ %s' % (
-                    path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
-                ))
+                # Check if interval changed
+                if interval != self.interval[path]:
+                    self.next_run[path] = self.get_next_run(interval)
+                    self.interval[path] = interval
+                    log.info(
+                        'new interval for source %s, now scheduled @ %s' % (
+                            path, self.next_run[path].strftime(
+                                '%d.%m.%Y %H:%M')
+                        ))
 
-            # Run
-            if (self.now() > self.next_run[path]) or force_run:
-                count, time = importer.fetch_one(
-                    path,
-                    IExternalEventCollector(source.getObject()).fetch,
-                    limit, reimport, source_ids, source.getObject().autoremove)
-                self.next_run[path] = self.get_next_run(interval)
-                self.interval[path] = interval
-                log.info('Source %s imported, next run scheduled @ %s' % (
-                    path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
-                ))
-
-        self.handle_run(True)
+                # Run
+                if (self.now() > self.next_run[path]) or force_run:
+                    count, time = importer.fetch_one(
+                        path,
+                        IExternalEventCollector(source.getObject()).fetch,
+                        limit, reimport, source_ids,
+                        source.getObject().autoremove)
+                    self.next_run[path] = self.get_next_run(interval)
+                    self.interval[path] = interval
+                    log.info('source %s processed, next run scheduled @ %s' % (
+                        path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
+                    ))
+        finally:
+            self.handle_run(True)
 
 import_scheduler = ExternalEventImportScheduler()
 
