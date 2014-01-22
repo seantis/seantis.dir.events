@@ -515,6 +515,28 @@ class TestImport(IntegrationTestCase):
             # Clean up (transaction has been commited)
             self.cleanup_after_fetch_one()
 
+    def test_importer_export_imported(self):
+        try:
+            # Import event
+            importer = ExternalEventImporter(self.directory)
+            event = self.create_fetch_entry(source_id='s', fetch_id='f')
+            imports, runtime = importer.fetch_one('source', lambda: [event])
+            self.assertEquals(imports, 1)
+
+            # Add own event
+            event = self.create_event(start=datetime.today().replace(second=0))
+            event.submit()
+            event.publish()
+            reindex_directory(self.directory)
+
+            # Export events
+            events = [idx for idx in enumerate(self.catalog.export())]
+            self.assertEquals(len(events), 1)
+
+        finally:
+            # Clean up (transaction has been commited)
+            self.cleanup_after_fetch_one()
+
     def test_guidle_import(self):
         xml = """<?xml version="1.0" encoding="UTF-8"?>
 <guidle:exportData xmlns:guidle="http://www.guidle.com">
