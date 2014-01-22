@@ -387,6 +387,26 @@ class ExternalEventImportScheduler(object):
     def __init__(self):
         self.next_run = {}
         self.interval = {}
+        self.running = False
+
+    @synchronized(_lock)
+    def handle_run(self, do_stop=False):
+        """Check if we can start importing or signal that we are finished.
+
+        Note that it is possible that requests are still blocked, i.e. when
+        doing the same request (e.g. '/fetch'), see ZSever/medusa/http_server.
+        
+        """
+        return_value = False
+
+        if do_stop:
+            self.running = False
+        else:
+            if not self.running:
+                self.running = True
+                return_value = True
+
+        return return_value
 
     def now(self):
         return datetime.now()
@@ -410,9 +430,13 @@ class ExternalEventImportScheduler(object):
 
         return next_run
 
-    @synchronized(_lock)
     def run(self, context, limit=0, reimport=False, source_ids=[],
             force_run=False):
+
+        if not self.handle_run():
+            log.info('already importing')
+            return
+
         importer = ExternalEventImporter(context)
         for source in importer.sources():
             path = source.getPath()
@@ -450,6 +474,7 @@ class ExternalEventImportScheduler(object):
                     path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
                 ))
 
+        self.handle_run(True)
 
 import_scheduler = ExternalEventImportScheduler()
 
