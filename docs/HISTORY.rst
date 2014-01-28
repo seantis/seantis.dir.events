@@ -5,6 +5,9 @@ Changelog
 1.0rc4 (unreleased)
 ~~~~~~~~~~~~~~~~~~~
 
+- Integrates seantis.plonetools.
+  [href]
+
 1.0rc3
 ~~~~~~
 
