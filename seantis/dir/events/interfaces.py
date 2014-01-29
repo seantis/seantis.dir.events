@@ -364,7 +364,7 @@ class IExternalEventSource(form.Schema):
 class IExternalEventSourceGuidle(IExternalEventSource):
     """Guidle source."""
 
-    url = AutoProtocolURI(
+    url = Website(
         title=_(u'Guidle URL to download from'),
         required=True
     )
@@ -373,7 +373,7 @@ class IExternalEventSourceGuidle(IExternalEventSource):
 class IExternalEventSourceSeantisJson(IExternalEventSource):
     """Seantis events directory source."""
 
-    url = AutoProtocolURI(
+    url = Website(
         title=_(u'Events directory URL'),
         required=True
     )
