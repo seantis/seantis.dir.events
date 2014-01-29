@@ -15,7 +15,8 @@ from zope.schema import Text, TextLine, Bool, List, Choice, Time, Date, Int
 from zope.interface import Invalid, Interface, Attribute, alsoProvides
 from zope.schema.vocabulary import SimpleVocabulary, SimpleTerm
 
-from seantis.dir.base.schemafields import Email, AutoProtocolURI
+from seantis.plonetools.schemafields import Email, Website
+
 from seantis.dir.base.interfaces import (
     IDirectory,
     IDirectoryItem,
@@ -191,13 +192,13 @@ class IEventsDirectoryItem(IDirectoryItem):
     )
 
     searchable('location_url')
-    location_url = AutoProtocolURI(
+    location_url = Website(
         title=_(u'Location Website'),
         required=False
     )
 
     searchable('event_url')
-    event_url = AutoProtocolURI(
+    event_url = Website(
         title=_(u'Event Website'),
         required=False
     )
@@ -233,7 +234,7 @@ class IEventsDirectoryItem(IDirectoryItem):
     )
 
     searchable('registration')
-    registration = AutoProtocolURI(
+    registration = Website(
         title=_(u'Ticket / Registration Website'),
         required=False
     )

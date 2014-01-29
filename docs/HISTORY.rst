@@ -5,6 +5,15 @@ Changelog
 1.0rc4 (unreleased)
 ~~~~~~~~~~~~~~~~~~~
 
+- Removes plone.app.event.dx profile depencency - it is deprecated.
+  [href]
+
+- Adds plone.app.event.ploneintegration profile dependency.
+  [href]
+
+- Integrates seantis.plonetools.
+  [href]
+
 1.0rc3
 ~~~~~~
 

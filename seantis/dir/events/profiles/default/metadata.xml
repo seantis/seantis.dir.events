@@ -3,7 +3,7 @@
     <dependencies>
         <dependency>profile-plone.app.dexterity:default</dependency>
         <dependency>profile-plone.app.event:default</dependency>
-        <dependency>profile-plone.app.event.dx:default</dependency>
+        <dependency>profile-plone.app.event.ploneintegration:default</dependency>
         <dependency>profile-plone.formwidget.recurrence:default</dependency>
         <dependency>profile-collective.js.underscore:default</dependency>
         <dependency>profile-collective.geo.behaviour:default</dependency>
