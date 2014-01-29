@@ -23,7 +23,7 @@ _lock = threading.Lock()
 @grok.subscribe(IResourceViewedEvent)
 def on_resource_viewed(event):
     path = '/'.join(event.context.getPhysicalPath())
-    register(path + '/fetch', 10 * 60)
+    register(path + '/fetch', 15 * 60)
     register(path + '/cleanup?run=1', 60 * 60)
 
 
