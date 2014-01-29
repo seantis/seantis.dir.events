@@ -117,9 +117,9 @@ class CommonBrowserTests(BrowserTestCase):
         self.assertTrue('GS1' in admin.contents)
         self.assertTrue('GS2' in admin.contents)
         self.assertTrue('GS3' in admin.contents)
-        self.assertTrue('/gs1/edit' in admin.contents)
-        self.assertTrue('/gs2/edit' in admin.contents)
-        self.assertTrue('/gs3/edit' in admin.contents)
+        self.assertTrue('/gs1' in admin.contents)
+        self.assertTrue('/gs2' in admin.contents)
+        self.assertTrue('/gs3' in admin.contents)
 
         # Filters
         admin.open('/veranstaltungen?source=gs1')
