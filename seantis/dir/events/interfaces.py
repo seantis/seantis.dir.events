@@ -376,19 +376,19 @@ class IExternalEventSourceSeantisJson(IExternalEventSource):
     )
 
     do_filter = Bool(
-        title=_(u'Filter events by category names'),
+        title=_(u'Filter events'),
         required=False,
         default=False
     )
 
     cat1 = TextLine(
-        title=_(u'Filter: 1st category name'),
+        title=_(u'What'),
         required=False,
         default=u''
     )
 
     cat2 = TextLine(
-        title=_(u'Filter: 2nd category name'),
+        title=_(u'Where'),
         required=False,
         default=u''
     )

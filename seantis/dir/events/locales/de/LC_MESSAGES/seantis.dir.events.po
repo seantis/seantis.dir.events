@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-01-29 10:33+0000\n"
+"POT-Creation-Date: 2014-01-29 10:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -152,7 +152,7 @@ msgstr "Sie organisieren eine Veranstaltung?"
 msgid "Edit import source condition"
 msgstr "Importquellenbedingung bearbeiten"
 
-#: ./interfaces.py:345
+#: ./interfaces.py:338
 msgid "Enabled"
 msgstr "Aktiviert"
 
@@ -246,16 +246,8 @@ msgid "Events matching the current filter"
 msgstr "Veranstaltungen die dem aktuellen Filter entsprechen"
 
 #: ./interfaces.py:379
-msgid "Filter events by category names"
-msgstr "Filtere Veranstaltungen mittels Kategorien"
-
-#: ./interfaces.py:385
-msgid "Filter: 1st category name"
-msgstr "Filter: Kategorie 1"
-
-#: ./interfaces.py:391
-msgid "Filter: 2nd category name"
-msgstr "Filter: Kategorie 2"
+msgid "Filter events"
+msgstr "Filtere Veranstaltungen"
 
 #: ./templates/directory.pt:64
 msgid "Filtered Events"
@@ -345,7 +337,7 @@ msgstr "Importierte Veranstaltungen können nicht editiert werden. Es wurden kei
 msgid "Information"
 msgstr "Informationen"
 
-#: ./interfaces.py:338
+#: ./interfaces.py:344
 msgid "Limit"
 msgstr "Limit"
 
@@ -585,7 +577,7 @@ msgstr "Allgemeine Geschäftsbedingungen"
 msgid "Th"
 msgstr "Do"
 
-#: ./interfaces.py:339
+#: ./interfaces.py:345
 msgid "The number of events to import every 15 minutes."
 msgstr "Anzahl der Veranstaltungen, welche alle 15 Minuten importiert werden."
 
@@ -679,6 +671,7 @@ msgid "We"
 msgstr "Mi"
 
 #: ./directory.py:40
+#: ./interfaces.py:385
 msgid "What"
 msgstr "Was"
 
@@ -687,6 +680,7 @@ msgid "When will this event occur?"
 msgstr "Wann wird diese Veranstaltung stattfinden?"
 
 #: ./directory.py:40
+#: ./interfaces.py:391
 msgid "Where"
 msgstr "Wo"
 

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-01-29 10:33+0000\n"
+"POT-Creation-Date: 2014-01-29 10:43+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -155,7 +155,7 @@ msgstr ""
 msgid "Edit import source condition"
 msgstr ""
 
-#: ./interfaces.py:345
+#: ./interfaces.py:338
 msgid "Enabled"
 msgstr ""
 
@@ -249,15 +249,7 @@ msgid "Events matching the current filter"
 msgstr ""
 
 #: ./interfaces.py:379
-msgid "Filter events by category names"
-msgstr ""
-
-#: ./interfaces.py:385
-msgid "Filter: 1st category name"
-msgstr ""
-
-#: ./interfaces.py:391
-msgid "Filter: 2nd category name"
+msgid "Filter events"
 msgstr ""
 
 #: ./templates/directory.pt:64
@@ -348,7 +340,7 @@ msgstr ""
 msgid "Information"
 msgstr ""
 
-#: ./interfaces.py:338
+#: ./interfaces.py:344
 msgid "Limit"
 msgstr ""
 
@@ -588,7 +580,7 @@ msgstr ""
 msgid "Th"
 msgstr ""
 
-#: ./interfaces.py:339
+#: ./interfaces.py:345
 msgid "The number of events to import every 15 minutes."
 msgstr ""
 
@@ -682,6 +674,7 @@ msgid "We"
 msgstr ""
 
 #: ./directory.py:40
+#: ./interfaces.py:385
 msgid "What"
 msgstr ""
 
@@ -690,6 +683,7 @@ msgid "When will this event occur?"
 msgstr ""
 
 #: ./directory.py:40
+#: ./interfaces.py:391
 msgid "Where"
 msgstr ""
 
