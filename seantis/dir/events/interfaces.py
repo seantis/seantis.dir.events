@@ -334,15 +334,11 @@ class IExternalEventSource(form.Schema):
         title=_(u'Name'),
     )
 
-    interval = Choice(
-        title=_(u'Import interval'),
+    limit = Int(
+        title=_(u'Limit'),
+        description=_(u'The number of events to import every 15 minutes.'),
         required=True,
-        vocabulary=SimpleVocabulary([
-            SimpleTerm(value='continuous',
-                       title=_(u'Every few minutes a few events')),
-            SimpleTerm(value='daily', title=_(u'Every day at 02:00')),
-            SimpleTerm(value='hourly', title=_(u'Every hour'))
-        ]),
+        default=25
     )
 
     enabled = Bool(

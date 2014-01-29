@@ -207,8 +207,8 @@ class ExternalEventImporter(object):
                     event[cat] = set()
                 categories[cat] |= event[cat]
 
-            # for testing
-            if limit and len(imported) >= limit and not limit_reached_id:
+            # stop at limit
+            if limit and (len(imported)+1) >= limit and not limit_reached_id:
                 log.info('reached limit of %i events' % limit)
                 # don't quit right away, all events of the same source_id
                 # need to be imported first since they have the same
@@ -376,7 +376,7 @@ class ExternalEventImporter(object):
                 len(imported), minutes, seconds
             ))
 
-        return len(imported), runtime
+        return len(imported)
 
 
 class ExternalEventImportScheduler(object):
@@ -384,8 +384,6 @@ class ExternalEventImportScheduler(object):
     _lock = Lock()
 
     def __init__(self):
-        self.next_run = {}
-        self.interval = {}
         self.running = False
 
     @synchronized(_lock)
@@ -407,77 +405,37 @@ class ExternalEventImportScheduler(object):
 
         return return_value
 
-    def now(self):
-        return datetime.now()
+    def run(self, context, reimport=False, source_ids=[]):
 
-    def get_next_run(self, interval):
-        now = self.now()
-
-        if interval == 'continuous':
-            next_run = now
-
-        elif interval == 'hourly':
-            # 'hourly': Schedule next run at xx:00
-            next_run = datetime(now.year, now.month, now.day, now.hour)
-            next_run += timedelta(hours=1)
-
-        else:
-            # 'daily': Schedule next run tomorrow 2:00
-            days = 0 if (now.hour < 2) else 1
-            next_run = datetime(now.year, now.month, now.day) + timedelta(
-                days=days, hours=2)
-
-        return next_run
-
-    def run(self, context, limit=0, reimport=False, source_ids=[],
-            force_run=False):
+        imported = 0
+        sources = 0
 
         if not self.handle_run():
             log.info('already importing')
-            return
+            return imported, sources
+
+        directory = '/'.join(context.getPhysicalPath())
+        log.info('begin importing sources from %s' % (directory))
 
         try:
             importer = ExternalEventImporter(context)
             for source in importer.sources():
+                sources += 1
                 path = source.getPath()
-                interval = source.getObject().interval
-
-                # Continuous import imports only a few events
-                if interval == 'continuous':
-                    limit = 10
-
-                # Check if initial run
-                if not path in self.next_run:
-                    self.next_run[path] = self.get_next_run(interval)
-                    self.interval[path] = interval
-                    log.info('initial run for source %s scheduled @ %s' % (
-                        path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
-                    ))
-
-                # Check if interval changed
-                if interval != self.interval[path]:
-                    self.next_run[path] = self.get_next_run(interval)
-                    self.interval[path] = interval
-                    log.info(
-                        'new interval for source %s, now scheduled @ %s' % (
-                            path, self.next_run[path].strftime(
-                                '%d.%m.%Y %H:%M')
-                        ))
-
-                # Run
-                if (self.now() > self.next_run[path]) or force_run:
-                    count, time = importer.fetch_one(
-                        path,
-                        IExternalEventCollector(source.getObject()).fetch,
-                        limit, reimport, source_ids,
-                        source.getObject().autoremove)
-                    self.next_run[path] = self.get_next_run(interval)
-                    self.interval[path] = interval
-                    log.info('source %s processed, next run scheduled @ %s' % (
-                        path, self.next_run[path].strftime('%d.%m.%Y %H:%M')
-                    ))
+                events = importer.fetch_one(
+                    path,
+                    IExternalEventCollector(source.getObject()).fetch,
+                    source.getObject().limit,
+                    reimport, source_ids,
+                    source.getObject().autoremove)
+                log.info('source %s processed' % (path))
+                imported += events
         finally:
+            log.info('importing sources from %s finished' % (directory))
             self.handle_run(True)
+
+        return imported, sources
+
 
 import_scheduler = ExternalEventImportScheduler()
 
@@ -493,15 +451,13 @@ class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
 
         self.request.response.setHeader("Content-type", "text/plain")
 
-        limit = int(self.request.get('limit', 0))
         reimport = bool(self.request.get('reimport', False))
         ids = self.request.get('source-ids', '').split(',')
-        force_run = bool(self.request.get('force', False))
 
-        execute_under_special_role(
+        imported, sources = execute_under_special_role(
             getSite(), 'Manager',
-            import_scheduler.run, self.context, limit, reimport,
-            all(ids) and ids or None, force_run
+            import_scheduler.run, self.context, reimport,
+            all(ids) and ids or None
         )
 
-        return u''
+        return u'%i events imported from %i sources' % (imported, sources)

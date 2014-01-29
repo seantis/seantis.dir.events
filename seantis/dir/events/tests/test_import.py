@@ -114,104 +114,6 @@ class TestImport(IntegrationTestCase):
 
         return kw
 
-    @mock.patch('seantis.dir.events.sources.ExternalEventImportScheduler.now')
-    def test_import_scheduler_next_run(self, now):
-        real_now = datetime.today()
-        today = datetime(real_now.year, real_now.month, real_now.day)
-        tomorrow = today + timedelta(days=1)
-
-        # Test daily interval
-        now.return_value = today
-        next_run = import_scheduler.get_next_run('daily')
-        self.assertEqual(next_run, today + timedelta(hours=2))
-
-        now.return_value = today + timedelta(minutes=10)
-        next_run = import_scheduler.get_next_run('daily')
-        self.assertEqual(next_run, today + timedelta(hours=2))
-
-        now.return_value = today + timedelta(hours=1, minutes=59)
-        next_run = import_scheduler.get_next_run('daily')
-        self.assertEqual(next_run, today + timedelta(hours=2))
-
-        now.return_value = today + timedelta(hours=2)
-        next_run = import_scheduler.get_next_run('daily')
-        self.assertEqual(next_run, tomorrow + timedelta(hours=2))
-
-        now.return_value = today + timedelta(hours=2, minutes=30)
-        next_run = import_scheduler.get_next_run('daily')
-        self.assertEqual(next_run, tomorrow + timedelta(hours=2))
-
-        now.return_value = today + timedelta(hours=4)
-        next_run = import_scheduler.get_next_run('daily')
-        self.assertEqual(next_run, tomorrow + timedelta(hours=2))
-
-        now.return_value = today + timedelta(hours=12)
-        next_run = import_scheduler.get_next_run('daily')
-        self.assertEqual(next_run, tomorrow + timedelta(hours=2))
-
-        # Test hourly interval
-        now.return_value = today + timedelta(minutes=10)
-        next_run = import_scheduler.get_next_run('hourly')
-        self.assertEqual(next_run, today + timedelta(hours=1))
-
-        now.return_value = today + timedelta(minutes=40)
-        next_run = import_scheduler.get_next_run('hourly')
-        self.assertEqual(next_run, today + timedelta(hours=1))
-
-        now.return_value = today + timedelta(minutes=59)
-        next_run = import_scheduler.get_next_run('hourly')
-        self.assertEqual(next_run, today + timedelta(hours=1))
-
-        now.return_value = today + timedelta(hours=1, minutes=1)
-        next_run = import_scheduler.get_next_run('hourly')
-        self.assertEqual(next_run, today + timedelta(hours=2))
-
-        now.return_value = today + timedelta(hours=23, minutes=59)
-        next_run = import_scheduler.get_next_run('hourly')
-        self.assertEqual(next_run, tomorrow)
-
-        now.return_value = today + timedelta(days=3, hours=17, minutes=28)
-        next_run = import_scheduler.get_next_run('hourly')
-        self.assertEqual(next_run, today + timedelta(days=3, hours=18))
-
-        # Test continuous interval
-        now.return_value = today + timedelta(hours=5, minutes=59)
-        next_run = import_scheduler.get_next_run('continuous')
-        self.assertEqual(next_run, today + timedelta(hours=5, minutes=59))
-
-    @mock.patch('seantis.dir.events.sources.ExternalEventImportScheduler.now')
-    @mock.patch('seantis.dir.events.sources.ExternalEventImporter.sources')
-    def test_import_scheduler_run(self, sources, now):
-
-        real_now = datetime.today()
-        today = datetime(real_now.year, real_now.month, real_now.day)
-        now.return_value = today + timedelta(hours=5, minutes=59)
-
-        source = mock.Mock()
-        source.getPath.return_value = 'path'
-        obj = mock.Mock()
-        source.getObject.return_value = obj
-        sources.return_value = [source]
-
-        # Test interval change
-        obj.interval = 'daily'
-        import_scheduler.run(self, None)
-        self.assertEquals(import_scheduler.next_run['path'],
-                          today + timedelta(days=1, hours=2))
-        self.assertEquals(import_scheduler.interval['path'], 'daily')
-
-        obj.interval = 'hourly'
-        import_scheduler.run(self, None)
-        self.assertEquals(import_scheduler.next_run['path'],
-                          today + timedelta(hours=6))
-        self.assertEquals(import_scheduler.interval['path'], 'hourly')
-
-        obj.interval = 'continuous'
-        import_scheduler.run(self, None)
-        self.assertEquals(import_scheduler.next_run['path'],
-                          today + timedelta(hours=5, minutes=59))
-        self.assertEquals(import_scheduler.interval['path'], 'continuous')
-
     def test_importer_sources(self):
         self.create_guidle_source(enabled=True)
         self.create_guidle_source(enabled=False)
@@ -304,38 +206,38 @@ class TestImport(IntegrationTestCase):
             ids = ['event1', 'event2', 'event3', 'event4',
                    'event5', 'event6', 'event7', 'event8']
             events = from_ids(ids[:4])
-            imports, runtime = importer.fetch_one('source', fetch)
+            imports = importer.fetch_one('source', fetch)
             self.assertEquals(imports, 4)
             imported = [i.getObject().source_id for i in self.catalog.query()]
             self.assertEquals(ids[:4], imported)
 
             # Import with limit
             events = from_ids(ids[4:])
-            imports, runtime = importer.fetch_one('source', fetch, limit=2)
-            self.assertEquals(imports, 3)
-            self.assertEquals(len(self.catalog.query()), 7)
-            imports, runtime = importer.fetch_one('source', fetch)
-            self.assertEquals(imports, 1)
+            imports = importer.fetch_one('source', fetch, limit=2)
+            self.assertEquals(imports, 2)
+            self.assertEquals(len(self.catalog.query()), 6)
+            imports = importer.fetch_one('source', fetch)
+            self.assertEquals(imports, 2)
             self.assertEquals(len(self.catalog.query()), 8)
 
             # Force reimport
-            imports, runtime = importer.fetch_one('source', fetch)
+            imports = importer.fetch_one('source', fetch)
             self.assertEquals(imports, 0)
             self.assertEquals(len(self.catalog.query()), 8)
-            imports, runtime = importer.fetch_one('source', fetch,
+            imports = importer.fetch_one('source', fetch,
                                                   reimport=True)
             self.assertEquals(imports, 4)
             self.assertEquals(len(self.catalog.query()), 8)
 
             # Reimport updated events
             events = from_ids(ids)
-            imports, runtime = importer.fetch_one('source', fetch)
+            imports = importer.fetch_one('source', fetch)
             self.assertEquals(imports, 8)
             self.assertEquals(len(self.catalog.query()), 8)
 
             # Test import of given source IDs only
             events = from_ids(ids)
-            imports, runtime = importer.fetch_one(
+            imports = importer.fetch_one(
                 'source', fetch, source_ids=ids[2:6]
             )
             self.assertEquals(imports, 4)
@@ -365,7 +267,7 @@ class TestImport(IntegrationTestCase):
                 cat1=set(), cat2=set(['cat2-1', 'cat2-2', 'cat2-3'])
             ))
 
-            imports, runtime = importer.fetch_one('source', fetch)
+            imports = importer.fetch_one('source', fetch)
             self.assertEquals(imports, 3)
             self.assertTrue('cat1-1' in self.directory.cat1_suggestions)
             self.assertTrue('cat1-2' in self.directory.cat1_suggestions)
@@ -413,7 +315,7 @@ class TestImport(IntegrationTestCase):
             # event['attachment_1'] =
             # event['attachment_2'] =
 
-            imports, runtime = importer.fetch_one('source', lambda: [event])
+            imports = importer.fetch_one('source', lambda: [event])
             imported = self.catalog.query()
             self.assertEquals(imports, 1)
             self.assertEquals(len(imported), 1)
@@ -455,7 +357,7 @@ class TestImport(IntegrationTestCase):
                                                   fetch_id='fetch_id'))
             events.append(self.create_fetch_entry(source_id='source_id_2',
                                                   fetch_id='fetch_id'))
-            imports, runtime = importer.fetch_one('source', fetch)
+            imports = importer.fetch_one('source', fetch)
             self.assertEquals(imports, 3)
             self.assertEquals(len(self.directory.keys()), 3)
 
@@ -465,7 +367,7 @@ class TestImport(IntegrationTestCase):
             events.append(self.create_fetch_entry(source_id='source_id_3',
                                                   fetch_id='fetch_id'))
 
-            imports, runtime = importer.fetch_one('source', fetch,
+            imports = importer.fetch_one('source', fetch,
                                                   autoremove=True)
             self.assertEquals(imports, 1)
 
@@ -482,7 +384,7 @@ class TestImport(IntegrationTestCase):
             # Import event
             importer = ExternalEventImporter(self.directory)
             event = self.create_fetch_entry(source_id='s', fetch_id='f')
-            imports, runtime = importer.fetch_one('source', lambda: [event])
+            imports = importer.fetch_one('source', lambda: [event])
             self.assertEquals(imports, 1)
 
             # Hide event
@@ -494,9 +396,9 @@ class TestImport(IntegrationTestCase):
             hidden.hide()
 
             # Re-import event
-            imports, runtime = importer.fetch_one('source', lambda: [event])
+            imports = importer.fetch_one('source', lambda: [event])
             self.assertEquals(imports, 0)
-            imports, runtime = importer.fetch_one(
+            imports = importer.fetch_one(
                 'source', lambda: [event], reimport=True
             )
             self.assertEquals(imports, 1)
@@ -520,7 +422,7 @@ class TestImport(IntegrationTestCase):
             # Import event
             importer = ExternalEventImporter(self.directory)
             event = self.create_fetch_entry(source_id='s', fetch_id='f')
-            imports, runtime = importer.fetch_one('source', lambda: [event])
+            imports = importer.fetch_one('source', lambda: [event])
             self.assertEquals(imports, 1)
 
             # Add own event

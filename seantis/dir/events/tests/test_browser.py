@@ -875,4 +875,4 @@ class CommonBrowserTests(BrowserTestCase):
 
     def test_fetch_view(self):
         browser = self.admin_browser
-        browser.open('veranstaltungen/fetch?limit=1')
+        browser.open('veranstaltungen/fetch')

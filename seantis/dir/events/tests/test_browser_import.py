@@ -67,21 +67,15 @@ class CommonBrowserTests(BrowserTestCase):
 
         return kw
 
-    def addGuidleSource(
-        self, title='Guidle Source', url='http://localhost:8888/',
-            interval='daily', enabled=True, do_check_saved=True):
-
+    def addGuidleSource(self, title='Guidle Source', limit=25):
         browser = self.admin_browser
 
         # Add form
         browser.open('/veranstaltungen/++add++seantis.dir.events.sourceguidle')
         browser.widget('title').value = title
-        browser.widget('url').value = url
-        browser.getControl('Enabled').selected = enabled
-        if interval == 'daily':
-            browser.getControl('Every day').selected = True
-        elif interval == 'hourly':
-            browser.getControl('Every hour').selected = True
+        browser.widget('url').value = 'http://localhost:8888/'
+        browser.getControl('Enabled').selected = True
+        browser.widget('limit').value = str(limit)
 
         # Save
         browser.getControl('Save').click()
@@ -97,14 +91,14 @@ class CommonBrowserTests(BrowserTestCase):
 
         self.addGuidleSource(title='GS1')
         self.addGuidleSource(title='GS2')
-        self.addGuidleSource(title='GS3')
+        self.addGuidleSource(title='GS3', limit=1)
 
         # Import events (two for each source)
         fetch.return_value = [
-            self.create_fetch_entry(title='event1'),
-            self.create_fetch_entry(title='event2'),
+            self.create_fetch_entry(title='event1', source_id='event1'),
+            self.create_fetch_entry(title='event2', source_id='event2')
         ]
-        anom.open('/veranstaltungen/fetch?force=true')
+        anom.open('/veranstaltungen/fetch')
 
         # Anonymous users can't see import filters and sources
         anom.open('/veranstaltungen/')
@@ -129,10 +123,14 @@ class CommonBrowserTests(BrowserTestCase):
         admin.open('/veranstaltungen?source=gs2')
         self.assertTrue('/event2-1' in admin.contents)
         self.assertTrue('/event2-2' not in admin.contents)
-        admin.open('/veranstaltungen?source=')
+
+        # Limit
+        admin.open('/veranstaltungen?source=gs3')
+        self.assertTrue('/event1-2' in admin.contents)
+        self.assertTrue('/event2-2' not in admin.contents)
 
         # Imported Events can be hidden
-        admin.open('/veranstaltungen')
+        admin.open('/veranstaltungen?source=')
         self.assertTrue('Hide' in admin.contents)
         self.assertTrue('Archive' not in admin.contents)
 
