@@ -234,7 +234,7 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
     @property
     def import_sources_config(self):
-        return [(source.Title, source.getURL() + '/edit')
+        return [(source.Title, source.getURL())
                 for source in self.catalog.import_sources()]
 
     def render(self):
