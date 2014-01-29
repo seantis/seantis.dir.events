@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-01-29 10:22+0000\n"
+"POT-Creation-Date: 2014-01-29 10:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr ""
 
-#: ./interfaces.py:462
+#: ./interfaces.py:463
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
@@ -65,13 +65,13 @@ msgstr ""
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:505
+#: ./interfaces.py:506
 #: ./templates/macros.pt:175
 msgid "Attachments"
 msgstr ""
 
-#: ./interfaces.py:351
-msgid "Automatically remove already imported events which have been deleted externally."
+#: ./interfaces.py:352
+msgid "Automatically delete already imported events if no longer present."
 msgstr ""
 
 #: ./form.py:906
@@ -240,7 +240,7 @@ msgstr ""
 msgid "Events Directory Item"
 msgstr ""
 
-#: ./interfaces.py:373
+#: ./interfaces.py:374
 msgid "Events directory URL"
 msgstr ""
 
@@ -248,15 +248,15 @@ msgstr ""
 msgid "Events matching the current filter"
 msgstr ""
 
-#: ./interfaces.py:378
+#: ./interfaces.py:379
 msgid "Filter events by category names"
 msgstr ""
 
-#: ./interfaces.py:384
+#: ./interfaces.py:385
 msgid "Filter: 1st category name"
 msgstr ""
 
-#: ./interfaces.py:390
+#: ./interfaces.py:391
 msgid "Filter: 2nd category name"
 msgstr ""
 
@@ -308,7 +308,7 @@ msgstr ""
 msgid "Guidle Import"
 msgstr ""
 
-#: ./interfaces.py:364
+#: ./interfaces.py:365
 msgid "Guidle URL to download from"
 msgstr ""
 
@@ -332,7 +332,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:479
+#: ./interfaces.py:480
 msgid "Images"
 msgstr ""
 
@@ -454,15 +454,15 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:484
+#: ./interfaces.py:485
 msgid "PDF"
 msgstr ""
 
-#: ./interfaces.py:446
+#: ./interfaces.py:447
 msgid "Please choose at least one category"
 msgstr ""
 
-#: ./interfaces.py:454
+#: ./interfaces.py:455
 msgid "Please enter at least one suggestion"
 msgstr ""
 
@@ -506,7 +506,7 @@ msgstr ""
 msgid "Show all occurrences"
 msgstr ""
 
-#: ./interfaces.py:424
+#: ./interfaces.py:425
 msgid "Source"
 msgstr ""
 
@@ -575,6 +575,10 @@ msgstr ""
 msgid "Suggested Values for the Where-Category"
 msgstr ""
 
+#: ./interfaces.py:351
+msgid "Synchronise deleted events"
+msgstr ""
+
 #: ./directory.py:381
 #: ./interfaces.py:87
 msgid "Terms and Conditions"
@@ -588,7 +592,7 @@ msgstr ""
 msgid "The number of events to import every 15 minutes."
 msgstr ""
 
-#: ./interfaces.py:425
+#: ./interfaces.py:426
 msgid "The source id to check for. Leave empty for any source."
 msgstr ""
 
@@ -653,11 +657,11 @@ msgstr ""
 msgid "Tu"
 msgstr ""
 
-#: ./interfaces.py:477
+#: ./interfaces.py:478
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:499
+#: ./interfaces.py:500
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
@@ -693,7 +697,7 @@ msgstr ""
 msgid "Whole Day"
 msgstr ""
 
-#: ./interfaces.py:518
+#: ./interfaces.py:519
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 

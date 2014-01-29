@@ -348,12 +348,13 @@ class IExternalEventSource(form.Schema):
     )
 
     autoremove = Bool(
-        title=_(
-            u'Automatically remove already imported events which have been '
-            u'deleted externally.'
+        title=_(u'Synchronise deleted events'),
+        description=_(
+            u'Automatically delete already imported events if no longer '
+            u'present.'
         ),
-        required=False,
-        default=False
+        required=True,
+        default=True
     )
 
 
