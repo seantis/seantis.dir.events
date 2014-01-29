@@ -98,7 +98,7 @@ class CommonBrowserTests(BrowserTestCase):
             self.create_fetch_entry(title='event1', source_id='event1'),
             self.create_fetch_entry(title='event2', source_id='event2')
         ]
-        anom.open('/veranstaltungen/fetch')
+        anom.open('/veranstaltungen/fetch?no_shuffle=True')
 
         # Anonymous users can't see import filters and sources
         anom.open('/veranstaltungen/')
@@ -200,14 +200,14 @@ class CommonBrowserTests(BrowserTestCase):
         fetch.return_value = [
             self.create_fetch_entry(title='event'),
         ]
-        browser.open('/veranstaltungen/fetch?force=true')
+        browser.open('/veranstaltungen/fetch?force=true&no_shuffle=True')
         browser.open('/veranstaltungen')
         self.assertTrue('message_all_' in browser.contents)
         self.assertTrue('message_gs2_' not in browser.contents)
 
         # Add second guidle source
         self.addGuidleSource(title='gs2')
-        browser.open('/veranstaltungen/fetch?force=true')
+        browser.open('/veranstaltungen/fetch?force=true&no_shuffle=True')
         browser.open('/veranstaltungen')
         self.assertTrue('message_all_' in browser.contents)
         self.assertTrue('message_gs2_' in browser.contents)

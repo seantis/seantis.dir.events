@@ -13,6 +13,7 @@ from five import grok
 from datetime import datetime, timedelta
 from urllib import urlopen
 from itertools import groupby
+from random import shuffle
 
 from threading import Lock
 from plone.synchronize import synchronized
@@ -405,22 +406,25 @@ class ExternalEventImportScheduler(object):
 
         return return_value
 
-    def run(self, context, reimport=False, source_ids=[]):
+    def run(self, context, reimport=False, source_ids=[], no_shuffle=False):
 
-        imported = 0
-        sources = 0
+        len_imported = 0
+        len_sources = 0
 
         if not self.handle_run():
             log.info('already importing')
-            return imported, sources
+            return len_imported, len_sources
 
         directory = '/'.join(context.getPhysicalPath())
         log.info('begin importing sources from %s' % (directory))
 
         try:
             importer = ExternalEventImporter(context)
-            for source in importer.sources():
-                sources += 1
+            sources = importer.sources()
+            if not no_shuffle:
+                shuffle(sources)
+            for source in sources:
+                len_sources += 1
                 path = source.getPath()
                 events = importer.fetch_one(
                     path,
@@ -429,14 +433,14 @@ class ExternalEventImportScheduler(object):
                     reimport, source_ids,
                     source.getObject().autoremove)
                 log.info('source %s processed' % (path))
-                imported += events
+                len_imported += events
         finally:
             context.reindexObject()
             IDirectoryCatalog(context).reindex()
             log.info('importing sources from %s finished' % (directory))
             self.handle_run(True)
 
-        return imported, sources
+        return len_imported, len_sources
 
 
 import_scheduler = ExternalEventImportScheduler()
@@ -455,11 +459,12 @@ class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
 
         reimport = bool(self.request.get('reimport', False))
         ids = self.request.get('source-ids', '').split(',')
+        no_shuffle = bool(self.request.get('no_shuffle', False))
 
         imported, sources = execute_under_special_role(
             getSite(), 'Manager',
             import_scheduler.run, self.context, reimport,
-            all(ids) and ids or None
+            all(ids) and ids or None, no_shuffle
         )
 
         return u'%i events imported from %i sources' % (imported, sources)
