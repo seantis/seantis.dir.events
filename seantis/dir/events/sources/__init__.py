@@ -431,6 +431,8 @@ class ExternalEventImportScheduler(object):
                 log.info('source %s processed' % (path))
                 imported += events
         finally:
+            context.reindexObject()
+            IDirectoryCatalog(context).reindex()
             log.info('importing sources from %s finished' % (directory))
             self.handle_run(True)
 
