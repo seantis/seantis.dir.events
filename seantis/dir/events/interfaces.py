@@ -334,17 +334,17 @@ class IExternalEventSource(form.Schema):
         title=_(u'Name'),
     )
 
+    enabled = Bool(
+        title=_(u'Enabled'),
+        required=True,
+        default=True
+    )
+
     limit = Int(
         title=_(u'Limit'),
         description=_(u'The number of events to import every 15 minutes.'),
         required=True,
         default=25
-    )
-
-    enabled = Bool(
-        title=_(u'Enabled'),
-        required=True,
-        default=False
     )
 
     autoremove = Bool(
