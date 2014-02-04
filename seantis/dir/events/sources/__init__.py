@@ -11,7 +11,7 @@ from functools32 import lru_cache
 from five import grok
 
 from datetime import datetime
-from urllib import urlopen
+from urllib2 import urlopen
 from itertools import groupby
 from random import shuffle
 
@@ -57,7 +57,7 @@ class ExternalEventImporter(object):
 
     @lru_cache(maxsize=50)
     def download(self, url):
-        return urlopen(url).read()
+        return urlopen(url, timeout=60).read()
 
     def disable_indexing(self):
         self.context._v_fetching = True
@@ -437,4 +437,7 @@ class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
                 all(ids) and ids or None, no_shuffle
             )
 
-        return u'%i events imported from %i sources' % (imported, sources)
+            return u'%i events imported from %i sources' % (imported, sources)
+
+        else:
+            return u''
