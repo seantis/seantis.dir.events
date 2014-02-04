@@ -10,13 +10,10 @@ from functools32 import lru_cache
 
 from five import grok
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from urllib import urlopen
 from itertools import groupby
 from random import shuffle
-
-from threading import Lock
-from plone.synchronize import synchronized
 
 from zope.component.hooks import getSite
 
@@ -382,38 +379,10 @@ class ExternalEventImporter(object):
 
 class ExternalEventImportScheduler(object):
 
-    _lock = Lock()
-
-    def __init__(self):
-        self.running = False
-
-    @synchronized(_lock)
-    def handle_run(self, do_stop=False):
-        """Check if we can start importing or signal that we are finished.
-
-        Note that it is possible that requests are still blocked, i.e. when
-        doing the same request (e.g. '/fetch'), see ZSever/medusa/http_server.
-        
-        """
-        return_value = False
-
-        if do_stop:
-            self.running = False
-        else:
-            if not self.running:
-                self.running = True
-                return_value = True
-
-        return return_value
-
     def run(self, context, reimport=False, source_ids=[], no_shuffle=False):
 
         len_imported = 0
         len_sources = 0
-
-        if not self.handle_run():
-            log.info('already importing')
-            return len_imported, len_sources
 
         directory = '/'.join(context.getPhysicalPath())
         log.info('begin importing sources from %s' % (directory))
@@ -438,7 +407,6 @@ class ExternalEventImportScheduler(object):
             context.reindexObject()
             IDirectoryCatalog(context).reindex()
             log.info('importing sources from %s finished' % (directory))
-            self.handle_run(True)
 
         return len_imported, len_sources
 
@@ -460,11 +428,13 @@ class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
         reimport = bool(self.request.get('reimport', False))
         ids = self.request.get('source-ids', '').split(',')
         no_shuffle = bool(self.request.get('no_shuffle', False))
+        do_run = self.request.get('run') == '1'
 
-        imported, sources = execute_under_special_role(
-            getSite(), 'Manager',
-            import_scheduler.run, self.context, reimport,
-            all(ids) and ids or None, no_shuffle
-        )
+        if do_run:
+            imported, sources = execute_under_special_role(
+                getSite(), 'Manager',
+                import_scheduler.run, self.context, reimport,
+                all(ids) and ids or None, no_shuffle
+            )
 
         return u'%i events imported from %i sources' % (imported, sources)
