@@ -432,3 +432,18 @@ input.ricancelbutton {
     end of recurrence widget fixes
 
 */
+
+
+/* wizard */
+form.seantis-form-navigation ul.wizardSteps {
+    padding-bottom: 1em;
+}
+form.seantis-form-navigation ul.wizardSteps li:before {
+    content : '';
+}
+form.seantis-form-navigation ul.wizardSteps li a:before {
+    content : '〉';
+}
+form.seantis-form-navigation ul.wizardSteps li:first-child a:before {
+    content : '';
+}

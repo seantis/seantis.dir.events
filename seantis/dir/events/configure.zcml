@@ -169,6 +169,15 @@
        handler=".upgrades.upgrade_1007_to_1008">
     </genericsetup:upgradeStep>
 
+    <genericsetup:upgradeStep
+       title="Update teamraum integration"
+       description=""
+       source="1008"
+       destination="1009"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1008_to_1009">
+    </genericsetup:upgradeStep>
+
     <!-- Advanced Theme Adjustments through Diazo -->
     <plone:static name="seantis.dir.events.izug-theme" 
       directory="themes/izug-theme" type="theme" 
