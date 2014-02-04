@@ -7,7 +7,7 @@ from datetime import timedelta
 from dateutil.parser import parse
 
 from lxml import objectify
-from urllib import urlopen
+from urllib2 import urlopen
 
 from five import grok
 
@@ -138,7 +138,7 @@ class EventsSourceGuidle(grok.Adapter):
 
         try:
             if xml is None:
-                xml = urlopen(self.context.url).read()
+                xml = urlopen(self.context.url, timeout=60).read()
             root = objectify.fromstring(xml)
 
             offers = root.xpath(

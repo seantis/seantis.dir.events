@@ -1,12 +1,12 @@
 import json
-import urllib
 
 from logging import getLogger
 log = getLogger('seantis.dir.events')
 
 from dateutil.parser import parse
 from five import grok
-from urllib import urlopen
+from urllib import quote_plus
+from urllib2 import urlopen
 from plone.app.event.base import default_timezone
 
 from seantis.dir.events.dates import default_now
@@ -28,12 +28,12 @@ class EventsSourceSeantisJson(grok.Adapter):
         if self.context.do_filter and (self.context.cat1 or self.context.cat2):
             url += '&filter=true'
             if self.context.cat1:
-                cat = urllib.quote_plus(
+                cat = quote_plus(
                     self.context.cat1.strip().encode('utf-8')
                 )
                 url += '&cat1=' + cat
             if self.context.cat2:
-                cat = urllib.quote_plus(
+                cat = quote_plus(
                     self.context.cat2.strip().encode('utf-8')
                 )
                 url += '&cat2=' + cat
@@ -44,7 +44,7 @@ class EventsSourceSeantisJson(grok.Adapter):
         try:
             if json_string is None:
                 url = self.build_url()
-                json_string = urlopen(url).read()
+                json_string = urlopen(url, timeout=60).read()
 
             events = json.loads(json_string)
         except:
