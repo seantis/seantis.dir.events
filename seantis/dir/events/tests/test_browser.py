@@ -869,6 +869,25 @@ class CommonBrowserTests(BrowserTestCase):
         self.assertTrue('test1' in browser.contents)
         self.assertTrue('test2' in browser.contents)
 
+    def test_browser_add_today_whole_day(self):
+
+        browser = self.admin_browser
+
+        self.addEvent(title='whole-day-event-today',
+                      whole_day=True,
+                      check_submitted=False, do_publish=False)
+
+        browser.open('/veranstaltungen?state=submitted')
+
+        # The event should be visible (it wasn't in an earlier version)
+        self.assertTrue('whole-day-event-today' in browser.contents)
+        self.assertTrue('Submitted (1)' in browser.contents)
+
+        # .. .also if published
+        browser.getLink('Publish', index=1).click()
+        browser.open('/veranstaltungen?state=published')
+        self.assertTrue('whole-day-event-today' in browser.contents)
+
     def test_cleanup_view(self):
         browser = self.admin_browser
         browser.open('veranstaltungen/cleanup?run=1')
