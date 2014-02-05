@@ -3,7 +3,12 @@ import transaction
 from datetime import date
 from seantis.dir.events.tests import IntegrationTestCase
 
-from seantis.dir.events.catalog import LazyList, EventOrderIndex
+from seantis.dir.events.catalog import (
+    LazyList,
+    EventOrderIndex,
+    attach_reindex_to_transaction,
+    ReindexDataManager
+)
 
 from mock import Mock
 
@@ -73,6 +78,88 @@ class TestEventIndex(IntegrationTestCase):
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 0)
 
+        event.publish()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 1)
+
+        denied = self.create_event()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 1)
+
+        denied.submit()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 1)
+        self.assertEqual(len(published.index), 1)
+
+        denied.do_action("deny")
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 1)
+
+    def test_event_order_index_more(self):
+
+        self.login_testuser()
+
+        submitted = self.catalog.indices['submitted']
+        published = self.catalog.indices['published']
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
+
+        # Lazy-create events on access
+        events = LazyList(lambda i: self.create_event(), 50)
+
+        num_submitted = 0
+        num_published = 0
+
+        for new_idx, new_event in enumerate(events):
+
+            if new_idx > 0:
+
+                for old_idx, old_event in enumerate(events[:new_idx - 1]):
+
+                    if old_event.state == 'preview':
+
+                        if (old_idx % 13 != 0):
+                            old_event.submit()
+                            transaction.commit()
+                            num_submitted += 1
+
+                    elif old_event.state == 'submitted':
+
+                        if (old_idx % 7 != 0):
+                            old_event.publish()
+                            transaction.commit()
+                            num_submitted -= 1
+                            num_published += 1
+                        else:
+                            old_event.do_action("deny")
+                            transaction.commit()
+                            num_submitted -= 1
+
+                    elif old_event.state == 'published':
+
+                        if (old_idx % 5 != 0):
+                            old_event.archive()
+                            transaction.commit()
+                            num_published -= 1
+
+                    elif old_event.state == 'archived':
+
+                        if (old_idx % 11 == 0):
+                            old_event.publish()
+                            transaction.commit()
+                            num_published += 1
+
+                    self.assertEqual(len(submitted.index), num_submitted)
+                    self.assertEqual(len(published.index), num_published)
+
     def test_event_order_index_recurrence(self):
         self.login_testuser()
 
@@ -100,6 +187,18 @@ class TestEventIndex(IntegrationTestCase):
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 10)
 
+        event.archive()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
+
+        event.publish()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 10)
+
         event.recurrence = ''
         transaction.commit()
 
@@ -114,6 +213,82 @@ class TestEventIndex(IntegrationTestCase):
 
         self.assertEqual(len(submitted.index), 0)
         self.assertEqual(len(published.index), 0)
+
+        denied = self.create_event(recurrence='RRULE:FREQ=DAILY;COUNT=10')
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
+
+        denied.submit()
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 10)
+        self.assertEqual(len(published.index), 0)
+
+        denied.do_action("deny")
+        transaction.commit()
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
+
+    def test_event_order_index_recurrence_more(self):
+
+        self.login_testuser()
+
+        submitted = self.catalog.indices['submitted']
+        published = self.catalog.indices['published']
+
+        self.assertEqual(len(submitted.index), 0)
+        self.assertEqual(len(published.index), 0)
+
+        events = LazyList(lambda i: self.create_event(
+            recurrence='RRULE:FREQ=DAILY;COUNT=' + str(i)), 50)
+
+        num_submitted = 0
+        num_published = 0
+
+        for new_idx, new_event in enumerate(events):
+
+            if new_idx > 0:
+
+                for old_idx, old_event in enumerate(events[:new_idx - 1]):
+
+                    if old_event.state == 'preview':
+
+                        if (old_idx % 13 != 0):
+                            old_event.submit()
+                            transaction.commit()
+                            num_submitted += old_idx
+
+                    elif old_event.state == 'submitted':
+
+                        if (old_idx % 7 != 0):
+                            old_event.publish()
+                            transaction.commit()
+                            num_submitted -= old_idx
+                            num_published += old_idx
+                        else:
+                            old_event.do_action("deny")
+                            transaction.commit()
+                            num_submitted -= old_idx
+
+                    elif old_event.state == 'published':
+
+                        if (old_idx % 5 != 0):
+                            old_event.archive()
+                            transaction.commit()
+                            num_published -= old_idx
+
+                    elif old_event.state == 'archived':
+
+                        if (old_idx % 11 == 0):
+                            old_event.publish()
+                            transaction.commit()
+                            num_published += old_idx
+
+                    self.assertEqual(len(submitted.index), num_submitted)
+                    self.assertEqual(len(published.index), num_published)
 
     def test_eventorder_metadata(self):
 
@@ -192,3 +367,23 @@ class TestEventIndex(IntegrationTestCase):
         self.assertEqual(dateindex[date(2013, 07, 04)], 0)
         self.assertEqual(dateindex[date(2013, 07, 05)], 1)
         self.assertEqual(dateindex[date(2013, 07, 06)], 5)
+
+    def test_attach_reindex_idempotence(self):
+
+        # attaching the reindex to the request multiple times should
+        # result in only one call to the reindex function on the catalog
+
+        # because we cannot let the transaction go through in the test
+        # we need to inspect the content of the transaction
+        def number_of_data_managers():
+            resources = transaction.get()._resources
+            return len(
+                [m for m in resources if isinstance(m, ReindexDataManager)]
+            )
+
+        attach_reindex_to_transaction(self.directory)
+        self.assertEqual(1, number_of_data_managers())
+        attach_reindex_to_transaction(self.directory)
+        self.assertEqual(1, number_of_data_managers())
+        attach_reindex_to_transaction(self.directory)
+        self.assertEqual(1, number_of_data_managers())

@@ -5,7 +5,8 @@ name = 'seantis.dir.events'
 description = (
     "Directory of upcoming Events."
 )
-version = '1.0rc1'
+version = '1.0rc4'
+
 
 def get_long_description():
     readme = open('README.rst').read()
@@ -53,6 +54,7 @@ setup(name=name, version=version, description=description,
           'plone.app.event[ploneintegration, dexterity]>=1.0.3',
           'plone.event>=1.0',
           'plone.app.dexterity',
+          'plone.synchronize',
           'plone.formwidget.recurrence[z3cform]>=1.1',
           'plone.formwidget.datetime[z3cform]>=1.0',
           'collective.autopermission',
@@ -60,6 +62,7 @@ setup(name=name, version=version, description=description,
           'collective.z3cform.mapwidget',
           'collective.js.underscore',
           'seantis.dir.base>=1.7',
+          'seantis.plonetools>=0.9',
           'zope.proxy',
           'pytz',
           'python-magic',

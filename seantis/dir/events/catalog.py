@@ -1,3 +1,6 @@
+import logging
+log = logging.getLogger('seantis.dir.events')
+
 import transaction
 from transaction.interfaces import ISavepointDataManager
 from transaction._transaction import AbortSavepoint
@@ -5,9 +8,12 @@ from transaction._transaction import AbortSavepoint
 from datetime import datetime, timedelta
 from five import grok
 
-from itertools import ifilter
+from itertools import ifilter, islice
 from plone.app.event.ical.exporter import construct_icalendar
 from plone.memoize import instance
+
+from threading import Lock
+from plone.synchronize import synchronized
 
 from zope.interface import implements
 from zope.annotation.interfaces import IAnnotations
@@ -70,11 +76,28 @@ class ReindexDataManager(object):
         return AbortSavepoint(self, transaction.get())
 
 
+def reindex_already_attached():
+    for resource in transaction.get()._resources:
+        if isinstance(resource, ReindexDataManager):
+            return True
+
+    return False
+
+
+_attach_lock = Lock()
+
+
+@synchronized(_attach_lock)
 def attach_reindex_to_transaction(directory):
+    assert directory is not None
+
     request = getattr(directory, 'REQUEST', None)
 
-    if request:
+    if request and not reindex_already_attached():
         transaction.get().join(ReindexDataManager(request, directory))
+
+    if not request:
+        log.warn('request not found')
 
 
 def may_reindex_directory(directory):
@@ -102,8 +125,10 @@ def onRemovedItem(item, event):
 
 @grok.subscribe(IEventsDirectoryItem, IObjectMovedEvent)
 def onMovedItem(item, event):
-    attach_reindex_to_transaction(event.oldParent)
-    attach_reindex_to_transaction(event.newParent)
+    if event.oldParent is not None:
+        attach_reindex_to_transaction(event.oldParent)
+    if event.newParent is not None:
+        attach_reindex_to_transaction(event.newParent)
 
 
 @grok.subscribe(IEventsDirectoryItem, IObjectModifiedEvent)
@@ -372,7 +397,7 @@ class EventOrderIndex(EventIndex):
 
     def limit_to_subset(self, index, subset):
 
-        if not subset:
+        if subset is None:
             return index
 
         ids = set(brain.id for brain in subset)
@@ -391,6 +416,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     grok.context(IEventsDirectory)
     grok.provides(IDirectoryCatalog)
 
+    _lock = Lock()
+
     def __init__(self, *args, **kwargs):
         self._daterange = dates.default_daterange
         self._state = 'published'
@@ -408,6 +435,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
     def index_for_state(self, state):
         return EventOrderIndex(self, state)
 
+    @synchronized(_lock)
     def reindex(self):
         for ix in self.indices.values():
             ix.reindex()
@@ -532,7 +560,26 @@ class EventsDirectoryCatalog(DirectoryCatalog):
             self.spawn(self.hide_blocked(self.subset)), key=self.sortkey()
         )
 
-    def export(self, search=None, filter=None):
+    def export(self, search=None, filter=None, max=None):
+        # Find subset
+        if search:
+            subset = super(EventsDirectoryCatalog, self).search(search)
+        elif filter:
+            subset = super(EventsDirectoryCatalog, self).filter(filter)
+        else:
+            subset = super(EventsDirectoryCatalog, self).items()
+
+        # Get lazy list from indexer using the subset
+        start, end = getattr(dates.DateRanges(), 'this_and_next_year')
+        ll = self.ix_published.lazy_list(start, end, subset)
+
+        # Check if upper limit is valid
+        if not isinstance(max, (int, long)) or (max <= 0):
+            max = len(ll)
+
+        return islice(ll, max)
+
+    def calendar(self, search=None, filter=None):
         if search:
             items = super(EventsDirectoryCatalog, self).search(search)
         elif filter:
@@ -540,8 +587,4 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         else:
             items = super(EventsDirectoryCatalog, self).items()
 
-        return items
-
-    def calendar(self, search=None, filter=None):
-        items = self.export(search, filter)
         return construct_icalendar(self.directory, items)

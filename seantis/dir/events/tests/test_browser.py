@@ -871,6 +871,29 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('test1' in browser.contents)
         self.assertTrue('test2' in browser.contents)
 
+        # Export only first event
+        browser.open('/veranstaltungen?type=json&max=1')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+    def test_issue_17(self):
+        self.addEvent(title='test1')
+        self.addEvent(title='test2', date=datetime.today() - timedelta(days=2),
+                      check_submitted=False, do_publish=False)
+        self.addEvent(title='test3', date=datetime.today() - timedelta(days=4),
+                      check_submitted=False, do_publish=False)
+        self.admin_browser.open(
+            '/veranstaltungen/test3/do-action?action=publish')
+
+        # Past events (submitted or published) should not be exported
+        browser = self.new_browser()
+        browser.open('/veranstaltungen?type=json')
+        self.assertEqual(browser.headers['Content-type'], 'application/json')
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+        self.assertTrue('test3' not in browser.contents)
+
     def test_ical_export(self):
         # Add events
         self.addEvent(title='test1', description='desc1')
@@ -967,6 +990,10 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('test1' not in browser.contents)
         self.assertTrue('test2' in browser.contents)
 
+        browser.open('/veranstaltungen?filter=true&cat1=Category2_2')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
         # Search (search=&searchtext=)
         browser.open('/veranstaltungen?search=true&searchtext=test1')
         self.assertTrue('test1' in browser.contents)
@@ -974,6 +1001,47 @@ class BrowserTestCase(FunctionalTestCase):
 
         browser.open('/veranstaltungen?search=true&searchtext=test2')
         self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        browser.open('/veranstaltungen?search=true&searchtext=token')
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+    def test_eventindex_view(self):
+        # Test unauthorized access
+        anonymous = self.new_browser()
+        anonymous.assert_unauthorized('/veranstaltungen/eventindex')
+
+        browser = self.admin_browser
+
+        # Test eventindex
+        browser.open('/veranstaltungen/eventindex')
+        self.assertTrue('text/plain' in browser.headers['Content-type'])
+        self.assertTrue('test1' not in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        self.addEvent(title='test1')
+        browser.open('/veranstaltungen/eventindex')
+        self.assertTrue('text/plain' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' not in browser.contents)
+
+        self.addEvent(title='test2')
+        browser.open('/veranstaltungen/eventindex')
+        self.assertTrue('text/plain' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        # reindex
+        browser.open('/veranstaltungen/eventindex?reindex')
+        self.assertTrue('text/plain' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
+        self.assertTrue('test2' in browser.contents)
+
+        # rebuild
+        browser.open('/veranstaltungen/eventindex?rebuild')
+        self.assertTrue('text/plain' in browser.headers['Content-type'])
+        self.assertTrue('test1' in browser.contents)
         self.assertTrue('test2' in browser.contents)
 
     def test_browser_issue14(self):

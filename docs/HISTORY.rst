@@ -2,13 +2,50 @@
 Changelog
 ---------
 
+1.0rc4 (unreleased)
+~~~~~~~~~~~~~~~~~~~
+
+- Removes plone.app.event.dx profile depencency - it is deprecated.
+  [href]
+
+- Adds plone.app.event.ploneintegration profile dependency.
+  [href]
+
+- Integrates seantis.plonetools.
+  [href]
+
+1.0rc3
+~~~~~~
+
+- Add JSON export.
+  [msom]
+
+1.0rc2
+~~~~~~
+
+- Stops event reindexing from running more than once per transaction.
+  [href]
+
+- Makes event reindexing threadsafe.
+  [href]
+
+- Add tests.
+  [msom]
+
 1.0rc1
 ~~~~~~
 
-- Fixes ical export error [href]
-- Fixes typos in add event form [msom]
-- Fixes date formating with superfluous point [msom]
-- Upgrade to seantis.dir.base 1.7 [msom]
+- Fixes ical export error
+  [href]
+
+- Fixes typos in add event form
+  [msom]
+
+- Fixes date formating with superfluous point
+  [msom]
+
+- Upgrade to seantis.dir.base 1.7
+  [msom]
 
 1.0a3
 ~~~~~~

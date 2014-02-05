@@ -192,13 +192,20 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
             and self.request.get('searchtext') or None
         filter = 'filter' in self.request.keys() \
             and self.get_filter_terms() or None
+        max = 'max' in self.request.keys() \
+            and self.request.get('max') or None
+        try:
+            max = int(max)
+        except:
+            max = None
 
         if self.is_ical_export:
             calendar = self.catalog.calendar(search=search, filter=filter)
-            return utils.render_ical_response(self.request, self.context, calendar)
+            return utils.render_ical_response(self.request, self.context,
+                                              calendar)
 
         elif self.is_json_export:
-            export = self.catalog.export(search=search, filter=filter)
+            export = self.catalog.export(search=search, filter=filter, max=max)
             return utils.render_json_response(self.request, export)
 
         else:
