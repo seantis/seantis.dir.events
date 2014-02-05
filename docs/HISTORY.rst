@@ -2,8 +2,12 @@
 Changelog
 ---------
 
-1.0rc4 (unreleased)
+1.1rc1 (unreleased)
 ~~~~~~~~~~~~~~~~~~~
+
+
+1.0
+~~~
 
 - Removes plone.app.event.dx profile depencency - it is deprecated.
   [href]
@@ -13,6 +17,18 @@ Changelog
 
 - Integrates seantis.plonetools.
   [href]
+
+- Search with no results no longer shows all events.
+  [msom]
+
+- Upgrade steps are no longer displayed in the coverage report.
+  [msom]
+
+- Update teamraum theme integration.
+  [msom]
+
+- Show a single today's whole-day event correctly.
+  [msom]
 
 1.0rc3
 ~~~~~~
