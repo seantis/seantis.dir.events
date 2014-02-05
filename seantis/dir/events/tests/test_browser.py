@@ -1044,7 +1044,7 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('test1' in browser.contents)
         self.assertTrue('test2' in browser.contents)
 
-    def test_browser_issue14(self):
+    def test_browser_add_today_whole_day(self):
 
         browser = self.admin_browser
 
@@ -1054,30 +1054,11 @@ class BrowserTestCase(FunctionalTestCase):
 
         browser.open('/veranstaltungen?state=submitted')
 
-        # Either the event should be visible ...
+        # The event should be visible (it wasn't in an earlier version)
         self.assertTrue('whole-day-event-today' in browser.contents)
         self.assertTrue('Submitted (1)' in browser.contents)
 
-        # ... or not be counted in the number of submitted events
-        self.assertTrue('whole-day-event-today' not in browser.contents)
-        self.assertTrue('Submitted (0)' in browser.contents)
-
-        # This does not happen, if another event is submitted with start/end
-        self.addEvent(title='timed-event-today',
-                      check_submitted=False, do_publish=False)
-        self.assertTrue('whole-day-event-today' in browser.contents)
-        self.assertTrue('timed-event-today' in browser.contents)
-        self.assertTrue('Submitted (2)' in browser.contents)
-
-        # Happens also if the all-day event is published
-        browser.open('/veranstaltungen?state=submitted')
+        # .. .also if published
         browser.getLink('Publish', index=1).click()
         browser.open('/veranstaltungen?state=published')
         self.assertTrue('whole-day-event-today' in browser.contents)
-
-        # Becomes visible by publishing the other event
-        browser.open('/veranstaltungen?state=submitted')
-        browser.getLink('Publish', index=1).click()
-        browser.open('/veranstaltungen?state=published')
-        self.assertTrue('whole-day-event-today' in browser.contents)
-        self.assertTrue('timed-event-today' in browser.contents)
