@@ -229,6 +229,12 @@ def upgrade_1007_to_1008(context):
 
 
 def upgrade_1008_to_1009(context):
+    # update css
+    getToolByName(context, 'portal_css').cookResources()
+
+
+def upgrade_1009_to_1010(context):
+    # Add new types and workflow
     setup = getToolByName(context, 'portal_setup')
     profile = 'profile-seantis.dir.events:default'
     setup.runImportStepFromProfile(profile, 'typeinfo')
@@ -240,9 +246,3 @@ def upgrade_1008_to_1009(context):
     if 'source' not in catalog.indexes():
         catalog.addIndex('source', 'FieldIndex')
         catalog.manage_reindexIndex(ids=['source'])
-
-
-def upgrade_1009_to_1010(context):
-    setup = getToolByName(context, 'portal_setup')
-    profile = 'profile-seantis.dir.events:default'
-    setup.runImportStepFromProfile(profile, 'typeinfo')
