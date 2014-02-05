@@ -371,6 +371,7 @@ class EventOrderIndex(EventIndex):
 
         first_date = self.identity_date(self.index[0])
         last_date = self.identity_date(self.index[-1])
+        last_date = last_date + timedelta(days=1, microseconds=-1)
 
         if not dates.overlaps(first_date, last_date, start, end):
             return []
