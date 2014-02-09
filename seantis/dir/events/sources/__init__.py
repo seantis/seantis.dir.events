@@ -10,10 +10,12 @@ from functools32 import lru_cache
 
 from five import grok
 
-from datetime import datetime
-from urllib2 import urlopen
+from datetime import datetime, timedelta
+from urllib2 import urlopen, HTTPError
 from itertools import groupby
 from random import shuffle
+from threading import Lock
+from plone.synchronize import synchronized
 
 from zope.component.hooks import getSite
 
@@ -265,9 +267,12 @@ class ExternalEventImporter(object):
                 if not url or not allow_download(download, url):
                     event[download] = None
                 else:
-                    event[download] = method(self.download(url))
-                    if name in event:
-                        event[download].filename = event[name]
+                    try:
+                        event[download] = method(self.download(url))
+                        if name in event:
+                            event[download].filename = event[name]
+                    except HTTPError:
+                        event[download] = None
 
                 if name in event:
                     del event[name]
@@ -379,10 +384,44 @@ class ExternalEventImporter(object):
 
 class ExternalEventImportScheduler(object):
 
+    _lock = Lock()
+
+    def __init__(self):
+        self.running = False
+        self.last_run = datetime.now()
+
+    @synchronized(_lock)
+    def handle_run(self, do_stop=False):
+        """Check if we can start importing or signal that we are finished.
+
+        Note that it is possible that requests are still blocked, i.e. when
+        doing the same request (e.g. '/fetch'), see ZSever/medusa/http_server.
+        
+        Note that it happend that some threads died while executing, hence 
+        forcing a run every 4 hours.
+        """
+        return_value = False
+
+        if do_stop:
+            self.running = False
+            self.last_run = datetime.now()
+        else:
+            delta = datetime.now() - self.last_run
+            if not self.running or delta > timedelta(hours=4):
+                self.running = True
+                self.last_run = datetime.now()
+                return_value = True
+
+        return return_value
+
     def run(self, context, reimport=False, source_ids=[], no_shuffle=False):
 
         len_imported = 0
         len_sources = 0
+
+        if not self.handle_run():
+            log.info('already importing')
+            return len_imported, len_sources
 
         directory = '/'.join(context.getPhysicalPath())
         log.info('begin importing sources from %s' % (directory))
@@ -407,6 +446,7 @@ class ExternalEventImportScheduler(object):
             context.reindexObject()
             IDirectoryCatalog(context).reindex()
             log.info('importing sources from %s finished' % (directory))
+            self.handle_run(True)
 
         return len_imported, len_sources
 
