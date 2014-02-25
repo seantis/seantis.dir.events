@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.0.1 (unreleased)
+1.0.1 (2014-02-15)
 ~~~~~~~~~~~~~~~~~~
 
 - Fixes a rare bug occurring when an event exist for the last day of a year,
