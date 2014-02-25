@@ -2,13 +2,17 @@
 Changelog
 ---------
 
+1.1dev (unreleased)
+~~~~~~~~~~~~~~~~~~~
+
+Nothing yet.
+
 1.0.1 (2014-02-15)
 ~~~~~~~~~~~~~~~~~~
 
 - Fixes a rare bug occurring when an event exist for the last day of a year,
   but no events exist for the whole next year. Fixes #37.
   [href]
-
 
 1.0
 ~~~
