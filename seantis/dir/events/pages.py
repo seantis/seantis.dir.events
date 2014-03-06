@@ -167,7 +167,9 @@ class CustomPageRequest(object):
 
         return urlreplace(
             url,
-            path=lambda p: p.replace(self.original_path, self.replacement_path)
+            path=lambda p: p.replace(
+                self.original_path, self.replacement_path, 1
+            )
         )
 
     def properties(self, directory):
@@ -343,11 +345,13 @@ class URLTransform(object):
         path = pagerequest.original_path
 
         for a in tree.xpath("//a[contains(@href, '%s')]" % path):
-            a.attrib['href'] = pagerequest.transform_url(a.attrib['href'])
+            a.attrib['href'] = pagerequest.transform_url(
+                a.attrib.get('href', '')
+            )
 
         for form in tree.xpath("//form[contains(@action, '%s')]" % path):
             form.attrib['action'] = pagerequest.transform_url(
-                form.attrib['action']
+                form.attrib.get('action', '')
             )
 
         return result
