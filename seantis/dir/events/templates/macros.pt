@@ -159,7 +159,7 @@
             <div class="name" tal:content="o/organizer"></div>
             <div class="event_url" tal:condition="o/event_url">
               <span class="link-external">
-                <a i18n:translate="" target="_blank" tal:attributes="href o/event_url">Event Website</a>
+                <a target="_blank" tal:attributes="href o/event_url" tal:content="o/event_url"></a>
               </span>
             </div>
             <div class="contact" tal:condition="python: any((o.contact_name, o.contact_email))">
@@ -175,7 +175,7 @@
             <h3 i18n:translate="">Ticket</h3>
             <div class="registration" tal:condition="o/registration">
               <span class="link-external">
-                <a tal:attributes="href o/registration" target="_blank" i18n:translate="">Ticket / Registration Website</a>
+                <a tal:attributes="href o/registration" target="_blank" tal:content="o/registration"></a>
               </span>
             </div>
             <div class="prices" tal:condition="o/prices">

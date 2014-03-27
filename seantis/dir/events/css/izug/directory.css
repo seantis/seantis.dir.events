@@ -795,6 +795,10 @@ div.riform input[type="checkbox"] {
 
 .event-view .event-details a {
     color: #00538C;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .event-view .event-details a.selected,

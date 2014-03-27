@@ -8,6 +8,10 @@ Changelog
 - Add locality to list view. Implements #40.
   [msom]
 
+- Show organizer and ticket / registration website on detail view.
+  Implements #41.
+  [msom]
+
 1.0.1 (2014-02-15)
 ~~~~~~~~~~~~~~~~~~
 
