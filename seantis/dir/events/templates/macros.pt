@@ -58,8 +58,20 @@
                   </a></h3>
 
                   <div class="short" tal:content="item/short_description"></div>
+
+                  <div class="event-locality">
+                    <div class="locality" tal:content="item/locality"></div>
+                    <div class="street">
+                      <span tal:content="item/street"></span>
+                      <span tal:content="item/housenumber"></span>
+                    </div>
+                    <div class="town">
+                      <span tal:content="item/zipcode"></span>
+                      <span tal:content="item/town"></span>
+                    </div>
+                  </div>
                 </div>
-                  
+
                 <div class="eventtags">
                   <tal:block repeat="tag python: item.eventtags()">
                     <a class="eventtag" tal:attributes="href python: tag[1]"><tal:block replace="structure python: tag[0]"></tal:block></a>
