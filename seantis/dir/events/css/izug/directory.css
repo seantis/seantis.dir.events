@@ -803,6 +803,7 @@ div.riform input[type="checkbox"] {
     max-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .event-view .event-details a.selected,
