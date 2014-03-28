@@ -276,7 +276,7 @@ class View(core.View):
     @property
     @view.memoize
     def occurrences(self):
-        min_date, max_date = dates.event_range()
+        min_date, max_date = dates.eventrange()
 
         return recurrence.occurrences(self.context, min_date, max_date)
 
