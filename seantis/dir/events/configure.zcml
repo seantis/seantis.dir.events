@@ -25,7 +25,7 @@
     <browser:resourceDirectory
         name="seantis.dir.events.stylesheets"
         directory="css"/>
-    
+
     <browser:resourceDirectory
         name="seantis.dir.events.javascript"
         directory="js"/>
@@ -56,7 +56,7 @@
     />
 
     <!-- Profiles -->
-    <genericsetup:registerProfile 
+    <genericsetup:registerProfile
         name="default"
         title="Seantis Dir Events"
         description="Base Profile for Seantis Dir Events, Minimal Styles"
@@ -91,14 +91,14 @@
     <!-- Content rule conditions -->
     <adapter factory=".conditions.SourceConditionExecutor" />
 
-    <browser:page 
+    <browser:page
       for="plone.app.contentrules.browser.interfaces.IRuleConditionAdding"
       name="seantis.dir.events.conditions.source_add"
       class=".conditions.SourceConditionAddForm"
       permission="cmf.ManagePortal"
       />
 
-    <browser:page 
+    <browser:page
       for=".interfaces.ISourceCondition"
       name="seantis.dir.events.conditions.source_edit"
       class=".conditions.SourceConditionEditForm"
@@ -207,7 +207,7 @@
     </genericsetup:upgradeStep>
 
     <genericsetup:upgradeStep
-       title="Add import"
+       title="Update javascript and css"
        description=""
        source="1009"
        destination="1010"
@@ -215,9 +215,18 @@
        handler=".upgrades.upgrade_1009_to_1010">
     </genericsetup:upgradeStep>
 
+    <genericsetup:upgradeStep
+       title="Add import"
+       description=""
+       source="1010"
+       destination="1011"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1010_to_1011">
+    </genericsetup:upgradeStep>
+
     <!-- Advanced Theme Adjustments through Diazo -->
-    <plone:static name="seantis.dir.events.izug-theme" 
-      directory="themes/izug-theme" type="theme" 
+    <plone:static name="seantis.dir.events.izug-theme"
+      directory="themes/izug-theme" type="theme"
     />
 
 </configure>

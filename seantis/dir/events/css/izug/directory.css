@@ -580,6 +580,10 @@ form.change-event {
     font-size: 12px;
 }
 
+#directoryResultList .event-text .locality {
+    font-weight: bold;
+}
+
 #directoryResultList .timerange {
     font-size: 11px;
     color: black;
@@ -796,6 +800,11 @@ div.riform input[type="checkbox"] {
 
 .event-view .event-details a {
     color: #00538C;
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .event-view .event-details a.selected,

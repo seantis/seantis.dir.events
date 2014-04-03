@@ -145,6 +145,10 @@
     font-size: 1.4em !important;   
 }
 
+.event-text .locality {
+    font-weight: bold;
+}
+
 .event-text {
     color: #333;
     font-size: 12px;

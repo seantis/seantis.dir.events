@@ -5,7 +5,15 @@ Changelog
 1.1dev (unreleased)
 ~~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Add locality to list view. Implements #40.
+  [msom]
+
+- Show organizer and ticket / registration website on detail view.
+  Implements #41.
+  [msom]
+
+- Set coordinates using the location. Implements #43.
+  [msom]
 
 1.0.1 (2014-02-15)
 ~~~~~~~~~~~~~~~~~~

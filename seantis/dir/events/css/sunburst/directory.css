@@ -144,6 +144,10 @@
     font-size: 12px;
 }
 
+.event-text .locality {
+    font-weight: bold;
+}
+
 .event-image {
     float: right;
     margin: 7px 50px;
