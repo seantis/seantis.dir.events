@@ -217,11 +217,11 @@ def upgrade_1007_to_1008(context):
     setup.runAllImportStepsFromProfile(
         'profile-collective.geo.behaviour:default'
     )
- 
+
     add_behavior_to_item(
         context, 'seantis.dir.events', IEventsDirectoryItem
     )
- 
+
     # update css and js
     getToolByName(context, 'portal_css').cookResources()
     getToolByName(context, 'portal_javascripts').cookResources()
@@ -229,3 +229,8 @@ def upgrade_1007_to_1008(context):
 def upgrade_1008_to_1009(context):
     # update css
     getToolByName(context, 'portal_css').cookResources()
+
+def upgrade_1009_to_1010(context):
+    # update css and js
+    getToolByName(context, 'portal_css').cookResources()
+    getToolByName(context, 'portal_javascripts').cookResources()

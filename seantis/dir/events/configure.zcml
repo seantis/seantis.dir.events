@@ -23,7 +23,7 @@
     <browser:resourceDirectory
         name="seantis.dir.events.stylesheets"
         directory="css"/>
-    
+
     <browser:resourceDirectory
         name="seantis.dir.events.javascript"
         directory="js"/>
@@ -55,7 +55,7 @@
 
 
     <!-- Profiles -->
-    <genericsetup:registerProfile 
+    <genericsetup:registerProfile
         name="default"
         title="Seantis Dir Events"
         description="Base Profile for Seantis Dir Events, Minimal Styles"
@@ -178,9 +178,18 @@
        handler=".upgrades.upgrade_1008_to_1009">
     </genericsetup:upgradeStep>
 
+    <genericsetup:upgradeStep
+       title="Update javascript and css"
+       description=""
+       source="1009"
+       destination="1010"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1009_to_1010">
+    </genericsetup:upgradeStep>
+
     <!-- Advanced Theme Adjustments through Diazo -->
-    <plone:static name="seantis.dir.events.izug-theme" 
-      directory="themes/izug-theme" type="theme" 
+    <plone:static name="seantis.dir.events.izug-theme"
+      directory="themes/izug-theme" type="theme"
     />
 
 
