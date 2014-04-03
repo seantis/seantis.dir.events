@@ -56,6 +56,15 @@ load_libraries(['jQuery', '_'], function($, _) {
     var range_start_date = '#formfield-form-widgets-submission_range_start_date';
     var range_end_date = '#formfield-form-widgets-submission_range_end_date';
 
+    var locality_fields = [
+        '#form-widgets-street',
+        '#form-widgets-housenumber',
+        '#form-widgets-zipcode',
+        '#form-widgets-town'
+    ];
+
+    var locality_search_field = "#form-widgets-wkt-map-geocoder input";
+
     var submission_type = function(shown) {
         if (shown) {
             return $(submission_input + ':checked').val();
@@ -272,6 +281,33 @@ load_libraries(['jQuery', '_'], function($, _) {
         autoselect_days();
     };
 
+    var locality = function(e) {
+        var street = $(locality_fields[0]).val();
+        var number = $(locality_fields[1]).val();
+        var zip = $(locality_fields[2]).val();
+        var town = $(locality_fields[3]).val();
+
+        var locality = street;
+        if (street && number) {
+            locality += ' ' + number;
+        }
+        if (locality) {
+            locality += ', ';
+        }
+        locality += zip;
+        if (zip && town) {
+            locality += ' ';
+        }
+        locality += town;
+
+        return locality;
+    };
+
+    var update_map_widget = function(e) {
+        var loc = locality();
+        $(locality_search_field).val(loc);
+    };
+
     $(document).ready(function() {
         $(submission_input).change(update_submission_fields);
         $(wholeday_field).change(update_submission_fields);
@@ -289,5 +325,10 @@ load_libraries(['jQuery', '_'], function($, _) {
         $([range_start_date, range_end_date].join(', ')).change(function() {
             _.defer(autoselect_days);
         });
+
+        _.each(locality_fields, function(field) {
+            $(field).change(update_map_widget);
+        });
+        update_map_widget();
     });
 });

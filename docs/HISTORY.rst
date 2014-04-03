@@ -12,6 +12,9 @@ Changelog
   Implements #41.
   [msom]
 
+- Set coordinates using the location. Implements #43.
+  [msom]
+
 1.0.1 (2014-02-15)
 ~~~~~~~~~~~~~~~~~~
 
