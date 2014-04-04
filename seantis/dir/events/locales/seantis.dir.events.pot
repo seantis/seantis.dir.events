@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-07-17 12:32+0000\n"
+"POT-Creation-Date: 2014-04-04 13:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,15 +21,15 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr ""
 
-#: ./interfaces.py:352
+#: ./interfaces.py:350
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
-#: ./form.py:796
+#: ./form.py:825
 msgid "Adjust"
 msgstr ""
 
-#: ./templates/directory.pt:50
+#: ./templates/directory.pt:69
 msgid "All Events"
 msgstr ""
 
@@ -37,7 +37,7 @@ msgstr ""
 msgid "All day"
 msgstr ""
 
-#: ./item.py:120
+#: ./item.py:121
 msgid "Attachment ${number}"
 msgstr ""
 
@@ -49,40 +49,40 @@ msgstr ""
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:395
-#: ./templates/macros.pt:175
+#: ./interfaces.py:393
+#: ./templates/macros.pt:178
 msgid "Attachments"
 msgstr ""
 
-#: ./form.py:851
+#: ./form.py:880
 msgid "Back"
 msgstr ""
 
-#: ./templates/directory.pt:46
+#: ./templates/directory.pt:65
 msgid "Calendar Export"
 msgstr ""
 
-#: ./templates/macros.pt:190
+#: ./templates/macros.pt:193
 msgid "Calendar export for all occurrences of this event"
 msgstr ""
 
-#: ./templates/macros.pt:198
+#: ./templates/macros.pt:201
 msgid "Calendar export for this event"
 msgstr ""
 
-#: ./templates/macros.pt:193
+#: ./templates/macros.pt:196
 msgid "Calendar export for this occurrence only"
 msgstr ""
 
-#: ./templates/macros.pt:187
+#: ./templates/macros.pt:190
 msgid "Calendars (iCal)"
 msgstr ""
 
-#: ./form.py:475
+#: ./form.py:504
 msgid "Cancel"
 msgstr ""
 
-#: ./form.py:621
+#: ./form.py:650
 msgid "Cancel Event Submission"
 msgstr ""
 
@@ -98,12 +98,16 @@ msgstr ""
 msgid "Contact Phone"
 msgstr ""
 
-#: ./form.py:454
+#: ./form.py:483
 msgid "Continue"
 msgstr ""
 
-#: ./form.py:312
+#: ./form.py:341
 msgid "Coordinates"
+msgstr ""
+
+#: ./dates.py:395
+msgid "Custom date range"
 msgstr ""
 
 #: ./interfaces.py:268
@@ -111,15 +115,15 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: ./dates.py:287
+#: ./dates.py:294
 msgid "Day after Tomorrow"
 msgstr ""
 
-#: ./form.py:705
+#: ./form.py:734
 msgid "Detail Preview"
 msgstr ""
 
-#: ./templates/directory.pt:75
+#: ./templates/directory.pt:94
 msgid "Dou you have an event to share?"
 msgstr ""
 
@@ -135,56 +139,55 @@ msgstr ""
 msgid "Ends each day at"
 msgstr ""
 
-#: ./form.py:133
+#: ./form.py:157
 msgid "Enter"
 msgstr ""
 
-#: ./form.py:185
+#: ./form.py:209
 msgid "Event"
 msgstr ""
 
-#: ./form.py:550
+#: ./form.py:579
 msgid "Event Preview Updated"
 msgstr ""
 
-#: ./form.py:645
+#: ./form.py:674
 msgid "Event Saved"
 msgstr ""
 
-#: ./form.py:822
+#: ./form.py:851
 msgid "Event Submission Finish"
 msgstr ""
 
-#: ./form.py:407
+#: ./form.py:436
 msgid "Event Submission Form"
 msgstr ""
 
-#: ./form.py:774
+#: ./form.py:803
 msgid "Event Submission Preview"
 msgstr ""
 
 #: ./interfaces.py:201
-#: ./templates/macros.pt:150
 msgid "Event Website"
 msgstr ""
 
-#: ./form.py:241
+#: ./form.py:265
 msgid "Event date"
 msgstr ""
 
-#: ./form.py:359
+#: ./form.py:388
 msgid "Event submission cancelled"
 msgstr ""
 
-#: ./form.py:848
+#: ./form.py:877
 msgid "Event submitted"
 msgstr ""
 
-#: ./item.py:168
+#: ./item.py:169
 msgid "Event was archived"
 msgstr ""
 
-#: ./item.py:167
+#: ./item.py:168
 msgid "Event was published"
 msgstr ""
 
@@ -196,15 +199,15 @@ msgstr ""
 msgid "Events Directory Item"
 msgstr ""
 
-#: ./templates/directory.pt:55
+#: ./templates/directory.pt:74
 msgid "Events matching the current filter"
 msgstr ""
 
-#: ./templates/directory.pt:55
+#: ./templates/directory.pt:74
 msgid "Filtered Events"
 msgstr ""
 
-#: ./form.py:135
+#: ./form.py:159
 msgid "Finish"
 msgstr ""
 
@@ -212,35 +215,39 @@ msgstr ""
 msgid "Fr"
 msgstr ""
 
-#: ./dates.py:304
+#: ./dates.py:395
+msgid "From ... to ..."
+msgstr ""
+
+#: ./dates.py:311
 msgid "From 4pm next Friday until 12pm next Sunday"
 msgstr ""
 
-#: ./dates.py:296
+#: ./dates.py:303
 msgid "From 4pm this Friday until 12pm this Sunday"
 msgstr ""
 
-#: ./dates.py:323
+#: ./dates.py:330
 msgid "From next Monday until the following Sunday"
 msgstr ""
 
-#: ./dates.py:349
+#: ./dates.py:356
 msgid "From the beginning of next month until the end"
 msgstr ""
 
-#: ./dates.py:314
+#: ./dates.py:321
 msgid "From today until 12pm this Sunday"
 msgstr ""
 
-#: ./dates.py:382
+#: ./dates.py:389
 msgid "From today until the end of next year"
 msgstr ""
 
-#: ./dates.py:342
+#: ./dates.py:349
 msgid "From today until the end of the month"
 msgstr ""
 
-#: ./dates.py:359
+#: ./dates.py:366
 msgid "From today until the end of this year"
 msgstr ""
 
@@ -248,7 +255,7 @@ msgstr ""
 msgid "Housenumber"
 msgstr ""
 
-#: ./form.py:754
+#: ./form.py:783
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr ""
 
@@ -260,32 +267,32 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:369
+#: ./interfaces.py:367
 msgid "Images"
 msgstr ""
 
-#: ./form.py:320
+#: ./form.py:349
 msgid "Information"
 msgstr ""
 
-#: ./form.py:718
+#: ./form.py:747
 msgid "List Preview"
 msgstr ""
 
-#: ./form.py:726
+#: ./form.py:755
 msgid "List Preview (${number} Occurrences)"
 msgstr ""
 
-#: ./form.py:730
+#: ./form.py:759
 msgid "List Preview (No Occurrences)"
 msgstr ""
 
 #: ./interfaces.py:165
-#: ./templates/macros.pt:128
+#: ./templates/macros.pt:131
 msgid "Locality"
 msgstr ""
 
-#: ./form.py:292
+#: ./form.py:321
 msgid "Location"
 msgstr ""
 
@@ -297,7 +304,7 @@ msgstr ""
 msgid "Long Description"
 msgstr ""
 
-#: ./form.py:302
+#: ./form.py:331
 msgid "Map"
 msgstr ""
 
@@ -321,31 +328,31 @@ msgstr ""
 msgid "Mo"
 msgstr ""
 
-#: ./dates.py:349
+#: ./dates.py:356
 msgid "Next Month"
 msgstr ""
 
-#: ./dates.py:323
+#: ./dates.py:330
 msgid "Next Week"
 msgstr ""
 
-#: ./dates.py:304
+#: ./dates.py:311
 msgid "Next Weekend"
 msgstr ""
 
-#: ./dates.py:370
+#: ./dates.py:377
 msgid "Next Year"
 msgstr ""
 
-#: ./form.py:552
+#: ./form.py:581
 msgid "No changes were applied"
 msgstr ""
 
-#: ./directory.py:165
+#: ./directory.py:184
 msgid "No events for the current daterange"
 msgstr ""
 
-#: ./directory.py:167
+#: ./directory.py:186
 msgid "No events for the current state"
 msgstr ""
 
@@ -362,19 +369,19 @@ msgid "On these days"
 msgstr ""
 
 #: ./interfaces.py:207
-#: ./templates/macros.pt:146
+#: ./templates/macros.pt:149
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:374
+#: ./interfaces.py:372
 msgid "PDF"
 msgstr ""
 
-#: ./interfaces.py:336
+#: ./interfaces.py:334
 msgid "Please choose at least one category"
 msgstr ""
 
-#: ./interfaces.py:344
+#: ./interfaces.py:342
 msgid "Please enter at least one suggestion"
 msgstr ""
 
@@ -382,11 +389,11 @@ msgstr ""
 msgid "Prices"
 msgstr ""
 
-#: ./item.py:169
+#: ./item.py:170
 msgid "Publication of event was denied"
 msgstr ""
 
-#: ./directory.py:266
+#: ./directory.py:348
 msgid "Published"
 msgstr ""
 
@@ -394,7 +401,7 @@ msgstr ""
 msgid "Recurrence"
 msgstr ""
 
-#: ./templates/macros.pt:205
+#: ./templates/macros.pt:208
 msgid "Recurring Event"
 msgstr ""
 
@@ -402,11 +409,11 @@ msgstr ""
 msgid "Sa"
 msgstr ""
 
-#: ./form.py:612
+#: ./form.py:641
 msgid "Save Event"
 msgstr ""
 
-#: ./form.py:408
+#: ./form.py:437
 msgid "Send us your events and we will publish them"
 msgstr ""
 
@@ -414,7 +421,7 @@ msgstr ""
 msgid "Short Description"
 msgstr ""
 
-#: ./templates/macros.pt:207
+#: ./templates/macros.pt:210
 msgid "Show all occurrences"
 msgstr ""
 
@@ -422,7 +429,7 @@ msgstr ""
 msgid "Start date"
 msgstr ""
 
-#: ./submission.py:52
+#: ./submission.py:51
 msgid "Start date after end date"
 msgstr ""
 
@@ -446,20 +453,20 @@ msgstr ""
 msgid "Su"
 msgstr ""
 
-#: ./form.py:836
+#: ./form.py:865
 msgid "Submit"
 msgstr ""
 
-#: ./templates/directory.pt:76
+#: ./templates/directory.pt:95
 msgid "Submit Your Event"
 msgstr ""
 
-#: ./directory.py:261
+#: ./directory.py:343
 msgid "Submitted"
 msgstr ""
 
-#: ./form.py:735
-#: ./templates/macros.pt:213
+#: ./form.py:764
+#: ./templates/macros.pt:216
 msgid "Submitter"
 msgstr ""
 
@@ -479,7 +486,7 @@ msgstr ""
 msgid "Suggested Values for the Where-Category"
 msgstr ""
 
-#: ./directory.py:311
+#: ./directory.py:393
 #: ./interfaces.py:87
 msgid "Terms and Conditions"
 msgstr ""
@@ -488,44 +495,43 @@ msgstr ""
 msgid "Th"
 msgstr ""
 
-#: ./dates.py:370
+#: ./dates.py:377
 msgid "The whole next year"
 msgstr ""
 
-#: ./dates.py:342
+#: ./dates.py:349
 msgid "This Month"
 msgstr ""
 
-#: ./dates.py:314
+#: ./dates.py:321
 msgid "This Week"
 msgstr ""
 
-#: ./dates.py:296
+#: ./dates.py:303
 msgid "This Weekend"
 msgstr ""
 
-#: ./dates.py:359
+#: ./dates.py:366
 msgid "This Year"
 msgstr ""
 
-#: ./dates.py:382
+#: ./dates.py:389
 msgid "This and Next Year"
 msgstr ""
 
-#: ./templates/macros.pt:206
+#: ./templates/macros.pt:209
 msgid "This is a recurring event"
 msgstr ""
 
-#: ./templates/macros.pt:163
+#: ./templates/macros.pt:166
 msgid "Ticket"
 msgstr ""
 
 #: ./interfaces.py:237
-#: ./templates/macros.pt:166
 msgid "Ticket / Registration Website"
 msgstr ""
 
-#: ./form.py:221
+#: ./form.py:245
 msgid "Title of event"
 msgstr ""
 
@@ -545,11 +551,11 @@ msgstr ""
 msgid "Tu"
 msgstr ""
 
-#: ./interfaces.py:367
+#: ./interfaces.py:365
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:389
+#: ./interfaces.py:387
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
@@ -557,7 +563,7 @@ msgstr ""
 msgid "Up to 140 characters"
 msgstr ""
 
-#: ./form.py:134
+#: ./form.py:158
 msgid "Verify"
 msgstr ""
 
@@ -565,7 +571,7 @@ msgstr ""
 msgid "We"
 msgstr ""
 
-#: ./directory.py:40
+#: ./directory.py:37
 msgid "What"
 msgstr ""
 
@@ -573,7 +579,7 @@ msgstr ""
 msgid "When will this event occur?"
 msgstr ""
 
-#: ./directory.py:40
+#: ./directory.py:37
 msgid "Where"
 msgstr ""
 
@@ -581,11 +587,11 @@ msgstr ""
 msgid "Whole Day"
 msgstr ""
 
-#: ./interfaces.py:408
+#: ./interfaces.py:406
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 
-#: ./submission.py:61
+#: ./submission.py:60
 msgid "You may not add more than ${max} occurences"
 msgstr ""
 

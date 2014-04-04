@@ -20,7 +20,7 @@ def eventrange():
     # according to http://en.wikipedia.org/wiki/List_of_UTC_time_offsets this
     # is Baker / Howland Island with an UTC Offset of -12
     return (
-        this_morning - timedelta(seconds=60*60*12),
+        this_morning - timedelta(seconds=60 * 60 * 12),
         this_morning + timedelta(days=365 * 2)
     )
 
@@ -243,6 +243,13 @@ def next_weekday(date, weekday):
     return date + timedelta((w - date.weekday()) % 7)
 
 
+def as_range(start, end):
+    start = datetime(start.year, start.month, start.day, tzinfo=start.tzinfo)
+    end = datetime(end.year, end.month, end.day, tzinfo=end.tzinfo)
+    end = end + timedelta(days=1, microseconds=-1)
+    return start, end
+
+
 class DateRanges(object):
 
     def __init__(self, now=None):
@@ -383,3 +390,9 @@ class DateRanges(object):
     )
     def this_and_next_year(self):
         return self.this_year[0], self.next_year[1]
+
+    @property
+    @daterange(_(u'From ... to ...'), _(u'Custom date range'))
+    def custom(self):
+        # These values are only used to as default values and are overwritten
+        return self.this_month

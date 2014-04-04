@@ -2,13 +2,10 @@ import logging
 log = logging.getLogger('seantis.dir.events')
 
 from five import grok
-from pytz import timezone
 
-from datetime import datetime
-from datetime import date as datetime_date
-from urllib import urlopen
-from icalendar import Calendar
-from plone.dexterity.utils import createContent, addContentToContainer
+from datetime import date, timedelta
+from dateutil.parser import parse
+
 from zope.component import queryAdapter
 from zope.component.hooks import getSite
 from Products.CMFPlone.PloneBatch import Batch
@@ -156,6 +153,23 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         """ Store the last selected daterange on the session. """
         session.set_session(self.context, 'daterange', method)
 
+    def get_last_custom_start_date(self):
+        """ Returns the last selected custom start date. """
+        default, unused = getattr(dates.DateRanges(), 'custom')
+        return session.get_session(self.context,
+                                   'custom_date_start') or default
+
+    def get_last_custom_end_date(self):
+        """ Returns the last selected custom end date. """
+        unused, default = getattr(dates.DateRanges(), 'custom')
+        return session.get_session(self.context,
+                                   'custom_date_end') or default
+
+    def set_last_custom_dates(self, start, end):
+        """ Store the last selected custom dates on the session. """
+        session.set_session(self.context, 'custom_date_start', start)
+        session.set_session(self.context, 'custom_date_end', end)
+
     def get_last_state(self):
         """ Returns the last selected event state. """
         return session.get_session(self.context, 'state') or 'published'
@@ -181,6 +195,46 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
     def daterange_url(self, method):
         return self.directory.absolute_url() + '?range=' + method
+
+    @property
+    def custom_date_min(self):
+        return date.today().strftime('%Y-%m-%d')
+
+    @property
+    def custom_date_max(self):
+        mim_date, max_date = dates.eventrange()
+        return max_date.strftime('%Y-%m-%d')
+
+    @property
+    def custom_date_from(self):
+        return self.catalog.custom_start_date().strftime('%Y-%m-%d')
+
+    @property
+    def custom_date_to(self):
+        return self.catalog.custom_end_date().strftime('%Y-%m-%d')
+
+    @property
+    def custom_date_url(self):
+        url = self.daterange_url('custom')
+        url += '&from=' + self.custom_date_from
+        url += '&to=' + self.custom_date_to
+        return url
+
+    @cached_property
+    def locale(self):
+        # borrowed from widget collective.z3form.datetimewidget.DateWidget
+        cal = self.request.locale.dates.calendars['gregorian']
+        locale = {
+            'lang': getattr(self.request, 'LANGUAGE', 'en'),
+            'months': ','.join(cal.getMonthNames()),
+            'shortmonths': ','.join(cal.getMonthAbbreviations()),
+            'days': ','.join([cal.getDayNames()[6]] + cal.getDayNames()[:6]),
+            'shortdays': ','.join(
+                [cal.getDayAbbreviations()[6]] + cal.getDayAbbreviations()[:6]
+            ),
+            'format': 'dd.mm.yyyy'
+        }
+        return locale
 
     @property
     def has_results(self):
@@ -212,16 +266,30 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
             return self._template.render(self)
 
     def update(self, **kwargs):
+        # Update date range
         daterange = self.request.get('range', self.get_last_daterange())
-
-        # do not trust the user's input blindly
         if not dates.is_valid_daterange(daterange):
             daterange = 'this_month'
         else:
             self.set_last_daterange(daterange)
 
-        state = self.request.get('state', self.get_last_state())
+        # Update custom dates
+        start = self.get_last_custom_start_date()
+        end = self.get_last_custom_end_date()
+        if daterange == 'custom':
+            tz = start.tzinfo
+            try:
+                start = parse(self.request.get('from'), ignoretz=True)
+                start = start.replace(tzinfo=tz)
+                end = parse(self.request.get('to'), ignoretz=True)
+                end = end.replace(tzinfo=tz)
+                end = max(start, end)
+                self.set_last_custom_dates(start, end)
+            except:
+                pass
 
+        # Update state
+        state = self.request.get('state', self.get_last_state())
         if not self.show_state_filters or state not in (
             'submitted', 'published', 'archived'
         ):
@@ -229,8 +297,10 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
         else:
             self.set_last_state(state)
 
+        # Set catalog
         self.catalog.state = state
         self.catalog.daterange = daterange
+        self.catalog.set_custom_dates(start, end)
 
         if not self.is_ical_export and not self.is_json_export:
             super(EventsDirectoryView, self).update(**kwargs)
