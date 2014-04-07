@@ -1045,7 +1045,6 @@ class BrowserTestCase(FunctionalTestCase):
         self.assertTrue('test2' in browser.contents)
 
     def test_browser_add_today_whole_day(self):
-
         browser = self.admin_browser
 
         self.addEvent(title='whole-day-event-today',
@@ -1062,3 +1061,36 @@ class BrowserTestCase(FunctionalTestCase):
         browser.getLink('Publish', index=1).click()
         browser.open('/veranstaltungen?state=published')
         self.assertTrue('whole-day-event-today' in browser.contents)
+
+    def test_date_range_selection(self):
+        browser = self.admin_browser
+
+        def open_range(date1, date2):
+            browser.open(
+                'veranstaltungen?range=custom&from=%s&to=%s' % (
+                    '%04i-%02i-%02i' % (date1.year, date1.month, date1.day),
+                    '%04i-%02i-%02i' % (date2.year, date2.month, date2.day)
+                )
+            )
+
+        dates = [datetime.today() + timedelta(days=d) for d in [8, 15, 28, 45]]
+        for date in dates:
+            self.addEvent(title=str(date), date=date)
+
+        open_range(datetime.today(), dates[2])
+        self.assertTrue(str(dates[0]) in browser.contents)
+        self.assertTrue(str(dates[1]) in browser.contents)
+        self.assertTrue(str(dates[2]) in browser.contents)
+        self.assertFalse(str(dates[3]) in browser.contents)
+
+        open_range(dates[1], dates[3])
+        self.assertFalse(str(dates[0]) in browser.contents)
+        self.assertTrue(str(dates[1]) in browser.contents)
+        self.assertTrue(str(dates[2]) in browser.contents)
+        self.assertTrue(str(dates[3]) in browser.contents)
+
+        open_range(dates[3], dates[2])
+        self.assertFalse(str(dates[0]) in browser.contents)
+        self.assertFalse(str(dates[1]) in browser.contents)
+        self.assertFalse(str(dates[2]) in browser.contents)
+        self.assertTrue(str(dates[3]) in browser.contents)
