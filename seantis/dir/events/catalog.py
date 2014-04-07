@@ -427,6 +427,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     def __init__(self, *args, **kwargs):
         self._daterange = dates.default_daterange
+        start, end = getattr(dates.DateRanges(), 'custom')
+        self._custom_start, self._custom_end = dates.as_range(start, end)
         self._state = 'published'
 
         self.subset = None
@@ -438,6 +440,12 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         self.indices = dict(
             submitted=self.ix_submitted, published=self.ix_published
         )
+
+    def daterange_dates(self):
+        if self._daterange == 'custom':
+            return self._custom_start, self._custom_end
+        else:
+            return getattr(dates.DateRanges(), self._daterange)
 
     def index_for_state(self, state):
         return EventOrderIndex(self, state)
@@ -483,6 +491,18 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     daterange = property(get_daterange, set_daterange)
 
+    def custom_start_date(self):
+        return self._custom_start
+
+    def custom_end_date(self):
+        return self._custom_end
+
+    @instance.clearafter
+    def set_custom_dates(self, start, end):
+        self._custom_start, self._custom_end = dates.as_range(
+            start, end
+        )
+
     def get_state(self):
         return self._state
 
@@ -513,7 +533,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     def spawn(self, realitems, start=None, end=None):
         if not all((start, end)):
-            start, end = getattr(dates.DateRanges(), self._daterange)
+            start, end = self.daterange_dates()
 
         for item in realitems:
             for occurrence in recurrence.occurrences(item, start, end):
@@ -542,13 +562,8 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     @property
     def lazy_list(self):
-        start, end = getattr(dates.DateRanges(), self.daterange)
+        start, end = self.daterange_dates()
         return self.indices[self.state].lazy_list(start, end, self.subset)
-
-    @instance.memoize
-    def all_items(self):
-        real = super(EventsDirectoryCatalog, self).items()
-        return sorted(self.spawn(self.hide_blocked(real)), key=self.sortkey())
 
     def filter(self, term):
         nonempty_terms = [t for t in term.values() if t != u'!empty']

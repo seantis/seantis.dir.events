@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2013-07-17 12:32+0000\n"
+"POT-Creation-Date: 2014-04-04 13:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,15 +18,15 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr "${chars} Zeichen übrig"
 
-#: ./interfaces.py:352
+#: ./interfaces.py:350
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
-#: ./form.py:796
+#: ./form.py:825
 msgid "Adjust"
 msgstr "Korrigieren"
 
-#: ./templates/directory.pt:50
+#: ./templates/directory.pt:69
 msgid "All Events"
 msgstr "Alle Veranstaltungen"
 
@@ -34,7 +34,7 @@ msgstr "Alle Veranstaltungen"
 msgid "All day"
 msgstr "Ganztags"
 
-#: ./item.py:120
+#: ./item.py:121
 msgid "Attachment ${number}"
 msgstr "Anhang ${number}"
 
@@ -46,40 +46,40 @@ msgstr "Anhang 1"
 msgid "Attachment 2"
 msgstr "Anhang 2"
 
-#: ./interfaces.py:395
-#: ./templates/macros.pt:175
+#: ./interfaces.py:393
+#: ./templates/macros.pt:178
 msgid "Attachments"
 msgstr "Anhänge"
 
-#: ./form.py:851
+#: ./form.py:880
 msgid "Back"
 msgstr "Zurück"
 
-#: ./templates/directory.pt:46
+#: ./templates/directory.pt:65
 msgid "Calendar Export"
 msgstr "Kalender Export"
 
-#: ./templates/macros.pt:190
+#: ./templates/macros.pt:193
 msgid "Calendar export for all occurrences of this event"
 msgstr "Kalender Export für alle Wiederholungen dieser Veranstaltung"
 
-#: ./templates/macros.pt:198
+#: ./templates/macros.pt:201
 msgid "Calendar export for this event"
 msgstr "Kalender Export für diese Veranstaltung"
 
-#: ./templates/macros.pt:193
+#: ./templates/macros.pt:196
 msgid "Calendar export for this occurrence only"
 msgstr "Kalender Export nur für diese Wiederholung"
 
-#: ./templates/macros.pt:187
+#: ./templates/macros.pt:190
 msgid "Calendars (iCal)"
 msgstr "Kalender (iCal)"
 
-#: ./form.py:475
+#: ./form.py:504
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ./form.py:621
+#: ./form.py:650
 msgid "Cancel Event Submission"
 msgstr "Abbrechen"
 
@@ -95,28 +95,32 @@ msgstr "Kontakt Name"
 msgid "Contact Phone"
 msgstr "Kontakt Telefon"
 
-#: ./form.py:454
+#: ./form.py:483
 msgid "Continue"
 msgstr "Weiter"
 
-#: ./form.py:312
+#: ./form.py:341
 msgid "Coordinates"
 msgstr "Koordinaten"
+
+#: ./dates.py:395
+msgid "Custom date range"
+msgstr "Benutzerdefinierte Zeitspanne"
 
 #: ./interfaces.py:268
 #: ./templates/directory.pt:39
 msgid "Date"
 msgstr "Datum"
 
-#: ./dates.py:287
+#: ./dates.py:294
 msgid "Day after Tomorrow"
 msgstr "Übermorgen"
 
-#: ./form.py:705
+#: ./form.py:734
 msgid "Detail Preview"
 msgstr "Details-Vorschau"
 
-#: ./templates/directory.pt:75
+#: ./templates/directory.pt:94
 msgid "Dou you have an event to share?"
 msgstr "Sie organisieren eine Veranstaltung?"
 
@@ -132,56 +136,55 @@ msgstr "Bis"
 msgid "Ends each day at"
 msgstr "Täglich bis"
 
-#: ./form.py:133
+#: ./form.py:157
 msgid "Enter"
 msgstr "Erfassen"
 
-#: ./form.py:185
+#: ./form.py:209
 msgid "Event"
 msgstr "Veranstaltung"
 
-#: ./form.py:550
+#: ./form.py:579
 msgid "Event Preview Updated"
 msgstr "Veranstaltungs Vorschau Aktualisiert"
 
-#: ./form.py:645
+#: ./form.py:674
 msgid "Event Saved"
 msgstr "Veranstaltung gespeichert"
 
-#: ./form.py:822
+#: ./form.py:851
 msgid "Event Submission Finish"
 msgstr "Veranstaltung melden"
 
-#: ./form.py:407
+#: ./form.py:436
 msgid "Event Submission Form"
 msgstr "Veranstaltung erfassen"
 
-#: ./form.py:774
+#: ./form.py:803
 msgid "Event Submission Preview"
 msgstr "Veranstaltungs-Vorschau"
 
 #: ./interfaces.py:201
-#: ./templates/macros.pt:150
 msgid "Event Website"
 msgstr "Veranstaltungs-Webseite"
 
-#: ./form.py:241
+#: ./form.py:265
 msgid "Event date"
 msgstr "Veranstaltungs-Datum"
 
-#: ./form.py:359
+#: ./form.py:388
 msgid "Event submission cancelled"
 msgstr "Veranstaltungs-Meldung abgebrochen"
 
-#: ./form.py:848
+#: ./form.py:877
 msgid "Event submitted"
 msgstr "Veranstaltung gemeldet"
 
-#: ./item.py:168
+#: ./item.py:169
 msgid "Event was archived"
 msgstr "Die Veranstaltung wurde archiviert"
 
-#: ./item.py:167
+#: ./item.py:168
 msgid "Event was published"
 msgstr "Die Veranstaltung wurde veröffentlicht"
 
@@ -193,15 +196,15 @@ msgstr "Veranstaltungs-Verzeichnis"
 msgid "Events Directory Item"
 msgstr "Veranstaltungs-Verzeichnis Eintrag"
 
-#: ./templates/directory.pt:55
+#: ./templates/directory.pt:74
 msgid "Events matching the current filter"
 msgstr "Veranstaltungen die dem aktuellen Filter entsprechen"
 
-#: ./templates/directory.pt:55
+#: ./templates/directory.pt:74
 msgid "Filtered Events"
 msgstr "Gefilterte Veranstaltungen"
 
-#: ./form.py:135
+#: ./form.py:159
 msgid "Finish"
 msgstr "Abschliessen"
 
@@ -209,35 +212,39 @@ msgstr "Abschliessen"
 msgid "Fr"
 msgstr "Fr"
 
-#: ./dates.py:304
+#: ./dates.py:395
+msgid "From ... to ..."
+msgstr "Von ... bis ..."
+
+#: ./dates.py:311
 msgid "From 4pm next Friday until 12pm next Sunday"
 msgstr "Vom nächstem Freitag 16 Uhr bis nächsten Sonntag Nacht"
 
-#: ./dates.py:296
+#: ./dates.py:303
 msgid "From 4pm this Friday until 12pm this Sunday"
 msgstr "Von diesem Freitag 16 Uhr bis diesen Sonntag Nacht"
 
-#: ./dates.py:323
+#: ./dates.py:330
 msgid "From next Monday until the following Sunday"
 msgstr "Vom nächsten Montag bis zum folgenden Sonntag"
 
-#: ./dates.py:349
+#: ./dates.py:356
 msgid "From the beginning of next month until the end"
 msgstr "Vom nächsten Monatsbeginn bis Monatsende"
 
-#: ./dates.py:314
+#: ./dates.py:321
 msgid "From today until 12pm this Sunday"
 msgstr "Von Heute bis Sonntag Nacht"
 
-#: ./dates.py:382
+#: ./dates.py:389
 msgid "From today until the end of next year"
 msgstr "Von Heute bis Ende nächstes Jahr"
 
-#: ./dates.py:342
+#: ./dates.py:349
 msgid "From today until the end of the month"
 msgstr "Von Heute bis Monatsende"
 
-#: ./dates.py:359
+#: ./dates.py:366
 msgid "From today until the end of this year"
 msgstr "Von Heute bis Jahresende"
 
@@ -245,7 +252,7 @@ msgstr "Von Heute bis Jahresende"
 msgid "Housenumber"
 msgstr "Hausnummer"
 
-#: ./form.py:754
+#: ./form.py:783
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr "Ich stimme den <a target='_blank' href='${url}'>Allgemeinen Geschäftsbedingungen</a> zu"
 
@@ -257,32 +264,32 @@ msgstr "Erfasser von Veranstaltungen müssen diesen Allgemeinen Geschäftsbeding
 msgid "Image"
 msgstr "Bild"
 
-#: ./interfaces.py:369
+#: ./interfaces.py:367
 msgid "Images"
 msgstr "Bilder"
 
-#: ./form.py:320
+#: ./form.py:349
 msgid "Information"
 msgstr "Informationen"
 
-#: ./form.py:718
+#: ./form.py:747
 msgid "List Preview"
 msgstr "Listen-Vorschau"
 
-#: ./form.py:726
+#: ./form.py:755
 msgid "List Preview (${number} Occurrences)"
 msgstr "Listen-Vorschau (${number} Wiederholungen)"
 
-#: ./form.py:730
+#: ./form.py:759
 msgid "List Preview (No Occurrences)"
 msgstr "Listen-Vorschau (Keine Wiederholungen)"
 
 #: ./interfaces.py:165
-#: ./templates/macros.pt:128
+#: ./templates/macros.pt:131
 msgid "Locality"
 msgstr "Lokalität"
 
-#: ./form.py:292
+#: ./form.py:321
 msgid "Location"
 msgstr "Ort"
 
@@ -294,7 +301,7 @@ msgstr "Webseite der Lokalität"
 msgid "Long Description"
 msgstr "Lange Beschreibung"
 
-#: ./form.py:302
+#: ./form.py:331
 msgid "Map"
 msgstr "Karte"
 
@@ -318,31 +325,31 @@ msgstr "Fehlende Start-Zeit"
 msgid "Mo"
 msgstr "Mo"
 
-#: ./dates.py:349
+#: ./dates.py:356
 msgid "Next Month"
 msgstr "Nächsten Monat"
 
-#: ./dates.py:323
+#: ./dates.py:330
 msgid "Next Week"
 msgstr "Nächste Woche"
 
-#: ./dates.py:304
+#: ./dates.py:311
 msgid "Next Weekend"
 msgstr "Nächstes Wochenende"
 
-#: ./dates.py:370
+#: ./dates.py:377
 msgid "Next Year"
 msgstr "Nächstes Jahr"
 
-#: ./form.py:552
+#: ./form.py:581
 msgid "No changes were applied"
 msgstr "Keine Änderungen"
 
-#: ./directory.py:165
+#: ./directory.py:184
 msgid "No events for the current daterange"
 msgstr "Keine Veranstaltungen für das gewählte Datum"
 
-#: ./directory.py:167
+#: ./directory.py:186
 msgid "No events for the current state"
 msgstr "Keine Veranstaltungen für den gewählten Status"
 
@@ -359,19 +366,19 @@ msgid "On these days"
 msgstr "An diesen Tagen"
 
 #: ./interfaces.py:207
-#: ./templates/macros.pt:146
+#: ./templates/macros.pt:149
 msgid "Organizer"
 msgstr "Organisator"
 
-#: ./interfaces.py:374
+#: ./interfaces.py:372
 msgid "PDF"
 msgstr "PDF"
 
-#: ./interfaces.py:336
+#: ./interfaces.py:334
 msgid "Please choose at least one category"
 msgstr "Bitte wählen Sie mindestens eine Kategorie"
 
-#: ./interfaces.py:344
+#: ./interfaces.py:342
 msgid "Please enter at least one suggestion"
 msgstr "Bitte geben Sie mindestens einen Vorschlag ein"
 
@@ -379,11 +386,11 @@ msgstr "Bitte geben Sie mindestens einen Vorschlag ein"
 msgid "Prices"
 msgstr "Preise"
 
-#: ./item.py:169
+#: ./item.py:170
 msgid "Publication of event was denied"
 msgstr "Die Veranstaltung wurde abgelehnt"
 
-#: ./directory.py:266
+#: ./directory.py:348
 msgid "Published"
 msgstr "Veröffentlicht"
 
@@ -391,7 +398,7 @@ msgstr "Veröffentlicht"
 msgid "Recurrence"
 msgstr "Wiederholung"
 
-#: ./templates/macros.pt:205
+#: ./templates/macros.pt:208
 msgid "Recurring Event"
 msgstr "Wiederholende Veranstaltung"
 
@@ -399,11 +406,11 @@ msgstr "Wiederholende Veranstaltung"
 msgid "Sa"
 msgstr "Sa"
 
-#: ./form.py:612
+#: ./form.py:641
 msgid "Save Event"
 msgstr "Veranstaltung speichern"
 
-#: ./form.py:408
+#: ./form.py:437
 msgid "Send us your events and we will publish them"
 msgstr "Senden Sie uns Ihre Veranstaltung und wir werden sie veröffentlichen"
 
@@ -411,7 +418,7 @@ msgstr "Senden Sie uns Ihre Veranstaltung und wir werden sie veröffentlichen"
 msgid "Short Description"
 msgstr "Kurzbeschrieb"
 
-#: ./templates/macros.pt:207
+#: ./templates/macros.pt:210
 msgid "Show all occurrences"
 msgstr "Alle Wiederholungen anzeigen"
 
@@ -419,7 +426,7 @@ msgstr "Alle Wiederholungen anzeigen"
 msgid "Start date"
 msgstr "Von Datum"
 
-#: ./submission.py:52
+#: ./submission.py:51
 msgid "Start date after end date"
 msgstr "Start-Datum nach End-Datum"
 
@@ -443,20 +450,20 @@ msgstr "Strasse"
 msgid "Su"
 msgstr "So"
 
-#: ./form.py:836
+#: ./form.py:865
 msgid "Submit"
 msgstr "Melden"
 
-#: ./templates/directory.pt:76
+#: ./templates/directory.pt:95
 msgid "Submit Your Event"
 msgstr "Veranstaltung melden"
 
-#: ./directory.py:261
+#: ./directory.py:343
 msgid "Submitted"
 msgstr "Gemeldet"
 
-#: ./form.py:735
-#: ./templates/macros.pt:213
+#: ./form.py:764
+#: ./templates/macros.pt:216
 msgid "Submitter"
 msgstr "Erfasser"
 
@@ -476,7 +483,7 @@ msgstr "Vorgeschlagene Werte für die Was-Kategorie"
 msgid "Suggested Values for the Where-Category"
 msgstr "Vorgeschlagene Werte für die Wo-Kategorie"
 
-#: ./directory.py:311
+#: ./directory.py:393
 #: ./interfaces.py:87
 msgid "Terms and Conditions"
 msgstr "Allgemeine Geschäftsbedingungen"
@@ -485,44 +492,43 @@ msgstr "Allgemeine Geschäftsbedingungen"
 msgid "Th"
 msgstr "Do"
 
-#: ./dates.py:370
+#: ./dates.py:377
 msgid "The whole next year"
 msgstr "Das ganze nächste Jahr"
 
-#: ./dates.py:342
+#: ./dates.py:349
 msgid "This Month"
 msgstr "Diesen Monat"
 
-#: ./dates.py:314
+#: ./dates.py:321
 msgid "This Week"
 msgstr "Diese Woche"
 
-#: ./dates.py:296
+#: ./dates.py:303
 msgid "This Weekend"
 msgstr "Dieses Wochenende"
 
-#: ./dates.py:359
+#: ./dates.py:366
 msgid "This Year"
 msgstr "Dieses Jahr"
 
-#: ./dates.py:382
+#: ./dates.py:389
 msgid "This and Next Year"
 msgstr "Dieses und nächstes Jahr"
 
-#: ./templates/macros.pt:206
+#: ./templates/macros.pt:209
 msgid "This is a recurring event"
 msgstr "Dies ist eine sich wiederholende Veranstaltung"
 
-#: ./templates/macros.pt:163
+#: ./templates/macros.pt:166
 msgid "Ticket"
 msgstr "Ticket"
 
 #: ./interfaces.py:237
-#: ./templates/macros.pt:166
 msgid "Ticket / Registration Website"
 msgstr "Ticket / Registrations Webseite"
 
-#: ./form.py:221
+#: ./form.py:245
 msgid "Title of event"
 msgstr "Titel der Veranstaltung"
 
@@ -542,11 +548,11 @@ msgstr "Ort"
 msgid "Tu"
 msgstr "Di"
 
-#: ./interfaces.py:367
+#: ./interfaces.py:365
 msgid "Unknown image format"
 msgstr "Unbekanntes Bild-Format"
 
-#: ./interfaces.py:389
+#: ./interfaces.py:387
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 
@@ -554,7 +560,7 @@ msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 msgid "Up to 140 characters"
 msgstr "Bis zu 140 Zeichen"
 
-#: ./form.py:134
+#: ./form.py:158
 msgid "Verify"
 msgstr "Kontrollieren"
 
@@ -562,7 +568,7 @@ msgstr "Kontrollieren"
 msgid "We"
 msgstr "Mi"
 
-#: ./directory.py:40
+#: ./directory.py:37
 msgid "What"
 msgstr "Was"
 
@@ -570,7 +576,7 @@ msgstr "Was"
 msgid "When will this event occur?"
 msgstr "Wann wird diese Veranstaltung stattfinden?"
 
-#: ./directory.py:40
+#: ./directory.py:37
 msgid "Where"
 msgstr "Wo"
 
@@ -578,11 +584,11 @@ msgstr "Wo"
 msgid "Whole Day"
 msgstr "Ganztags"
 
-#: ./interfaces.py:408
+#: ./interfaces.py:406
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr "Sie müssen den Allgemeinen Geschäftsbedingungen zustimmen bevor Sie diese Veranstaltung melden"
 
-#: ./submission.py:61
+#: ./submission.py:60
 msgid "You may not add more than ${max} occurences"
 msgstr "Sie dürfen nicht mehr als ${max} Wiederholungen erfassen"
 

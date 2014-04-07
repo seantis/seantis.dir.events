@@ -15,6 +15,9 @@ Changelog
 - Set coordinates using the location. Implements #43.
   [msom]
 
+- Add custom date filter. Implements #33.
+  [msom]
+
 1.0.1 (2014-02-15)
 ~~~~~~~~~~~~~~~~~~
 
