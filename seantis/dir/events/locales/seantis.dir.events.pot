@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-01-29 10:43+0000\n"
+"POT-Creation-Date: 2014-04-07 12:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Adjust"
 msgstr ""
 
-#: ./templates/directory.pt:59
+#: ./templates/directory.pt:78
 msgid "All Events"
 msgstr ""
 
@@ -66,7 +66,7 @@ msgid "Attachment 2"
 msgstr ""
 
 #: ./interfaces.py:506
-#: ./templates/macros.pt:175
+#: ./templates/macros.pt:178
 msgid "Attachments"
 msgstr ""
 
@@ -78,23 +78,23 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: ./templates/directory.pt:55
+#: ./templates/directory.pt:74
 msgid "Calendar Export"
 msgstr ""
 
-#: ./templates/macros.pt:190
+#: ./templates/macros.pt:193
 msgid "Calendar export for all occurrences of this event"
 msgstr ""
 
-#: ./templates/macros.pt:198
+#: ./templates/macros.pt:201
 msgid "Calendar export for this event"
 msgstr ""
 
-#: ./templates/macros.pt:193
+#: ./templates/macros.pt:196
 msgid "Calendar export for this occurrence only"
 msgstr ""
 
-#: ./templates/macros.pt:187
+#: ./templates/macros.pt:190
 msgid "Calendars (iCal)"
 msgstr ""
 
@@ -106,7 +106,7 @@ msgstr ""
 msgid "Cancel Event Submission"
 msgstr ""
 
-#: ./templates/directory.pt:88
+#: ./templates/directory.pt:107
 msgid "Configure Imports"
 msgstr ""
 
@@ -134,12 +134,16 @@ msgstr ""
 msgid "Coordinates"
 msgstr ""
 
+#: ./dates.py:395
+msgid "Custom date range"
+msgstr ""
+
 #: ./interfaces.py:269
 #: ./templates/directory.pt:39
 msgid "Date"
 msgstr ""
 
-#: ./dates.py:287
+#: ./dates.py:294
 msgid "Day after Tomorrow"
 msgstr ""
 
@@ -147,7 +151,7 @@ msgstr ""
 msgid "Detail Preview"
 msgstr ""
 
-#: ./templates/directory.pt:84
+#: ./templates/directory.pt:103
 msgid "Dou you have an event to share?"
 msgstr ""
 
@@ -200,7 +204,6 @@ msgid "Event Submission Preview"
 msgstr ""
 
 #: ./interfaces.py:202
-#: ./templates/macros.pt:150
 msgid "Event Website"
 msgstr ""
 
@@ -244,7 +247,7 @@ msgstr ""
 msgid "Events directory URL"
 msgstr ""
 
-#: ./templates/directory.pt:64
+#: ./templates/directory.pt:83
 msgid "Events matching the current filter"
 msgstr ""
 
@@ -252,7 +255,7 @@ msgstr ""
 msgid "Filter events"
 msgstr ""
 
-#: ./templates/directory.pt:64
+#: ./templates/directory.pt:83
 msgid "Filtered Events"
 msgstr ""
 
@@ -264,35 +267,39 @@ msgstr ""
 msgid "Fr"
 msgstr ""
 
-#: ./dates.py:304
+#: ./dates.py:395
+msgid "From ... to ..."
+msgstr ""
+
+#: ./dates.py:311
 msgid "From 4pm next Friday until 12pm next Sunday"
 msgstr ""
 
-#: ./dates.py:296
+#: ./dates.py:303
 msgid "From 4pm this Friday until 12pm this Sunday"
 msgstr ""
 
-#: ./dates.py:323
+#: ./dates.py:330
 msgid "From next Monday until the following Sunday"
 msgstr ""
 
-#: ./dates.py:349
+#: ./dates.py:356
 msgid "From the beginning of next month until the end"
 msgstr ""
 
-#: ./dates.py:314
+#: ./dates.py:321
 msgid "From today until 12pm this Sunday"
 msgstr ""
 
-#: ./dates.py:382
+#: ./dates.py:389
 msgid "From today until the end of next year"
 msgstr ""
 
-#: ./dates.py:342
+#: ./dates.py:349
 msgid "From today until the end of the month"
 msgstr ""
 
-#: ./dates.py:359
+#: ./dates.py:366
 msgid "From today until the end of this year"
 msgstr ""
 
@@ -304,7 +311,7 @@ msgstr ""
 msgid "Guidle URL to download from"
 msgstr ""
 
-#: ./directory.py:336
+#: ./directory.py:413
 msgid "Hidden"
 msgstr ""
 
@@ -328,7 +335,7 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: ./templates/directory.pt:46
+#: ./templates/directory.pt:65
 msgid "Import"
 msgstr ""
 
@@ -357,7 +364,7 @@ msgid "List Preview (No Occurrences)"
 msgstr ""
 
 #: ./interfaces.py:166
-#: ./templates/macros.pt:128
+#: ./templates/macros.pt:131
 msgid "Locality"
 msgstr ""
 
@@ -401,19 +408,19 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: ./dates.py:349
+#: ./dates.py:356
 msgid "Next Month"
 msgstr ""
 
-#: ./dates.py:323
+#: ./dates.py:330
 msgid "Next Week"
 msgstr ""
 
-#: ./dates.py:304
+#: ./dates.py:311
 msgid "Next Weekend"
 msgstr ""
 
-#: ./dates.py:370
+#: ./dates.py:377
 msgid "Next Year"
 msgstr ""
 
@@ -421,11 +428,11 @@ msgstr ""
 msgid "No changes were applied"
 msgstr ""
 
-#: ./directory.py:196
+#: ./directory.py:216
 msgid "No events for the current daterange"
 msgstr ""
 
-#: ./directory.py:198
+#: ./directory.py:218
 msgid "No events for the current state"
 msgstr ""
 
@@ -442,7 +449,7 @@ msgid "On these days"
 msgstr ""
 
 #: ./interfaces.py:208
-#: ./templates/macros.pt:146
+#: ./templates/macros.pt:149
 msgid "Organizer"
 msgstr ""
 
@@ -466,7 +473,7 @@ msgstr ""
 msgid "Publication of event was denied"
 msgstr ""
 
-#: ./directory.py:335
+#: ./directory.py:412
 msgid "Published"
 msgstr ""
 
@@ -474,7 +481,7 @@ msgstr ""
 msgid "Recurrence"
 msgstr ""
 
-#: ./templates/macros.pt:205
+#: ./templates/macros.pt:208
 msgid "Recurring Event"
 msgstr ""
 
@@ -494,7 +501,7 @@ msgstr ""
 msgid "Short Description"
 msgstr ""
 
-#: ./templates/macros.pt:207
+#: ./templates/macros.pt:210
 msgid "Show all occurrences"
 msgstr ""
 
@@ -538,16 +545,16 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: ./templates/directory.pt:85
+#: ./templates/directory.pt:104
 msgid "Submit Your Event"
 msgstr ""
 
-#: ./directory.py:330
+#: ./directory.py:407
 msgid "Submitted"
 msgstr ""
 
 #: ./form.py:790
-#: ./templates/macros.pt:213
+#: ./templates/macros.pt:216
 msgid "Submitter"
 msgstr ""
 
@@ -571,7 +578,7 @@ msgstr ""
 msgid "Synchronise deleted events"
 msgstr ""
 
-#: ./directory.py:381
+#: ./directory.py:458
 #: ./interfaces.py:87
 msgid "Terms and Conditions"
 msgstr ""
@@ -588,31 +595,31 @@ msgstr ""
 msgid "The source id to check for. Leave empty for any source."
 msgstr ""
 
-#: ./dates.py:370
+#: ./dates.py:377
 msgid "The whole next year"
 msgstr ""
 
-#: ./dates.py:342
+#: ./dates.py:349
 msgid "This Month"
 msgstr ""
 
-#: ./dates.py:314
+#: ./dates.py:321
 msgid "This Week"
 msgstr ""
 
-#: ./dates.py:296
+#: ./dates.py:303
 msgid "This Weekend"
 msgstr ""
 
-#: ./dates.py:359
+#: ./dates.py:366
 msgid "This Year"
 msgstr ""
 
-#: ./dates.py:382
+#: ./dates.py:389
 msgid "This and Next Year"
 msgstr ""
 
-#: ./templates/macros.pt:206
+#: ./templates/macros.pt:209
 msgid "This is a recurring event"
 msgstr ""
 
@@ -620,12 +627,11 @@ msgstr ""
 msgid "This is an imported event and not editable."
 msgstr ""
 
-#: ./templates/macros.pt:163
+#: ./templates/macros.pt:166
 msgid "Ticket"
 msgstr ""
 
 #: ./interfaces.py:238
-#: ./templates/macros.pt:166
 msgid "Ticket / Registration Website"
 msgstr ""
 
@@ -673,7 +679,7 @@ msgstr ""
 msgid "We"
 msgstr ""
 
-#: ./directory.py:40
+#: ./directory.py:43
 #: ./interfaces.py:385
 msgid "What"
 msgstr ""
@@ -682,7 +688,7 @@ msgstr ""
 msgid "When will this event occur?"
 msgstr ""
 
-#: ./directory.py:40
+#: ./directory.py:43
 #: ./interfaces.py:391
 msgid "Where"
 msgstr ""

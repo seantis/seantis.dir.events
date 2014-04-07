@@ -23,12 +23,12 @@
 .directoryMarker {
     right: auto;
     left: -6px;
-    top: 2px; 
+    top: 2px;
     position: absolute;
 }
 
 #directoryInfo {
-    margin-top: 22px;   
+    margin-top: 22px;
 }
 
 #directoryResultList {
@@ -58,11 +58,11 @@
 }
 
 .event-navigation > div {
-    margin-bottom: 20px;   
+    margin-bottom: 20px;
 }
 
 .event-navigation h3 {
-   font-size: 1.3em;  
+   font-size: 1.3em;
     margin-bottom: 10px
 
 }
@@ -78,14 +78,14 @@ a.event-navigation-link.selected {
     font-weight: bold;
 }
 
-a.event-navigation-link.selected, 
+a.event-navigation-link.selected,
 #content a.event-navigation-link:hover {
     color: black !important;
     border: 1px solid #0083bae !important;
     border-width: 1px 1px 1px 10px !important;
 }
 
-.event-navigation-admin a.event-navigation-link.selected, 
+.event-navigation-admin a.event-navigation-link.selected,
 #content .event-navigation-admin a.event-navigation-link:hover {
     border-color: #de7700 !important;
 }
@@ -97,6 +97,16 @@ a.event-navigation-link.selected,
 #content .event-navigation ul {
     list-style-type: none;
     margin: 0;
+}
+
+.event-navigation-dates input.custom-date-from,
+.event-navigation-dates input.custom-date-to {
+  border: none;
+  padding: 5px;
+  font-size: inherit;
+  font-weight: normal;
+  box-shadow: none;
+  width: 80%;
 }
 
 /* event list display */
@@ -129,11 +139,11 @@ a.event-navigation-link.selected,
 
 .eventtags {
     width: 50%;
-    float:left;   
+    float:left;
 }
 
 .event-view .eventtags {
-    margin: 15px 0 20px 0;   
+    margin: 15px 0 20px 0;
 }
 
 .timerange {
@@ -147,11 +157,11 @@ a.event-navigation-link.selected,
     padding: 5px;
     margin: 5px 7px 0 0;
     border: 1px solid #dce4eb;
-    background-color: #efefef;   
+    background-color: #efefef;
 }
 
 #content .event-image a.link-overlay {
-    border-bottom: none !important;   
+    border-bottom: none !important;
 }
 
 .event-view .event-image {
@@ -160,10 +170,10 @@ a.event-navigation-link.selected,
 
 .event-view {
     float: left;
-    width: 61.2%;   
+    width: 61.2%;
     padding-right: 25px;
     box-sizing: border-box;
-    background: url(data:image/gif;base64,R0lGODlhCgABAIAAAN3d3QAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpCOTA4OEVEMTA5NkMxMUUyODJBQTk2RkJDNzQyODE3OCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpCOTA4OEVEMjA5NkMxMUUyODJBQTk2RkJDNzQyODE3OCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkI5MDg4RUNGMDk2QzExRTI4MkFBOTZGQkM3NDI4MTc4IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkI5MDg4RUQwMDk2QzExRTI4MkFBOTZGQkM3NDI4MTc4Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAAAAAAAsAAAAAAoAAQAAAgOEjwUAOw==) repeat-y;   
+    background: url(data:image/gif;base64,R0lGODlhCgABAIAAAN3d3QAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS4wLWMwNjAgNjEuMTM0Nzc3LCAyMDEwLzAyLzEyLTE3OjMyOjAwICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpCOTA4OEVEMTA5NkMxMUUyODJBQTk2RkJDNzQyODE3OCIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpCOTA4OEVEMjA5NkMxMUUyODJBQTk2RkJDNzQyODE3OCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkI5MDg4RUNGMDk2QzExRTI4MkFBOTZGQkM3NDI4MTc4IiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOkI5MDg4RUQwMDk2QzExRTI4MkFBOTZGQkM3NDI4MTc4Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+Af/+/fz7+vn49/b19PPy8fDv7u3s6+rp6Ofm5eTj4uHg397d3Nva2djX1tXU09LR0M/OzczLysnIx8bFxMPCwcC/vr28u7q5uLe2tbSzsrGwr66trKuqqainpqWko6KhoJ+enZybmpmYl5aVlJOSkZCPjo2Mi4qJiIeGhYSDgoGAf359fHt6eXh3dnV0c3JxcG9ubWxramloZ2ZlZGNiYWBfXl1cW1pZWFdWVVRTUlFQT05NTEtKSUhHRkVEQ0JBQD8+PTw7Ojk4NzY1NDMyMTAvLi0sKyopKCcmJSQjIiEgHx4dHBsaGRgXFhUUExIREA8ODQwLCgkIBwYFBAMCAQAAIfkEAAAAAAAsAAAAAAoAAQAAAgOEjwUAOw==) repeat-y;
 }
 
 @media all and (max-width: 790px) {
@@ -173,19 +183,19 @@ a.event-navigation-link.selected,
     /* the missing space is no accident*/
     .responsive-events.event-view {
         float: none;
-        width: auto;   
+        width: auto;
     }
 
     .responsive-events #directoryResultList {
         float: none;
         width: auto;
-        clear: both;   
+        clear: both;
     }
 
     .responsive-events .event-navigation {
         float: none;
         clear:both;
-        width: auto;   
+        width: auto;
     }
 
     .responsive-events .event-sidebar {
@@ -197,7 +207,7 @@ a.event-navigation-link.selected,
 }
 
 .event-title {
-    border: 1px solid #0083be;   
+    border: 1px solid #0083be;
     border-width: 0 0 0 10px;
     padding-left: 10px;
     margin-top: 10px;
@@ -227,7 +237,7 @@ a.event-navigation-link.selected,
     margin-left: 20px;
 }
 
-.event-details h3 {   
+.event-details h3 {
     font-size: 1.1em;
     background-color: #efefef;
     color: #666;
@@ -240,24 +250,24 @@ a.event-navigation-link.selected,
 .event-details > div {
     margin-bottom: 10px;
     border-radius: 3px;
-    padding-bottom: 5px; 
+    padding-bottom: 5px;
     background-color: #fafafa;
 }
 
 .admin-filter, .ical-links {
-     margin-top: 20px;   
+     margin-top: 20px;
 }
 
 .event-details > div > div {
-    padding-left: 10px;   
+    padding-left: 10px;
 }
 
 .event-details > div:last-child {
-    margin-bottom: 0;   
+    margin-bottom: 0;
 }
 
 .location .locality, .organizer .name {
-    color: #0083be;   
+    color: #0083be;
 }
 
 .organizer .contact {
@@ -283,7 +293,7 @@ a.event-navigation-link.selected,
 }
 
 .your-event p {
-    font-size: 1.1em;   
+    font-size: 1.1em;
     line-height: 1.4em;
     color: #777;
 }
@@ -298,7 +308,7 @@ a.event-navigation-link.selected,
 }
 
 .your-event a:before {
-    content: "► ";   
+    content: "► ";
 }
 
 /* submit your own event form */
@@ -308,7 +318,7 @@ a.event-navigation-link.selected,
 }
 
 .event-submit-form #geoshapemap {
-    height: 400px;  
+    height: 400px;
 }
 
 .event-submit-form .geocoder-wrapper label {
@@ -317,7 +327,7 @@ a.event-navigation-link.selected,
 }
 
 form.change-event {
-    margin-bottom: 20px;   
+    margin-bottom: 20px;
 }
 
 .event-submit-form .olControlNavigationItemInactive,
@@ -326,11 +336,11 @@ form.change-event {
 .event-submit-form .olControlDrawFeaturePathItemActive,
 .event-submit-form .olControlDrawFeaturePolygonItemInactive,
 .event-submit-form .olControlDrawFeaturePolygonItemActive {
-    display: none;   
+    display: none;
 }
 
 .event-submit-form #formfield-form-widgets-wkt .formHelp {
-    display: none;   
+    display: none;
 }
 
 /* event states */
@@ -359,7 +369,7 @@ form.change-event {
 }
 
 .event-workflow .event-state {
-    float: left;   
+    float: left;
     text-align: left;
     background-color: #eee;
     padding: 0 4px;
@@ -378,15 +388,15 @@ form.change-event {
 
 .actionMenuContent #seantis-dir-events-item,
 .actionMenuContent #seantis-dir-events-directory {
-    background: none;    
+    background: none;
 }
 
 .portalMessage {
-    margin-bottom: 12px !important;   
+    margin-bottom: 12px !important;
 }
 
 #landingPageText {
-   line-height: 1.4em;   
+   line-height: 1.4em;
 }
 
 /* start */
@@ -452,7 +462,7 @@ form.change-event {
 }
 
 #directoryResultList {
-    width: 400px !important; 
+    width: 400px !important;
     margin-right: 25px;
 }
 
@@ -470,11 +480,11 @@ form.change-event {
 }
 
 #directoryResultMap #default-cgmap {
-    height: 300px;   
+    height: 300px;
 }
 
 #directoryDetails .event-sidebar {
-    margin-top: 38px;   
+    margin-top: 38px;
 }
 
 /* event navigation */
@@ -484,7 +494,7 @@ form.change-event {
 
 .event-navigation h3 {
    font-size: 12px;
-   font-weight: normal;   
+   font-weight: normal;
    margin-bottom: 5px
 }
 
@@ -493,11 +503,11 @@ form.change-event {
 }
 
 .event-navigation ul li {
-    margin: 0 !important;   
+    margin: 0 !important;
 }
 
 .event-navigation ul li a.navTreeCurrentNode {
-    font-weight: bold;   
+    font-weight: bold;
 }
 
 /* submit your event */
@@ -512,7 +522,7 @@ form.change-event {
 .your-event p {
     color: black;
     font-weight: bold;
-    font-size: 11px;      
+    font-size: 11px;
 }
 
 .your-event a {
@@ -528,7 +538,7 @@ form.change-event {
 
 /* events list */
 #directoryResultList {
-    border-top: none !important;   
+    border-top: none !important;
 }
 
 #directoryResultList .eventgroup .event {
@@ -538,7 +548,7 @@ form.change-event {
 #directoryResultList .eventgroup-title {
     background-color: white;
     color: #00538C;
-    border-radius: 0; 
+    border-radius: 0;
     padding: 4px 0;
     font-size: 13px;
     font-weight: bold;
@@ -555,11 +565,11 @@ form.change-event {
 }
 
 #directoryResultList .directoryResult .directoryInfoText {
-    border-bottom: 1px solid #efefef;   
+    border-bottom: 1px solid #efefef;
 }
 
 #directoryResultList .directoryResult:last-child .directoryInfoText {
-    border-bottom: none;   
+    border-bottom: none;
 }
 
 #directoryResultList .event-image {
@@ -595,7 +605,7 @@ form.change-event {
 
 /* submitted events */
 #directoryResultList .event-state-submitted {
-    background-color: white;   
+    background-color: white;
 }
 
 /* event workflow */
@@ -620,12 +630,12 @@ form span.required:before {
 }
 
 .event-submit-form textarea {
-    width: 99.5%;   
+    width: 99.5%;
 }
 
 .event-submit-form #form-widgets-short_description {
     height: 45px;
-    resize: none;   
+    resize: none;
 }
 
 .event-submit-form #formfield-form-widgets-cat1,
@@ -636,7 +646,7 @@ form span.required:before {
 }
 
 .event-submit-form #formfield-form-widgets-cat1 {
-    float: left;   
+    float: left;
 }
 .event-submit-form #formfield-form-widgets-cat2 {
     float: right;
@@ -644,23 +654,23 @@ form span.required:before {
 }
 
 .event-submit-form #map .geocoder-wrapper {
-    display: none;   
+    display: none;
 }
 
 /* the recurrence widget is scrambled egg on izug.basetheme */
 div.riform {
-    font-size: 11px !important;   
+    font-size: 11px !important;
 }
 div.riform label {
-    vertical-align: middle;   
+    vertical-align: middle;
 }
 div.riform select {
     position: relative;
-    top: -5px;   
+    top: -5px;
 }
 
 div.riform input {
-    border: 1px solid #ccc;   
+    border: 1px solid #ccc;
 }
 
 div.riform input[type="radio"],
@@ -669,11 +679,11 @@ div.riform input[type="checkbox"] {
 }
 
 #riformfields label {
-    font-weight: normal !important;   
+    font-weight: normal !important;
 }
 
 #rirangeoptions div {
-    margin-bottom: 10px;   
+    margin-bottom: 10px;
 }
 .rioccurrences .occurrence .action {
     position: absolute;
@@ -690,16 +700,16 @@ div.riform input[type="checkbox"] {
 .rirefreshbutton {
     position: relative;
     left: 9px;
-    top: -8px;   
+    top: -8px;
 }
 
 .riform h1 {
-    color: white !important;   
+    color: white !important;
     font-size: 14px !important;
 }
 
 .riform h2 {
-    color: black !important;   
+    color: black !important;
     font-size: 12px !important;
 }
 
@@ -715,7 +725,7 @@ div.riform input[type="checkbox"] {
 }
 
 .start .rlabel {
-    color: green !important;   
+    color: green !important;
     font-weight: normal !important;
     font-size: 10px !important;
 }
@@ -726,7 +736,7 @@ div.riform input[type="checkbox"] {
 }
 
 .event-view {
-    background: none;   
+    background: none;
     margin: 0;
     padding: 0;
 }
@@ -748,7 +758,7 @@ div.riform input[type="checkbox"] {
 }
 
 .event-view .event-date span {
-    margin-right: 10px;   
+    margin-right: 10px;
 }
 
 .event-view .event-image {
@@ -792,7 +802,7 @@ div.riform input[type="checkbox"] {
     background: none;
     box-shadow: none;
     border-top: 1px solid #efefef;
-    font-size: 11px; 
+    font-size: 11px;
     color: black;
     font-weight: bold;
     margin-bottom: 0;
@@ -815,15 +825,15 @@ div.riform input[type="checkbox"] {
 
 /* event-preview */
 .event-preview-form .event-title {
-    margin-top: 20px !important;   
+    margin-top: 20px !important;
 }
 
 .event-preview-form fieldset {
-    width: 935px !important;   
+    width: 935px !important;
 }
 
 .event-preview-form fieldset .event-date {
-    width: 915px;   
+    width: 915px;
 }
 
 .event-preview-form fieldset h1 {
@@ -832,11 +842,11 @@ div.riform input[type="checkbox"] {
 
 .event-preview-form fieldset .event-view {
     margin-top: -15px;
-    margin-left: -10px;   
+    margin-left: -10px;
 }
 
 .event-submit-help {
-    margin: 25px 0 29px 25px;   
+    margin: 25px 0 29px 25px;
 }
 
 /* hide directory search form selection label */
@@ -853,14 +863,14 @@ div.riform input[type="checkbox"] {
 }
 
 .seantis-form-navigation ul.wizardSteps li.formTab a.selected {
-    font-weight: bold;   
+    font-weight: bold;
 }
 
 /* form errors */
 .event-submit-form .error,
 .event-finish-form .error {
     margin-right: 20px;
-    width: 97.5%;   
+    width: 97.5%;
 }
 
 .event-submit-form .error .error,
@@ -874,15 +884,15 @@ div.riform input[type="checkbox"] {
 
 .actionMenuContent #seantis-dir-events-item,
 .actionMenuContent #seantis-dir-events-directory {
-    background: none;    
+    background: none;
 }
 
 .portalMessage {
-    margin-bottom: 12px !important;   
+    margin-bottom: 12px !important;
 }
 
 #landingPageText {
-   line-height: 1.4em;   
+   line-height: 1.4em;
 }
 
 /* start */
@@ -938,7 +948,7 @@ div.riform input[type="checkbox"] {
 }
 
 #directoryResultList {
-    width: 400px !important; 
+    width: 400px !important;
     margin-right: 25px;
 }
 
@@ -955,11 +965,11 @@ div.riform input[type="checkbox"] {
 }
 
 #directoryResultMap #default-cgmap {
-    height: 300px;   
+    height: 300px;
 }
 
 #directoryDetails .event-sidebar {
-    margin-top: 38px;   
+    margin-top: 38px;
 }
 
 /* event navigation */
@@ -969,7 +979,7 @@ div.riform input[type="checkbox"] {
 
 .event-navigation h3 {
    font-size: 12px;
-   font-weight: normal;   
+   font-weight: normal;
    margin-bottom: 5px
 }
 
@@ -978,11 +988,11 @@ div.riform input[type="checkbox"] {
 }
 
 .event-navigation ul li {
-    margin: 0 !important;   
+    margin: 0 !important;
 }
 
 .event-navigation ul li a.navTreeCurrentNode {
-    font-weight: bold;   
+    font-weight: bold;
 }
 
 /* submit your event */
@@ -997,7 +1007,7 @@ div.riform input[type="checkbox"] {
 .your-event p {
     color: black;
     font-weight: bold;
-    font-size: 11px;      
+    font-size: 11px;
 }
 
 .your-event a {
@@ -1015,12 +1025,12 @@ div.riform input[type="checkbox"] {
 .directoryMarker {
     right: auto;
     left: -3px !important;
-    top: 2px !important; 
+    top: 2px !important;
 }
 
 /* events list */
 #directoryResultList {
-    border-top: none !important;   
+    border-top: none !important;
 }
 
 #directoryResultList .eventgroup .event {
@@ -1030,7 +1040,7 @@ div.riform input[type="checkbox"] {
 #directoryResultList .eventgroup-title {
     background-color: white;
     color: #00538C;
-    border-radius: 0; 
+    border-radius: 0;
     padding: 4px 0;
     font-size: 13px;
     font-weight: bold;
@@ -1047,11 +1057,11 @@ div.riform input[type="checkbox"] {
 }
 
 #directoryResultList .directoryResult .directoryInfoText {
-    border-bottom: 1px solid #efefef;   
+    border-bottom: 1px solid #efefef;
 }
 
 #directoryResultList .directoryResult:last-child .directoryInfoText {
-    border-bottom: none;   
+    border-bottom: none;
 }
 
 #directoryResultList .event-image {
@@ -1083,7 +1093,7 @@ div.riform input[type="checkbox"] {
 
 /* submitted events */
 #directoryResultList .event-state-submitted {
-    background-color: white;   
+    background-color: white;
 }
 
 /* event workflow */
@@ -1108,12 +1118,12 @@ form span.required:before {
 }
 
 .event-submit-form textarea {
-    width: 99.5%;   
+    width: 99.5%;
 }
 
 .event-submit-form #form-widgets-short_description {
     height: 45px;
-    resize: none;   
+    resize: none;
 }
 
 .event-submit-form #formfield-form-widgets-cat1,
@@ -1124,7 +1134,7 @@ form span.required:before {
 }
 
 .event-submit-form #formfield-form-widgets-cat1 {
-    float: left;   
+    float: left;
 }
 .event-submit-form #formfield-form-widgets-cat2 {
     float: right;
@@ -1132,19 +1142,19 @@ form span.required:before {
 }
 
 .event-submit-form #map .geocoder-wrapper {
-    display: none;   
+    display: none;
 }
 
-/* 
+/*
 
     date / time part on submit form
-    
+
 */
 
 /* general date time styles */
 .event-submit-form input:disabled {
     background-color: #eee;
-    color: #eee; 
+    color: #eee;
 }
 
 .event-submit-form #formfield-form-widgets-submission_start_time input,
@@ -1170,28 +1180,28 @@ div.time-picker {
 }
 .event-submit-form #formfield-form-widgets-submission_end_time {
     float: left;
-    clear: right;   
+    clear: right;
 }
 
 /* complex multi day event */
 .event-submit-form #formfield-form-widgets-submission_range_start_date {
     float: left;
-    clear: left;   
+    clear: left;
 }
 
 .event-submit-form #formfield-form-widgets-submission_range_end_date {
     float: left;
-    clear: right;   
+    clear: right;
 }
 
 .event-submit-form #formfield-form-widgets-submission_range_start_time {
     float: left;
-    clear: left;   
+    clear: left;
 }
 
 .event-submit-form #formfield-form-widgets-submission_range_end_time {
     float: left;
-    clear: right;   
+    clear: right;
 }
 
 .event-submit-form #formfield-form-widgets-submission_days .option {
@@ -1214,16 +1224,16 @@ div.time-picker {
 .rirefreshbutton {
     position: relative;
     left: 9px;
-    top: -8px;   
+    top: -8px;
 }
 
 .riform h1 {
-    color: white !important;   
+    color: white !important;
     font-size: 14px !important;
 }
 
 .riform h2 {
-    color: black !important;   
+    color: black !important;
     font-size: 12px !important;
 }
 
@@ -1233,7 +1243,7 @@ div.time-picker {
 }
 
 .event-view {
-    background: none;   
+    background: none;
     margin: 0;
     padding: 0;
 }
@@ -1255,7 +1265,7 @@ div.time-picker {
 }
 
 .event-view .event-date span {
-    margin-right: 10px;   
+    margin-right: 10px;
 }
 
 .event-view .event-image {
@@ -1299,7 +1309,7 @@ div.time-picker {
     background: none;
     box-shadow: none;
     border-top: 1px solid #efefef;
-    font-size: 11px; 
+    font-size: 11px;
     color: black;
     font-weight: bold;
     margin-bottom: 0;
@@ -1317,15 +1327,15 @@ div.time-picker {
 
 /* event-preview */
 .event-preview-form .event-title {
-    margin-top: 20px !important;   
+    margin-top: 20px !important;
 }
 
 .event-preview-form fieldset {
-    width: 935px !important;   
+    width: 935px !important;
 }
 
 .event-preview-form fieldset .event-date {
-    width: 915px;   
+    width: 915px;
 }
 
 .event-preview-form fieldset h1 {
@@ -1334,11 +1344,11 @@ div.time-picker {
 
 .event-preview-form fieldset .event-view {
     margin-top: -15px;
-    margin-left: -10px;   
+    margin-left: -10px;
 }
 
 .event-submit-help {
-    margin: 25px 0 29px 25px;   
+    margin: 25px 0 29px 25px;
 }
 
 /* hide directory search form selection label */
@@ -1355,14 +1365,14 @@ div.time-picker {
 }
 
 .seantis-form-navigation ul.wizardSteps li.formTab a.selected {
-    font-weight: bold;   
+    font-weight: bold;
 }
 
 /* form errors */
 .event-submit-form .error,
 .event-finish-form .error {
     margin-right: 20px;
-    width: 97.5%;   
+    width: 97.5%;
 }
 
 .event-submit-form .error .error,
@@ -1402,25 +1412,25 @@ div.time-picker {
 
 /* terms overlay */
 body.site-zug .pb-ajax {
-    max-width: 600px;   
+    max-width: 600px;
 }
 
 /* Hide the Detail Layers in the Map Control Field */
-div.olControlLayerSwitcher .dataLbl, 
+div.olControlLayerSwitcher .dataLbl,
 div.olControlLayerSwitcher .dataLayersDiv {
-    display: none;   
+    display: none;
 }
 
 div.olControlLayerSwitcher .baseLayersDiv {
-    padding-bottom: 10px;   
+    padding-bottom: 10px;
 }
 
 div.olControlLayerSwitcher .layersDiv, div.olControlLayerSwitcher * {
-   font-weight: normal;   
-   font-size: 11px 
+   font-weight: normal;
+   font-size: 11px
 }
 
 /* Hide coordinates tab */
 #contentview-locations {
-    display: none;   
+    display: none;
 }

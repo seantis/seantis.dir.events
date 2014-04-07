@@ -2,8 +2,11 @@
 Changelog
 ---------
 
-1.1dev (unreleased)
-~~~~~~~~~~~~~~~~~~~
+1.2dev (unrelease)
+~~~~~~~~~~~~~~~~
+
+1.1 (2014-04-07)
+~~~~~~~~~~~~~~~~
 
 - Add locality to list view. Implements #40.
   [msom]
@@ -13,6 +16,9 @@ Changelog
   [msom]
 
 - Set coordinates using the location. Implements #43.
+  [msom]
+
+- Add custom date filter. Implements #33.
   [msom]
 
 1.0.1 (2014-02-15)
