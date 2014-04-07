@@ -2,8 +2,8 @@
 Changelog
 ---------
 
-1.1dev (unreleased)
-~~~~~~~~~~~~~~~~~~~
+1.1 (2014-04-07)
+~~~~~~~~~~~~~~~~
 
 - Add locality to list view. Implements #40.
   [msom]
