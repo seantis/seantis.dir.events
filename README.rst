@@ -70,7 +70,7 @@ Index
 
 Cleanup
 ~~~~~~~
-* Archive past events, remove stale previews and archived events: *cleanup?run=1*
+* Archive past events, remove stale previews and archived events: */cleanup?run=1*
 
 Guidle Import
 ~~~~~~~~~~~~~
