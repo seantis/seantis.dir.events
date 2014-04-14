@@ -61,6 +61,7 @@ JSON export
 * Export a limited number of events: *?type=json&max=10*
 * Export all events with a given category: *?type=json&filter=1&cat1=text&cat2=text*
 * Export all events with a given keyword: *?type=json&search=1&searchtext=text*
+* Export events with RRULES: *?type=json&compact=1*
 
 Index
 ~~~~~
@@ -72,12 +73,12 @@ Cleanup
 ~~~~~~~
 * Archive past events, remove stale previews and archived events: */cleanup?run=1*
 
-Guidle Import
+Import
 ~~~~~~~~~~~~~
-* Import events: */fetch?source=guidle*
-* Reimport event: */fetch?source=guidle&reimport=1*
-* Import a limited number of events: */fetch?source=guidle&limit=10*
-* Import only events with a given ID: */fetch?source=guidle&source-ids=event1,event2*
+* Import events: */fetch?run=1*
+* Reimport event: */fetch?run=1&reimport=1*
+* Import only events with a given ID: */fetch?run=1&source-ids=event1,event2*
+* Don't process source in random order: */fetch?run=1&no_shuffle=1*
 
 Build Status
 ------------
