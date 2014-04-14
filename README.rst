@@ -44,13 +44,40 @@ Installation
 
     [instance]
     ...
-    environment-vars = 
+    environment-vars =
         ...
         zope_i18n_compile_mo_files true
 
 
 4. Install dexterity and seantis.dir.events using portal_quickinstaller
 
+
+Special Views
+-------------
+
+JSON export
+~~~~~~~~~~~
+* JSON export of all events: *?type=json*
+* Export a limited number of events: *?type=json&max=10*
+* Export all events with a given category: *?type=json&filter=1&cat1=text&cat2=text*
+* Export all events with a given keyword: *?type=json&search=1&searchtext=text*
+
+Index
+~~~~~
+* View event index: */eventindex*
+* Rebuild Z-catalog: */eventindex?rebuild*
+* Reindex event indices: */eventindex?reindex*
+
+Cleanup
+~~~~~~~
+* Archive past events, remove stale previews and archived events: */cleanup?run=1*
+
+Guidle Import
+~~~~~~~~~~~~~
+* Import events: */fetch?source=guidle*
+* Reimport event: */fetch?source=guidle&reimport=1*
+* Import a limited number of events: */fetch?source=guidle&limit=10*
+* Import only events with a given ID: */fetch?source=guidle&source-ids=event1,event2*
 
 Build Status
 ------------
