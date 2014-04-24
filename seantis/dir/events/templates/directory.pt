@@ -97,12 +97,11 @@
             </tal:block>
 
             <div class="event-sidebar">
-              <metal:use use-macro="context/@@seantis-dir-macros/macros/map">
-              </metal:use>
               <div class="your-event">
                 <p i18n:translate="">Dou you have an event to share?</p>
-                <a i18n:translate="" tal:attributes="href python: context.absolute_url() + '/@@submit'">Submit Your Event</a>
+                <a i18n:translate="" tal:attributes="href python: context.absolute_url() + '/@@submit'" class="button">Submit Your Event</a>
               </div>
+<<<<<<< HEAD
               <div id="event-sources" tal:condition="view/show_import_sources">
                 <h2 i18n:translate="">Configure Imports</h2>
                 <ul>
@@ -111,6 +110,10 @@
                   </li>
                 </ul>
               </div>
+=======
+              <metal:use use-macro="context/@@seantis-dir-macros/macros/map">
+              </metal:use>
+>>>>>>> master
             </div>
 
             <div class="visualClear"></div>
