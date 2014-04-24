@@ -2,8 +2,11 @@
 Changelog
 ---------
 
-1.2dev (unrelease)
-~~~~~~~~~~~~~~~~
+1.1.1 (2014-04-24)
+~~~~~~~~~~~~~~~~~~
+
+- Move event submission link to top and style it as button
+  [msom]
 
 1.1 (2014-04-07)
 ~~~~~~~~~~~~~~~~
