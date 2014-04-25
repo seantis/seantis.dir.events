@@ -10,10 +10,12 @@ from lxml import objectify
 from urllib2 import urlopen
 
 from five import grok
+from zope.component import queryAdapter
 
 from seantis.dir.events.interfaces import (
     IExternalEventCollector,
     IExternalEventSourceGuidle,
+    IGuidleClassifier,
     NoImportDataException
 )
 
@@ -122,20 +124,7 @@ class EventsSourceGuidle(grok.Adapter):
                 else:
                     event[key] = getattr(node, child).text
 
-    def categories_by_tags(self, classification):
-        categories = set()
-
-        # Add this category
-        categories.add(classification.attrib['name'])
-
-        # Add subcategories
-        # for tagname in (c.attrib['name'] for c in classification.iterchildren()):
-        #     categories.add(tagname)
-
-        return categories
-
     def fetch(self, xml=None):
-
         try:
             if xml is None:
                 xml = urlopen(self.context.url, timeout=60).read()
@@ -147,6 +136,8 @@ class EventsSourceGuidle(grok.Adapter):
             )
         except:
             raise NoImportDataException()
+
+        classifier = queryAdapter(self, IGuidleClassifier)
 
         for offer in offers:
 
@@ -199,8 +190,9 @@ class EventsSourceGuidle(grok.Adapter):
                 """)
 
                 # categories
-                for classification in offer.classifications.iterchildren():
-                    e['cat1'] = self.categories_by_tags(classification)
+                e['cat1'] = set()
+                if classifier:
+                    e['cat1'] = classifier.classify(offer.classifications)
                 e['cat2'] = set((e['town'],))
 
                 # image (download later)

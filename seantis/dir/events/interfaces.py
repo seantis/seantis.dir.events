@@ -367,6 +367,26 @@ class IExternalEventSourceGuidle(IExternalEventSource):
     )
 
 
+class IGuidleClassifier(Interface):
+    """Interface for guidle import classifier (adapter).
+
+        An example classifier might look something like:
+
+        class MyGuidleClassfier(grok.Adapter):
+            grok.context(EventsSourceGuidle)
+            grok.provides(IGuidleClassifier)
+
+            def classify(self, classifications):
+                categories = set()
+                for classification in classifications.iterchildren():
+                    categories.add(classification.attrib['name'])
+                return categories
+    """
+
+    def classify(self, classifications):
+        """ Returns a set of categories of a guidle event. """
+
+
 class IExternalEventSourceSeantisJson(IExternalEventSource):
     """Seantis events directory source."""
 
@@ -415,12 +435,12 @@ class IExternalEventCollector(Interface):
 
 
 class ISourceCondition(Interface):
-    """Interface for the configurable aspects of a source condition of a 
+    """Interface for the configurable aspects of a source condition of a
     content rule.
-    
+
     This is also used to create add and edit forms, below.
     """
-    
+
     source = TextLine(
         title=_(u'Source'),
         description=_(u"The source id to check for. "

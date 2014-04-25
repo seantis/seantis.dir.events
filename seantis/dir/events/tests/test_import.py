@@ -557,7 +557,7 @@ class TestImport(IntegrationTestCase):
                           'RRULE:FREQ=WEEKLY;BYDAY=MO,TU;UNTIL=20170904T0000Z')
         self.assertEquals(events[0]['whole_day'], True)
         self.assertEquals(events[0]['timezone'], 'Europe/Zurich')
-        self.assertEquals(events[0]['cat1'], set(['class']))
+        self.assertEquals(events[0]['cat1'], set())
         self.assertEquals(events[0]['cat2'], set(['City']))
 
         self.assertEquals(str(events[1]['last_update']),
@@ -583,7 +583,7 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(events[1]['recurrence'], '')
         self.assertEquals(events[1]['whole_day'], False)
         self.assertEquals(events[1]['timezone'], 'Europe/Zurich')
-        self.assertEquals(events[1]['cat1'], set(['class']))
+        self.assertEquals(events[1]['cat1'], set())
         self.assertEquals(events[1]['cat2'], set(['City']))
 
     def test_seantis_import(self):
