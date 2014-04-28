@@ -2,10 +2,11 @@
 Changelog
 ---------
 
-1.3 (unreleased)
-~~~~~~~~~~~~~~~~
+1.2.1 (2014-04-28)
+~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Allow concurrent import in different directories.
+  [msom]
 
 
 1.2 (2014-04-28)
