@@ -2,4 +2,5 @@
 <object name="portal_catalog" meta_type="Plone Catalog Tool">
     <column value="recurrence"/>
     <column value="timezone"/>
+    <column value="source_id"/>
 </object>

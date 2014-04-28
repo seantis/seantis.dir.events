@@ -168,9 +168,16 @@ class TestImport(IntegrationTestCase):
     def test_importer_existing_events(self):
         importer = ExternalEventImporter(self.directory)
 
-        sources = 2 * ['source1', 'source1', 'source2', '', None, 'source-3']
+        sources = [('s1', 'id1'), ('s2', 'id1'), ('s1', 'id1'), ('s2', 'id2'),
+                   ('', 'id2'), (None, 'id1'), ('s1', ''), ('s2', None)]
+
         for source in sources:
-            args = {} if source is None else {'source': source}
+            args = {}
+            if source[0] is not None:
+                args = {
+                    'source': source[0],
+                    'source_id': source[1]
+                }
             event = self.create_event(**args)
             event.submit()
             event.publish()
@@ -178,20 +185,20 @@ class TestImport(IntegrationTestCase):
                 alsoProvides(event, IExternalEvent)
             event.reindexObject()
 
-        for source in list(set(sources)):
-            if source is not None:
-                self.assertEquals(len(importer.existing_events(source)),
-                                  sources.count(source))
-
-    def test_importer_group_by_source_id(self):
-        importer = ExternalEventImporter(self.directory)
-
-        ids = ['1', '101', '27', '100', '2', '100', '27', '1']
-        events = [self.create_event(source_id=id) for id in ids]
-
-        groups = importer.groupby_source_id(events)
-        for id in groups:
-            self.assertEquals(len(groups[id]), ids.count(id))
+        self.assertEquals(importer.grouped_existing_events(None), {})
+        self.assertEquals(importer.grouped_existing_events(''), {})
+        self.assertEquals(len(importer.grouped_existing_events('s1')), 1)
+        self.assertEquals(
+            len(importer.grouped_existing_events('s1')['id1']), 2
+        )
+        self.assertEquals(len(importer.grouped_existing_events('s2')), 2)
+        self.assertEquals(
+            len(importer.grouped_existing_events('s2')['id1']), 1
+        )
+        self.assertEquals(
+            len(importer.grouped_existing_events('s2')['id2']), 1
+        )
+        self.assertEquals(importer.grouped_existing_events('s3'), {})
 
     def test_importer_fetch_one(self):
         try:
@@ -224,8 +231,7 @@ class TestImport(IntegrationTestCase):
             imports = importer.fetch_one('source', fetch)
             self.assertEquals(imports, 0)
             self.assertEquals(len(self.catalog.query()), 8)
-            imports = importer.fetch_one('source', fetch,
-                                                  reimport=True)
+            imports = importer.fetch_one('source', fetch, reimport=True)
             self.assertEquals(imports, 4)
             self.assertEquals(len(self.catalog.query()), 8)
 
@@ -367,8 +373,7 @@ class TestImport(IntegrationTestCase):
             events.append(self.create_fetch_entry(source_id='source_id_3',
                                                   fetch_id='fetch_id'))
 
-            imports = importer.fetch_one('source', fetch,
-                                                  autoremove=True)
+            imports = importer.fetch_one('source', fetch, autoremove=True)
             self.assertEquals(imports, 1)
 
             ids = [item.source_id for id, item in self.directory.objectItems()]

@@ -88,28 +88,21 @@ class ExternalEventImporter(object):
         annotations = IAnnotations(self.context)
         annotations[self.annotation_key] = isodate.datetime_isoformat(dt)
 
-    def existing_events(self, source):
+    def grouped_existing_events(self, source):
+        events = {}
+        if not source:
+            return events
 
         catalog = getToolByName(self.context, 'portal_catalog')
         brains = catalog(
             object_provides=IExternalEvent.__identifier__, source=source
         )
 
-        events = [brain.getObject() for brain in brains]
+        for key, items in groupby(brains, lambda brain: brain.source_id):
+            if key:
+                events[key] = [item.id for item in items]
 
         return events
-
-    def groupby_source_id(self, events):
-
-        ids = {}
-
-        keyfn = lambda e: e.source_id
-        events.sort(key=keyfn)
-
-        for key, items in groupby(events, lambda e: e.source_id):
-            ids[key] = [e for e in items]
-
-        return ids
 
     def _fetch_one(
         self, source, function, limit=None, reimport=False, source_ids=[],
@@ -126,7 +119,7 @@ class ExternalEventImporter(object):
             log.info('no data received for %s' % source)
             return imported
 
-        existing = self.groupby_source_id(self.existing_events(source))
+        existing = self.grouped_existing_events(source)
 
         # Autoremove externally deleted events
         if autoremove:
@@ -135,14 +128,11 @@ class ExternalEventImporter(object):
             delta = list(set(old_ids) - set(new_ids))
             if limit is not None:
                 delta = delta[:limit]
-            for rm_id in delta:
+            for source_id in delta:
                 # source id's are not necessarily unique
-                for event in existing[rm_id]:
-                    log.info('Deleting %s @ %s' % (
-                        event.title,
-                        event.start.strftime('%d.%m.%Y %H:%M')
-                    ))
-                    self.context.manage_delObjects(event.id)
+                for event_id in existing[source_id]:
+                    log.info('Deleting %s' % (event_id))
+                    self.context.manage_delObjects(event_id)
 
         if len(events) == 0:
             return imported
@@ -195,10 +185,6 @@ class ExternalEventImporter(object):
 
             if changed_offers_only and event['source_id'] in existing:
                 if event['last_update'] <= last_update:
-                    # log.info('skipping %s @ %s' % (
-                    #     event['title'],
-                    #     event['start'].strftime('%d.%m.%Y %H:%M')
-                    # ))
                     continue
 
             # keep a set of all categories for the suggestions
@@ -208,7 +194,7 @@ class ExternalEventImporter(object):
                 categories[cat] |= event[cat]
 
             # stop at limit
-            if limit and (len(imported)+1) >= limit and not limit_reached_id:
+            if limit and (len(imported) + 1) >= limit and not limit_reached_id:
                 log.info('reached limit of %i events' % limit)
                 # don't quit right away, all events of the same source_id
                 # need to be imported first since they have the same
@@ -229,16 +215,17 @@ class ExternalEventImporter(object):
             # If the existing event has been hidden, we keep it hidden
             hide_event = False
             if event['source_id'] in existing:
-                for e in existing[event['source_id']]:
-                    hide_event |= e.review_state == 'hidden'
+                for event_id in existing[event['source_id']]:
+                    review_state = self.context.get(event_id).review_state
+                    hide_event |= review_state == 'hidden'
 
             # source id's are not necessarily unique as a single external
             # event might have to be represented as more than one event in
             # seantis.dir.events - therefore updating is done through
             # deleting first, adding second
             if event['source_id'] in existing:
-                for e in existing[event['source_id']]:
-                    self.context.manage_delObjects(e.id)
+                for event_id in existing[event['source_id']]:
+                    self.context.manage_delObjects(event_id)
                 del existing[event['source_id']]
 
             # image and attachments are downloaded
@@ -396,8 +383,8 @@ class ExternalEventImportScheduler(object):
 
         Note that it is possible that requests are still blocked, i.e. when
         doing the same request (e.g. '/fetch'), see ZSever/medusa/http_server.
-        
-        Note that it happend that some threads died while executing, hence 
+
+        Note that it happend that some threads died while executing, hence
         forcing a run every 4 hours.
         """
         return_value = False

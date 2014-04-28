@@ -257,3 +257,10 @@ def upgrade_1010_to_1011(context):
     if 'source' not in catalog.indexes():
         catalog.addIndex('source', 'FieldIndex')
         catalog.manage_reindexIndex(ids=['source'])
+
+
+def upgrade_1011_to_1012(context):
+    # Add source_id to index
+    setup = getToolByName(context, 'portal_setup')
+    profile = 'profile-seantis.dir.events:default'
+    setup.runImportStepFromProfile(profile, 'catalog')
