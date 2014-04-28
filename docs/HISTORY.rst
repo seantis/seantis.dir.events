@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.2dev (unreleased)
+1.2 (2014-04-28)
 ~~~~~~~~~~~~~~~~~~~
 
 - Add import.
