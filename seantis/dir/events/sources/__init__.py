@@ -387,29 +387,34 @@ class ExternalEventImportScheduler(object):
     _lock = Lock()
 
     def __init__(self):
-        self.running = False
-        self.last_run = datetime.now()
+        self.running = {}
+        self.last_run = {}
 
     @synchronized(_lock)
-    def handle_run(self, do_stop=False):
+    def handle_run(self, import_directory, do_stop=False):
         """Check if we can start importing or signal that we are finished.
 
         Note that it is possible that requests are still blocked, i.e. when
         doing the same request (e.g. '/fetch'), see ZSever/medusa/http_server.
-        
-        Note that it happend that some threads died while executing, hence 
+
+        Note that it happend that some threads died while executing, hence
         forcing a run every 4 hours.
         """
         return_value = False
 
+        if import_directory not in self.running:
+            self.running[import_directory] = False
+        if import_directory not in self.last_run:
+            self.last_run[import_directory] = datetime.now()
+
         if do_stop:
-            self.running = False
-            self.last_run = datetime.now()
+            self.running[import_directory] = False
+            self.last_run[import_directory] = datetime.now()
         else:
-            delta = datetime.now() - self.last_run
-            if not self.running or delta > timedelta(hours=4):
-                self.running = True
-                self.last_run = datetime.now()
+            delta = datetime.now() - self.last_run[import_directory]
+            if not self.running[import_directory] or delta > timedelta(hours=4):
+                self.running[import_directory] = True
+                self.last_run[import_directory] = datetime.now()
                 return_value = True
 
         return return_value
@@ -419,12 +424,13 @@ class ExternalEventImportScheduler(object):
         len_imported = 0
         len_sources = 0
 
-        if not self.handle_run():
+        import_directory = '/'.join(context.getPhysicalPath())
+
+        if not self.handle_run(import_directory):
             log.info('already importing')
             return len_imported, len_sources
 
-        directory = '/'.join(context.getPhysicalPath())
-        log.info('begin importing sources from %s' % (directory))
+        log.info('begin importing sources from %s' % (import_directory))
 
         try:
             importer = ExternalEventImporter(context)
@@ -445,8 +451,8 @@ class ExternalEventImportScheduler(object):
         finally:
             context.reindexObject()
             IDirectoryCatalog(context).reindex()
-            log.info('importing sources from %s finished' % (directory))
-            self.handle_run(True)
+            log.info('importing sources from %s finished' % (import_directory))
+            self.handle_run(import_directory, do_stop=True)
 
         return len_imported, len_sources
 
