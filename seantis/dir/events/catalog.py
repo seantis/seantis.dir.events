@@ -173,11 +173,10 @@ class LazyList(object):
 
 class EventIndex(object):
 
-    version = "1.0"
+    version = "1"
 
     def __init__(self, catalog, initial_index=None):
         self.catalog = catalog
-        self.key = 'seantis.dir.events.eventindex'
         self.datekey = '%Y.%m.%d'
 
         # be careful here, there's self.index a property which gets
@@ -204,11 +203,11 @@ class EventIndex(object):
 
     @property
     def annotations(self):
-        return IAnnotations(self.catalog.directory, self.key)
+        return IAnnotations(self.catalog.directory)
 
     @property
     def index_key(self):
-        return self.name + self.version
+        return 'seantis.dir.events.' + self.name + '-' + self.version
 
     def meta_key(self, key):
         return self.index_key + '_meta_' + key
