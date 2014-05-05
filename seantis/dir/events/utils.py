@@ -135,21 +135,6 @@ def verify_wkt(data):
     return geom
 
 
-def profile(fn):
-    """ Naive profiling of a function.. on unix systems only. """
-
-    @functools.wraps(fn)
-    def wrapper(*args, **kwargs):
-        start = time.time()
-
-        result = fn(*args, **kwargs)
-        print fn.__name__, 'took', (time.time() - start) * 1000, 'ms'
-
-        return result
-
-    return wrapper
-
-
 def webcal(fn):
     """ Replaces the http in a function that returns an url with webcal.
     Does nothing if https is used, as webcals seems to be supported badly.

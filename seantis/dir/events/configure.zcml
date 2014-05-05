@@ -40,12 +40,6 @@
         name="seantis.dir.events.item"
         />
 
-    <!-- Transform order 9001 - change custom page urls -->
-    <adapter
-        name="seantis.dir.events.transform"
-        factory=".pages.URLTransform"
-        />
-
     <!-- Behaviors -->
     <plone:behavior
         title="Event Submission Data"

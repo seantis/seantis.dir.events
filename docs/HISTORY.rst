@@ -2,6 +2,16 @@
 Changelog
 ---------
 
+1.2.2 (unreleased)
+~~~~~~~~~~~~~~~~~~
+
+- Remove profile function.
+  [msom]
+
+- Remove pages. Implements #51.
+  [msom]
+
+
 1.2.1 (2014-04-28)
 ~~~~~~~~~~~~~~~~~~
 
