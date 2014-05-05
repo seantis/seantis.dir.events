@@ -1,3 +1,5 @@
+import os
+
 import unittest2 as unittest
 
 from datetime import datetime, timedelta
@@ -38,6 +40,9 @@ class IntegrationTestCase(unittest.TestCase):
         if 'source' not in self.catalog.catalog.indexes():
             self.catalog.catalog.addIndex('source', 'FieldIndex')
             self.catalog.catalog.manage_reindexIndex(ids=['source'])
+
+        # Add environment variables
+        os.environ['seantis_events_import'] = 'true'
 
         self.directory.manage_setLocalRoles(testing.TEST_USER_ID, ('Manager',))
         self.logout()
@@ -99,6 +104,9 @@ class FunctionalTestCase(IntegrationTestCase):
     def setUp(self):
         self.app = self.layer['app']
         self.portal = self.layer['portal']
+
+        # Add environment variables
+        os.environ['seantis_events_import'] = 'true'
 
     def new_browser(self):
         return new_browser(self.layer)
