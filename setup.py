@@ -5,7 +5,7 @@ name = 'seantis.dir.events'
 description = (
     "Directory of upcoming Events."
 )
-version = '1.2.2'
+version = '1.2.3'
 
 
 def get_long_description():
