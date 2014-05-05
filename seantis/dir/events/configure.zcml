@@ -218,6 +218,15 @@
        handler=".upgrades.upgrade_1010_to_1011">
     </genericsetup:upgradeStep>
 
+    <genericsetup:upgradeStep
+       title="Use new annotations"
+       description=""
+       source="1011"
+       destination="1012"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1011_to_1012">
+    </genericsetup:upgradeStep>
+
     <!-- Advanced Theme Adjustments through Diazo -->
     <plone:static name="seantis.dir.events.izug-theme"
       directory="themes/izug-theme" type="theme"

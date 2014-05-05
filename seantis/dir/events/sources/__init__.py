@@ -1,3 +1,5 @@
+import os
+
 import logging
 log = logging.getLogger('seantis.dir.events')
 
@@ -390,6 +392,13 @@ class ExternalEventImportScheduler(object):
         self.running = {}
         self.last_run = {}
 
+    def is_importing_instance(self):
+        """ Check if we are the instance which imports events.
+
+        This is defined with an environment variable via the buildout file.
+        """
+        return os.getenv('seantis_events_import', False) == 'true'
+
     @synchronized(_lock)
     def handle_run(self, import_directory, do_stop=False):
         """Check if we can start importing or signal that we are finished.
@@ -399,6 +408,9 @@ class ExternalEventImportScheduler(object):
 
         Note that it happend that some threads died while executing, hence
         forcing a run every 4 hours.
+
+        Note that we need up to #sites_with_import threads
+        (+ 1 if we are importing from ourselves) worst case.
         """
         return_value = False
 
@@ -423,6 +435,9 @@ class ExternalEventImportScheduler(object):
 
         len_imported = 0
         len_sources = 0
+
+        if not self.is_importing_instance():
+            return len_imported, len_sources
 
         import_directory = '/'.join(context.getPhysicalPath())
 
