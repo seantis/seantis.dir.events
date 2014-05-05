@@ -11,6 +11,9 @@ Changelog
 - Remove pages. Implements #51.
   [msom]
 
+- Reindex directory during transaction, clean up and import events in a
+  specific instance. Fixes #52.
+  [msom]
 
 1.2.1 (2014-04-28)
 ~~~~~~~~~~~~~~~~~~
