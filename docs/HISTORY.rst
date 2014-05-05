@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.2.2 (unreleased)
+1.2.2 (2014-05-05)
 ~~~~~~~~~~~~~~~~~~
 
 - Remove profile function.
