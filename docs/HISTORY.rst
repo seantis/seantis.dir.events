@@ -2,10 +2,11 @@
 Changelog
 ---------
 
-1.2.3 (unreleased)
+1.2.3 (2014-05-08)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Handle timezones correctly in import/export. Fixes #60.
+  [msom]
 
 1.2.2 (2014-05-05)
 ~~~~~~~~~~~~~~~~~~
