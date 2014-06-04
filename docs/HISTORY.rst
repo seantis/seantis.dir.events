@@ -2,10 +2,11 @@
 Changelog
 ---------
 
-1.2.4 (unreleased)
+1.2.4 (2014-06-04)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Add upgrade step to ensure source-index is set up.
+  [msom]
 
 1.2.3 (2014-05-08)
 ~~~~~~~~~~~~~~~~~~
