@@ -299,7 +299,9 @@ class EventOrderIndex(EventIndex):
     def reindex(self):
 
         events = self.catalog.query(review_state=self.state)
-        self.index = sortedset()
+
+        if self.index:
+            self.index = sortedset()
 
         self.update(events)
         self.generate_metadata()
