@@ -300,7 +300,7 @@ class EventOrderIndex(EventIndex):
 
         events = self.catalog.query(review_state=self.state)
 
-        if self.index:
+        if self.index or self.index is None:
             self.index = sortedset()
 
         self.update(events)
