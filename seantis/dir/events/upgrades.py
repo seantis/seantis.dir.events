@@ -261,8 +261,6 @@ def upgrade_1010_to_1011(context):
 
 
 def upgrade_1011_to_1012(context):
-    # import pdb; pdb.set_trace()
-
     # Remove old annotations from IEventsDirectory
     catalog = getToolByName(context, 'portal_catalog')
     brains = catalog(object_provides=IEventsDirectory.__identifier__)
@@ -284,3 +282,10 @@ def upgrade_1011_to_1012(context):
                     del annotations[name]
                 except:
                     pass
+
+
+def upgrade_1012_to_1013(context):
+    catalog = getToolByName(context, 'portal_catalog')
+    if 'source' not in catalog.indexes():
+        catalog.addIndex('source', 'FieldIndex')
+        catalog.manage_reindexIndex(ids=['source'])

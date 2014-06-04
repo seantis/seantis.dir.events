@@ -227,6 +227,16 @@
        handler=".upgrades.upgrade_1011_to_1012">
     </genericsetup:upgradeStep>
 
+    <genericsetup:upgradeStep
+       title="Fix index"
+       description=""
+       source="1012"
+       destination="1013"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1012_to_1013">
+    </genericsetup:upgradeStep>
+
+
     <!-- Advanced Theme Adjustments through Diazo -->
     <plone:static name="seantis.dir.events.izug-theme"
       directory="themes/izug-theme" type="theme"
