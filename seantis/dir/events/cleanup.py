@@ -36,7 +36,10 @@ class CleanupScheduler(object):
         """
         return os.getenv('seantis_events_cleanup', False) == 'true'
 
-    def get_next_run(self, now=datetime.today()):
+    def get_next_run(self, now=None):
+        if now is None:
+            now = datetime.now()
+
         # Schedule next run tomorrow at 0:30
         days = 1
         if now.hour < 1 and now.minute < 30:
@@ -46,8 +49,10 @@ class CleanupScheduler(object):
         return next_run
 
     @synchronized(_lock)
-    def run(self, directory, dryrun=False, force_run=False,
-            now=datetime.today()):
+    def run(self, directory, dryrun=False, force_run=False, now=None):
+
+        if now is None:
+            now = datetime.now()
 
         if not self.is_cleaning_instance():
             return
