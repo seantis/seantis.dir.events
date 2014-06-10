@@ -74,6 +74,7 @@ JSON export
 * Export all events with a given category: *?type=json&filter=1&cat1=text&cat2=text*
 * Export all events with a given keyword: *?type=json&search=1&searchtext=text*
 * Export events with RRULES: *?type=json&compact=1*
+* Include imported events: *?type=json&imported=1*
 
 Index
 ~~~~~

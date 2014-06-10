@@ -626,7 +626,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         if self.import_source != '' and self.subset == None:
             self.subset = sorted(self.query(), key=self.sortkey())
 
-    def export(self, search=None, term=None, max=None, **kw):
+    def export(self, search=None, term=None, max=None, imported=False, **kw):
         # Unfortunantely, the search/filter/items/query functions depend all
         # on some view-state variables - we have to find the subset ourselves.
         if search:
@@ -647,21 +647,22 @@ class EventsDirectoryCatalog(DirectoryCatalog):
             **kw
         )
 
-        # Unfortunantely, we cannot query for 'not having an interface' nor
-        # not having not the attribute 'source' - we have to build the
-        # difference of the query above and all external events!
-        external = self.catalog(
-            path={'query': self.path, 'depth': 1},
-            object_provides=IExternalEvent.__identifier__,
-            review_state='published',
-            **kw
-        )
-        if len(external):
-            subset_ids = list(
-                frozenset([brain.id for brain in subset]) -
-                frozenset([brain.id for brain in external])
+        if not imported:
+            # Unfortunantely, we cannot query for 'not having an interface' nor
+            # not having not the attribute 'source' - we have to build the
+            # difference of the query above and all external events!
+            external = self.catalog(
+                path={'query': self.path, 'depth': 1},
+                object_provides=IExternalEvent.__identifier__,
+                review_state='published',
+                **kw
             )
-            subset = [brain for brain in subset if brain.id in subset_ids]
+            if len(external):
+                subset_ids = list(
+                    frozenset([brain.id for brain in subset]) -
+                    frozenset([brain.id for brain in external])
+                )
+                subset = [brain for brain in subset if brain.id in subset_ids]
 
         if term:
             filter_key = partial(is_exact_match, term=term)

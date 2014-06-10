@@ -5,7 +5,14 @@ Changelog
 1.2.5 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Fix cleanup scheduler.
+  [msom]
+
+- Prevent creation of log entries by viewing the events. Updates #70.
+  [msom]
+
+- Allow export of imported events. Implements #68.
+  [msom]
 
 1.2.4 (2014-06-04)
 ~~~~~~~~~~~~~~~~~~

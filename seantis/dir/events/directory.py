@@ -302,6 +302,7 @@ class EventsDirectoryView(directory.View):
             and self.get_filter_terms() or None
         max = int(self.request.get('max', 0))
         compact = 'compact' in self.request.keys()
+        imported = 'imported' in self.request.keys()
 
         if self.is_ical_export:
             calendar = self.catalog.calendar(search=search, term=term)
@@ -309,7 +310,8 @@ class EventsDirectoryView(directory.View):
                                               calendar)
 
         elif self.is_json_export:
-            export = self.catalog.export(search=search, term=term, max=max)
+            export = self.catalog.export(search=search, term=term, max=max,
+                                         imported=imported)
             return utils.render_json_response(self.request, export, compact)
 
         else:
@@ -369,7 +371,6 @@ class EventsDirectoryView(directory.View):
     def groups(self, items):
         """ Returns the given occurrences grouped by human_date. """
         groups = grouped_occurrences(items, self.request)
-
         for key, items in groups.items():
             for ix, item in enumerate(items):
                 items[ix] = item.get_object()

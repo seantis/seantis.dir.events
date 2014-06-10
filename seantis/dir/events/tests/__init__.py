@@ -168,7 +168,8 @@ class BrowserTestCase(FunctionalTestCase):
                  date=datetime.today(), start='2:00 PM', end='4:00 PM',
                  submitter='submitter', email='submitter@example.com',
                  do_submit=True, check_submitted=True,
-                 do_publish=True, check_published=True):
+                 do_publish=True, check_published=True,
+                 recurrence=''):
 
         browser = self.admin_browser
 
@@ -181,7 +182,7 @@ class BrowserTestCase(FunctionalTestCase):
         browser.getControl(cat2).selected = True
         browser.widget('submission_date_type').value = ['date']
         browser.set_date('submission_date', date)
-        browser.widget('submission_recurrence').value = ''
+        browser.widget('submission_recurrence').value = recurrence
         if whole_day:
             browser.getControl('All day').selected = True
         else:
