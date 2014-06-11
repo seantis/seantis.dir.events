@@ -14,6 +14,9 @@ Changelog
 - Allow export of imported events. Implements #68.
   [msom]
 
+- Display number of removed already imported events in fetch view. Implements #71.
+  [msom]
+
 1.2.4 (2014-06-04)
 ~~~~~~~~~~~~~~~~~~
 

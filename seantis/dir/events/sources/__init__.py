@@ -118,6 +118,7 @@ class ExternalEventImporter(object):
         autoremove=False
     ):
         imported = []
+        len_deleted = 0
 
         try:
             events = sorted(
@@ -126,7 +127,7 @@ class ExternalEventImporter(object):
             )
         except NoImportDataException:
             log.info('no data received for %s' % source)
-            return imported
+            return imported, len_deleted
 
         existing = self.groupby_source_id(self.existing_events(source))
 
@@ -145,9 +146,10 @@ class ExternalEventImporter(object):
                         event.start.strftime('%d.%m.%Y %H:%M')
                     ))
                     self.context.manage_delObjects(event.id)
+                    len_deleted += 1
 
         if len(events) == 0:
-            return imported
+            return imported, len_deleted
 
         fetch_ids = set(event['fetch_id'] for event in events)
         assert len(fetch_ids) == 1, """
@@ -342,7 +344,7 @@ class ExternalEventImporter(object):
         log.info('committing events for %s' % source)
         transaction.commit()
 
-        return imported
+        return imported, len_deleted
 
     def fetch_one(
         self, source, function, limit=None, reimport=False, source_ids=[],
@@ -355,7 +357,7 @@ class ExternalEventImporter(object):
         self.disable_indexing()
 
         try:
-            imported = self._fetch_one(
+            imported, len_deleted = self._fetch_one(
                 source, function, limit, reimport, source_ids, autoremove
             )
         finally:
@@ -381,7 +383,7 @@ class ExternalEventImporter(object):
                 len(imported), minutes, seconds
             ))
 
-        return len(imported)
+        return len(imported), len_deleted
 
 
 class ExternalEventImportScheduler(object):
@@ -434,16 +436,17 @@ class ExternalEventImportScheduler(object):
     def run(self, context, reimport=False, source_ids=[], no_shuffle=False):
 
         len_imported = 0
+        len_deleted = 0
         len_sources = 0
 
         if not self.is_importing_instance():
-            return len_imported, len_sources
+            return len_imported, len_deleted, len_sources
 
         import_directory = '/'.join(context.getPhysicalPath())
 
         if not self.handle_run(import_directory):
             log.info('already importing')
-            return len_imported, len_sources
+            return len_imported, len_deleted, len_sources
 
         log.info('begin importing sources from %s' % (import_directory))
 
@@ -455,7 +458,7 @@ class ExternalEventImportScheduler(object):
             for source in sources:
                 len_sources += 1
                 path = source.getPath()
-                events = importer.fetch_one(
+                events, deleted = importer.fetch_one(
                     path,
                     IExternalEventCollector(source.getObject()).fetch,
                     source.getObject().limit,
@@ -463,13 +466,14 @@ class ExternalEventImportScheduler(object):
                     source.getObject().autoremove)
                 log.info('source %s processed' % (path))
                 len_imported += events
+                len_deleted += deleted
         finally:
             context.reindexObject()
             IDirectoryCatalog(context).reindex()
             log.info('importing sources from %s finished' % (import_directory))
             self.handle_run(import_directory, do_stop=True)
 
-        return len_imported, len_sources
+        return len_imported, len_deleted, len_sources
 
 
 import_scheduler = ExternalEventImportScheduler()
@@ -492,13 +496,15 @@ class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
         do_run = self.request.get('run') == '1'
 
         if do_run:
-            imported, sources = execute_under_special_role(
+            imported, deleted, sources = execute_under_special_role(
                 getSite(), 'Manager',
                 import_scheduler.run, self.context, reimport,
                 all(ids) and ids or None, no_shuffle
             )
 
-            return u'%i events imported from %i sources' % (imported, sources)
+            return u'%i events imported from %i sources (%i deleted)' % (
+                imported, sources, deleted
+            )
 
         else:
             return u''
