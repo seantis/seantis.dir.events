@@ -1,3 +1,5 @@
+import os
+
 from datetime import datetime, timedelta
 from DateTime.DateTime import DateTime
 
@@ -261,6 +263,13 @@ class TestCleanup(IntegrationTestCase):
         now = today + timedelta(hours=13)
         cleanup_scheduler.run(self.directory, now=now)
         self.assertEqual(len(self.catalog.catalog()), 2)
+
+        # Not importing instance
+        now = today + timedelta(hours=14)
+        cleanup_scheduler.run(self.directory, force_run=True, now=now)
+        self.assertEqual(len(self.catalog.catalog()), 2)
+
+        os.environ['seantis_events_cleanup'] = 'true'
 
         # Force cleanup now
         now = today + timedelta(hours=14)

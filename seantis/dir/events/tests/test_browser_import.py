@@ -154,6 +154,14 @@ class CommonBrowserTests(BrowserTestCase):
         self.assertTrue('Description' not in admin.contents)
         self.assertTrue('Save Event' not in admin.contents)
 
+        # Imported events are not exported
+        anom.open('/veranstaltungen?type=json')
+        self.assertTrue('event1' not in anom.contents)
+
+        # ... unless we request it!
+        anom.open('/veranstaltungen?type=json&imported=1')
+        self.assertTrue('event1' in anom.contents)
+
     def addSourceContentRule(self, title='rule', source=''):
         browser = self.admin_browser
 

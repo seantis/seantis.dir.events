@@ -8,7 +8,12 @@ class CommonBrowserTests(BrowserTestCase):
         # Add events
         self.addEvent(title='test1', description='desc1')
         self.addEvent(title='test2', description='desc2',
-                      cat1='Category1_2', cat2='Category2_2')
+                      cat1='Category1_2', cat2='Category2_2',
+                      recurrence='RRULE:FREQ=DAILY;COUNT=2')
+        first_date = datetime.today().replace(
+            hour=14, minute=0, second=0, microsecond=0
+        )
+        second_date = first_date + timedelta(days=1)
 
         browser = self.new_browser()
 
@@ -23,6 +28,14 @@ class CommonBrowserTests(BrowserTestCase):
         self.assertTrue('Category1_2' in browser.contents)
         self.assertTrue('Category2' in browser.contents)
         self.assertTrue('Category2_2' in browser.contents)
+        self.assertTrue(first_date.isoformat() in browser.contents)
+        self.assertTrue(second_date.isoformat() in browser.contents)
+
+        # Export compact
+        browser.open('/veranstaltungen?type=json&compact=1')
+        self.assertTrue('RRULE:FREQ=DAILY;COUNT=2' in browser.contents)
+        self.assertTrue(first_date.isoformat() in browser.contents)
+        self.assertTrue(second_date.isoformat() not in browser.contents)
 
         # Export by using filter (&filter=&cat1=&cat2=)
         browser.open('/veranstaltungen?type=json&filter=true&cat1=Category1')

@@ -3,6 +3,7 @@ log = logging.getLogger('seantis.dir.events')
 
 from Products.CMFCore.utils import getToolByName
 from zope.component.hooks import getSite
+from zope.annotation.interfaces import IAnnotations
 
 from plone.app.theming.utils import (
     applyTheme,
@@ -260,6 +261,37 @@ def upgrade_1010_to_1011(context):
 
 
 def upgrade_1011_to_1012(context):
+    # Remove old annotations from IEventsDirectory
+    catalog = getToolByName(context, 'portal_catalog')
+    brains = catalog(object_provides=IEventsDirectory.__identifier__)
+
+    names = (
+        'eventorder-hidden1.0',
+        'eventorder-hidden1.0_meta_dateindex',
+        'eventorder-published1.0',
+        'eventorder-published1.0_meta_dateindex',
+        'eventorder-submitted1.0',
+        'eventorder-submitted1.0_meta_dateindex'
+    )
+
+    for brain in brains:
+        annotations = IAnnotations(brain.getObject())
+        for name in names:
+            if name in annotations:
+                try:
+                    del annotations[name]
+                except:
+                    pass
+
+
+def upgrade_1012_to_1013(context):
+    catalog = getToolByName(context, 'portal_catalog')
+    if 'source' not in catalog.indexes():
+        catalog.addIndex('source', 'FieldIndex')
+        catalog.manage_reindexIndex(ids=['source'])
+
+
+def upgrade_1013_to_1014(context):
     # Add source_id to index
     setup = getToolByName(context, 'portal_setup')
     profile = 'profile-seantis.dir.events:default'

@@ -43,6 +43,7 @@ from blist import sortedset
 # this is just awful
 # http://plone.293351.n2.nabble.com/Event-on-object-deletion-td3670562.html
 # http://stackoverflow.com/questions/11218272/plone-reacting-to-object-removal
+# http://repoze.org/tmdemo.html
 class ReindexDataManager(object):
 
     implements(ISavepointDataManager)
@@ -56,13 +57,16 @@ class ReindexDataManager(object):
         pass
 
     def tpc_finish(self, transaction):
-        reindex_directory(self.directory)
+        pass
 
     def tpc_abort(self, transaction):
         pass
 
     def commit(self, transaction):
-        pass
+        # We need to reindex the directory during the transaction since we
+        # we store the index (as text) in the annotations (which itself
+        # is an attribute of the directory and therefore stored in the ZODB)
+        reindex_directory(self.directory)
 
     def abort(self, transaction):
         pass
@@ -169,11 +173,10 @@ class LazyList(object):
 
 class EventIndex(object):
 
-    version = "1.0"
+    version = "1"
 
     def __init__(self, catalog, initial_index=None):
         self.catalog = catalog
-        self.key = 'seantis.dir.events.eventindex'
         self.datekey = '%Y.%m.%d'
 
         # be careful here, there's self.index a property which gets
@@ -198,13 +201,13 @@ class EventIndex(object):
     def reindex(self, events=[]):
         raise NotImplementedError
 
-    @cached_property
+    @property
     def annotations(self):
-        return IAnnotations(self.catalog.directory, self.key)
+        return IAnnotations(self.catalog.directory)
 
     @property
     def index_key(self):
-        return self.name + self.version
+        return 'seantis.dir.events.' + self.name + '-' + self.version
 
     def meta_key(self, key):
         return self.index_key + '_meta_' + key
@@ -296,7 +299,9 @@ class EventOrderIndex(EventIndex):
     def reindex(self):
 
         events = self.catalog.query(review_state=self.state)
-        self.index = sortedset()
+
+        if self.index or self.index is None:
+            self.index = sortedset()
 
         self.update(events)
         self.generate_metadata()
@@ -621,7 +626,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         if self.import_source != '' and self.subset == None:
             self.subset = sorted(self.query(), key=self.sortkey())
 
-    def export(self, search=None, term=None, max=None, **kw):
+    def export(self, search=None, term=None, max=None, imported=False, **kw):
         # Unfortunantely, the search/filter/items/query functions depend all
         # on some view-state variables - we have to find the subset ourselves.
         if search:
@@ -642,21 +647,22 @@ class EventsDirectoryCatalog(DirectoryCatalog):
             **kw
         )
 
-        # Unfortunantely, we cannot query for 'not having an interface' nor
-        # not having not the attribute 'source' - we have to build the
-        # difference of the query above and all external events!
-        external = self.catalog(
-            path={'query': self.path, 'depth': 1},
-            object_provides=IExternalEvent.__identifier__,
-            review_state='published',
-            **kw
-        )
-        if len(external):
-            subset_ids = list(
-                frozenset([brain.id for brain in subset]) -
-                frozenset([brain.id for brain in external])
+        if not imported:
+            # Unfortunantely, we cannot query for 'not having an interface' nor
+            # not having not the attribute 'source' - we have to build the
+            # difference of the query above and all external events!
+            external = self.catalog(
+                path={'query': self.path, 'depth': 1},
+                object_provides=IExternalEvent.__identifier__,
+                review_state='published',
+                **kw
             )
-            subset = [brain for brain in subset if brain.id in subset_ids]
+            if len(external):
+                subset_ids = list(
+                    frozenset([brain.id for brain in subset]) -
+                    frozenset([brain.id for brain in external])
+                )
+                subset = [brain for brain in subset if brain.id in subset_ids]
 
         if term:
             filter_key = partial(is_exact_match, term=term)

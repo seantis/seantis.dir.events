@@ -27,8 +27,6 @@ from seantis.dir.events import _
 from AccessControl import getSecurityManager
 from Products.CMFCore import permissions
 
-from seantis.dir.events import pages
-
 
 class ResourceViewedEvent(object):
     implements(IResourceViewedEvent)
@@ -37,7 +35,7 @@ class ResourceViewedEvent(object):
         self.context = context
 
 
-class EventsDirectory(directory.Directory, pages.CustomPageHook):
+class EventsDirectory(directory.Directory):
 
     def labels(self):
         return dict(cat1=_(u'What'), cat2=_(u'Where'))
@@ -84,7 +82,7 @@ class EventsDirectory(directory.Directory, pages.CustomPageHook):
         return result
 
 
-class ExtendedDirectoryViewlet(grok.Viewlet, pages.CustomDirectory):
+class ExtendedDirectoryViewlet(grok.Viewlet):
     grok.context(IEventsDirectory)
     grok.name('seantis.dir.events.directory.detail')
     grok.require('zope2.View')
@@ -94,7 +92,6 @@ class ExtendedDirectoryViewlet(grok.Viewlet, pages.CustomDirectory):
 
     def __init__(self, *args, **kwargs):
         super(ExtendedDirectoryViewlet, self).__init__(*args, **kwargs)
-        self.context = self.custom_directory
 
 
 class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
@@ -142,7 +139,7 @@ class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
         return '\n'.join(result)
 
 
-class EventsDirectoryView(directory.View, pages.CustomDirectory):
+class EventsDirectoryView(directory.View):
 
     grok.name('view')
     grok.context(IEventsDirectory)
@@ -155,7 +152,7 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
 
     @property
     def title(self):
-        return self.custom_directory.title
+        return self.directory.title
 
     @property
     def is_ical_export(self):
@@ -305,6 +302,7 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
             and self.get_filter_terms() or None
         max = int(self.request.get('max', 0))
         compact = 'compact' in self.request.keys()
+        imported = 'imported' in self.request.keys()
 
         if self.is_ical_export:
             calendar = self.catalog.calendar(search=search, term=term)
@@ -312,7 +310,8 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
                                               calendar)
 
         elif self.is_json_export:
-            export = self.catalog.export(search=search, term=term, max=max)
+            export = self.catalog.export(search=search, term=term, max=max,
+                                         imported=imported)
             return utils.render_json_response(self.request, export, compact)
 
         else:
@@ -372,7 +371,6 @@ class EventsDirectoryView(directory.View, pages.CustomDirectory):
     def groups(self, items):
         """ Returns the given occurrences grouped by human_date. """
         groups = grouped_occurrences(items, self.request)
-
         for key, items in groups.items():
             for ix, item in enumerate(items):
                 items[ix] = item.get_object()

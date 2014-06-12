@@ -1,3 +1,5 @@
+import os
+
 from logging import getLogger
 log = getLogger('seantis.dir.events')
 
@@ -27,7 +29,17 @@ class CleanupScheduler(object):
     def __init__(self):
         self.next_run = 0
 
-    def get_next_run(self, now=datetime.today()):
+    def is_cleaning_instance(self):
+        """ Check if we are the instance which cleans up events.
+
+        This is defined with an environment variable via the buildout file.
+        """
+        return os.getenv('seantis_events_cleanup', False) == 'true'
+
+    def get_next_run(self, now=None):
+        if now is None:
+            now = datetime.now()
+
         # Schedule next run tomorrow at 0:30
         days = 1
         if now.hour < 1 and now.minute < 30:
@@ -37,8 +49,13 @@ class CleanupScheduler(object):
         return next_run
 
     @synchronized(_lock)
-    def run(self, directory, dryrun=False, force_run=False,
-            now=datetime.today()):
+    def run(self, directory, dryrun=False, force_run=False, now=None):
+
+        if now is None:
+            now = datetime.now()
+
+        if not self.is_cleaning_instance():
+            return
 
         if not self.next_run:
             self.next_run = self.get_next_run(now)

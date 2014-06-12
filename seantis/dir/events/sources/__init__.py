@@ -1,3 +1,5 @@
+import os
+
 import logging
 log = logging.getLogger('seantis.dir.events')
 
@@ -109,6 +111,7 @@ class ExternalEventImporter(object):
         autoremove=False
     ):
         imported = []
+        len_deleted = 0
 
         try:
             events = sorted(
@@ -117,7 +120,7 @@ class ExternalEventImporter(object):
             )
         except NoImportDataException:
             log.info('no data received for %s' % source)
-            return imported
+            return imported, len_deleted
 
         existing = self.grouped_existing_events(source)
 
@@ -133,9 +136,10 @@ class ExternalEventImporter(object):
                 for event_id in existing[source_id]:
                     log.info('Deleting %s' % (event_id))
                     self.context.manage_delObjects(event_id)
+                    len_deleted += 1
 
         if len(events) == 0:
-            return imported
+            return imported, len_deleted
 
         fetch_ids = set(event['fetch_id'] for event in events)
         assert len(fetch_ids) == 1, """
@@ -327,7 +331,7 @@ class ExternalEventImporter(object):
         log.info('committing events for %s' % source)
         transaction.commit()
 
-        return imported
+        return imported, len_deleted
 
     def fetch_one(
         self, source, function, limit=None, reimport=False, source_ids=[],
@@ -340,7 +344,7 @@ class ExternalEventImporter(object):
         self.disable_indexing()
 
         try:
-            imported = self._fetch_one(
+            imported, len_deleted = self._fetch_one(
                 source, function, limit, reimport, source_ids, autoremove
             )
         finally:
@@ -366,7 +370,7 @@ class ExternalEventImporter(object):
                 len(imported), minutes, seconds
             ))
 
-        return len(imported)
+        return len(imported), len_deleted
 
 
 class ExternalEventImportScheduler(object):
@@ -374,11 +378,18 @@ class ExternalEventImportScheduler(object):
     _lock = Lock()
 
     def __init__(self):
-        self.running = False
-        self.last_run = datetime.now()
+        self.running = {}
+        self.last_run = {}
+
+    def is_importing_instance(self):
+        """ Check if we are the instance which imports events.
+
+        This is defined with an environment variable via the buildout file.
+        """
+        return os.getenv('seantis_events_import', False) == 'true'
 
     @synchronized(_lock)
-    def handle_run(self, do_stop=False):
+    def handle_run(self, import_directory, do_stop=False):
         """Check if we can start importing or signal that we are finished.
 
         Note that it is possible that requests are still blocked, i.e. when
@@ -386,17 +397,25 @@ class ExternalEventImportScheduler(object):
 
         Note that it happend that some threads died while executing, hence
         forcing a run every 4 hours.
+
+        Note that we need up to #sites_with_import threads
+        (+ 1 if we are importing from ourselves) worst case.
         """
         return_value = False
 
+        if import_directory not in self.running:
+            self.running[import_directory] = False
+        if import_directory not in self.last_run:
+            self.last_run[import_directory] = datetime.now()
+
         if do_stop:
-            self.running = False
-            self.last_run = datetime.now()
+            self.running[import_directory] = False
+            self.last_run[import_directory] = datetime.now()
         else:
-            delta = datetime.now() - self.last_run
-            if not self.running or delta > timedelta(hours=4):
-                self.running = True
-                self.last_run = datetime.now()
+            delta = datetime.now() - self.last_run[import_directory]
+            if not self.running[import_directory] or delta > timedelta(hours=4):
+                self.running[import_directory] = True
+                self.last_run[import_directory] = datetime.now()
                 return_value = True
 
         return return_value
@@ -404,14 +423,19 @@ class ExternalEventImportScheduler(object):
     def run(self, context, reimport=False, source_ids=[], no_shuffle=False):
 
         len_imported = 0
+        len_deleted = 0
         len_sources = 0
 
-        if not self.handle_run():
-            log.info('already importing')
-            return len_imported, len_sources
+        if not self.is_importing_instance():
+            return len_imported, len_deleted, len_sources
 
-        directory = '/'.join(context.getPhysicalPath())
-        log.info('begin importing sources from %s' % (directory))
+        import_directory = '/'.join(context.getPhysicalPath())
+
+        if not self.handle_run(import_directory):
+            log.info('already importing')
+            return len_imported, len_deleted, len_sources
+
+        log.info('begin importing sources from %s' % (import_directory))
 
         try:
             importer = ExternalEventImporter(context)
@@ -421,7 +445,7 @@ class ExternalEventImportScheduler(object):
             for source in sources:
                 len_sources += 1
                 path = source.getPath()
-                events = importer.fetch_one(
+                events, deleted = importer.fetch_one(
                     path,
                     IExternalEventCollector(source.getObject()).fetch,
                     source.getObject().limit,
@@ -429,13 +453,14 @@ class ExternalEventImportScheduler(object):
                     source.getObject().autoremove)
                 log.info('source %s processed' % (path))
                 len_imported += events
+                len_deleted += deleted
         finally:
             context.reindexObject()
             IDirectoryCatalog(context).reindex()
-            log.info('importing sources from %s finished' % (directory))
-            self.handle_run(True)
+            log.info('importing sources from %s finished' % (import_directory))
+            self.handle_run(import_directory, do_stop=True)
 
-        return len_imported, len_sources
+        return len_imported, len_deleted, len_sources
 
 
 import_scheduler = ExternalEventImportScheduler()
@@ -458,13 +483,15 @@ class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
         do_run = self.request.get('run') == '1'
 
         if do_run:
-            imported, sources = execute_under_special_role(
+            imported, deleted, sources = execute_under_special_role(
                 getSite(), 'Manager',
                 import_scheduler.run, self.context, reimport,
                 all(ids) and ids or None, no_shuffle
             )
 
-            return u'%i events imported from %i sources' % (imported, sources)
+            return u'%i events imported from %i sources (%i deleted)' % (
+                imported, sources, deleted
+            )
 
         else:
             return u''

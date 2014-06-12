@@ -40,12 +40,6 @@
         name="seantis.dir.events.item"
         />
 
-    <!-- Transform order 9001 - change custom page urls -->
-    <adapter
-        name="seantis.dir.events.transform"
-        factory=".pages.URLTransform"
-        />
-
     <!-- Behaviors -->
     <plone:behavior
         title="Event Submission Data"
@@ -225,12 +219,30 @@
     </genericsetup:upgradeStep>
 
     <genericsetup:upgradeStep
-       title="Add metadata field"
+       title="Use new annotations"
        description=""
        source="1011"
        destination="1012"
        profile="seantis.dir.events:default"
        handler=".upgrades.upgrade_1011_to_1012">
+    </genericsetup:upgradeStep>
+
+    <genericsetup:upgradeStep
+       title="Fix index"
+       description=""
+       source="1012"
+       destination="1013"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1012_to_1013">
+    </genericsetup:upgradeStep>
+
+    <genericsetup:upgradeStep
+       title="Add metadata field"
+       description=""
+       source="1011"
+       destination="1012"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1013_to_1014">
     </genericsetup:upgradeStep>
 
     <!-- Advanced Theme Adjustments through Diazo -->

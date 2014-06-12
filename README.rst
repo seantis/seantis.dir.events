@@ -48,8 +48,20 @@ Installation
         ...
         zope_i18n_compile_mo_files true
 
+4. Setup up autoremove and/or import clock servers for one instance (or set up a cron job getting the corresponding views described below).
 
-4. Install dexterity and seantis.dir.events using portal_quickinstaller
+
+::
+
+    [instance]
+    ...
+    environment-vars =
+        ...
+        seantis_events_cleanup true
+        seantis_events_import true
+
+
+5. Install dexterity and seantis.dir.events using portal_quickinstaller
 
 
 Special Views
@@ -62,6 +74,7 @@ JSON export
 * Export all events with a given category: *?type=json&filter=1&cat1=text&cat2=text*
 * Export all events with a given keyword: *?type=json&search=1&searchtext=text*
 * Export events with RRULES: *?type=json&compact=1*
+* Include imported events: *?type=json&imported=1*
 
 Index
 ~~~~~
@@ -71,14 +84,15 @@ Index
 
 Cleanup
 ~~~~~~~
-* Archive past events, remove stale previews and archived events: */cleanup?run=1*
+* Archive past events, remove stale previews and archived events: */cleanup?run=1&force=1*
 
 Import
-~~~~~~~~~~~~~
+~~~~~~
 * Import events: */fetch?run=1*
 * Reimport event: */fetch?run=1&reimport=1*
 * Import only events with a given ID: */fetch?run=1&source-ids=event1,event2*
 * Don't process source in random order: */fetch?run=1&no_shuffle=1*
+
 
 Build Status
 ------------

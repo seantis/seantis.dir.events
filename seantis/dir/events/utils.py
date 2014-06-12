@@ -47,6 +47,7 @@ def render_json_response(request, items, compact):
     request.response.setHeader("Content-Type", "application/json")
     request.response.setHeader("Access-Control-Allow-Origin", "*")  # CORS
 
+    utc = pytz.timezone('utc')
     duplicates = set()
 
     result = []
@@ -58,6 +59,14 @@ def render_json_response(request, items, compact):
 
         event = {}
 
+        start = item.start
+        end = item.end
+
+        if not start.tzinfo:
+            start = utc.localize(start)
+        if not end.tzinfo:
+            end = utc.localize(end)
+
         updated = item.modification_date.asdatetime().replace(microsecond=0)
         event['last_update'] = updated.isoformat()
         event['id'] = item.id
@@ -66,11 +75,11 @@ def render_json_response(request, items, compact):
         event['long_description'] = item.long_description
         event['cat1'] = item.cat1
         event['cat2'] = item.cat2
-        event['start'] = item.start.isoformat()
-        event['end'] = item.end.isoformat()
+        event['start'] = utc.normalize(start).isoformat()
+        event['end'] = utc.normalize(end).isoformat()
         event['recurrence'] = item.recurrence if compact else ''
         event['whole_day'] = item.whole_day
-        event['timezone'] = 'UTC'
+        event['timezone'] = item.timezone
         event['locality'] = item.locality
         event['street'] = item.street
         event['housenumber'] = item.housenumber
@@ -133,21 +142,6 @@ def verify_wkt(data):
         from pygeoif.geometry import from_wkt
         geom = from_wkt(data)
     return geom
-
-
-def profile(fn):
-    """ Naive profiling of a function.. on unix systems only. """
-
-    @functools.wraps(fn)
-    def wrapper(*args, **kwargs):
-        start = time.time()
-
-        result = fn(*args, **kwargs)
-        print fn.__name__, 'took', (time.time() - start) * 1000, 'ms'
-
-        return result
-
-    return wrapper
 
 
 def webcal(fn):

@@ -1,4 +1,5 @@
 import json
+import pytz
 
 from logging import getLogger
 log = getLogger('seantis.dir.events')
@@ -7,14 +8,22 @@ from dateutil.parser import parse
 from five import grok
 from urllib import quote_plus
 from urllib2 import urlopen
-from plone.app.event.base import default_timezone
 
-from seantis.dir.events.dates import default_now
+from seantis.dir.events.dates import default_now, as_timezone
 from seantis.dir.events.interfaces import (
     IExternalEventCollector,
     IExternalEventSourceSeantisJson,
     NoImportDataException
 )
+
+
+def fix_tzinfo(date):
+    """ Fix timezone information for dates parsed with dateutil."""
+    if date.tzinfo and date.tzname():
+        timezone = date.tzname()
+        date.replace(tzinfo=None)
+        date = as_timezone(date, timezone)
+    return date
 
 
 class EventsSourceSeantisJson(grok.Adapter):
@@ -83,13 +92,13 @@ class EventsSourceSeantisJson(grok.Adapter):
             e['cat1'] = cat1
             e['cat2'] = cat2
 
-            assert event.get('timezone') == 'UTC', """
-                We expect UTC times from our own exports
-            """
+            timezone = event.get('timezone')
+            start = fix_tzinfo(parse(event.get('start')))
+            end = fix_tzinfo(parse(event.get('end')))
 
-            e['timezone'] = default_timezone()
-            e['start'] = parse(event.get('start'))
-            e['end'] = parse(event.get('end'))
+            e['timezone'] = timezone
+            e['start'] = as_timezone(start, timezone)
+            e['end'] = as_timezone(end, timezone)
             e['recurrence'] = event.get('recurrence')
             e['whole_day'] = event.get('whole_day')
 

@@ -2,8 +2,55 @@
 Changelog
 ---------
 
-1.2dev (unreleased)
-~~~~~~~~~~~~~~~~~~~
+1.2.5 (unreleased)
+~~~~~~~~~~~~~~~~~~
+
+- Fix cleanup scheduler.
+  [msom]
+
+- Prevent creation of log entries by viewing the events. Updates #70.
+  [msom]
+
+- Allow export of imported events. Implements #68.
+  [msom]
+
+- Display number of removed already imported events in fetch view. Implements #71.
+  [msom]
+
+1.2.4 (2014-06-04)
+~~~~~~~~~~~~~~~~~~
+
+- Add upgrade step to ensure source-index is set up.
+  [msom]
+
+1.2.3 (2014-05-08)
+~~~~~~~~~~~~~~~~~~
+
+- Handle timezones correctly in import/export. Fixes #60.
+  [msom]
+
+1.2.2 (2014-05-05)
+~~~~~~~~~~~~~~~~~~
+
+- Remove profile function.
+  [msom]
+
+- Remove pages. Implements #51.
+  [msom]
+
+- Reindex directory during transaction, clean up and import events in a
+  specific instance. Fixes #52.
+  [msom]
+
+1.2.1 (2014-04-28)
+~~~~~~~~~~~~~~~~~~
+
+- Allow concurrent import in different directories.
+  [msom]
+
+
+1.2 (2014-04-28)
+~~~~~~~~~~~~~~~~
 
 - Add import.
   [msom]

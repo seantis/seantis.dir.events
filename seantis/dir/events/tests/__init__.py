@@ -1,3 +1,5 @@
+import os
+
 import unittest2 as unittest
 
 from datetime import datetime, timedelta
@@ -38,6 +40,9 @@ class IntegrationTestCase(unittest.TestCase):
         if 'source' not in self.catalog.catalog.indexes():
             self.catalog.catalog.addIndex('source', 'FieldIndex')
             self.catalog.catalog.manage_reindexIndex(ids=['source'])
+
+        # Add environment variables
+        os.environ['seantis_events_import'] = 'true'
 
         self.directory.manage_setLocalRoles(testing.TEST_USER_ID, ('Manager',))
         self.logout()
@@ -100,6 +105,9 @@ class FunctionalTestCase(IntegrationTestCase):
         self.app = self.layer['app']
         self.portal = self.layer['portal']
 
+        # Add environment variables
+        os.environ['seantis_events_import'] = 'true'
+
     def new_browser(self):
         return new_browser(self.layer)
 
@@ -160,7 +168,8 @@ class BrowserTestCase(FunctionalTestCase):
                  date=datetime.today(), start='2:00 PM', end='4:00 PM',
                  submitter='submitter', email='submitter@example.com',
                  do_submit=True, check_submitted=True,
-                 do_publish=True, check_published=True):
+                 do_publish=True, check_published=True,
+                 recurrence=''):
 
         browser = self.admin_browser
 
@@ -173,7 +182,7 @@ class BrowserTestCase(FunctionalTestCase):
         browser.getControl(cat2).selected = True
         browser.widget('submission_date_type').value = ['date']
         browser.set_date('submission_date', date)
-        browser.widget('submission_recurrence').value = ''
+        browser.widget('submission_recurrence').value = recurrence
         if whole_day:
             browser.getControl('All day').selected = True
         else:
