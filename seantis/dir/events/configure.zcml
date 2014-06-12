@@ -239,8 +239,8 @@
     <genericsetup:upgradeStep
        title="Add metadata field"
        description=""
-       source="1011"
-       destination="1012"
+       source="1013"
+       destination="1014"
        profile="seantis.dir.events:default"
        handler=".upgrades.upgrade_1013_to_1014">
     </genericsetup:upgradeStep>

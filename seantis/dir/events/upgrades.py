@@ -296,3 +296,6 @@ def upgrade_1013_to_1014(context):
     setup = getToolByName(context, 'portal_setup')
     profile = 'profile-seantis.dir.events:default'
     setup.runImportStepFromProfile(profile, 'catalog')
+
+    catalog = getToolByName(context, 'portal_catalog')
+    catalog.clearFindAndRebuild()
