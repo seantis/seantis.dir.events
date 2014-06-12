@@ -236,6 +236,14 @@
        handler=".upgrades.upgrade_1012_to_1013">
     </genericsetup:upgradeStep>
 
+    <genericsetup:upgradeStep
+       title="Add metadata field"
+       description=""
+       source="1013"
+       destination="1014"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1013_to_1014">
+    </genericsetup:upgradeStep>
 
     <!-- Advanced Theme Adjustments through Diazo -->
     <plone:static name="seantis.dir.events.izug-theme"
