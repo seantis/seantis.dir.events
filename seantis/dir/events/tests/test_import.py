@@ -454,7 +454,9 @@ class TestImport(IntegrationTestCase):
   <guidle:groupSet>
     <guidle:group>
       <guidle:offer id="123">
-        <guidle:lastUpdateDate>2013-07-26T16:00:43.208+02:00</guidle:lastUpdateDate>
+        <guidle:lastUpdateDate>
+          2013-07-26T16:00:43.208+02:00
+        </guidle:lastUpdateDate>
         <guidle:offerDetail>
           <guidle:title>Title</guidle:title>
           <guidle:shortDescription>Description</guidle:shortDescription>
@@ -495,7 +497,9 @@ class TestImport(IntegrationTestCase):
         </guidle:classifications>
       </guidle:offer>
       <guidle:offer id="234">
-        <guidle:lastUpdateDate>2013-07-26T16:00:43.208+02:00</guidle:lastUpdateDate>
+        <guidle:lastUpdateDate>
+          2013-07-26T16:00:43.208+02:00
+        </guidle:lastUpdateDate>
         <guidle:offerDetail>
           <guidle:title>Title</guidle:title>
           <guidle:shortDescription>Description</guidle:shortDescription>
@@ -531,6 +535,46 @@ class TestImport(IntegrationTestCase):
           </guidle:classification>
         </guidle:classifications>
       </guidle:offer>
+      <guidle:offer id="50_1">
+        <guidle:lastUpdateDate>
+          2014-05-28T11:20:35.736+02:00
+        </guidle:lastUpdateDate>
+        <guidle:offerDetail id="345">
+          <guidle:title>Issue 50</guidle:title>
+        </guidle:offerDetail>
+        <guidle:address>
+          <guidle:city>City</guidle:city>
+        </guidle:address>
+        <guidle:contact></guidle:contact>
+        <guidle:schedules>
+          <guidle:date>
+            <guidle:startDate>2014-03-12</guidle:startDate>
+            <guidle:endDate>2014-12-31</guidle:endDate>
+            <guidle:startTime>00:00:00</guidle:startTime>
+            <guidle:endTime>00:00:00</guidle:endTime>
+          </guidle:date>
+          </guidle:schedules>
+      </guidle:offer>
+      <guidle:offer id="50_2">
+        <guidle:lastUpdateDate>
+          2014-05-28T11:20:35.736+02:00
+        </guidle:lastUpdateDate>
+        <guidle:offerDetail id="345">
+          <guidle:title>Issue 50 (2)</guidle:title>
+        </guidle:offerDetail>
+        <guidle:address>
+          <guidle:city>City</guidle:city>
+        </guidle:address>
+        <guidle:contact></guidle:contact>
+        <guidle:schedules>
+          <guidle:date>
+            <guidle:startDate>2014-01-01</guidle:startDate>
+            <guidle:endDate>2014-02-14</guidle:endDate>
+            <guidle:startTime>07:00:00</guidle:startTime>
+            <guidle:endTime>19:00:00</guidle:endTime>
+          </guidle:date>
+          </guidle:schedules>
+      </guidle:offer>
     </guidle:group>
   </guidle:groupSet>
 </guidle:exportData>"""
@@ -540,7 +584,7 @@ class TestImport(IntegrationTestCase):
 
         source = EventsSourceGuidle(context)
         events = [event for event in source.fetch(xml)]
-        self.assertEquals(len(events), 2)
+        self.assertEquals(len(events), 4)
 
         self.assertEquals(str(events[0]['last_update']),
                           '2013-07-26 16:00:43+02:00')
@@ -594,6 +638,18 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(events[1]['timezone'], 'Europe/Zurich')
         self.assertEquals(events[1]['cat1'], set())
         self.assertEquals(events[1]['cat2'], set(['City']))
+
+        self.assertEquals(events[2]['start'], datetime(2014, 3, 12, 0, 0))
+        self.assertEquals(events[2]['end'], datetime(2014, 3, 12, 0, 0))
+        self.assertEquals(events[2]['recurrence'],
+                          'RRULE:FREQ=DAILY;UNTIL=20150101T0000Z')
+        self.assertEquals(events[2]['whole_day'], True)
+
+        self.assertEquals(events[3]['start'], datetime(2014, 1, 1, 7, 0))
+        self.assertEquals(events[3]['end'], datetime(2014, 1, 1, 19, 0))
+        self.assertEquals(events[3]['recurrence'],
+                          'RRULE:FREQ=DAILY;UNTIL=20140215T0000Z')
+        self.assertEquals(events[3]['whole_day'], False)
 
     def test_seantis_import(self):
         json_string = """[{

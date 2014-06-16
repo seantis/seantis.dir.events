@@ -78,6 +78,14 @@ class EventsSourceGuidle(grok.Adapter):
             # to support daily occurences by weekday
             if end and not event['recurrence']:
                 event['end'] = parse(end)
+
+                # Sometimes events last over several days, we replace this
+                # with a daily occurence
+                if event['start'] != event['end']:
+                    event['recurrence'] = self.limit_recurrence(
+                        "RRULE:FREQ=DAILY", event['end'] + timedelta(days=1)
+                    )
+                    event['end'] = event['start']
             else:
                 # if a recurrence exists it needs to be limited by the end date
                 if event['recurrence']:
@@ -92,6 +100,12 @@ class EventsSourceGuidle(grok.Adapter):
                 event['whole_day'] = True
             else:
                 event['whole_day'] = False
+
+                # Some recurrent events start/end at 00:00
+                if start_time == end_time and event['recurrence']:
+                    event['whole_day'] = True
+                    start_time = None
+                    end_time = None
 
             if start_time:
                 event['start'] = parse(start_time, default=event['start'])

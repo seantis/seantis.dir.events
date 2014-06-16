@@ -18,8 +18,7 @@ from seantis.dir.base.upgrades import (
 
 from seantis.dir.events.submission import EventSubmissionData
 from seantis.dir.events.interfaces import (
-    IEventsDirectory,
-    IEventsDirectoryItem
+    IEventsDirectory, IEventsDirectoryItem, IExternalEvent
 )
 
 
@@ -292,10 +291,26 @@ def upgrade_1012_to_1013(context):
 
 
 def upgrade_1013_to_1014(context):
-    # Add source_id to index
+    # Add source_id to the catalog as available meta data
     setup = getToolByName(context, 'portal_setup')
     profile = 'profile-seantis.dir.events:default'
     setup.runImportStepFromProfile(profile, 'catalog')
 
     catalog = getToolByName(context, 'portal_catalog')
     catalog.clearFindAndRebuild()
+
+
+def upgrade_1014_to_1015(context):
+    # Remove imported events with no recurrence which last more than one day
+    catalog = getToolByName(context, 'portal_catalog')
+    brains = catalog(
+        object_provides=IExternalEvent.__identifier__, review_state='published'
+    )
+
+    for brain in brains:
+        if brain.recurrence:
+            continue
+        if (brain.end.asdatetime()-brain.start.asdatetime()).days:
+            log.info('Deleting %s' % (brain.id))
+            obj = brain.getObject()
+            obj.aq_parent.manage_delObjects([obj.getId()])

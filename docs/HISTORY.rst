@@ -14,7 +14,11 @@ Changelog
 - Allow export of imported events. Implements #68.
   [msom]
 
-- Display number of removed already imported events in fetch view. Implements #71.
+- Display number of removed already imported events in fetch view.
+  Implements #71.
+  [msom]
+
+- Split guidle events that last over a day. Fixes #50.
   [msom]
 
 1.2.4 (2014-06-04)
