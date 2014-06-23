@@ -2,20 +2,20 @@
 Changelog
 ---------
 
-1.2.5 (unreleased)
+1.3 (2014-06-23)
 ~~~~~~~~~~~~~~~~~~
-
-- Fix cleanup scheduler.
-  [msom]
-
-- Prevent creation of log entries by viewing the events. Updates #70.
-  [msom]
 
 - Allow export of imported events. Implements #68.
   [msom]
 
 - Display number of removed already imported events in fetch view.
   Implements #71.
+  [msom]
+
+- Fix cleanup scheduler.
+  [msom]
+
+- Prevent creation of log entries by viewing the events. Updates #70.
   [msom]
 
 - Split guidle events that last over a day. Fixes #50.
