@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-04-07 12:54+0000\n"
+"POT-Creation-Date: 2014-07-11 11:15+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr ""
 
-#: ./interfaces.py:463
+#: ./interfaces.py:495
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
@@ -37,7 +37,7 @@ msgstr ""
 msgid "All Events"
 msgstr ""
 
-#: ./interfaces.py:304
+#: ./interfaces.py:316
 msgid "All day"
 msgstr ""
 
@@ -57,20 +57,20 @@ msgstr ""
 msgid "Attachment ${number}"
 msgstr ""
 
-#: ./interfaces.py:155
+#: ./interfaces.py:167
 msgid "Attachment 1"
 msgstr ""
 
-#: ./interfaces.py:160
+#: ./interfaces.py:172
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:506
+#: ./interfaces.py:538
 #: ./templates/macros.pt:178
 msgid "Attachments"
 msgstr ""
 
-#: ./interfaces.py:352
+#: ./interfaces.py:364
 msgid "Automatically delete already imported events if no longer present."
 msgstr ""
 
@@ -114,15 +114,15 @@ msgstr ""
 msgid "Configure source condition"
 msgstr ""
 
-#: ./interfaces.py:220
+#: ./interfaces.py:232
 msgid "Contact Email"
 msgstr ""
 
-#: ./interfaces.py:214
+#: ./interfaces.py:226
 msgid "Contact Name"
 msgstr ""
 
-#: ./interfaces.py:226
+#: ./interfaces.py:238
 msgid "Contact Phone"
 msgstr ""
 
@@ -138,7 +138,7 @@ msgstr ""
 msgid "Custom date range"
 msgstr ""
 
-#: ./interfaces.py:269
+#: ./interfaces.py:281
 #: ./templates/directory.pt:39
 msgid "Date"
 msgstr ""
@@ -151,7 +151,7 @@ msgstr ""
 msgid "Detail Preview"
 msgstr ""
 
-#: ./templates/directory.pt:103
+#: ./templates/directory.pt:101
 msgid "Dou you have an event to share?"
 msgstr ""
 
@@ -159,19 +159,19 @@ msgstr ""
 msgid "Edit import source condition"
 msgstr ""
 
-#: ./interfaces.py:338
+#: ./interfaces.py:350
 msgid "Enabled"
 msgstr ""
 
-#: ./interfaces.py:289
+#: ./interfaces.py:301
 msgid "End date"
 msgstr ""
 
-#: ./interfaces.py:279
+#: ./interfaces.py:291
 msgid "End time"
 msgstr ""
 
-#: ./interfaces.py:299
+#: ./interfaces.py:311
 msgid "Ends each day at"
 msgstr ""
 
@@ -185,6 +185,10 @@ msgstr ""
 
 #: ./form.py:580
 msgid "Event Preview Updated"
+msgstr ""
+
+#: ./interfaces.py:98
+msgid "Event Report Link"
 msgstr ""
 
 #: ./form.py:700
@@ -203,7 +207,7 @@ msgstr ""
 msgid "Event Submission Preview"
 msgstr ""
 
-#: ./interfaces.py:202
+#: ./interfaces.py:214
 msgid "Event Website"
 msgstr ""
 
@@ -243,7 +247,7 @@ msgstr ""
 msgid "Events Directory Item"
 msgstr ""
 
-#: ./interfaces.py:374
+#: ./interfaces.py:406
 msgid "Events directory URL"
 msgstr ""
 
@@ -251,7 +255,7 @@ msgstr ""
 msgid "Events matching the current filter"
 msgstr ""
 
-#: ./interfaces.py:379
+#: ./interfaces.py:411
 msgid "Filter events"
 msgstr ""
 
@@ -307,20 +311,24 @@ msgstr ""
 msgid "Guidle Import"
 msgstr ""
 
-#: ./interfaces.py:365
+#: ./interfaces.py:377
 msgid "Guidle URL to download from"
 msgstr ""
 
-#: ./directory.py:413
+#: ./directory.py:418
 msgid "Hidden"
 msgstr ""
 
-#: ./interfaces.py:178
+#: ./interfaces.py:190
 msgid "Housenumber"
 msgstr ""
 
 #: ./form.py:809
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
+msgstr ""
+
+#: ./interfaces.py:99
+msgid "If a link is given, the \"submit event\" link on the directory will point to that link, instead of the internal submit form. If left empty, the internal submit form remains. Use this, if events should be submitted on an external website. "
 msgstr ""
 
 #: ./interfaces.py:88
@@ -331,7 +339,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:480
+#: ./interfaces.py:512
 msgid "Images"
 msgstr ""
 
@@ -347,7 +355,7 @@ msgstr ""
 msgid "Information"
 msgstr ""
 
-#: ./interfaces.py:344
+#: ./interfaces.py:356
 msgid "Limit"
 msgstr ""
 
@@ -363,7 +371,7 @@ msgstr ""
 msgid "List Preview (No Occurrences)"
 msgstr ""
 
-#: ./interfaces.py:166
+#: ./interfaces.py:178
 #: ./templates/macros.pt:131
 msgid "Locality"
 msgstr ""
@@ -372,11 +380,11 @@ msgstr ""
 msgid "Location"
 msgstr ""
 
-#: ./interfaces.py:196
+#: ./interfaces.py:208
 msgid "Location Website"
 msgstr ""
 
-#: ./interfaces.py:145
+#: ./interfaces.py:157
 msgid "Long Description"
 msgstr ""
 
@@ -404,7 +412,7 @@ msgstr ""
 msgid "Mo"
 msgstr ""
 
-#: ./interfaces.py:334
+#: ./interfaces.py:346
 msgid "Name"
 msgstr ""
 
@@ -428,44 +436,44 @@ msgstr ""
 msgid "No changes were applied"
 msgstr ""
 
-#: ./directory.py:216
+#: ./directory.py:220
 msgid "No events for the current daterange"
 msgstr ""
 
-#: ./directory.py:218
+#: ./directory.py:222
 msgid "No events for the current state"
 msgstr ""
 
-#: ./interfaces.py:261
+#: ./interfaces.py:273
 msgid "On a single day"
 msgstr ""
 
-#: ./interfaces.py:262
+#: ./interfaces.py:274
 msgid "On several days"
 msgstr ""
 
-#: ./interfaces.py:314
+#: ./interfaces.py:326
 msgid "On these days"
 msgstr ""
 
-#: ./interfaces.py:208
+#: ./interfaces.py:220
 #: ./templates/macros.pt:149
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:485
+#: ./interfaces.py:517
 msgid "PDF"
 msgstr ""
 
-#: ./interfaces.py:447
+#: ./interfaces.py:479
 msgid "Please choose at least one category"
 msgstr ""
 
-#: ./interfaces.py:455
+#: ./interfaces.py:487
 msgid "Please enter at least one suggestion"
 msgstr ""
 
-#: ./interfaces.py:232
+#: ./interfaces.py:244
 msgid "Prices"
 msgstr ""
 
@@ -473,11 +481,11 @@ msgstr ""
 msgid "Publication of event was denied"
 msgstr ""
 
-#: ./directory.py:412
+#: ./directory.py:417
 msgid "Published"
 msgstr ""
 
-#: ./interfaces.py:309
+#: ./interfaces.py:321
 msgid "Recurrence"
 msgstr ""
 
@@ -497,7 +505,7 @@ msgstr ""
 msgid "Send us your events and we will publish them"
 msgstr ""
 
-#: ./interfaces.py:137
+#: ./interfaces.py:149
 msgid "Short Description"
 msgstr ""
 
@@ -505,7 +513,7 @@ msgstr ""
 msgid "Show all occurrences"
 msgstr ""
 
-#: ./interfaces.py:425
+#: ./interfaces.py:457
 msgid "Source"
 msgstr ""
 
@@ -513,7 +521,7 @@ msgstr ""
 msgid "Source contains: ${source}"
 msgstr ""
 
-#: ./interfaces.py:284
+#: ./interfaces.py:296
 msgid "Start date"
 msgstr ""
 
@@ -521,11 +529,11 @@ msgstr ""
 msgid "Start date after end date"
 msgstr ""
 
-#: ./interfaces.py:274
+#: ./interfaces.py:286
 msgid "Start time"
 msgstr ""
 
-#: ./interfaces.py:294
+#: ./interfaces.py:306
 msgid "Starts each day at"
 msgstr ""
 
@@ -533,7 +541,7 @@ msgstr ""
 msgid "State"
 msgstr ""
 
-#: ./interfaces.py:172
+#: ./interfaces.py:184
 msgid "Street"
 msgstr ""
 
@@ -545,11 +553,11 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: ./templates/directory.pt:104
+#: ./templates/directory.pt:102
 msgid "Submit Your Event"
 msgstr ""
 
-#: ./directory.py:407
+#: ./directory.py:412
 msgid "Submitted"
 msgstr ""
 
@@ -558,27 +566,27 @@ msgstr ""
 msgid "Submitter"
 msgstr ""
 
-#: ./interfaces.py:131
+#: ./interfaces.py:143
 msgid "Submitter Email"
 msgstr ""
 
-#: ./interfaces.py:126
+#: ./interfaces.py:138
 msgid "Submitter Name"
 msgstr ""
 
-#: ./interfaces.py:117
+#: ./interfaces.py:129
 msgid "Suggested Values for the What-Category"
 msgstr ""
 
-#: ./interfaces.py:118
+#: ./interfaces.py:130
 msgid "Suggested Values for the Where-Category"
 msgstr ""
 
-#: ./interfaces.py:351
+#: ./interfaces.py:363
 msgid "Synchronise deleted events"
 msgstr ""
 
-#: ./directory.py:458
+#: ./directory.py:463
 #: ./interfaces.py:87
 msgid "Terms and Conditions"
 msgstr ""
@@ -587,11 +595,11 @@ msgstr ""
 msgid "Th"
 msgstr ""
 
-#: ./interfaces.py:345
+#: ./interfaces.py:357
 msgid "The number of events to import every 15 minutes."
 msgstr ""
 
-#: ./interfaces.py:426
+#: ./interfaces.py:458
 msgid "The source id to check for. Leave empty for any source."
 msgstr ""
 
@@ -631,7 +639,7 @@ msgstr ""
 msgid "Ticket"
 msgstr ""
 
-#: ./interfaces.py:238
+#: ./interfaces.py:250
 msgid "Ticket / Registration Website"
 msgstr ""
 
@@ -647,7 +655,7 @@ msgstr ""
 msgid "Tomorrow"
 msgstr ""
 
-#: ./interfaces.py:190
+#: ./interfaces.py:202
 msgid "Town"
 msgstr ""
 
@@ -655,15 +663,15 @@ msgstr ""
 msgid "Tu"
 msgstr ""
 
-#: ./interfaces.py:478
+#: ./interfaces.py:510
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:500
+#: ./interfaces.py:532
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
-#: ./interfaces.py:138
+#: ./interfaces.py:150
 msgid "Up to 140 characters"
 msgstr ""
 
@@ -679,17 +687,17 @@ msgstr ""
 msgid "We"
 msgstr ""
 
-#: ./directory.py:43
-#: ./interfaces.py:385
+#: ./directory.py:41
+#: ./interfaces.py:417
 msgid "What"
 msgstr ""
 
-#: ./interfaces.py:257
+#: ./interfaces.py:269
 msgid "When will this event occur?"
 msgstr ""
 
-#: ./directory.py:43
-#: ./interfaces.py:391
+#: ./directory.py:41
+#: ./interfaces.py:423
 msgid "Where"
 msgstr ""
 
@@ -697,7 +705,7 @@ msgstr ""
 msgid "Whole Day"
 msgstr ""
 
-#: ./interfaces.py:519
+#: ./interfaces.py:551
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 
@@ -705,7 +713,7 @@ msgstr ""
 msgid "You may not add more than ${max} occurences"
 msgstr ""
 
-#: ./interfaces.py:184
+#: ./interfaces.py:196
 msgid "Zipcode"
 msgstr ""
 

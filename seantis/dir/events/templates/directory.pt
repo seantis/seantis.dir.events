@@ -99,7 +99,7 @@
             <div class="event-sidebar">
               <div class="your-event">
                 <p i18n:translate="">Dou you have an event to share?</p>
-                <a i18n:translate="" tal:attributes="href python: context.absolute_url() + '/@@submit'" class="button">Submit Your Event</a>
+                <a i18n:translate="" tal:attributes="href view/submit_event_link" class="button">Submit Your Event</a>
               </div>
               <metal:use use-macro="context/@@seantis-dir-macros/macros/map">
               </metal:use>

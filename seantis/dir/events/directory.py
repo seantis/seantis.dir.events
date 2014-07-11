@@ -164,6 +164,16 @@ class EventsDirectoryView(directory.View):
         """ Returns true if the current request is an json request. """
         return self.request.get('type') == 'json'
 
+    @property
+    def submit_event_link(self):
+        submit_event_link = getattr(self.context, 'submit_event_link', None)
+        submit_event_link = (submit_event_link or '').strip()
+
+        if submit_event_link.replace('http://', '').replace('https://', ''):
+            return submit_event_link
+        else:
+            return self.context.absolute_url() + '/@@submit'
+
     def get_last_daterange(self):
         """ Returns the last selected daterange. """
         return session.get_session(self.context, 'daterange') \

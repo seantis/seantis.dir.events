@@ -94,6 +94,18 @@ class IEventsDirectory(IDirectory):
     )
     form.widget(terms=WysiwygFieldWidget)
 
+    submit_event_link = Website(
+        title=_(u'Event Report Link'),
+        description=_(
+            u'If a link is given, the "submit event" link on the directory '
+            u'will point to that link, instead of the internal submit form. '
+            u'If left empty, the internal submit form remains. '
+            u'Use this, if events should be submitted on an external website. '
+        ),
+        required=False,
+        default=None
+    )
+
 
 # Hide all categories as they are predefined
 IEventsDirectory.setTaggedValue(

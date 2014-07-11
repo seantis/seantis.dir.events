@@ -5,7 +5,9 @@ Changelog
 1.3.1 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Adds the ability to add a custom link used for submitting events.
+  Implements #74.
+  [href]
 
 1.3 (2014-06-23)
 ~~~~~~~~~~~~~~~~~~
