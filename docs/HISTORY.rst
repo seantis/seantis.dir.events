@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.3.1 (unreleased)
+1.3.1 (2014-07-14)
 ~~~~~~~~~~~~~~~~~~
 
 - Adds the ability to add a custom link used for submitting events.
