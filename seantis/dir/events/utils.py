@@ -70,6 +70,7 @@ def render_json_response(request, items, compact):
         updated = item.modification_date.asdatetime().replace(microsecond=0)
         event['last_update'] = updated.isoformat()
         event['id'] = item.id
+        event['url'] = item.url()
         event['title'] = item.title
         event['short_description'] = item.short_description
         event['long_description'] = item.long_description

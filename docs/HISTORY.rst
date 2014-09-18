@@ -5,7 +5,8 @@ Changelog
 1.3.2 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Add url to JSON export #75.
+  [msom]
 
 1.3.1 (2014-07-14)
 ~~~~~~~~~~~~~~~~~~
