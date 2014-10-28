@@ -11,7 +11,7 @@ class CommonBrowserTests(BrowserTestCase):
                       cat1='Category1_2', cat2='Category2_2',
                       recurrence='RRULE:FREQ=DAILY;COUNT=2')
         first_date = datetime.today().replace(
-            hour=14, minute=0, second=0, microsecond=0
+            hour=15, minute=0, second=0, microsecond=0
         )
         second_date = first_date + timedelta(days=1)
 
