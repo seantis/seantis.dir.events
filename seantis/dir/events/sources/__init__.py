@@ -19,8 +19,6 @@ from random import shuffle
 from threading import Lock
 from plone.synchronize import synchronized
 
-from zope.component.hooks import getSite
-
 from collective.geo.geographer.interfaces import IWriteGeoreferenced
 from Products.CMFCore.utils import getToolByName
 from plone.namedfile import NamedFile, NamedImage
@@ -28,6 +26,7 @@ from plone.dexterity.utils import createContentInContainer
 from zope.interface import alsoProvides
 from zope.annotation.interfaces import IAnnotations
 
+from seantis.plonetools import unrestricted
 from seantis.dir.base import directory
 from seantis.dir.base.interfaces import (
     IDirectoryCatalog,
@@ -40,7 +39,6 @@ from seantis.dir.events.interfaces import (
     IEventsDirectory,
     NoImportDataException
 )
-from seantis.dir.events.unrestricted import execute_under_special_role
 
 
 class ExternalEventImporter(object):
@@ -483,11 +481,13 @@ class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
         do_run = self.request.get('run') == '1'
 
         if do_run:
-            imported, deleted, sources = execute_under_special_role(
-                getSite(), 'Manager',
-                import_scheduler.run, self.context, reimport,
-                all(ids) and ids or None, no_shuffle
-            )
+            with unrestricted.run_as('Manager'):
+                imported, deleted, sources = import_scheduler.run(
+                    self.context,
+                    reimport,
+                    all(ids) and ids or None,
+                    no_shuffle
+                )
 
             return u'%i events imported from %i sources (%i deleted)' % (
                 imported, sources, deleted

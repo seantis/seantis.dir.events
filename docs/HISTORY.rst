@@ -5,7 +5,8 @@ Changelog
 1.3.3 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Move modules async and unrestricted to seantis.plonetools.
+  [href]
 
 1.3.2 (2014-09-18)
 ~~~~~~~~~~~~~~~~~~

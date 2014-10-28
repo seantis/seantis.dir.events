@@ -18,7 +18,7 @@ from zope.component.hooks import getSite
 from seantis.dir.base.interfaces import IDirectoryCatalog
 from seantis.dir.events.tests.layer import INTEGRATION_TESTING
 from seantis.dir.events.tests.layer import FUNCTIONAL_TESTING
-from seantis.dir.events.maintenance import clear_clockservers
+from seantis.plonetools.async import clear_clockservers
 
 
 class IntegrationTestCase(unittest.TestCase):

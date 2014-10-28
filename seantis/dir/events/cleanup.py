@@ -11,7 +11,7 @@ from five import grok
 
 from plone.synchronize import synchronized
 
-from zope.component.hooks import getSite
+from seantis.plonetools import unrestricted
 
 from seantis.dir.base.interfaces import IDirectoryCatalog
 from seantis.dir.events.dates import to_utc
@@ -19,7 +19,6 @@ from seantis.dir.events.interfaces import (
     IEventsDirectoryItem, IEventsDirectory, IExternalEvent
 )
 from seantis.dir.events.recurrence import has_future_occurrences
-from seantis.dir.events.unrestricted import execute_under_special_role
 
 
 class CleanupScheduler(object):
@@ -241,9 +240,7 @@ class CleanupView(grok.View):
         # this maintenance feature may be run unrestricted as it does not
         # leak any information and it's behavior cannot be altered by the
         # user. This allows for easy use via cronjobs.
-        execute_under_special_role(
-            getSite(), 'Manager',
-            cleanup_scheduler.run, self.context, dryrun, force_run
-        )
+        with unrestricted.run_as('Manager'):
+            cleanup_scheduler.run(self.context, dryrun, force_run)
 
         return u''
