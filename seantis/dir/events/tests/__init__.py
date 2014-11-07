@@ -165,17 +165,19 @@ class BrowserTestCase(FunctionalTestCase):
     def addEvent(self, title='title', description='description',
                  cat1='Category1', cat2='Category2',
                  whole_day=False,
-                 date=datetime.today(), start='2:00 PM', end='4:00 PM',
+                 date=None, start='2:00 PM', end='4:00 PM',
                  submitter='submitter', email='submitter@example.com',
                  do_submit=True, check_submitted=True,
                  do_publish=True, check_published=True,
                  recurrence=''):
 
+        if date is None:
+            date = datetime.today()
+
         browser = self.admin_browser
 
         # Add form
         browser.open('/veranstaltungen/++add++seantis.dir.events.item')
-        # browser.show()
         browser.widget('title').value = title
         browser.widget('short_description').value = description
         browser.getControl(cat1).selected = True

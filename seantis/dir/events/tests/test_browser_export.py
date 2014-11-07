@@ -1,4 +1,8 @@
+import pytz
+
 from datetime import datetime, timedelta
+from dateutil.tz import tzlocal
+
 from seantis.dir.events.tests import BrowserTestCase
 
 
@@ -10,9 +14,9 @@ class CommonBrowserTests(BrowserTestCase):
         self.addEvent(title='test2', description='desc2',
                       cat1='Category1_2', cat2='Category2_2',
                       recurrence='RRULE:FREQ=DAILY;COUNT=2')
-        first_date = datetime.today().replace(
-            hour=15, minute=0, second=0, microsecond=0
-        )
+        first_date = datetime.now(tzlocal()).replace(
+            hour=14, minute=0, second=0, microsecond=0
+        ).astimezone(pytz.utc)
         second_date = first_date + timedelta(days=1)
 
         browser = self.new_browser()
