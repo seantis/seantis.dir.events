@@ -205,21 +205,23 @@ class BrowserTestCase(FunctionalTestCase):
 
             # Check if submitted
             if check_submitted:
-                browser.open('/veranstaltungen?state=submitted')
+                browser.open('/veranstaltungen?state=submitted' +
+                             '&range=this_and_next_year')
                 self.assertTrue(title in browser.contents)
                 self.assertTrue(description in browser.contents)
                 self.assertTrue(cat1 in browser.contents)
                 self.assertTrue(cat2 in browser.contents)
-
             if do_publish:
 
                 # Publish
-                browser.open('/veranstaltungen?state=submitted')
+                browser.open('/veranstaltungen?state=submitted' +
+                             '&range=this_and_next_year')
                 browser.getLink('Publish', index=1).click()
 
                 # Check if published
                 if check_published:
-                    browser.open('/veranstaltungen?state=published')
+                    browser.open('/veranstaltungen?state=published' +
+                                 '&range=this_and_next_year')
                     self.assertTrue(title in browser.contents)
                     self.assertTrue(description in browser.contents)
                     self.assertTrue(cat1 in browser.contents)
