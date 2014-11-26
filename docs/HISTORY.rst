@@ -8,6 +8,8 @@ Changelog
 - Move modules async and unrestricted to seantis.plonetools.
   [href]
 
+- Only export point coordinates. Fixes #81.
+
 1.3.2 (2014-09-18)
 ~~~~~~~~~~~~~~~~~~
 

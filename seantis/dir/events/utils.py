@@ -118,13 +118,15 @@ def render_json_response(request, items, compact):
             attachement['url'] += '/@@download/attachment_2'
             event['attachements'].append(attachement)
 
+        event['longitude'] = None
+        event['latitude'] = None
         try:
             geo = IGeoreferenced(item)
-            event['longitude'] = geo.coordinates[0]
-            event['latitude'] = geo.coordinates[1]
+            if geo.type == 'Point':
+                event['longitude'] = geo.coordinates[0]
+                event['latitude'] = geo.coordinates[1]
         except TypeError:
-            event['longitude'] = None
-            event['latitude'] = None
+            pass
 
         result.append(event)
 

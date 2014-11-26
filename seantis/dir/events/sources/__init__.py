@@ -290,9 +290,12 @@ class ExternalEventImporter(object):
 
             # set coordinates now
             if lat and lon:
-                IWriteGeoreferenced(obj).setGeoInterface(
-                    'Point', map(float, (lon, lat))
-                )
+                try:
+                    IWriteGeoreferenced(obj).setGeoInterface(
+                        'Point', map(float, (lon, lat))
+                    )
+                except ValueError:
+                    pass
 
             # followed by the categories
             IDirectoryCategorized(obj).cat1 = list(cats[0])
