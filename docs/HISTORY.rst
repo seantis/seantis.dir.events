@@ -9,8 +9,13 @@ Changelog
   [href]
 
 - Only export point coordinates. Fixes #81.
+  [msom]
 
 - Show import source in event view. Implements #78.
+  [msom]
+
+- Disable some import log messages. Implements #77.
+  [msom]
 
 1.3.2 (2014-09-18)
 ~~~~~~~~~~~~~~~~~~

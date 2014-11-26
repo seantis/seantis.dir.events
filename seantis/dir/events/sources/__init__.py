@@ -157,7 +157,7 @@ class ExternalEventImporter(object):
             log.info('reimport everything')
             changed_offers_only = False
         else:
-            log.info('importing updates since {}'.format(last_update))
+            # log.info('importing updates since {}'.format(last_update))
             changed_offers_only = True
 
         total = len(events) if not limit else limit
@@ -329,7 +329,7 @@ class ExternalEventImporter(object):
             if len(diff):
                 log.info('added to %s %s' % (category, diff))
 
-        log.info('committing events for %s' % source)
+        # log.info('committing events for %s' % source)
         transaction.commit()
 
         return imported, len_deleted
@@ -340,7 +340,7 @@ class ExternalEventImporter(object):
     ):
 
         start = datetime.now()
-        log.info('begin fetching events for %s' % source)
+        # log.info('begin fetching events for %s' % source)
 
         self.disable_indexing()
 
@@ -458,7 +458,7 @@ class ExternalEventImportScheduler(object):
         finally:
             context.reindexObject()
             IDirectoryCatalog(context).reindex()
-            log.info('importing sources from %s finished' % (import_directory))
+            # log.info('importing sources from %s finished' % (import_directory))
             self.handle_run(import_directory, do_stop=True)
 
         return len_imported, len_deleted, len_sources
