@@ -5,7 +5,7 @@
       lang="en"
       metal:use-macro="context/main_template/macros/master"
       i18n:domain="seantis.dir.events">
-   
+
 <body>
 
 <metal:block fill-slot="head_slot">
@@ -22,7 +22,15 @@
         <div tal:replace="structure provider:plone.abovecontentbody" />
 
         <div id="directoryDetails" class="events">
-          
+
+          <div tal:condition="view/show_source">
+            <p>
+              <em>
+                <tal:block i18n:translate="">This is an imported event and not editable.</tal:block>
+                <a tal:attributes="href view/import_source" i18n:translate="">View the source of this event</a>.
+              </em>
+            </p>
+          </div>
           <tal:block define="
             occurrence python: view.occurrence;
             is_preview python: False;
@@ -35,11 +43,11 @@
           </div>
 
           <div class="visualClear"></div>
-          
+
         </div>
 
         <div tal:replace="structure provider:plone.belowcontentbody" />
-        
+
         <div style="display: none" id="#parentlink">
           <a tal:attributes="href python: context.get_parent().absolute_url()"></a>
         </div>

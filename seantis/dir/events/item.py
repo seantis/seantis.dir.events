@@ -238,7 +238,8 @@ class View(core.View):
                     self.context, [self.context]
                 )
 
-            return utils.render_ical_response(self.request, self.context, calendar)
+            return utils.render_ical_response(self.request, self.context,
+                                              calendar)
 
     @utils.webcal
     def ical_url(self, only_this):
@@ -302,6 +303,23 @@ class View(core.View):
         return getSecurityManager().checkPermission(
             permissions.ModifyPortalContent, self.context
         )
+
+    @property
+    def show_source(self):
+        if not IExternalEvent.providedBy(self.context):
+            return False
+
+        return getSecurityManager().checkPermission(
+            permissions.ReviewPortalContent, self.context
+        )
+
+    @property
+    def import_source(self):
+        try:
+            result = IExternalEvent(self.context).source
+        except:
+            result = ""
+        return result
 
 
 class ICalendarEventItemComponent(ICalendarEventComponent, grok.Adapter):
