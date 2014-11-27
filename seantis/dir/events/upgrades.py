@@ -314,3 +314,9 @@ def upgrade_1014_to_1015(context):
             log.info('Deleting %s' % (brain.id))
             obj = brain.getObject()
             obj.aq_parent.manage_delObjects([obj.getId()])
+
+
+def upgrade_1015_to_1016(context):
+    # reindex everything
+    catalog = getToolByName(context, 'portal_catalog')
+    catalog.clearFindAndRebuild()
