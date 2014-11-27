@@ -2,10 +2,11 @@
 Changelog
 ---------
 
-1.3.4 (unreleased)
+1.3.4 (2014-11-27)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Add missing upgrade step.
+  [msom]
 
 1.3.3 (2014-11-26)
 ~~~~~~~~~~~~~~~~~~
