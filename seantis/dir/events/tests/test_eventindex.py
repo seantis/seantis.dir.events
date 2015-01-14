@@ -390,6 +390,8 @@ class TestEventIndex(IntegrationTestCase):
         self.assertEqual(1, number_of_data_managers())
 
     def test_by_range_timezone_regression(self):
+        year = date.today().year
+
         self.login_testuser()
 
         published = self.catalog.indices['published']
@@ -397,8 +399,8 @@ class TestEventIndex(IntegrationTestCase):
         self.assertEqual(len(published.index), 0)
 
         event = self.create_event(
-            start=datetime(2014, 12, 31, 22),
-            end=datetime(2014, 12, 31, 23),
+            start=datetime(year, 12, 31, 22),
+            end=datetime(year, 12, 31, 23),
             timezone='Europe/Vienna'
         )
         event.submit()
@@ -407,10 +409,10 @@ class TestEventIndex(IntegrationTestCase):
 
         self.assertEqual(len(published.index), 1)
 
-        dtrange = (datetime(2015, 1, 1), datetime(2015, 12, 31))
+        dtrange = (datetime(year+1, 1, 1), datetime(year+1, 12, 31))
         dtrange = [dates.as_timezone(dt, 'Europe/Vienna') for dt in dtrange]
         self.assertEqual(len(published.by_range(*dtrange)), 0)
 
-        dtrange = (datetime(2014, 1, 1), datetime(2014, 12, 31, 23, 59))
+        dtrange = (datetime(year, 1, 1), datetime(year, 12, 31, 23, 59))
         dtrange = [dates.as_timezone(dt, 'Europe/Vienna') for dt in dtrange]
         self.assertEqual(len(published.by_range(*dtrange)), 1)
