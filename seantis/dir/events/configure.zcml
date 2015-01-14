@@ -109,6 +109,12 @@
         editview="seantis.dir.events.conditions.source_edit"
         />
 
+    <genericsetup:importStep
+      name="seantis.dir.events"
+      description=""
+      title="seantis.dir.events indexes"
+      handler="seantis.dir.events.setuphandler.import_indexes" />
+
     <!-- Upgrades -->
     <genericsetup:upgradeStep
       source="*"

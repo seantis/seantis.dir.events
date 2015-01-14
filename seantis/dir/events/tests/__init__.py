@@ -36,11 +36,6 @@ class IntegrationTestCase(unittest.TestCase):
         )
         self.catalog = getAdapter(self.directory, IDirectoryCatalog)
 
-        # Add missing indexes
-        if 'source' not in self.catalog.catalog.indexes():
-            self.catalog.catalog.addIndex('source', 'FieldIndex')
-            self.catalog.catalog.manage_reindexIndex(ids=['source'])
-
         # Add environment variables
         os.environ['seantis_events_import'] = 'true'
 
@@ -124,16 +119,6 @@ class BrowserTestCase(FunctionalTestCase):
 
         browser = self.new_browser()
         browser.login_admin()
-
-        browser.open(
-            '/portal_catalog/manage_addProduct/PluginIndexes/addFieldIndex'
-        )
-        browser.getControl(name='id').value = 'source'
-        browser.getControl(
-            name='extra.indexed_attrs:record:string'
-        ).value = 'source'
-        browser.getControl('Add').click()
-        self.assertTrue('source' in browser.contents)
 
         # create an events directory
         browser.open('/++add++seantis.dir.events.directory')
