@@ -2,12 +2,16 @@
 Changelog
 ---------
 
+1.3.5 (unreleased)
+~~~~~~~~~~~~~~~~~~
+
+Nothing yet.
+
 1.3.5 (2015-01-19)
 ~~~~~~~~~~~~~~~~~~
 
 - Set up indexes on installation. Fixes #84.
   [msom]
-
 
 1.3.4 (2014-11-27)
 ~~~~~~~~~~~~~~~~~~
