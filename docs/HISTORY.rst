@@ -2,7 +2,12 @@
 Changelog
 ---------
 
-1.3.6 (unreleased)
+1.3.7 (unreleased)
+~~~~~~~~~~~~~~~~~~
+
+Nothing yet.
+
+1.3.6 (2015-01-26)
 ~~~~~~~~~~~~~~~~~~
 
 - Limits the category suggestion validators to directories/items created
