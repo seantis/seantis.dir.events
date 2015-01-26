@@ -472,16 +472,20 @@ class IResourceViewedEvent(Interface):
 
 
 # force the user to select at least one value for each category
-@form.validator(field=IDirectoryItemCategories['cat1'])
-@form.validator(field=IDirectoryItemCategories['cat2'])
+@form.validator(
+    context=IEventsDirectoryItem, field=IDirectoryItemCategories['cat1'])
+@form.validator(
+    context=IEventsDirectoryItem, field=IDirectoryItemCategories['cat2'])
 def validate_category(value):
     if not value:
         raise Invalid(_(u'Please choose at least one category'))
 
 
 # to enforce the last rule, categories must exist
-@form.validator(field=IEventsDirectory['cat1_suggestions'])
-@form.validator(field=IEventsDirectory['cat2_suggestions'])
+@form.validator(
+    context=IEventsDirectory, field=IDirectory['cat1_suggestions'])
+@form.validator(
+    context=IEventsDirectory, field=IDirectory['cat2_suggestions'])
 def validate_suggestion(value):
     if not value:
         raise Invalid(_(u'Please enter at least one suggestion'))
@@ -526,8 +530,7 @@ def validate_attachment(value):
 
     filetype = magic.from_buffer(value.data[:1024], mime=True)
 
-    if not filetype in mime_whitelist:
-        print filetype
+    if filetype not in mime_whitelist:
         raise Invalid(
             _(
                 u'Unsupported fileformat. Supported is ${formats}',

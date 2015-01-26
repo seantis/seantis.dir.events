@@ -5,7 +5,9 @@ Changelog
 1.3.6 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Limits the category suggestion validators to directories/items created
+  by seantis.dir.events. Fixes seantis.dir.base issue #17.
+  [href]
 
 1.3.5 (2015-01-19)
 ~~~~~~~~~~~~~~~~~~
