@@ -326,7 +326,7 @@ def upgrade_1015_to_1016(context):
 
 def upgrade_1016_to_1017(context):
     # Delete imported guidle events if no classifier is used
-    classifier = queryAdapter(EventsSourceGuidle, IGuidleClassifier)
+    classifier = queryAdapter(EventsSourceGuidle(None), IGuidleClassifier)
 
     if not classifier:
         catalog = getToolByName(context, 'portal_catalog')
