@@ -2,6 +2,7 @@ import logging
 log = logging.getLogger('seantis.dir.events')
 
 from Products.CMFCore.utils import getToolByName
+from zope.component import queryAdapter
 from zope.component.hooks import getSite
 from zope.annotation.interfaces import IAnnotations
 
@@ -18,8 +19,9 @@ from seantis.dir.base.upgrades import (
 
 from seantis.dir.events.submission import EventSubmissionData
 from seantis.dir.events.interfaces import (
-    IEventsDirectory, IEventsDirectoryItem, IExternalEvent
+    IEventsDirectory, IEventsDirectoryItem, IExternalEvent, IGuidleClassifier
 )
+from seantis.dir.events.sources.guidle import EventsSourceGuidle
 
 
 def setup_indexing(context):
@@ -320,3 +322,19 @@ def upgrade_1015_to_1016(context):
     # reindex everything
     catalog = getToolByName(context, 'portal_catalog')
     catalog.clearFindAndRebuild()
+
+
+def upgrade_1016_to_1017(context):
+    # Delete imported guidle events if no classifier is used
+    classifier = queryAdapter(EventsSourceGuidle, IGuidleClassifier)
+
+    if not classifier:
+        catalog = getToolByName(context, 'portal_catalog')
+        brains = catalog(object_provides=IExternalEvent.__identifier__)
+
+        for brain in brains:
+            event = brain.getObject()
+            if catalog(path={"query": event.source},
+                       portal_type='seantis.dir.events.sourceguidle'):
+                log.info('Deleting %s' % (event.Title()))
+                event.aq_parent.manage_delObjects([event.getId()])

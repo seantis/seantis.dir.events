@@ -20,6 +20,21 @@ from seantis.dir.events.interfaces import (
 )
 
 
+class DefaultGuidleClassfier(object):
+
+    def classify(self, classifications):
+        categories = set()
+        for classification in classifications.iterchildren():
+            if classification.attrib.get('type', '') != "PRIMARY":
+                continue
+
+            categories = set([
+                tag.attrib.get('name') for tag in classification.iterchildren()
+            ])
+
+        return categories
+
+
 class EventsSourceGuidle(grok.Adapter):
     grok.context(IExternalEventSourceGuidle)
     grok.provides(IExternalEventCollector)
@@ -152,6 +167,8 @@ class EventsSourceGuidle(grok.Adapter):
             raise NoImportDataException()
 
         classifier = queryAdapter(self, IGuidleClassifier)
+        if not classifier:
+            classifier = DefaultGuidleClassfier()
 
         for offer in offers:
 

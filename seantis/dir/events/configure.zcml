@@ -269,6 +269,15 @@
        handler=".upgrades.upgrade_1015_to_1016">
     </genericsetup:upgradeStep>
 
+    <genericsetup:upgradeStep
+       title="Add a default classifier for Guidle imports"
+       description=""
+       source="1016"
+       destination="1017"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1016_to_1017">
+    </genericsetup:upgradeStep>
+
     <!-- Advanced Theme Adjustments through Diazo -->
     <plone:static name="seantis.dir.events.izug-theme"
       directory="themes/izug-theme" type="theme"

@@ -2,8 +2,11 @@
 Changelog
 ---------
 
-1.4.2 (unreleased)
-~~~~~~~~~~~~~~~~~~
+1.5 (unreleased)
+~~~~~~~~~~~~~~~~
+
+- Add a default classifier for Guidle imports. Implements #87.
+  [msom]
 
 - Increase fetch timeout for imports.
   [msom]
