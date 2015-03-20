@@ -221,9 +221,7 @@ class EventsSourceGuidle(grok.Adapter):
                 """)
 
                 # categories
-                e['cat1'] = set()
-                if classifier:
-                    e['cat1'] = classifier.classify(offer.classifications)
+                e['cat1'] = classifier.classify(offer.classifications)
                 e['cat2'] = set((e['town'],))
 
                 # image (download later)

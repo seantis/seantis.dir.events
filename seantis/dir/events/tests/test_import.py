@@ -553,7 +553,11 @@ class TestImport(IntegrationTestCase):
             <guidle:startTime>00:00:00</guidle:startTime>
             <guidle:endTime>00:00:00</guidle:endTime>
           </guidle:date>
-          </guidle:schedules>
+        </guidle:schedules>
+        <guidle:classifications>
+          <guidle:classification name="class">
+          </guidle:classification>
+        </guidle:classifications>
       </guidle:offer>
       <guidle:offer id="50_2">
         <guidle:lastUpdateDate>
@@ -573,7 +577,11 @@ class TestImport(IntegrationTestCase):
             <guidle:startTime>07:00:00</guidle:startTime>
             <guidle:endTime>19:00:00</guidle:endTime>
           </guidle:date>
-          </guidle:schedules>
+        </guidle:schedules>
+        <guidle:classifications>
+          <guidle:classification name="class">
+          </guidle:classification>
+        </guidle:classifications>
       </guidle:offer>
     </guidle:group>
   </guidle:groupSet>
