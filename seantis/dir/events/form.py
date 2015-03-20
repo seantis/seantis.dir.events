@@ -454,6 +454,10 @@ class EventSubmitForm(extensible.ExtensibleForm, form.Form, NavigationMixin):
         super(EventSubmitForm, self).update()
 
     def render(self):
+        if self.directory.submit_event_link:
+            self.redirect(self.directory.submit_event_link)
+            return ''
+
         if self.empty_body:
             return ''
 

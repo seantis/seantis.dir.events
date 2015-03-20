@@ -8,6 +8,9 @@ Changelog
 - Add an option to import remotely imported events. Implements #86.
   [msom]
 
+- Redirect to external link in submit form if set. Updates #74.
+  [msom]
+
 1.3.6 (2015-01-26)
 ~~~~~~~~~~~~~~~~~~
 
