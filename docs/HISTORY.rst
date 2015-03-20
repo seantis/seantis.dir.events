@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.5 (unreleased)
+1.5 (2015-03-20)
 ~~~~~~~~~~~~~~~~
 
 - Add a default classifier for Guidle imports. Implements #87.
