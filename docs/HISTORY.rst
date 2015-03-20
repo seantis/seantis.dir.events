@@ -5,7 +5,8 @@ Changelog
 1.4.2 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Increase fetch timeout for imports.
+  [msom]
 
 1.4.1 (2015-03-20)
 ~~~~~~~~~~~~~~~~~~

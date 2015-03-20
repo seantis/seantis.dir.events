@@ -59,7 +59,7 @@ class ExternalEventImporter(object):
 
     @lru_cache(maxsize=50)
     def download(self, url):
-        return urlopen(url, timeout=60).read()
+        return urlopen(url, timeout=300).read()
 
     def disable_indexing(self):
         self.context._v_fetching = True
