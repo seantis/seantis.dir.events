@@ -829,6 +829,7 @@ class TestImport(IntegrationTestCase):
         context = mock.Mock()
         context.url = '  http://www.ex.ch/ev/  '
         context.do_filter = False
+        context.import_imported = False
         context.cat1 = ''
         context.cat2 = ''
         source = EventsSourceSeantisJson(context)
@@ -871,5 +872,13 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(
             source.build_url(),
             'http://www.ex.ch/ev?type=json&compact=true&filter=true'
+            '&cat1=cat1&cat2=cat2'
+        )
+
+        context.import_imported = True
+        source = EventsSourceSeantisJson(context)
+        self.assertEquals(
+            source.build_url(),
+            'http://www.ex.ch/ev?type=json&compact=true&imported=1&filter=true'
             '&cat1=cat1&cat2=cat2'
         )

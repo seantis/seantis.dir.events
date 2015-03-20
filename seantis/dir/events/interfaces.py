@@ -425,6 +425,14 @@ class IExternalEventSourceSeantisJson(IExternalEventSource):
         default=u''
     )
 
+    import_imported = Bool(
+        title=_(u'Import remotely imported events'),
+        description=_(u"If enabled, events which have been imported "
+                      u"themselves on the remote site will be imported too"),
+        required=False,
+        default=False
+    )
+
 
 class NoImportDataException(Exception):
     pass

@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-07-11 11:15+0000\n"
+"POT-Creation-Date: 2015-03-20 10:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr ""
 
-#: ./interfaces.py:495
+#: ./interfaces.py:507
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
@@ -65,7 +65,7 @@ msgstr ""
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:538
+#: ./interfaces.py:549
 #: ./templates/macros.pt:178
 msgid "Attachments"
 msgstr ""
@@ -315,7 +315,7 @@ msgstr ""
 msgid "Guidle URL to download from"
 msgstr ""
 
-#: ./directory.py:418
+#: ./directory.py:421
 msgid "Hidden"
 msgstr ""
 
@@ -331,6 +331,10 @@ msgstr ""
 msgid "If a link is given, the \"submit event\" link on the directory will point to that link, instead of the internal submit form. If left empty, the internal submit form remains. Use this, if events should be submitted on an external website. "
 msgstr ""
 
+#: ./interfaces.py:430
+msgid "If enabled, events which have been imported themselves on the remote site will be imported too"
+msgstr ""
+
 #: ./interfaces.py:88
 msgid "If entered, the terms and conditions have to be agreed to by anyone submitting an event."
 msgstr ""
@@ -339,12 +343,16 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:512
+#: ./interfaces.py:524
 msgid "Images"
 msgstr ""
 
 #: ./templates/directory.pt:65
 msgid "Import"
+msgstr ""
+
+#: ./interfaces.py:429
+msgid "Import remotely imported events"
 msgstr ""
 
 #: ./form.py:680
@@ -436,11 +444,11 @@ msgstr ""
 msgid "No changes were applied"
 msgstr ""
 
-#: ./directory.py:220
+#: ./directory.py:223
 msgid "No events for the current daterange"
 msgstr ""
 
-#: ./directory.py:222
+#: ./directory.py:225
 msgid "No events for the current state"
 msgstr ""
 
@@ -461,15 +469,15 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:517
+#: ./interfaces.py:529
 msgid "PDF"
 msgstr ""
 
-#: ./interfaces.py:479
+#: ./interfaces.py:489
 msgid "Please choose at least one category"
 msgstr ""
 
-#: ./interfaces.py:487
+#: ./interfaces.py:499
 msgid "Please enter at least one suggestion"
 msgstr ""
 
@@ -481,7 +489,7 @@ msgstr ""
 msgid "Publication of event was denied"
 msgstr ""
 
-#: ./directory.py:417
+#: ./directory.py:420
 msgid "Published"
 msgstr ""
 
@@ -513,7 +521,7 @@ msgstr ""
 msgid "Show all occurrences"
 msgstr ""
 
-#: ./interfaces.py:457
+#: ./interfaces.py:465
 msgid "Source"
 msgstr ""
 
@@ -557,7 +565,7 @@ msgstr ""
 msgid "Submit Your Event"
 msgstr ""
 
-#: ./directory.py:412
+#: ./directory.py:415
 msgid "Submitted"
 msgstr ""
 
@@ -586,7 +594,7 @@ msgstr ""
 msgid "Synchronise deleted events"
 msgstr ""
 
-#: ./directory.py:463
+#: ./directory.py:466
 #: ./interfaces.py:87
 msgid "Terms and Conditions"
 msgstr ""
@@ -599,7 +607,7 @@ msgstr ""
 msgid "The number of events to import every 15 minutes."
 msgstr ""
 
-#: ./interfaces.py:458
+#: ./interfaces.py:466
 msgid "The source id to check for. Leave empty for any source."
 msgstr ""
 
@@ -632,6 +640,7 @@ msgid "This is a recurring event"
 msgstr ""
 
 #: ./templates/form.pt:23
+#: ./templates/item.pt:29
 msgid "This is an imported event and not editable."
 msgstr ""
 
@@ -663,11 +672,11 @@ msgstr ""
 msgid "Tu"
 msgstr ""
 
-#: ./interfaces.py:510
+#: ./interfaces.py:522
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:532
+#: ./interfaces.py:543
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
@@ -680,6 +689,7 @@ msgid "Verify"
 msgstr ""
 
 #: ./templates/form.pt:24
+#: ./templates/item.pt:30
 msgid "View the source of this event"
 msgstr ""
 
@@ -705,7 +715,7 @@ msgstr ""
 msgid "Whole Day"
 msgstr ""
 
-#: ./interfaces.py:551
+#: ./interfaces.py:562
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 

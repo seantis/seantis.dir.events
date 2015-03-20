@@ -2,10 +2,11 @@
 Changelog
 ---------
 
-1.3.7 (unreleased)
-~~~~~~~~~~~~~~~~~~
+1.4 (unreleased)
+~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Add an option to import remotely imported events. Implements #86.
+  [msom]
 
 1.3.6 (2015-01-26)
 ~~~~~~~~~~~~~~~~~~
