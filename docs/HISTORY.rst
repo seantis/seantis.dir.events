@@ -5,8 +5,8 @@ Changelog
 1.5.1 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
-
+- Increase fetch timeout for imports.
+  [msom]
 
 1.5 (2015-03-20)
 ~~~~~~~~~~~~~~~~

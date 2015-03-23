@@ -55,7 +55,7 @@ class EventsSourceSeantisJson(grok.Adapter):
         try:
             if json_string is None:
                 url = self.build_url()
-                json_string = urlopen(url, timeout=60).read()
+                json_string = urlopen(url, timeout=300).read()
 
             events = json.loads(json_string)
         except:

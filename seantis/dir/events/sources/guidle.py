@@ -156,7 +156,7 @@ class EventsSourceGuidle(grok.Adapter):
     def fetch(self, xml=None):
         try:
             if xml is None:
-                xml = urlopen(self.context.url, timeout=60).read()
+                xml = urlopen(self.context.url, timeout=300).read()
             root = objectify.fromstring(xml)
 
             offers = root.xpath(
