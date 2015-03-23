@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.5.1 (unreleased)
+1.5.1 (2015-03-23)
 ~~~~~~~~~~~~~~~~~~
 
 - Increase fetch timeout for imports.
