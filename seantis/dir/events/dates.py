@@ -7,7 +7,7 @@ from plone.app.event.base import default_timezone
 from seantis.dir.events import utils
 from seantis.dir.events import _
 
-default_daterange = 'this_year'
+default_daterange = 'this_and_next_year'
 
 
 def eventrange():

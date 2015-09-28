@@ -5,7 +5,8 @@ Changelog
 1.5.2 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Change default date range filter value.
+  [msom]
 
 
 1.5.1 (2015-03-23)
