@@ -14,6 +14,9 @@ Changelog
 - Use less date ranges.
   [msom]
 
+- Enable jquerytools.dateinput.js.
+  [msom]
+
 1.5.1 (2015-03-23)
 ~~~~~~~~~~~~~~~~~~
 

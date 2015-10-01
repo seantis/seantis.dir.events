@@ -14,6 +14,7 @@
     <include package="plone.contentrules" file="meta.zcml" />
     <include package="plone.directives.form" file="meta.zcml" />
     <include package="plone.directives.form" />
+    <include package="plone.app.jquerytools" />
 
     <!-- Include configuration for dependencies listed in setup.py -->
     <includeDependencies package="." />
@@ -113,7 +114,15 @@
       name="seantis.dir.events"
       description=""
       title="seantis.dir.events indexes"
-      handler="seantis.dir.events.setuphandler.import_indexes" />
+      handler="seantis.dir.events.setuphandler.import_indexes"
+      />
+
+    <genericsetup:importStep
+      name="enable_jquerytools_dateinput_js"
+      description=""
+      title="Enable jquery.dateinput.js"
+      handler="seantis.dir.events.setuphandler.enable_jquerytools_dateinput_js"
+      />
 
     <!-- Upgrades -->
     <genericsetup:upgradeStep
@@ -276,6 +285,15 @@
        destination="1017"
        profile="seantis.dir.events:default"
        handler=".upgrades.upgrade_1016_to_1017">
+    </genericsetup:upgradeStep>
+
+    <genericsetup:upgradeStep
+       title="Enable jquerytools.dateinput.js"
+       description=""
+       source="1017"
+       destination="1018"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1017_to_1018">
     </genericsetup:upgradeStep>
 
     <!-- Advanced Theme Adjustments through Diazo -->

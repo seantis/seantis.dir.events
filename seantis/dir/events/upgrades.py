@@ -1,27 +1,29 @@
 import logging
-log = logging.getLogger('seantis.dir.events')
-
-from Products.CMFCore.utils import getToolByName
-from zope.component import queryAdapter
-from zope.component.hooks import getSite
-from zope.annotation.interfaces import IAnnotations
 
 from plone.app.theming.utils import (
     applyTheme,
     getOrCreatePersistentResourceDirectory
 )
-
+from Products.CMFCore.utils import getToolByName
 from seantis.dir.base.interfaces import IDirectoryCatalog
 from seantis.dir.base.upgrades import (
     add_behavior_to_item,
     reset_images_and_attachments
 )
-
-from seantis.dir.events.submission import EventSubmissionData
 from seantis.dir.events.interfaces import (
-    IEventsDirectory, IEventsDirectoryItem, IExternalEvent, IGuidleClassifier
+    IEventsDirectory,
+    IEventsDirectoryItem,
+    IExternalEvent,
+    IGuidleClassifier
 )
+from seantis.dir.events.setuphandler import enable_jquerytools_dateinput_js
 from seantis.dir.events.sources.guidle import EventsSourceGuidle
+from seantis.dir.events.submission import EventSubmissionData
+from zope.annotation.interfaces import IAnnotations
+from zope.component import queryAdapter
+from zope.component.hooks import getSite
+
+log = logging.getLogger('seantis.dir.events')
 
 
 def setup_indexing(context):
@@ -338,3 +340,8 @@ def upgrade_1016_to_1017(context):
                        portal_type='seantis.dir.events.sourceguidle'):
                 log.info('Deleting %s' % (event.Title()))
                 event.aq_parent.manage_delObjects([event.getId()])
+
+
+def upgrade_1017_to_1018(context):
+    # Enable jquerytools.dateinput.js
+    enable_jquerytools_dateinput_js(context)
