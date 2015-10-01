@@ -11,6 +11,9 @@ Changelog
 - Add new shorted date formatting.
   [msom]
 
+- Use less date ranges.
+  [msom]
+
 1.5.1 (2015-03-23)
 ~~~~~~~~~~~~~~~~~~
 

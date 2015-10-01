@@ -306,7 +306,6 @@ class DateRanges(object):
         )
 
     @property
-    @daterange(_(u'Day after Tomorrow'))
     def day_after_tomorrow(self):
         return (
             self.this_morning + timedelta(days=2),
@@ -322,9 +321,6 @@ class DateRanges(object):
         return this_weekend(self.now)
 
     @property
-    @daterange(
-        _(u'Next Weekend'), _(u'From 4pm next Friday until 12pm next Sunday')
-    )
     def next_weekend(self):
         weekend_start, weekend_end = this_weekend(self.now)
         weekend_start += timedelta(days=7)
@@ -341,9 +337,6 @@ class DateRanges(object):
         return self.this_morning, end_of_week
 
     @property
-    @daterange(
-        _(u'Next Week'), _(u'From next Monday until the following Sunday')
-    )
     def next_week(self):
         # range between next sunday (as in self.is_this_week)
         # and the sunday after that
@@ -367,9 +360,6 @@ class DateRanges(object):
         return self.this_morning, end_of_this_month
 
     @property
-    @daterange(
-        _(u'Next Month'), _(u'From the beginning of next month until the end')
-    )
     def next_month(self):
         _, prev_end = this_month(self.now)
         month_start = prev_end + timedelta(microseconds=1)
@@ -389,7 +379,6 @@ class DateRanges(object):
         return self.this_morning, end_of_year
 
     @property
-    @daterange(_(u'Next Year'), _(u'The whole next year'))
     def next_year(self):
         start_of_year = datetime(
             self.now.year + 1, 1, 1, tzinfo=self.now.tzinfo
