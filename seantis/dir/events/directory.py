@@ -13,7 +13,7 @@ from Products.CMFPlone.PloneBatch import Batch
 
 from seantis.dir.base import directory
 from seantis.dir.base import session
-from seantis.dir.base.utils import cached_property
+from seantis.dir.base.utils import cached_property, unicode_collate_sortkey
 
 from seantis.dir.events.interfaces import (
     IEventsDirectory, IActionGuard, IResourceViewedEvent, IExternalEvent
@@ -145,6 +145,8 @@ class EventsDirectoryView(directory.View):
     grok.context(IEventsDirectory)
     grok.require('zope2.View')
 
+    hide_search_viewlet = True
+
     template = None
     _template = grok.PageTemplateFile('templates/directory.pt')
 
@@ -173,6 +175,16 @@ class EventsDirectoryView(directory.View):
             return submit_event_link
         else:
             return self.context.absolute_url() + '/@@submit'
+
+    @property
+    def filter_values(self):
+        values = self.catalog.possible_values()
+        return {
+            'cat1': sorted(set(values.get('cat1', [])),
+                           key=unicode_collate_sortkey()),
+            'cat2': sorted(set(values.get('cat2', [])),
+                           key=unicode_collate_sortkey()),
+        }
 
     def get_last_daterange(self):
         """ Returns the last selected daterange. """

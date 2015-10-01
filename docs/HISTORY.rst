@@ -2,8 +2,14 @@
 Changelog
 ---------
 
-1.5.2 (unreleased)
+1.6 (unreleased)
 ~~~~~~~~~~~~~~~~
+
+- Change layout of event list and detail for visual redesign.
+  [msom]
+
+- Integrate search and filter into sidebar, disable the viewlet.
+  [msom]
 
 - Change default date range filter value.
   [msom]

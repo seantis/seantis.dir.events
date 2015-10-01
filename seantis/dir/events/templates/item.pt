@@ -31,16 +31,14 @@
               </em>
             </p>
           </div>
-          <tal:block define="
-            occurrence python: view.occurrence;
-            is_preview python: False;
-          ">
-            <metal:use use-macro="context/get_parent/@@seantis-dir-events-macros/macros/event-detail"></metal:use>
+          <tal:block define="occurrence python: view.occurrence;
+                             is_preview python: False;">
+            <metal:use use-macro="context/get_parent/@@seantis-dir-events-macros/macros/event-detail">
+              <metal:block fill-slot="event_detail_map_slot">
+                <metal:use use-macro="context/@@seantis-dir-macros/macros/map"></metal:use>
+              </metal:block>
+            </metal:use>
           </tal:block>
-
-          <div class="event-sidebar">
-            <metal:use use-macro="context/@@seantis-dir-macros/macros/map"></metal:use>
-          </div>
 
           <div class="visualClear"></div>
 
