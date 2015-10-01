@@ -14,7 +14,10 @@ def enable_jquerytools_dateinput_js(context):
     # Ensure that jquerytools.dateinput.js is enabled, it might be disabled
     # with plone.app.jquerytools >= 1.7
 
-    jstool = getToolByName(context, 'portal_javascripts')
+    try:
+        jstool = getToolByName(context, 'portal_javascripts')
+    except AttributeError:
+        return
 
     resource_id = '++resource++plone.app.jquerytools.dateinput.js'
     resource = jstool.getResource(resource_id)
