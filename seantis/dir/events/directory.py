@@ -379,7 +379,7 @@ class EventsDirectoryView(directory.View):
             self.fired_event = True
 
     def groups(self, items):
-        """ Returns the given occurrences grouped by human_date. """
+        """ Returns the given occurrences grouped by human_date_short. """
         groups = grouped_occurrences(items, self.request)
         for key, items in groups.items():
             for ix, item in enumerate(items):

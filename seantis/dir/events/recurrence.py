@@ -127,6 +127,9 @@ class Occurrence(ProxyBase):
     def human_date(self, request):
         return dates.human_date(self.local_start, request)
 
+    def human_date_short(self, request):
+        return dates.human_date_short(self.local_start, request)
+
     def human_daterange(self, request):
         # occurrences split to days all get the same date string
         if all((self.unsplit_start, self.unsplit_end)):
@@ -143,10 +146,10 @@ class Occurrence(ProxyBase):
 
 
 def grouped_occurrences(occurrences, request):
-    """ Returns the given occurrences grouped by human_date. """
+    """ Returns the given occurrences grouped by human_date_short. """
 
     def groupkey(item):
-        date = item.human_date(request)
+        date = item.human_date_short(request)
         return date
 
     groups = groupby(sorted(occurrences, key=lambda o: o.start), groupkey)

@@ -3,11 +3,13 @@ Changelog
 ---------
 
 1.5.2 (unreleased)
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~
 
 - Change default date range filter value.
   [msom]
 
+- Add new shorted date formatting.
+  [msom]
 
 1.5.1 (2015-03-23)
 ~~~~~~~~~~~~~~~~~~

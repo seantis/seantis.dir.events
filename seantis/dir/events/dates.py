@@ -141,9 +141,24 @@ def human_date(date, request):
     weekday = calendar.getDayNames()[date.weekday()]
 
     if now.year == date.year:
-        return weekday + ' ' + date.strftime('%d.%m.')
+        return weekday + ' ' + date.strftime('%d.%m')
     else:
         return weekday + ' ' + date.strftime('%d.%m.%Y')
+
+
+def human_date_short(date, request):
+    now = default_now()
+
+    if now.date() == date.date():
+        return _(u'Today')
+
+    if now.date() + timedelta(days=1) == date.date():
+        return _(u'Tomorrow')
+
+    if now.year == date.year:
+        return date.strftime('%d.%m')
+    else:
+        return date.strftime('%d.%m.%Y')
 
 
 def human_daterange(start, end, request):
