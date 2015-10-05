@@ -13,4 +13,7 @@ script: bin/coverage run bin/test -s seantis.dir.events
 
 after_success:
     - pip install coveralls
+    - python -m coverage.pickle2json
     - coveralls
+
+sudo: false
