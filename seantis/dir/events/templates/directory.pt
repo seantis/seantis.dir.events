@@ -49,8 +49,8 @@
           <div class="event-navigation-filter" tal:define="filters view/filter_values; filtered view/used_terms">
             <form>
               <h2 i18n:translate="">Filter</h2>
-              <div tal:repeat="filter filters" tal:attributes="name filter">
-                <select>
+              <div tal:repeat="filter filters">
+                <select tal:attributes="name filter">
                   <option i18n:translate="" tal:condition="python: filter in filtered">Any</option>
                   <option i18n:translate="" tal:condition="python: filter not in filtered" selected="selected">Any</option>
                   <tal:block tal:repeat="category python: filters[filter]">
