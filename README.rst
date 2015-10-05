@@ -112,7 +112,7 @@ Coverage
 
 Latests PyPI Release
 --------------------
-.. image:: https://pypip.in/v/seantis.dir.events/badge.png
+.. image:: https://img.shields.io/pypi/v/seantis.dir.events.svg
   :target: https://crate.io/packages/seantis.dir.events
   :alt: Latest PyPI Release
 
