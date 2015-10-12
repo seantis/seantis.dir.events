@@ -23,6 +23,9 @@ Changelog
 - Enable jquerytools.dateinput.js.
   [msom]
 
+- Move events specific styles from plonetheme.onegov to this package.
+  [lknoepfel]
+
 1.5.1 (2015-03-23)
 ~~~~~~~~~~~~~~~~~~
 

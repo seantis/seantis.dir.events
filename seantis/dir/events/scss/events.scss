@@ -1,0 +1,373 @@
+/* @group seantis.dir.events */
+
+/* @group event directory: columns */
+.portaltype-seantis-dir-events-directory {
+
+  .event-banner {
+    float: left;
+    margin-bottom: 1rem;
+    width: 66%;
+  }
+
+  .your-event {
+    float: right;
+    margin-bottom: 1rem;
+    margin-top: 2rem;
+    width: 30%;
+  }
+
+  #directoryInfo {
+    border-top: 1px solid $lightgray3;
+    clear: both;
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+  }
+
+  .event-navigation {
+    float: left;
+    margin: 0 1rem 0 0;
+    width: 17%;
+  }
+
+  #directoryResultList {
+    float: left;
+    width: 50%;
+  }
+
+  .event-sidebar {
+    float: right;
+    width: 30%;
+  }
+
+  @media screen and (max-width: $screen-tablet-landscape) {
+    .event-banner,
+    .your-event,
+    .event-navigation,
+    #directoryResultList,
+    .event-sidebar {
+      clear: both;
+      float: none;
+      padding: 0;
+      width: 100%;
+    }
+  }
+}
+/* @end */
+
+
+/* @group event directory: banner */
+.portaltype-seantis-dir-events-directory {
+  #landingPageText {
+    h2 {
+      padding: 0;
+    }
+
+    div {
+      padding: 0;
+    }
+  }
+
+  #landingPageImage {
+    float: left;
+    width: 25.7575758%;
+
+    img {
+      max-width: 100%;
+    }
+  }
+}
+/* @end */
+
+
+/* @group event directory: submit your event */
+.your-event {
+  div {
+    background-color: $lightgray;
+    font-size: $font-size-18;
+    padding: 1em;
+  }
+}
+/* @end */
+
+
+/* @group event directory: event navigation (filters) */
+.event-navigation {
+  h2 {
+    @include gradient($navigation-gradient-from, $navigation-gradient-to);
+    border: 1px solid $lightgray2;
+    border-width: 1px 0;
+    font-size: 1em;
+    font-weight: normal;
+    margin-top: 0;
+    padding: .5em 1em;
+  }
+
+  input {
+    @include boxsizing(border-box);
+    margin: 0 0 1em;
+    max-width: 100%;
+  }
+
+  select {
+    @include inputfield();
+    height: 2em;
+    margin-bottom: 1em;
+    width: 100%;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    list-style: none;
+    margin-left: 1em;
+
+    a {
+      padding: .3em;
+    }
+
+    a.selected {
+      @include borderradius();
+      background: $highlight-color-light;
+    }
+  }
+
+  .event-navigation-search {
+    input {
+      width: 100%;
+    }
+  }
+
+  .custom-date {
+    margin-bottom: 1em;
+  }
+}
+/* @end */
+
+/* @group event directory: event results */
+#directoryResultList .eventgroup {
+
+  .directoryResult.event {
+    margin-bottom: 1rem;
+  }
+
+  .event-image {
+    float: left;
+    width: 25%;
+  }
+
+  .directoryInfoText {
+    float: left;
+    padding: 0;
+    width: 75%;
+  }
+
+  @media screen and (max-width: $screen-tablet-landscape) {
+    .event-image {
+      display: none;
+    }
+
+    .directoryInfoText {
+      width: 100%;
+    }
+  }
+
+  h2 {
+    border-top: 1px solid $lightgray2;
+    margin: 0 0 .3em;
+    padding-top: 1em;
+  }
+
+  img {
+    max-width: 90%;
+  }
+
+  .event-image-dummy {
+    div {
+      background-color: $lightgray;
+      color: $lightgray2;
+      font-size: $font-size-36;
+      font-weight: bold;
+      max-width: 90%;
+      padding: 1.5em 0;
+      text-align: center;
+      width: 128px;
+    }
+  }
+
+  .short {
+    margin-bottom: .8rem;
+  }
+
+  .locality {
+    color: $link-color;
+    display: inline;
+  }
+
+  .timerange {
+    clear: right;
+    display: inline-block;
+    float: right;
+    text-align: right;
+  }
+
+  .event-workflow {
+    margin-top: .8rem;
+
+    .event-state {
+      @include tag();
+      color: $text-color-light;
+    }
+  }
+}
+
+
+/* @group event: sidebar */
+.event-sidebar {
+  #directoryResultMap {
+    float: none;
+    width: 100%;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    li {
+      margin: 0;
+    }
+  }
+}
+/* @end */
+
+
+/* @group tags */
+.eventtag {
+  @include tag();
+}
+/* @end */
+
+
+/* @group event detail */
+.event-view {
+
+  .event-col-1 {
+    float: left;
+    margin: 1rem 1rem 0 0;
+    width: 17%;
+  }
+
+  .event-col-2 {
+    float: left;
+    width: 60%;
+  }
+
+  @media screen and (max-width: $screen-tablet-landscape) {
+    .event-col-1, .event-col-2 {
+      clear: both;
+      float: none;
+      padding: 0;
+      width: 100%;
+    }
+  }
+
+  h2 {
+    border-top: 1px solid $lightgray2;
+    margin-top: 1rem;
+    padding-top: 1.2em;
+  }
+
+  a {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  ul {
+    list-style: none;
+    margin: 0 !important;
+    padding: 0 !important;
+
+    li {
+        margin: 0;
+    }
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  .event-image-dummy {
+    div {
+      background-color: $lightgray;
+      color: $lightgray2;
+      font-size: $font-size-36;
+      font-weight: bold;
+      max-width: 100%;
+      padding: 2.5em 0;
+      text-align: center;
+    }
+  }
+
+  .short,
+  .long {
+    margin-bottom: 1em;
+  }
+
+  .location-url,
+  .contact {
+    margin-top: 1em;
+  }
+
+  #directoryResultMap {
+    float: none;
+    margin-top: 2em;
+    width: 100%;
+  }
+}
+/* @end */
+
+
+/* @group submit form */
+#formfield-form-widgets-cat1,
+#formfield-form-widgets-cat2 {
+  clear: none;
+  float: left;
+  width: 50%;
+}
+#formfield-form-widgets-cat1 > span,
+#formfield-form-widgets-cat2 > span {
+  display: block;
+}
+
+#formfield-form-widgets-submission_start_time input,
+#formfield-form-widgets-submission_end_time input,
+#formfield-form-widgets-submission_range_start_time input,
+#formfield-form-widgets-submission_range_end_time input {
+  width: 200px;
+}
+
+#formfield-form-widgets-submission_days .option {
+  float: left;
+  margin-right: .75em;
+}
+
+#formfield-form-widgets-submission_days .option input {
+  margin-right: 0;
+}
+/* @end */
+
+
+/* @group event preview form */
+.event-preview-form {
+    margin-top: 1em;
+}
+/* @end */
+
+
+/* @end */

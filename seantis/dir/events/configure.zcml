@@ -1,10 +1,12 @@
 <configure
     xmlns="http://namespaces.zope.org/zope"
     xmlns:grok="http://namespaces.zope.org/grok"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
     xmlns:browser="http://namespaces.zope.org/browser"
     xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
     xmlns:plone="http://namespaces.plone.org/plone"
     xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:theme="http://namespaces.zope.org/plonetheme.onegov"
     i18n_domain="seantis.dir.events">
 
     <i18n:registerTranslations directory="locales" />
@@ -30,6 +32,12 @@
     <browser:resourceDirectory
         name="seantis.dir.events.javascript"
         directory="js"/>
+
+
+    <configure zcml:condition="installed plonetheme.onegov">
+        <include package="plonetheme.onegov" />
+        <theme:add_scss path="scss/events.scss" />
+    </configure>
 
     <!-- Change add view -->
     <adapter
