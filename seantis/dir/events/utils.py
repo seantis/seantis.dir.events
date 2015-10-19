@@ -1,21 +1,18 @@
 import functools
-import time
 import json
 import pytz
+import string
+import time
 
+from collections import defaultdict
+from collective.geo.geographer.interfaces import IGeoreferenced
 from datetime import datetime
-
+from plone.namedfile import NamedFile
 from Products.CMFCore.utils import getToolByName
-
 from seantis.dir.base.interfaces import IDirectoryCatalog
-
+from zope import i18n
 from zope.component import getMultiAdapter, getAdapter
 from zope.component.hooks import getSite
-from zope import i18n
-
-from plone.namedfile import NamedFile
-
-from collective.geo.geographer.interfaces import IGeoreferenced
 
 
 def get_catalog(directory):
@@ -162,3 +159,33 @@ def webcal(fn):
         return url
 
     return wrapper
+
+
+def terms_match(item, term):
+    """ Returns if an item matches the given terms: At least one item of each
+    given categories must be present. """
+
+    item_categories = item.categories
+    if callable(item.categories):
+        item_categories = item.categories()
+
+    categories = defaultdict(list)
+    for category, label, value in item_categories:
+        if isinstance(value, basestring):
+            categories[category].extend((value.strip(), ))
+        else:
+            categories[category].extend(map(string.strip, value))
+
+    Found = True
+    for key, term_values in term.items():
+
+        if not term_values or term_values == '!empty':
+            continue
+
+        if isinstance(term_values, basestring):
+            term_values = (term_values, )
+
+        if not set(categories[key]) & set(term_values):
+            return False
+
+    return True

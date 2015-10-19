@@ -5,6 +5,9 @@ Changelog
 1.6 (unreleased)
 ~~~~~~~~~~~~~~~~
 
+- Allow filtering for multiple categories #90.
+  [msom]
+
 - Change layout of event list and detail for visual redesign.
   [msom]
 
