@@ -5,6 +5,9 @@ Changelog
 1.6 (unreleased)
 ~~~~~~~~~~~~~~~~
 
+- Allow filtering for multiple categories #90.
+  [msom]
+
 - Limit the range of different guidle categories. Implements #91.
   [msom]
 

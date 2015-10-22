@@ -25,7 +25,7 @@ from zope.lifecycleevent.interfaces import (
 )
 from Products.CMFCore.interfaces import IActionSucceededEvent
 
-from seantis.dir.base.catalog import DirectoryCatalog, is_exact_match
+from seantis.dir.base.catalog import DirectoryCatalog
 from seantis.dir.base.interfaces import IDirectoryCatalog
 from seantis.dir.base.utils import previous_and_next, cached_property
 
@@ -634,12 +634,6 @@ class EventsDirectoryCatalog(DirectoryCatalog):
             search = '"{}"*'.format(search)
             kw['SearchableText'] = search
 
-        elif term:
-            kw['categories'] = {
-                'query': term.values(),
-                'operator': 'and'
-            }
-
         subset = self.catalog(
             path={'query': self.path, 'depth': 1},
             object_provides=IEventsDirectoryItem.__identifier__,
@@ -665,7 +659,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
                 subset = [brain for brain in subset if brain.id in subset_ids]
 
         if term:
-            filter_key = partial(is_exact_match, term=term)
+            filter_key = partial(utils.terms_match, term=term)
             subset = filter(filter_key, subset)
 
         subset = sorted(subset, key=self.sortkey())
