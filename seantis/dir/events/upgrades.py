@@ -345,3 +345,8 @@ def upgrade_1016_to_1017(context):
 def upgrade_1017_to_1018(context):
     # Enable jquerytools.dateinput.js
     enable_jquerytools_dateinput_js(context)
+
+
+def upgrade_1018_to_1019(context):
+    # Delete imported guidle events if the default classifier is used
+    upgrade_1016_to_1017(context)

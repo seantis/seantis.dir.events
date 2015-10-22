@@ -304,6 +304,15 @@
        handler=".upgrades.upgrade_1017_to_1018">
     </genericsetup:upgradeStep>
 
+    <genericsetup:upgradeStep
+       title="Change guidle classifier"
+       description=""
+       source="1018"
+       destination="1019"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1018_to_1019">
+    </genericsetup:upgradeStep>
+
     <!-- Advanced Theme Adjustments through Diazo -->
     <plone:static name="seantis.dir.events.izug-theme"
       directory="themes/izug-theme" type="theme"

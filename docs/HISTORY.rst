@@ -5,6 +5,9 @@ Changelog
 1.6 (unreleased)
 ~~~~~~~~~~~~~~~~
 
+- Limit the range of different guidle categories. Implements #91.
+  [msom]
+
 - Change layout of event list and detail for visual redesign.
   [msom]
 

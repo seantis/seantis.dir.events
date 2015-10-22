@@ -29,7 +29,8 @@ class DefaultGuidleClassfier(object):
                 continue
 
             categories = set([
-                tag.attrib.get('name') for tag in classification.iterchildren()
+                tag.attrib.get('subcategoryName')
+                for tag in classification.iterchildren()
             ])
 
         return categories
