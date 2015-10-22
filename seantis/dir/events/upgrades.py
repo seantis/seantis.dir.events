@@ -348,45 +348,5 @@ def upgrade_1017_to_1018(context):
 
 
 def upgrade_1018_to_1019(context):
-    # todo: remove me!
-    catalog = getToolByName(context, 'portal_catalog')
-    categories = []
-    brains = catalog(object_provides=IEventsDirectoryItem.__identifier__)
-    for brain in brains:
-        event = brain.getObject()
-        categories.extend(event.cat1)
-    old_categories = sorted(set(categories))
-
-    # Only do something if the default guidle classifier is used
-    if not queryAdapter(EventsSourceGuidle(None), IGuidleClassifier):
-
-        # Delete imported guidle events
-        catalog = getToolByName(context, 'portal_catalog')
-        brains = catalog(object_provides=IExternalEvent.__identifier__)
-        for brain in brains:
-            event = brain.getObject()
-            if catalog(path={"query": event.source},
-                       portal_type='seantis.dir.events.sourceguidle'):
-                log.info('Deleting %s' % (event.Title()))
-                event.aq_parent.manage_delObjects([event.getId()])
-
-        # Rebuild suggested categories out of events
-        brains = catalog(object_provides=IEventsDirectory.__identifier__)
-        directories = [brain.getObject() for brain in brains]
-        for directory in directories:
-            categories = []
-            brains = catalog(
-                path={"query": '/'.join(directory.getPhysicalPath())},
-                object_provides=IEventsDirectoryItem.__identifier__
-            )
-
-            for brain in brains:
-                event = brain.getObject()
-                categories.extend(event.cat1)
-            directory.cat1_suggestions = sorted(set(categories))
-
-            log.info(
-                'Changed category suggesions for {}'.format(
-                    '/'.join(directory.getPhysicalPath())
-                )
-            )
+    # Delete imported guidle events if the default classifier is used
+    upgrade_1016_to_1017(context)
