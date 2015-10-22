@@ -16,11 +16,17 @@ msgstr "Ablehnen"
 msgid "Archive"
 msgstr "Archivieren"
 
+msgid "Archive permanently"
+msgstr "Permanent archivieren"
+
 msgid "Archive Event"
 msgstr "Veranstaltung archivieren"
 
 msgid "Archived"
 msgstr "Archiviert"
+
+msgid "Archived permanently"
+msgstr "Permanent archiviert"
 
 msgid "Hide"
 msgstr "Verstecken"

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-10-01 09:42+0000\n"
+"POT-Creation-Date: 2015-10-22 12:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,7 +30,7 @@ msgstr "Importquellenbedingung hinzufügen"
 msgid "Adjust"
 msgstr "Korrigieren"
 
-#: ./templates/directory.pt:117
+#: ./templates/directory.pt:126
 msgid "All Events"
 msgstr "Alle Veranstaltungen"
 
@@ -54,7 +54,7 @@ msgstr "Eine Importquellenbedingung überprüft einen Inhalt auf dessen Import-Q
 msgid "Any"
 msgstr "Egal"
 
-#: ./item.py:127
+#: ./item.py:130
 msgid "Attachment ${number}"
 msgstr "Anhang ${number}"
 
@@ -79,7 +79,7 @@ msgstr "Lösche automatisch bereits importierte Veranstaltungen, welche nicht me
 msgid "Back"
 msgstr "Zurück"
 
-#: ./templates/directory.pt:113
+#: ./templates/directory.pt:122
 msgid "Calendar Export"
 msgstr "Kalender Export"
 
@@ -107,7 +107,7 @@ msgstr "Abbrechen"
 msgid "Cancel Event Submission"
 msgstr "Abbrechen"
 
-#: ./templates/directory.pt:129
+#: ./templates/directory.pt:138
 msgid "Configure Imports"
 msgstr "Imports konfigurieren"
 
@@ -140,7 +140,7 @@ msgid "Custom date range"
 msgstr "Benutzerdefinierte Zeitspanne"
 
 #: ./interfaces.py:281
-#: ./templates/directory.pt:66
+#: ./templates/directory.pt:69
 msgid "Date"
 msgstr "Datum"
 
@@ -148,7 +148,7 @@ msgstr "Datum"
 msgid "Detail Preview"
 msgstr "Details-Vorschau"
 
-#: ./templates/directory.pt:33
+#: ./templates/directory.pt:32
 msgid "Dou you have an event to share?"
 msgstr "Sie organisieren eine Veranstaltung?"
 
@@ -220,15 +220,15 @@ msgstr "Veranstaltungs-Meldung abgebrochen"
 msgid "Event submitted"
 msgstr "Veranstaltung gemeldet"
 
-#: ./item.py:179
+#: ./item.py:182
 msgid "Event was archived"
 msgstr "Die Veranstaltung wurde archiviert"
 
-#: ./item.py:181
+#: ./item.py:184
 msgid "Event was hidden"
 msgstr "Die Veranstaltung wurde versteckt"
 
-#: ./item.py:178
+#: ./item.py:181
 msgid "Event was published"
 msgstr "Die Veranstaltung wurde veröffentlicht"
 
@@ -248,11 +248,11 @@ msgstr "Veranstaltungs-Verzeichnis Eintrag"
 msgid "Events directory URL"
 msgstr "URL des Veranstaltungs-Verzeichnis"
 
-#: ./templates/directory.pt:122
+#: ./templates/directory.pt:131
 msgid "Events matching the current filter"
 msgstr "Veranstaltungen die dem aktuellen Filter entsprechen"
 
-#: ./templates/directory.pt:52
+#: ./templates/directory.pt:51
 msgid "Filter"
 msgstr "Filtern"
 
@@ -260,7 +260,7 @@ msgstr "Filtern"
 msgid "Filter events"
 msgstr "Filtere Veranstaltungen"
 
-#: ./templates/directory.pt:122
+#: ./templates/directory.pt:131
 msgid "Filtered Events"
 msgstr "Gefilterte Veranstaltungen"
 
@@ -304,7 +304,7 @@ msgstr "Guidle Import"
 msgid "Guidle URL to download from"
 msgstr "Guidle-URL"
 
-#: ./directory.py:431
+#: ./directory.py:433
 msgid "Hidden"
 msgstr "Versteckt"
 
@@ -336,7 +336,7 @@ msgstr "Bild"
 msgid "Images"
 msgstr "Bilder"
 
-#: ./templates/directory.pt:93
+#: ./templates/directory.pt:102
 msgid "Import"
 msgstr "Import"
 
@@ -417,11 +417,11 @@ msgstr "Name"
 msgid "No changes were applied"
 msgstr "Keine Änderungen"
 
-#: ./directory.py:233
+#: ./directory.py:235
 msgid "No events for the current daterange"
 msgstr "Keine Veranstaltungen gefunden."
 
-#: ./directory.py:235
+#: ./directory.py:237
 msgid "No events for the current state"
 msgstr "Keine Veranstaltungen gefunden."
 
@@ -458,11 +458,11 @@ msgstr "Bitte geben Sie mindestens einen Vorschlag ein"
 msgid "Prices"
 msgstr "Preise"
 
-#: ./item.py:180
+#: ./item.py:183
 msgid "Publication of event was denied"
 msgstr "Die Veranstaltung wurde abgelehnt"
 
-#: ./directory.py:430
+#: ./directory.py:432
 msgid "Published"
 msgstr "Veröffentlicht"
 
@@ -482,7 +482,7 @@ msgstr "Sa"
 msgid "Save Event"
 msgstr "Veranstaltung speichern"
 
-#: ./templates/directory.pt:43
+#: ./templates/directory.pt:42
 msgid "Search"
 msgstr "Suche"
 
@@ -522,7 +522,7 @@ msgstr "Von"
 msgid "Starts each day at"
 msgstr "Täglich von"
 
-#: ./templates/directory.pt:86
+#: ./templates/directory.pt:95
 msgid "State"
 msgstr "Status"
 
@@ -538,11 +538,11 @@ msgstr "So"
 msgid "Submit"
 msgstr "Melden"
 
-#: ./templates/directory.pt:34
+#: ./templates/directory.pt:33
 msgid "Submit Your Event"
 msgstr "Veranstaltung melden"
 
-#: ./directory.py:425
+#: ./directory.py:427
 msgid "Submitted"
 msgstr "Gemeldet"
 
@@ -571,7 +571,7 @@ msgstr "Vorgeschlagene Werte für die Wo-Kategorie"
 msgid "Synchronise deleted events"
 msgstr "Synchronisiere gelöschte Veranstaltungen"
 
-#: ./directory.py:476
+#: ./directory.py:478
 #: ./interfaces.py:87
 msgid "Terms and Conditions"
 msgstr "Allgemeine Geschäftsbedingungen"

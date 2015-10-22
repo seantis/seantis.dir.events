@@ -350,3 +350,10 @@ def upgrade_1017_to_1018(context):
 def upgrade_1018_to_1019(context):
     # Delete imported guidle events if the default classifier is used
     upgrade_1016_to_1017(context)
+
+
+def upgrade_1019_to_1020(context):
+    # Add workflow
+    setup = getToolByName(context, 'portal_setup')
+    profile = 'profile-seantis.dir.events:default'
+    setup.runImportStepFromProfile(profile, 'workflow')

@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <dc-workflow xmlns:i18n="http://xml.zope.org/namespaces/i18n"
              i18n:domain="plone"
-             workflow_id="events_workflow" 
-             title="seantis.dir.events workflow" 
-             description="" 
-             state_variable="review_state" 
-             initial_state="preview" 
+             workflow_id="events_workflow"
+             title="seantis.dir.events workflow"
+             description=""
+             state_variable="review_state"
+             initial_state="preview"
              manager_bypass="False"
              i18n:attributes="title; description">
 
@@ -58,6 +58,21 @@
 
     <state state_id="archived" title="Archived" i18n:attributes="title">
         <exit-transition transition_id="publish" />
+        <exit-transition transition_id="archive_permanently" />
+
+        <permission-map name="View" acquired="False">
+            <permission-role>Manager</permission-role>
+            <permission-role>Reviewer</permission-role>
+        </permission-map>
+
+        <permission-map name="Modify portal content" acquired="False">
+            <permission-role>Manager</permission-role>
+            <permission-role>Reviewer</permission-role>
+        </permission-map>
+    </state>
+
+    <state state_id="archived_permanently" title="Archived permanently" i18n:attributes="title">
+        <exit-transition transition_id="publish" />
 
         <permission-map name="View" acquired="False">
             <permission-role>Manager</permission-role>
@@ -91,7 +106,7 @@
             <guard-expression>python: here.allow_action('submit')</guard-expression>
         </guard>
     </transition>
- 
+
     <transition transition_id="publish" title="Publish Event" new_state="published" trigger="USER" before_script="" after_script="" i18n:attributes="title">
         <action url="%(content_url)s/content_status_modify?workflow_action=publish" category="workflow" icon="" i18n:translate="">Publish</action>
         <guard>
@@ -113,6 +128,14 @@
         <guard>
             <guard-permission>Review portal content</guard-permission>
             <guard-expression>python: here.allow_action('archive')</guard-expression>
+        </guard>
+    </transition>
+
+    <transition transition_id="archive_permanently" title="Archive Event Permanently" new_state="archived_permanently" trigger="USER" before_script="" after_script="" i18n:attributes="title">
+        <action url="%(content_url)s/content_status_modify?workflow_action=archive_permanently" category="workflow" icon="" i18n:translate="">Archive permanently</action>
+        <guard>
+            <guard-permission>Review portal content</guard-permission>
+            <guard-expression>python: here.allow_action('archive_permanently')</guard-expression>
         </guard>
     </transition>
 

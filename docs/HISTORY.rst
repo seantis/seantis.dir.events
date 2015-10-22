@@ -8,6 +8,9 @@ Changelog
 - Allow filtering for multiple categories #90.
   [msom]
 
+- Add a new workflow state: archived permanently.
+  [msom]
+
 - Limit the range of different guidle categories. Implements #91.
   [msom]
 

@@ -313,6 +313,15 @@
        handler=".upgrades.upgrade_1018_to_1019">
     </genericsetup:upgradeStep>
 
+    <genericsetup:upgradeStep
+       title="Add new workflow state: archived permanently"
+       description=""
+       source="1019"
+       destination="1020"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1019_to_1020">
+    </genericsetup:upgradeStep>
+
     <!-- Advanced Theme Adjustments through Diazo -->
     <plone:static name="seantis.dir.events.izug-theme"
       directory="themes/izug-theme" type="theme"

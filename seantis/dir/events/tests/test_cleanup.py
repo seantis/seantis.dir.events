@@ -143,6 +143,32 @@ class TestCleanup(IntegrationTestCase):
         self.assertEqual(run(), [])
         self.assertEqual(len(self.catalog.catalog()), 1)
 
+    def test_keep_permanently_archived_events(self):
+
+        run = lambda: cleanup_scheduler.remove_archived_events(
+            self.directory, dryrun=False
+        )
+
+        archived = self.create_event()
+        archived.submit()
+        archived.publish()
+        archived.archive()
+        archived.archive_permanently()
+
+        # Age event
+        archived.start = to_utc(datetime.utcnow() - timedelta(days=31))
+        archived.end = to_utc(datetime.utcnow() - timedelta(days=31))
+        archived.reindexObject(idxs=['start', 'end'])
+
+        # Test run
+        archived.start = to_utc(datetime.utcnow() - timedelta(days=31))
+        archived.end = to_utc(datetime.utcnow() - timedelta(days=31))
+        archived.reindexObject(idxs=['start', 'end'])
+
+        self.assertEqual(len(self.catalog.catalog()), 2)
+        self.assertEqual(run(), [])
+        self.assertEqual(len(self.catalog.catalog()), 2)
+
     def test_remove_past_imported_events(self):
 
         run_dry = lambda: cleanup_scheduler.remove_past_imported_events(

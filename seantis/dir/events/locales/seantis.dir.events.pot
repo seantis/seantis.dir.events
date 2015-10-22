@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-10-01 09:42+0000\n"
+"POT-Creation-Date: 2015-10-22 12:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,7 +33,7 @@ msgstr ""
 msgid "Adjust"
 msgstr ""
 
-#: ./templates/directory.pt:117
+#: ./templates/directory.pt:126
 msgid "All Events"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgstr ""
 msgid "Any"
 msgstr ""
 
-#: ./item.py:127
+#: ./item.py:130
 msgid "Attachment ${number}"
 msgstr ""
 
@@ -82,7 +82,7 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: ./templates/directory.pt:113
+#: ./templates/directory.pt:122
 msgid "Calendar Export"
 msgstr ""
 
@@ -110,7 +110,7 @@ msgstr ""
 msgid "Cancel Event Submission"
 msgstr ""
 
-#: ./templates/directory.pt:129
+#: ./templates/directory.pt:138
 msgid "Configure Imports"
 msgstr ""
 
@@ -143,7 +143,7 @@ msgid "Custom date range"
 msgstr ""
 
 #: ./interfaces.py:281
-#: ./templates/directory.pt:66
+#: ./templates/directory.pt:69
 msgid "Date"
 msgstr ""
 
@@ -151,7 +151,7 @@ msgstr ""
 msgid "Detail Preview"
 msgstr ""
 
-#: ./templates/directory.pt:33
+#: ./templates/directory.pt:32
 msgid "Dou you have an event to share?"
 msgstr ""
 
@@ -223,15 +223,15 @@ msgstr ""
 msgid "Event submitted"
 msgstr ""
 
-#: ./item.py:179
+#: ./item.py:182
 msgid "Event was archived"
 msgstr ""
 
-#: ./item.py:181
+#: ./item.py:184
 msgid "Event was hidden"
 msgstr ""
 
-#: ./item.py:178
+#: ./item.py:181
 msgid "Event was published"
 msgstr ""
 
@@ -251,11 +251,11 @@ msgstr ""
 msgid "Events directory URL"
 msgstr ""
 
-#: ./templates/directory.pt:122
+#: ./templates/directory.pt:131
 msgid "Events matching the current filter"
 msgstr ""
 
-#: ./templates/directory.pt:52
+#: ./templates/directory.pt:51
 msgid "Filter"
 msgstr ""
 
@@ -263,7 +263,7 @@ msgstr ""
 msgid "Filter events"
 msgstr ""
 
-#: ./templates/directory.pt:122
+#: ./templates/directory.pt:131
 msgid "Filtered Events"
 msgstr ""
 
@@ -307,7 +307,7 @@ msgstr ""
 msgid "Guidle URL to download from"
 msgstr ""
 
-#: ./directory.py:431
+#: ./directory.py:433
 msgid "Hidden"
 msgstr ""
 
@@ -339,7 +339,7 @@ msgstr ""
 msgid "Images"
 msgstr ""
 
-#: ./templates/directory.pt:93
+#: ./templates/directory.pt:102
 msgid "Import"
 msgstr ""
 
@@ -420,11 +420,11 @@ msgstr ""
 msgid "No changes were applied"
 msgstr ""
 
-#: ./directory.py:233
+#: ./directory.py:235
 msgid "No events for the current daterange"
 msgstr ""
 
-#: ./directory.py:235
+#: ./directory.py:237
 msgid "No events for the current state"
 msgstr ""
 
@@ -461,11 +461,11 @@ msgstr ""
 msgid "Prices"
 msgstr ""
 
-#: ./item.py:180
+#: ./item.py:183
 msgid "Publication of event was denied"
 msgstr ""
 
-#: ./directory.py:430
+#: ./directory.py:432
 msgid "Published"
 msgstr ""
 
@@ -485,7 +485,7 @@ msgstr ""
 msgid "Save Event"
 msgstr ""
 
-#: ./templates/directory.pt:43
+#: ./templates/directory.pt:42
 msgid "Search"
 msgstr ""
 
@@ -525,7 +525,7 @@ msgstr ""
 msgid "Starts each day at"
 msgstr ""
 
-#: ./templates/directory.pt:86
+#: ./templates/directory.pt:95
 msgid "State"
 msgstr ""
 
@@ -541,11 +541,11 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: ./templates/directory.pt:34
+#: ./templates/directory.pt:33
 msgid "Submit Your Event"
 msgstr ""
 
-#: ./directory.py:425
+#: ./directory.py:427
 msgid "Submitted"
 msgstr ""
 
@@ -574,7 +574,7 @@ msgstr ""
 msgid "Synchronise deleted events"
 msgstr ""
 
-#: ./directory.py:476
+#: ./directory.py:478
 #: ./interfaces.py:87
 msgid "Terms and Conditions"
 msgstr ""

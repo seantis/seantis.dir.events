@@ -44,6 +44,15 @@ class TestWorkflow(IntegrationTestCase):
         event.publish()
         self.assertEqual(event.state, 'published')
 
+        event.archive()
+        self.assertEqual(event.state, 'archived')
+
+        event.archive_permanently()
+        self.assertEqual(event.state, 'archived_permanently')
+
+        event.publish()
+        self.assertEqual(event.state, 'published')
+
         alsoProvides(event, IExternalEvent)
 
         event.hide()
@@ -57,6 +66,7 @@ class TestWorkflow(IntegrationTestCase):
         action = lambda a: event.do_action(a)
 
         self.assertRaises(WorkflowException, action, 'archive')
+        self.assertRaises(WorkflowException, action, 'archive_permanently')
         self.assertRaises(WorkflowException, action, 'deny')
         self.assertRaises(WorkflowException, action, 'hide')
         self.assertRaises(WorkflowException, action, 'publish')
@@ -64,17 +74,26 @@ class TestWorkflow(IntegrationTestCase):
         event.submit()
 
         self.assertRaises(WorkflowException, action, 'archive')
+        self.assertRaises(WorkflowException, action, 'archive_permanently')
         self.assertRaises(WorkflowException, action, 'hide')
         self.assertRaises(WorkflowException, action, 'submit')
 
         event.publish()
 
+        self.assertRaises(WorkflowException, action, 'archive_permanently')
         self.assertRaises(WorkflowException, action, 'deny')
         self.assertRaises(WorkflowException, action, 'hide')
         self.assertRaises(WorkflowException, action, 'publish')
         self.assertRaises(WorkflowException, action, 'submit')
 
         event.archive()
+
+        self.assertRaises(WorkflowException, action, 'archive')
+        self.assertRaises(WorkflowException, action, 'deny')
+        self.assertRaises(WorkflowException, action, 'hide')
+        self.assertRaises(WorkflowException, action, 'submit')
+
+        event.archive_permanently()
 
         self.assertRaises(WorkflowException, action, 'archive')
         self.assertRaises(WorkflowException, action, 'deny')

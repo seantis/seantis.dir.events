@@ -113,6 +113,9 @@ class EventsDirectoryItem(item.DirectoryItem):
     def archive(self):
         self.do_action("archive")
 
+    def archive_permanently(self):
+        self.do_action("archive_permanently")
+
     def hide(self):
         self.do_action("hide")
 
