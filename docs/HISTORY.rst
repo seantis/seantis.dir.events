@@ -11,6 +11,9 @@ Changelog
 - Limit the range of different guidle categories. Implements #91.
   [msom]
 
+- Hide OpenLayer polygon drawing tools. Implements #93.
+  [msom]
+
 - Change layout of event list and detail for visual redesign.
   [msom]
 

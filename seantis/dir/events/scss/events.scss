@@ -360,6 +360,13 @@
 #formfield-form-widgets-submission_days .option input {
   margin-right: 0;
 }
+
+.event-submit-form .olControlDrawFeaturePathItemInactive,
+.event-submit-form .olControlDrawFeaturePolygonItemInactive,
+.event-submit-form .olControlDrawFeaturePathItemActive,
+.event-submit-form .olControlDrawFeaturePolygonItemActive {
+  display: none;
+}
 /* @end */
 
 
