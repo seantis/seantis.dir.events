@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-10-22 12:26+0000\n"
+"POT-Creation-Date: 2015-10-27 10:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,7 +26,7 @@ msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 msgid "Add import source condition"
 msgstr "Importquellenbedingung hinzufügen"
 
-#: ./form.py:855
+#: ./form.py:872
 msgid "Adjust"
 msgstr "Korrigieren"
 
@@ -75,7 +75,7 @@ msgstr "Anhänge"
 msgid "Automatically delete already imported events if no longer present."
 msgstr "Lösche automatisch bereits importierte Veranstaltungen, welche nicht mehr vorhanden sind."
 
-#: ./form.py:910
+#: ./form.py:928
 msgid "Back"
 msgstr "Zurück"
 
@@ -99,11 +99,11 @@ msgstr "Kalender Export nur für diese Wiederholung"
 msgid "Calendars (iCal)"
 msgstr "Kalender (iCal)"
 
-#: ./form.py:509
+#: ./form.py:525
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ./form.py:675
+#: ./form.py:691
 msgid "Cancel Event Submission"
 msgstr "Abbrechen"
 
@@ -127,11 +127,11 @@ msgstr "Kontakt Name"
 msgid "Contact Phone"
 msgstr "Kontakt Telefon"
 
-#: ./form.py:488
+#: ./form.py:504
 msgid "Continue"
 msgstr "Weiter"
 
-#: ./form.py:342
+#: ./form.py:343
 msgid "Coordinates"
 msgstr "Koordinaten"
 
@@ -144,7 +144,7 @@ msgstr "Benutzerdefinierte Zeitspanne"
 msgid "Date"
 msgstr "Datum"
 
-#: ./form.py:764
+#: ./form.py:780
 msgid "Detail Preview"
 msgstr "Details-Vorschau"
 
@@ -172,15 +172,15 @@ msgstr "Bis"
 msgid "Ends each day at"
 msgstr "Täglich bis"
 
-#: ./form.py:158
+#: ./form.py:159
 msgid "Enter"
 msgstr "Erfassen"
 
-#: ./form.py:210
+#: ./form.py:211
 msgid "Event"
 msgstr "Veranstaltung"
 
-#: ./form.py:584
+#: ./form.py:600
 msgid "Event Preview Updated"
 msgstr "Veranstaltungs Vorschau Aktualisiert"
 
@@ -188,19 +188,19 @@ msgstr "Veranstaltungs Vorschau Aktualisiert"
 msgid "Event Report Link"
 msgstr "\"Veranstaltung melden\" Link"
 
-#: ./form.py:704
+#: ./form.py:720
 msgid "Event Saved"
 msgstr "Veranstaltung gespeichert"
 
-#: ./form.py:881
+#: ./form.py:898
 msgid "Event Submission Finish"
 msgstr "Veranstaltung melden"
 
-#: ./form.py:437
+#: ./form.py:453
 msgid "Event Submission Form"
 msgstr "Veranstaltung erfassen"
 
-#: ./form.py:833
+#: ./form.py:849
 msgid "Event Submission Preview"
 msgstr "Veranstaltungs-Vorschau"
 
@@ -208,15 +208,15 @@ msgstr "Veranstaltungs-Vorschau"
 msgid "Event Website"
 msgstr "Veranstaltungs-Webseite"
 
-#: ./form.py:266
+#: ./form.py:267
 msgid "Event date"
 msgstr "Veranstaltungs-Datum"
 
-#: ./form.py:389
+#: ./form.py:405
 msgid "Event submission cancelled"
 msgstr "Veranstaltungs-Meldung abgebrochen"
 
-#: ./form.py:907
+#: ./form.py:925
 msgid "Event submitted"
 msgstr "Veranstaltung gemeldet"
 
@@ -264,7 +264,7 @@ msgstr "Filtere Veranstaltungen"
 msgid "Filtered Events"
 msgstr "Gefilterte Veranstaltungen"
 
-#: ./form.py:160
+#: ./form.py:161
 msgid "Finish"
 msgstr "Abschliessen"
 
@@ -312,7 +312,7 @@ msgstr "Versteckt"
 msgid "Housenumber"
 msgstr "Hausnummer"
 
-#: ./form.py:813
+#: ./form.py:829
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr "Ich stimme den <a target='_blank' href='${url}'>Allgemeinen Geschäftsbedingungen</a> zu"
 
@@ -344,11 +344,11 @@ msgstr "Import"
 msgid "Import remotely imported events"
 msgstr "Importiere importierte Veranstaltungen"
 
-#: ./form.py:684
+#: ./form.py:700
 msgid "Imported events may not be edited, no changes where applied"
 msgstr "Importierte Veranstaltungen können nicht editiert werden. Es wurden keine Änderungen gespeichert."
 
-#: ./form.py:350
+#: ./form.py:351
 msgid "Information"
 msgstr "Informationen"
 
@@ -356,15 +356,15 @@ msgstr "Informationen"
 msgid "Limit"
 msgstr "Limit"
 
-#: ./form.py:777
+#: ./form.py:793
 msgid "List Preview"
 msgstr "Listen-Vorschau"
 
-#: ./form.py:785
+#: ./form.py:801
 msgid "List Preview (${number} Occurrences)"
 msgstr "Listen-Vorschau (${number} Wiederholungen)"
 
-#: ./form.py:789
+#: ./form.py:805
 msgid "List Preview (No Occurrences)"
 msgstr "Listen-Vorschau (Keine Wiederholungen)"
 
@@ -373,7 +373,7 @@ msgstr "Listen-Vorschau (Keine Wiederholungen)"
 msgid "Locality"
 msgstr "Lokalität"
 
-#: ./form.py:322
+#: ./form.py:323
 msgid "Location"
 msgstr "Ort"
 
@@ -385,7 +385,7 @@ msgstr "Webseite der Lokalität"
 msgid "Long Description"
 msgstr "Lange Beschreibung"
 
-#: ./form.py:332
+#: ./form.py:333
 msgid "Map"
 msgstr "Karte"
 
@@ -413,7 +413,7 @@ msgstr "Mo"
 msgid "Name"
 msgstr "Name"
 
-#: ./form.py:586
+#: ./form.py:602
 msgid "No changes were applied"
 msgstr "Keine Änderungen"
 
@@ -424,6 +424,10 @@ msgstr "Keine Veranstaltungen gefunden."
 #: ./directory.py:237
 msgid "No events for the current state"
 msgstr "Keine Veranstaltungen gefunden."
+
+#: ./form.py:393
+msgid "No location set. The event will not be displayed in the map."
+msgstr "Keine Koordinaten gesetzt, die Veranstaltung wird nicht auf der Karte erscheinen."
 
 #: ./interfaces.py:273
 msgid "On a single day"
@@ -478,7 +482,7 @@ msgstr "Wiederholende Veranstaltung"
 msgid "Sa"
 msgstr "Sa"
 
-#: ./form.py:666
+#: ./form.py:682
 msgid "Save Event"
 msgstr "Veranstaltung speichern"
 
@@ -486,7 +490,7 @@ msgstr "Veranstaltung speichern"
 msgid "Search"
 msgstr "Suche"
 
-#: ./form.py:438
+#: ./form.py:454
 msgid "Send us your events and we will publish them"
 msgstr "Senden Sie uns Ihre Veranstaltung und wir werden sie veröffentlichen"
 
@@ -534,7 +538,7 @@ msgstr "Strasse"
 msgid "Su"
 msgstr "So"
 
-#: ./form.py:895
+#: ./form.py:913
 msgid "Submit"
 msgstr "Melden"
 
@@ -546,7 +550,7 @@ msgstr "Veranstaltung melden"
 msgid "Submitted"
 msgstr "Gemeldet"
 
-#: ./form.py:794
+#: ./form.py:810
 #: ./templates/macros.pt:221
 msgid "Submitter"
 msgstr "Erfasser"
@@ -625,7 +629,7 @@ msgstr "Ticket"
 msgid "Ticket / Registration Website"
 msgstr "Ticket / Registrations Webseite"
 
-#: ./form.py:246
+#: ./form.py:247
 msgid "Title of event"
 msgstr "Titel der Veranstaltung"
 
@@ -657,7 +661,7 @@ msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 msgid "Up to 140 characters"
 msgstr "Bis zu 140 Zeichen"
 
-#: ./form.py:159
+#: ./form.py:160
 msgid "Verify"
 msgstr "Kontrollieren"
 
@@ -699,4 +703,3 @@ msgstr "Sie dürfen nicht mehr als ${max} Wiederholungen erfassen"
 #: ./interfaces.py:196
 msgid "Zipcode"
 msgstr "PLZ"
-

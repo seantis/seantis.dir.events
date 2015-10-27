@@ -31,6 +31,7 @@ from z3c.form.browser.radio import RadioFieldWidget
 
 from collective.z3cform.mapwidget.widget import MapFieldWidget
 from collective.geo.contentlocations.interfaces import IGeoManager
+from collective.geo.geographer.interfaces import IGeoreferenced
 
 from plone.formwidget.datetime.z3cform.widget import DateWidget
 from plone.app.event.base import default_timezone
@@ -379,6 +380,21 @@ class EventSubmissionForm(extensible.ExtensibleForm):
             IGeoManager(content).setCoordinates(c['type'], c['coordinates'])
         else:
             IGeoManager(content).removeCoordinates()
+
+    def check_coordinates_present(self):
+        try:
+            geo = IGeoreferenced(self.context)
+            if geo.type:
+                return
+        except TypeError:
+            pass
+
+        self.context.plone_utils.addPortalMessage(
+            _(
+                u'No location set. The event will not be displayed in the'
+                u' map.'
+            ), 'warning'
+        )
 
     def handle_cancel(self):
         try:
@@ -841,6 +857,7 @@ class PreviewForm(EventSubmissionForm, form.AddForm, NavigationMixin):
         return current_token(self.request)
 
     def update(self, *args, **kwargs):
+        self.check_coordinates_present()
         verify_token(self.context, self.request)
         super(PreviewForm, self).update(*args, **kwargs)
 
@@ -889,6 +906,7 @@ class FinishForm(EventSubmissionForm, form.AddForm, NavigationMixin):
         return current_token(self.request)
 
     def update(self, *args, **kwargs):
+        self.check_coordinates_present()
         verify_token(self.context, self.request)
         super(FinishForm, self).update(*args, **kwargs)
 

@@ -14,6 +14,9 @@ Changelog
 - Limit the range of different guidle categories. Implements #91.
   [msom]
 
+- Show a warning when no coordinates are set.
+  [msom]
+
 - Hide OpenLayer polygon drawing tools. Implements #93.
   [msom]
 

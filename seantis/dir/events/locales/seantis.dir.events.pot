@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-10-22 12:26+0000\n"
+"POT-Creation-Date: 2015-10-27 10:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,7 +29,7 @@ msgstr ""
 msgid "Add import source condition"
 msgstr ""
 
-#: ./form.py:855
+#: ./form.py:872
 msgid "Adjust"
 msgstr ""
 
@@ -78,7 +78,7 @@ msgstr ""
 msgid "Automatically delete already imported events if no longer present."
 msgstr ""
 
-#: ./form.py:910
+#: ./form.py:928
 msgid "Back"
 msgstr ""
 
@@ -102,11 +102,11 @@ msgstr ""
 msgid "Calendars (iCal)"
 msgstr ""
 
-#: ./form.py:509
+#: ./form.py:525
 msgid "Cancel"
 msgstr ""
 
-#: ./form.py:675
+#: ./form.py:691
 msgid "Cancel Event Submission"
 msgstr ""
 
@@ -130,11 +130,11 @@ msgstr ""
 msgid "Contact Phone"
 msgstr ""
 
-#: ./form.py:488
+#: ./form.py:504
 msgid "Continue"
 msgstr ""
 
-#: ./form.py:342
+#: ./form.py:343
 msgid "Coordinates"
 msgstr ""
 
@@ -147,7 +147,7 @@ msgstr ""
 msgid "Date"
 msgstr ""
 
-#: ./form.py:764
+#: ./form.py:780
 msgid "Detail Preview"
 msgstr ""
 
@@ -175,15 +175,15 @@ msgstr ""
 msgid "Ends each day at"
 msgstr ""
 
-#: ./form.py:158
+#: ./form.py:159
 msgid "Enter"
 msgstr ""
 
-#: ./form.py:210
+#: ./form.py:211
 msgid "Event"
 msgstr ""
 
-#: ./form.py:584
+#: ./form.py:600
 msgid "Event Preview Updated"
 msgstr ""
 
@@ -191,19 +191,19 @@ msgstr ""
 msgid "Event Report Link"
 msgstr ""
 
-#: ./form.py:704
+#: ./form.py:720
 msgid "Event Saved"
 msgstr ""
 
-#: ./form.py:881
+#: ./form.py:898
 msgid "Event Submission Finish"
 msgstr ""
 
-#: ./form.py:437
+#: ./form.py:453
 msgid "Event Submission Form"
 msgstr ""
 
-#: ./form.py:833
+#: ./form.py:849
 msgid "Event Submission Preview"
 msgstr ""
 
@@ -211,15 +211,15 @@ msgstr ""
 msgid "Event Website"
 msgstr ""
 
-#: ./form.py:266
+#: ./form.py:267
 msgid "Event date"
 msgstr ""
 
-#: ./form.py:389
+#: ./form.py:405
 msgid "Event submission cancelled"
 msgstr ""
 
-#: ./form.py:907
+#: ./form.py:925
 msgid "Event submitted"
 msgstr ""
 
@@ -267,7 +267,7 @@ msgstr ""
 msgid "Filtered Events"
 msgstr ""
 
-#: ./form.py:160
+#: ./form.py:161
 msgid "Finish"
 msgstr ""
 
@@ -315,7 +315,7 @@ msgstr ""
 msgid "Housenumber"
 msgstr ""
 
-#: ./form.py:813
+#: ./form.py:829
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr ""
 
@@ -347,11 +347,11 @@ msgstr ""
 msgid "Import remotely imported events"
 msgstr ""
 
-#: ./form.py:684
+#: ./form.py:700
 msgid "Imported events may not be edited, no changes where applied"
 msgstr ""
 
-#: ./form.py:350
+#: ./form.py:351
 msgid "Information"
 msgstr ""
 
@@ -359,15 +359,15 @@ msgstr ""
 msgid "Limit"
 msgstr ""
 
-#: ./form.py:777
+#: ./form.py:793
 msgid "List Preview"
 msgstr ""
 
-#: ./form.py:785
+#: ./form.py:801
 msgid "List Preview (${number} Occurrences)"
 msgstr ""
 
-#: ./form.py:789
+#: ./form.py:805
 msgid "List Preview (No Occurrences)"
 msgstr ""
 
@@ -376,7 +376,7 @@ msgstr ""
 msgid "Locality"
 msgstr ""
 
-#: ./form.py:322
+#: ./form.py:323
 msgid "Location"
 msgstr ""
 
@@ -388,7 +388,7 @@ msgstr ""
 msgid "Long Description"
 msgstr ""
 
-#: ./form.py:332
+#: ./form.py:333
 msgid "Map"
 msgstr ""
 
@@ -416,7 +416,7 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: ./form.py:586
+#: ./form.py:602
 msgid "No changes were applied"
 msgstr ""
 
@@ -426,6 +426,10 @@ msgstr ""
 
 #: ./directory.py:237
 msgid "No events for the current state"
+msgstr ""
+
+#: ./form.py:393
+msgid "No location set. The event will not be displayed in the map."
 msgstr ""
 
 #: ./interfaces.py:273
@@ -481,7 +485,7 @@ msgstr ""
 msgid "Sa"
 msgstr ""
 
-#: ./form.py:666
+#: ./form.py:682
 msgid "Save Event"
 msgstr ""
 
@@ -489,7 +493,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: ./form.py:438
+#: ./form.py:454
 msgid "Send us your events and we will publish them"
 msgstr ""
 
@@ -537,7 +541,7 @@ msgstr ""
 msgid "Su"
 msgstr ""
 
-#: ./form.py:895
+#: ./form.py:913
 msgid "Submit"
 msgstr ""
 
@@ -549,7 +553,7 @@ msgstr ""
 msgid "Submitted"
 msgstr ""
 
-#: ./form.py:794
+#: ./form.py:810
 #: ./templates/macros.pt:221
 msgid "Submitter"
 msgstr ""
@@ -628,7 +632,7 @@ msgstr ""
 msgid "Ticket / Registration Website"
 msgstr ""
 
-#: ./form.py:246
+#: ./form.py:247
 msgid "Title of event"
 msgstr ""
 
@@ -660,7 +664,7 @@ msgstr ""
 msgid "Up to 140 characters"
 msgstr ""
 
-#: ./form.py:159
+#: ./form.py:160
 msgid "Verify"
 msgstr ""
 
