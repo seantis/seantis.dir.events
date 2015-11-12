@@ -26,9 +26,6 @@ Changelog
 - Integrate search and filter into sidebar, disable the viewlet.
   [msom]
 
-- Change default date range filter value.
-  [msom]
-
 - Add new shorted date formatting.
   [msom]
 
@@ -40,6 +37,15 @@ Changelog
 
 - Move events specific styles from plonetheme.onegov to this package.
   [lknoepfel]
+
+1.5.2 (2015-11-12)
+~~~~~~~~~~~~~~~~~~
+
+- Change default date range filter value.
+  [msom]
+
+- Add CSRF protection on special URLs #94.
+  [msom]
 
 1.5.1 (2015-03-23)
 ~~~~~~~~~~~~~~~~~~

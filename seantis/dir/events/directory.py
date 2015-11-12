@@ -1,31 +1,26 @@
 import logging
 log = logging.getLogger('seantis.dir.events')
 
-from five import grok
-
+from AccessControl import getSecurityManager
 from datetime import date
 from dateutil.parser import parse
-
-from zope.component import queryAdapter
-from zope.interface import implements
-from zope.event import notify
+from five import grok
+from plone.protect import createToken
+from Products.CMFCore import permissions
 from Products.CMFPlone.PloneBatch import Batch
-
 from seantis.dir.base import directory
 from seantis.dir.base import session
 from seantis.dir.base.utils import cached_property, unicode_collate_sortkey
-
+from seantis.dir.events import _
+from seantis.dir.events import dates
+from seantis.dir.events import utils
 from seantis.dir.events.interfaces import (
     IEventsDirectory, IActionGuard, IResourceViewedEvent, IExternalEvent
 )
-
 from seantis.dir.events.recurrence import grouped_occurrences
-from seantis.dir.events import dates
-from seantis.dir.events import utils
-from seantis.dir.events import _
-
-from AccessControl import getSecurityManager
-from Products.CMFCore import permissions
+from zope.component import queryAdapter
+from zope.event import notify
+from zope.interface import implements
 
 
 class ResourceViewedEvent(object):
@@ -108,6 +103,7 @@ class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
 
         if 'rebuild' in self.request:
             log.info('rebuilding ZCatalog')
+            self.request.set('_authenticator', createToken())
             self.catalog.catalog.clearFindAndRebuild()
 
         if 'reindex' in self.request:
@@ -131,9 +127,9 @@ class EventsDirectoryIndexView(grok.View, directory.DirectoryCatalogMixin):
             if dateindex:
                 result.append('-> dateindex')
 
-                for date in sorted(dateindex):
+                for d in sorted(dateindex):
                     result.append('%s -> %s' % (
-                        date.strftime('%y.%m.%d'), dateindex[date])
+                        d.strftime('%y.%m.%d'), dateindex[d])
                     )
 
         return '\n'.join(result)

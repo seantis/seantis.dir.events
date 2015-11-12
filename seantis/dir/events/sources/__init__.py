@@ -1,32 +1,23 @@
-import os
-
 import logging
 log = logging.getLogger('seantis.dir.events')
 
 import hashlib
-import transaction
 import isodate
+import os
 import pytz
-
-from functools32 import lru_cache
-
-from five import grok
-
-from datetime import datetime, timedelta
-from urllib2 import urlopen, HTTPError
-from itertools import groupby
-from random import shuffle
-from threading import Lock
-from plone.synchronize import synchronized
+import transaction
 
 from collective.geo.geographer.interfaces import IWriteGeoreferenced
-from Products.CMFCore.utils import getToolByName
-from plone.namedfile import NamedFile, NamedImage
+from datetime import datetime, timedelta
+from five import grok
+from functools32 import lru_cache
+from itertools import groupby
 from plone.dexterity.utils import createContentInContainer
-from zope.interface import alsoProvides
-from zope.annotation.interfaces import IAnnotations
-
-from seantis.plonetools import unrestricted
+from plone.namedfile import NamedFile, NamedImage
+from plone.protect import createToken
+from plone.synchronize import synchronized
+from Products.CMFCore.utils import getToolByName
+from random import shuffle
 from seantis.dir.base import directory
 from seantis.dir.base.interfaces import (
     IDirectoryCatalog,
@@ -39,6 +30,11 @@ from seantis.dir.events.interfaces import (
     IEventsDirectory,
     NoImportDataException
 )
+from seantis.plonetools import unrestricted
+from threading import Lock
+from urllib2 import urlopen, HTTPError
+from zope.annotation.interfaces import IAnnotations
+from zope.interface import alsoProvides
 
 
 class ExternalEventImporter(object):
@@ -458,7 +454,6 @@ class ExternalEventImportScheduler(object):
         finally:
             context.reindexObject()
             IDirectoryCatalog(context).reindex()
-            # log.info('importing sources from %s finished' % (import_directory))
             self.handle_run(import_directory, do_stop=True)
 
         return len_imported, len_deleted, len_sources
@@ -485,6 +480,7 @@ class EventsDirectoryFetchView(grok.View, directory.DirectoryCatalogMixin):
 
         if do_run:
             with unrestricted.run_as('Manager'):
+                self.request.set('_authenticator', createToken())
                 imported, deleted, sources = import_scheduler.run(
                     self.context,
                     reimport,
