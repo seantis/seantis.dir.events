@@ -8,6 +8,8 @@ Changelog
 - Change default date range filter value.
   [msom]
 
+- Add CSRF protection on special URLs #94.
+  [msom]
 
 1.5.1 (2015-03-23)
 ~~~~~~~~~~~~~~~~~~

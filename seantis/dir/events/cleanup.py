@@ -1,24 +1,20 @@
 import os
 
-from logging import getLogger
-log = getLogger('seantis.dir.events')
-
 from datetime import datetime, timedelta
-
-from threading import Lock
-
 from five import grok
-
+from logging import getLogger
+from plone.protect import createToken
 from plone.synchronize import synchronized
-
-from seantis.plonetools import unrestricted
-
 from seantis.dir.base.interfaces import IDirectoryCatalog
 from seantis.dir.events.dates import to_utc
 from seantis.dir.events.interfaces import (
     IEventsDirectoryItem, IEventsDirectory, IExternalEvent
 )
 from seantis.dir.events.recurrence import has_future_occurrences
+from seantis.plonetools import unrestricted
+from threading import Lock
+
+log = getLogger('seantis.dir.events')
 
 
 class CleanupScheduler(object):
@@ -230,7 +226,6 @@ class CleanupView(grok.View):
     grok.require('zope2.View')
 
     def render(self):
-
         self.request.response.setHeader("Content-type", "text/plain")
 
         # dryrun must be disabled explicitly using &run=1
@@ -241,6 +236,7 @@ class CleanupView(grok.View):
         # leak any information and it's behavior cannot be altered by the
         # user. This allows for easy use via cronjobs.
         with unrestricted.run_as('Manager'):
+            self.request.set('_authenticator', createToken())
             cleanup_scheduler.run(self.context, dryrun, force_run)
 
         return u''
