@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.5.2 (unreleased)
+1.5.2 (2015-11-12)
 ~~~~~~~~~~~~~~~~~~
 
 - Change default date range filter value.
