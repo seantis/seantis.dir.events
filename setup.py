@@ -28,8 +28,9 @@ teamraum_require = [
 tests_require = [
     'collective.betterbrowser>=0.4',
     'collective.testcaselayer',
+    'mock',
     'plone.app.testing',
-    'mock'
+    'unittest2',
 ]
 
 setup(name=name, version=version, description=description,
