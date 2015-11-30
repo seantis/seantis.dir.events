@@ -187,8 +187,8 @@
 
   .event-image-dummy {
     div {
-      background-color: $lightgray;
-      color: $lightgray2;
+      background-color: $lightgray2;
+      color: $lightgray3;
       font-size: $font-size-36;
       font-weight: bold;
       max-width: 90%;
@@ -199,7 +199,7 @@
   }
 
   .short {
-    margin-bottom: .8rem;
+    margin-bottom: .5rem;
   }
 
   .locality {
@@ -214,8 +214,13 @@
     text-align: right;
   }
 
+  .event-tags {
+    margin-top: .5rem;
+  }
+
   .event-workflow {
-    margin-top: .8rem;
+    clear: both;
+    margin-top: .5rem;
 
     .event-state {
       @include tag();
@@ -305,8 +310,8 @@
 
   .event-image-dummy {
     div {
-      background-color: $lightgray;
-      color: $lightgray2;
+      background-color: $lightgray2;
+      color: $lightgray3;
       font-size: $font-size-36;
       font-weight: bold;
       max-width: 100%;

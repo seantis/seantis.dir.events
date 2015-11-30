@@ -71,6 +71,12 @@
                   </div>
                 </div>
 
+                <div class="event-tags">
+                  <tal:block repeat="tag python: item.eventtags()">
+                    <a class="eventtag" tal:attributes="href python: tag[1]"><tal:block replace="structure python: tag[0]"></tal:block></a>
+                  </tal:block>
+                </div>
+
                 <div class="event-workflow" tal:define="actions python: item.list_actions()" tal:condition="python: not is_preview and actions">
                   <div class="event-state" tal:content="python: view.translate(item.state.title(), 'plone')"></div>
                   <div class="event-actions">
