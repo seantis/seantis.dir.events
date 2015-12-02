@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.6 (unreleased)
+1.6 (2015-12-02)
 ~~~~~~~~~~~~~~~~
 
 - Allow filtering for multiple categories #90.
