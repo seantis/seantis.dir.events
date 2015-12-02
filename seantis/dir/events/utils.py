@@ -2,11 +2,10 @@ import functools
 import json
 import pytz
 import string
-import time
+import urllib
 
 from collections import defaultdict
 from collective.geo.geographer.interfaces import IGeoreferenced
-from datetime import datetime
 from plone.namedfile import NamedFile
 from Products.CMFCore.utils import getToolByName
 from seantis.dir.base.interfaces import IDirectoryCatalog
@@ -176,7 +175,6 @@ def terms_match(item, term):
         else:
             categories[category].extend(map(string.strip, value))
 
-    Found = True
     for key, term_values in term.items():
 
         if not term_values or term_values == '!empty':
@@ -189,3 +187,9 @@ def terms_match(item, term):
             return False
 
     return True
+
+
+def recurrence_url(directory, event):
+    baseurl = directory.absolute_url()
+    baseurl += '?range=this_and_next_year&search=true&searchtext=%s'
+    return baseurl % urllib.quote(event.short_description.encode('utf-8'))

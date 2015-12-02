@@ -256,9 +256,7 @@ class View(core.View):
         return self.context.recurrence and True or False
 
     def recurrence_url(self, event):
-        baseurl = self.context.get_parent().absolute_url()
-        baseurl += '?range=this_and_next_year&search=true&searchtext=%s'
-        return baseurl % urllib.quote(event.short_description.encode('utf-8'))
+        return utils.recurrence_url(self.context.get_parent(), event)
 
     @property
     def date(self):

@@ -3,46 +3,21 @@
 /* @group event directory: columns */
 .portaltype-seantis-dir-events-directory {
 
-  .event-banner {
-    float: left;
-    margin-bottom: 1rem;
-    width: 66%;
-  }
-
-  .your-event {
-    float: right;
-    margin-bottom: 1rem;
-    margin-top: 2rem;
-    width: 30%;
-  }
-
   #directoryInfo {
-    border-top: 1px solid $lightgray3;
     clear: both;
-    margin-top: 1rem;
-    padding-top: 1.5rem;
-  }
-
-  .event-navigation {
-    float: left;
-    margin: 0 1rem 0 0;
-    width: 17%;
   }
 
   #directoryResultList {
     float: left;
-    width: 50%;
+    width: 60%;
   }
 
   .event-sidebar {
     float: right;
-    width: 30%;
+    width: 35%;
   }
 
   @media screen and (max-width: $screen-tablet-landscape) {
-    .event-banner,
-    .your-event,
-    .event-navigation,
     #directoryResultList,
     .event-sidebar {
       clear: both;
@@ -56,23 +31,30 @@
 
 
 /* @group event directory: banner */
-.portaltype-seantis-dir-events-directory {
-  #landingPageText {
-    h2 {
-      padding: 0;
-    }
 
-    div {
-      padding: 0;
-    }
+.portaltype-seantis-dir-events-directory {
+  #landingPageIntro {
+    margin-bottom: 2em;
   }
 
-  #landingPageImage {
+  .event-banner-image {
     float: left;
-    width: 25.7575758%;
+    padding-bottom: 1em;
+    padding-right: 2em;
+    width: 15%;
+  }
 
-    img {
-      max-width: 100%;
+  .event-banner-text {
+    float: left;
+    width: 60%;
+  }
+
+  @media screen and (max-width: $screen-tablet-landscape) {
+    .event-banner-image {
+      display: none;
+    }
+    .event-banner-text {
+      width: 100%;
     }
   }
 }
@@ -81,6 +63,8 @@
 
 /* @group event directory: submit your event */
 .your-event {
+  margin-bottom: 1rem;
+
   div {
     background-color: $lightgray;
     font-size: $font-size-18;
@@ -92,58 +76,153 @@
 
 /* @group event directory: event navigation (filters) */
 .event-navigation {
-  h2 {
-    @include gradient($navigation-gradient-from, $navigation-gradient-to);
-    border: 1px solid $lightgray2;
-    border-width: 1px 0;
-    font-size: 1em;
-    font-weight: normal;
-    margin-top: 0;
-    padding: .5em 1em;
-  }
+  border-bottom: 1px solid $lightgray2;
+  border-top: 1px solid $lightgray2;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  padding-top: 13px;
 
-  input {
-    @include boxsizing(border-box);
-    margin: 0 0 1em;
-    max-width: 100%;
-  }
-
-  select {
-    @include inputfield();
-    height: 2em;
-    margin-bottom: 1em;
-    padding: 0 0 0 .2em;
-    width: 100%;
-  }
-
-  ul {
-    list-style: none;
-    padding: 0;
-  }
-
-  li {
-    list-style: none;
-    margin-left: 1em;
-
-    a {
-      padding: .3em;
-    }
-
-    a.selected {
-      @include borderradius();
-      background: $highlight-color-light;
-    }
+  .event-navigation-search,
+  .event-navigation-filter {
+    float: left;
+    line-height: 2em;
+    margin-right: 30px;
   }
 
   .event-navigation-search {
-    input {
-      width: 100%;
+    .LSBox {
+      display: inline-block;
+      line-height: 1.4em;
+      position: relative;
+
+      &:before {
+        right: .6em;
+      }
+    }
+
+    a.reset {
+      font-size: 1.4em;
+      vertical-align: middle;
+
+      &:after {
+        @include base_icon("\34");
+        padding-left: 10px;
+        vertical-align: middle;
+      }
+
+      &:hover {
+        text-decoration: none;
+      }
     }
   }
 
-  .custom-date {
-    margin-bottom: 1em;
+  .event-navigation-filter {
+    span {
+      color: $link-color;
+      cursor: pointer;
+      font-size: 1.1em;
+      vertical-align: middle;
+
+      &.empty:after {
+        @include base_icon("\e80c");
+        padding-left: 10px;
+      }
+
+      &.selected {
+        font-weight: bold;
+      }
+    }
+
+    a.reset {
+      font-size: 1.4em;
+      vertical-align: middle;
+
+      &:after {
+        @include base_icon("\34");
+        padding-left: 10px;
+        vertical-align: middle;
+      }
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    ul {
+      @include ul('plain');
+      @include boxshadow(0 .25em .5em -.25em $darkgray);
+
+      background-color: $page-background;
+      border: 1px solid $breadcrumbs-border;
+      display: none;
+      margin-top: 8px;
+      padding: 8px 0;
+      position: absolute;
+      z-index: 100;
+
+      li {
+        margin: 0;
+        min-width: 10em;
+
+        a {
+          cursor: pointer;
+          display: inline-block;
+          padding: 3px 20px;
+        }
+
+        &.selected a {
+          color: $text-color;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+      }
+    }
+
+    input {
+      @include boxsizing(border-box);
+      margin-left: 2em;
+      margin-right: 1em;
+      max-width: 100%;
+    }
   }
+
+  @media screen and (max-width: $screen-tablet-landscape) {
+    border-bottom: 0;
+
+    .event-navigation-search,
+    .event-navigation-filter {
+      clear: both;
+      float: none;
+      padding: .5em 0;
+      width: 100%;
+    }
+
+    .event-navigation-search {
+      input {
+        width: 100%;
+      }
+
+      .LSBox {
+        margin-right: 1em;
+        width: 85%;
+
+        &:before {
+          right: 0;
+          top: .4em;
+        }
+      }
+    }
+
+    .event-navigation-filter {
+      ul {
+        @include boxshadow(none);
+        border: 0;
+        position: static;
+      }
+    }
+  }
+
 }
 /* @end */
 
@@ -165,16 +244,6 @@
     width: 75%;
   }
 
-  @media screen and (max-width: $screen-tablet-landscape) {
-    .event-image {
-      display: none;
-    }
-
-    .directoryInfoText {
-      width: 100%;
-    }
-  }
-
   h2 {
     border-top: 1px solid $lightgray2;
     margin: 0 0 .3em;
@@ -182,7 +251,7 @@
   }
 
   img {
-    max-width: 90%;
+    max-width: 85%;
   }
 
   .event-image-dummy {
@@ -191,10 +260,10 @@
       color: $lightgray3;
       font-size: $font-size-36;
       font-weight: bold;
-      max-width: 90%;
+      max-width: 85%;
       padding: 1.5em 0;
       text-align: center;
-      width: 128px;
+      width: 200px;
     }
   }
 
@@ -212,6 +281,10 @@
     display: inline-block;
     float: right;
     text-align: right;
+
+    a.recurring:after {
+      @include base_icon("\e900");
+    }
   }
 
   .event-tags {
@@ -225,6 +298,24 @@
     .event-state {
       @include tag();
       color: $text-color-light;
+    }
+  }
+
+  @media screen and (max-width: $screen-tablet-landscape) {
+    .event-image {
+      display: none;
+    }
+
+    .directoryInfoText {
+      width: 100%;
+    }
+
+    .locality {
+      display: block;
+    }
+
+    .timerange {
+      float: none;
     }
   }
 }
@@ -300,7 +391,7 @@
     padding: 0 !important;
 
     li {
-        margin: 0;
+      margin: 0;
     }
   }
 
@@ -317,6 +408,13 @@
       max-width: 100%;
       padding: 2.5em 0;
       text-align: center;
+      width: 100%;
+    }
+  }
+
+  @media screen and (max-width: $screen-tablet-landscape) {
+    .event-image-dummy {
+      display: none;
     }
   }
 
@@ -346,6 +444,7 @@
   float: left;
   width: 50%;
 }
+
 #formfield-form-widgets-cat1 > span,
 #formfield-form-widgets-cat2 > span {
   display: block;
@@ -378,7 +477,7 @@
 
 /* @group event preview form */
 .event-preview-form {
-    margin-top: 1em;
+  margin-top: 1em;
 }
 /* @end */
 

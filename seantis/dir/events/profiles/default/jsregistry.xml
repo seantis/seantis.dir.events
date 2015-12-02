@@ -30,4 +30,10 @@
         insert-after="++resource++seantis.dir.events.javascript/dependencies.js"
     />
 
+    <javascript id="++resource++seantis.dir.events.javascript/filter.js"
+        enabled="True"
+        expression="python: 'seantis.dir.events' in object.portal_type"
+        insert-after="++resource++seantis.dir.events.javascript/dependencies.js"
+    />
+
 </object>

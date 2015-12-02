@@ -18,6 +18,7 @@ from seantis.dir.events.interfaces import (
     IEventsDirectory, IActionGuard, IResourceViewedEvent, IExternalEvent
 )
 from seantis.dir.events.recurrence import grouped_occurrences
+from urllib import quote_plus
 from zope.component import queryAdapter
 from zope.event import notify
 from zope.interface import implements
@@ -182,6 +183,28 @@ class EventsDirectoryView(directory.View):
                            key=unicode_collate_sortkey()),
         }
 
+    def filter_url(self, category, value=None):
+        url = u'{}?filter=filter'.format(self.directory.absolute_url())
+
+        any_filter_set = False
+        for cat, val in session.get_last_filter(self.directory).iteritems():
+            if cat == category or val == '!empty':
+                continue
+
+            any_filter_set = True
+            url = url + u'&{}={} ()'.format(
+                cat, quote_plus(val.encode('utf-8'))
+            )
+
+        if any_filter_set or value:
+            if not value:
+                value = '!empty'
+            return url + u'&{}={} ()'.format(
+                category, quote_plus(value.encode('utf-8'))
+            )
+        else:
+            return self.directory.absolute_url() + '?reset=true'
+
     def get_last_daterange(self):
         """ Returns the last selected daterange. """
         return session.get_session(self.context, 'daterange') \
@@ -233,8 +256,23 @@ class EventsDirectoryView(directory.View):
             return _(u'No events for the current state')
 
     @property
+    def default_daterange(self):
+        return dates.default_daterange
+
+    @property
     def selected_daterange(self):
         return self.catalog.daterange
+
+    @property
+    def selected_daterange_title(self):
+        if self.catalog.daterange == 'custom':
+            return '{} - {}'.format(
+                self.catalog.custom_start_date().strftime('%d.%m.%Y'),
+                self.catalog.custom_end_date().strftime('%d.%m.%Y')
+            )
+        return dict([(r[0], r[1]) for r in self.dateranges]).get(
+            self.catalog.daterange, ''
+        )
 
     @property
     def dateranges(self):
@@ -267,6 +305,9 @@ class EventsDirectoryView(directory.View):
         url += '&to=' + self.custom_date_to
         return url
 
+    def recurrence_url(self, event):
+        return utils.recurrence_url(self.context, event)
+
     @cached_property
     def locale(self):
         # borrowed from widget collective.z3form.datetimewidget.DateWidget
@@ -295,9 +336,8 @@ class EventsDirectoryView(directory.View):
 
     @property
     def import_sources(self):
-        sources = [(source.Title, source.id) for
+        sources = [(source.id, source.Title) for
                    source in self.catalog.import_sources()]
-        sources.insert(0, (u'-', ''))
         return sources
 
     def import_source_url(self, source):
@@ -306,6 +346,10 @@ class EventsDirectoryView(directory.View):
     @property
     def selected_import_source(self):
         return self.catalog.import_source
+
+    @property
+    def selected_import_source_title(self):
+        return dict(self.import_sources).get(self.selected_import_source, '')
 
     @property
     def import_sources_config(self):
@@ -398,12 +442,6 @@ class EventsDirectoryView(directory.View):
     def translate(self, text, domain="seantis.dir.events"):
         return utils.translate(self.request, text, domain)
 
-    @property
-    def show_state_filters(self):
-        return getSecurityManager().checkPermission(
-            permissions.ReviewPortalContent, self.context
-        )
-
     @cached_property
     def batch(self):
         # use a custom batch whose items are lazy evaluated on __getitem__
@@ -415,8 +453,18 @@ class EventsDirectoryView(directory.View):
         return Batch(lazy_list, directory.ITEMSPERPAGE, start, orphan=0)
 
     @property
+    def show_state_filters(self):
+        return getSecurityManager().checkPermission(
+            permissions.ReviewPortalContent, self.context
+        )
+
+    @property
     def selected_state(self):
         return self.catalog.state
+
+    @property
+    def selected_state_title(self):
+        return dict(self.state_filter_list()).get(self.selected_state, '')
 
     def state_filter_list(self):
 
@@ -431,6 +479,10 @@ class EventsDirectoryView(directory.View):
 
     def state_url(self, method):
         return self.directory.absolute_url() + '?state=' + method
+
+    @property
+    def default_state(self):
+        return 'published'
 
     @utils.webcal
     def ical_url(self, for_all):

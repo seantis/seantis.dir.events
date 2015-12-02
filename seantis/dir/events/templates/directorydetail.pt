@@ -1,10 +1,10 @@
 <div xmlns:tal="http://xml.zope.org/namespaces/tal" xmlns:i18n="http://xml.zope.org/namespaces/i18n" i18n:domain="seantis.dir.contacts" id="landingPageIntro" tal:condition="python: context.subtitle or context.description or context.image">
-    <div id="landingPageText">
-      <h2 tal:content="context/subtitle" />
-      <div id="landingPageImage" tal:condition="context/image">
+    <div class="event-banner">
+      <h2 tal:condition="context/subtitle" tal:content="context/subtitle" />
+      <div tal:condition="context/image" class="event-banner-image">
         <img tal:replace="structure context/@@images/image/mini" />
       </div>
-      <div tal:content="structure python:view.safe_html(context.html_description())" />
+      <div class="event-banner-text" tal:content="structure python:view.safe_html(context.html_description())" />
     </div>
     <div style="clear: both;"></div>
 </div>

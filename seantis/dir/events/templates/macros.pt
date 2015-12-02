@@ -43,7 +43,7 @@
 
               <div class="event-image" >
                 <a tal:attributes="href string:${item/absolute_url}/@@images/image" tal:condition="item/image">
-                  <img tal:replace="structure item/@@images/image/thumb" />
+                  <img tal:replace="structure item/@@images/image/mini" />
                 </a>
                 <div tal:condition="python: not item.image" class="event-image-dummy">
                   <div tal:content="python: item.local_start.strftime('%d.%m')" />
@@ -67,6 +67,9 @@
                     <div class="locality" tal:content="item/locality"></div>
                     <div class="timerange">
                       <tal:block tal:content="python: group[0]" /> @ <tal:block tal:content="python: item.human_daterange(request)" />
+                      <tal:block condition="python: not is_preview and item.recurrence">
+                          <a tal:attributes="href python: view.recurrence_url(item)" title="Show all occurrences" i18n:attributes="title" class="recurring" />
+                      </tal:block>
                     </div>
                   </div>
                 </div>

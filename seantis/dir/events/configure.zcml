@@ -322,6 +322,15 @@
        handler=".upgrades.upgrade_1019_to_1020">
     </genericsetup:upgradeStep>
 
+    <genericsetup:upgradeStep
+       title="Add new Javascript Files"
+       description=""
+       source="1020"
+       destination="1021"
+       profile="seantis.dir.events:default"
+       handler=".upgrades.upgrade_1020_to_1021">
+    </genericsetup:upgradeStep>
+
     <!-- Advanced Theme Adjustments through Diazo -->
     <plone:static name="seantis.dir.events.izug-theme"
       directory="themes/izug-theme" type="theme"

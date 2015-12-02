@@ -21,91 +21,101 @@
     <div tal:replace="structure provider:plone.belowcontenttitle" />
     <div tal:replace="structure provider:plone.abovecontentbody" />
 
-    <div class="event-banner">
-      <tal:block>
-          <div tal:replace="structure provider:seantis.dir.base.directory.viewletmanager"/>
-      </tal:block>
-    </div>
-
-    <div class="your-event">
-      <div>
-        <p i18n:translate="">Dou you have an event to share?</p>
-        <a i18n:translate="" tal:attributes="href view/submit_event_link" class="button">Submit Your Event</a>
-      </div>
-    </div>
+    <div tal:replace="structure provider:seantis.dir.base.directory.viewletmanager"/>
 
     <div id="directoryInfo" class="responsive-events" tal:define="groups python: view.groups(view.batch);">
 
         <div class="event-navigation">
 
           <div class="event-navigation-search">
-            <h2 i18n:translate="">Search</h2>
             <form>
-                <input type="text" name="searchtext" tal:attributes="value view/used_searchtext"/>
-                <input type="hidden" class="context" name="search" value="search"/>
+                <div class="LSBox">
+                    <input type="text" id="searchtext" name="searchtext" tal:attributes="value view/used_searchtext"/>
+                    <input type="hidden" class="context" name="search" value="search"/>
+                </div>
+                <a tal:condition="view/used_searchtext" tal:attributes="href python: context.absolute_url() + '?reset=true'" class="reset"/>
             </form>
           </div>
 
-          <div class="event-navigation-filter" tal:define="filters view/filter_values; filtered view/used_terms">
-            <form>
-              <h2 i18n:translate="">Filter</h2>
-              <div tal:repeat="filter filters">
-                <select tal:attributes="name filter">
-                  <option i18n:translate="" tal:condition="python: filter in filtered">Any</option>
-                  <option i18n:translate="" tal:condition="python: filter not in filtered" selected="selected">Any</option>
-                  <tal:block tal:repeat="category python: filters[filter]">
-                    <option tal:condition="python: category == filtered.get(filter, '')" tal:content="category" selected="selected"/>
-                    <option tal:condition="python: category != filtered.get(filter, '')" tal:content="category"/>
-                  </tal:block>
-                </select>
-              </div>
-              <div>
-                <input type="submit" name="filter" i18n:attributes="value Filter" />
-              </div>
-            </form>
-          </div>
+          <tal:block tal:define="filters view/filter_values">
+              <div tal:repeat="category filters" class="event-navigation-filter">
 
-          <div class="event-navigation-dates">
-              <h2 i18n:translate="">Date</h2>
-              <ul>
-                  <tal:block tal:repeat="method view/dateranges">
-                      <li tal:condition="python: method[0] != 'custom'">
-                        <a tal:content="python: method[1]" tal:attributes="href python: view.daterange_url(method[0]); class python: method[0] == view.selected_daterange and 'selected event-navigation-link' or 'event-navigation-link'; title python: method[2]"></a>
-                      </li>
-                      <li tal:condition="python: method[0] == 'custom'">
-                          <div class="custom-date">
-                            <a tal:content="python: method[1]" tal:attributes="href view/custom_date_url; class python: method[0] == view.selected_daterange and 'selected event-navigation-link link-custom-date' or 'event-navigation-link link-custom-date'; title python: method[2]"></a>
-                          </div>
-                          <div>
-                            <input class="custom-date-from" name="from" type="date"
-                                   tal:attributes="value view/custom_date_from; data-locale view/locale/lang; data-months view/locale/months; data-short-months view/locale/shortmonths; data-days view/locale/days; data-short-days view/locale/shortdays; data-format view/locale/format; data-min-date view/custom_date_min; data-max-date view/custom_date_max"
-                                   />
-                          </div>
-                          <div>
-                            <input class="custom-date-to" name="to" type="date"
-                                   tal:attributes="value view/custom_date_to; data-locale view/locale/lang; data-months view/locale/months; data-short-months view/locale/shortmonths; data-days view/locale/days; data-short-days view/locale/shortdays; data-format view/locale/format; data-min-date view/custom_date_from; data-max-date view/custom_date_max"
-                                   />
-                          </div>
-                      </li>
+                  <tal:block tal:define="label python: view.labels[category];
+                                         values python: filters[category];
+                                         selected python: category in view.used_terms;
+                                         current python: view.used_terms.get(category, '')">
+                      <span tal:condition="python: not selected" tal:content="label" class="empty"/>
+                      <span tal:condition="selected" class="selected"><tal:block tal:content="label" />: <tal:block tal:content="current" /></span>
+                      <a tal:condition="selected" tal:attributes="href python: view.filter_url(category, '')" class="reset"/>
+                      <ul>
+                          <tal:block repeat="value values">
+                              <li>
+                                  <a tal:attributes="href python: view.filter_url(category, value)" tal:content="value" />
+                              </li>
+                          </tal:block>
+                      </ul>
                   </tal:block>
-              </ul>
-          </div>
+              </div>
+          </tal:block>
 
-          <div class="event-navigation-admin" tal:condition="view/show_state_filters">
-            <h2 i18n:translate="">State</h2>
+          <div class="event-navigation-filter event-navigation-dates"
+               tal:define="selected python: view.selected_daterange != view.default_daterange">
+            <span tal:condition="python: not selected" class="empty" i18n:translate="">Date</span>
+            <span tal:condition="selected" class="selected"><tal:block i18n:translate="">Date</tal:block>: <tal:block tal:content="view/selected_daterange_title" /></span>
+            <a tal:condition="selected" tal:attributes="href python: view.daterange_url(view.default_daterange)" class="reset"/>
             <ul>
-              <li tal:repeat="filter view/state_filter_list"><a tal:content="python: filter[1]" tal:attributes="href python: view.state_url(filter[0]); class python: filter[0] == view.selected_state and 'selected event-navigation-link' or 'event-navigation-link'"></a></li>
+                <tal:block tal:repeat="method view/dateranges">
+                    <li tal:condition="python: method[0] != 'custom'">
+                      <a tal:content="python: method[1]" tal:attributes="href python: view.daterange_url(method[0])"></a>
+                    </li>
+                    <li tal:condition="python: method[0] == 'custom'">
+                        <div class="custom-date">
+                          <a tal:content="python: method[1]" tal:attributes="href view/custom_date_url" class="link-custom-date"></a>
+                        </div>
+                        <div>
+                          <input class="custom-date-from" name="from" type="date"
+                                 tal:attributes="value view/custom_date_from; data-locale view/locale/lang; data-months view/locale/months; data-short-months view/locale/shortmonths; data-days view/locale/days; data-short-days view/locale/shortdays; data-format view/locale/format; data-min-date view/custom_date_min; data-max-date view/custom_date_max"
+                                 />
+                        </div>
+                        <div>
+                          <input class="custom-date-to" name="to" type="date"
+                                 tal:attributes="value view/custom_date_to; data-locale view/locale/lang; data-months view/locale/months; data-short-months view/locale/shortmonths; data-days view/locale/days; data-short-days view/locale/shortdays; data-format view/locale/format; data-min-date view/custom_date_from; data-max-date view/custom_date_max"
+                                 />
+                        </div>
+                    </li>
+                </tal:block>
             </ul>
           </div>
 
-          <div class="event-navigation-sources" tal:condition="view/show_import_sources">
-              <h2 i18n:translate="">Import</h2>
+          <div class="event-navigation-filter"
+               tal:condition="view/show_state_filters"
+               tal:define="selected python: view.selected_state != view.default_state">
+            <span tal:condition="python: not selected" class="empty" i18n:translate="">State</span>
+            <span tal:condition="selected" class="selected"><tal:block i18n:translate="">State</tal:block>: <tal:block tal:content="view/selected_state_title" /></span>
+            <a tal:condition="selected" tal:attributes="href python: view.state_url(view.default_state)" class="reset"/>
+            <ul>
+                <li tal:repeat="filter view/state_filter_list">
+                    <a tal:content="python: filter[1]" tal:attributes="href python: view.state_url(filter[0])" />
+                </li>
+            </ul>
+          </div>
+
+          <div class="event-navigation-filter"
+               tal:condition="view/show_import_sources"
+               tal:define="selected python: True if view.selected_import_source else False">
+              <span tal:condition="python: not selected" class="empty" i18n:translate="">Import</span>
+              <span tal:condition="selected" class="selected"><tal:block i18n:translate="">Import</tal:block>: <tal:block tal:content="view/selected_import_source_title" /></span>
+              <a tal:condition="selected" tal:attributes="href python: view.import_source_url('')" class="reset"/>
               <ul>
-                  <li tal:repeat="source view/import_sources">
-                    <a tal:content="python: source[0]" tal:attributes="href python: view.import_source_url(source[1]); class python: source[1] == view.selected_import_source and 'selected event-navigation-link' or 'event-navigation-link'; title python: source[0]"></a>
-                  </li>
+                  <tal:block tal:repeat="source view/import_sources">
+                      <li tal:condition="python: source[0]">
+                          <a tal:content="python: source[1]" tal:attributes="href python: view.import_source_url(source[0])" />
+                      </li>
+                  </tal:block>
               </ul>
           </div>
+
+          <div class="visualClear" />
 
         </div>
 
@@ -116,6 +126,13 @@
         </tal:block>
 
         <div class="event-sidebar">
+          <div class="your-event">
+            <div>
+              <p i18n:translate="">Dou you have an event to share?</p>
+              <a i18n:translate="" tal:attributes="href view/submit_event_link" class="button">Submit Your Event</a>
+            </div>
+          </div>
+
           <metal:use use-macro="context/@@seantis-dir-macros/macros/map" />
 
           <div class="event-navigation-ical">

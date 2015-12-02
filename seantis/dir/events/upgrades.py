@@ -357,3 +357,14 @@ def upgrade_1019_to_1020(context):
     setup = getToolByName(context, 'portal_setup')
     profile = 'profile-seantis.dir.events:default'
     setup.runImportStepFromProfile(profile, 'workflow')
+
+
+def upgrade_1020_to_1021(context):
+    # update css
+    getToolByName(context, 'portal_css').cookResources()
+
+    # add new js files
+    setup = getToolByName(context, 'portal_setup')
+    setup.runImportStepFromProfile(
+        'profile-seantis.dir.events:default', 'jsregistry'
+    )
