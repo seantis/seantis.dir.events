@@ -29,38 +29,6 @@
 }
 /* @end */
 
-
-/* @group event directory: banner */
-
-.portaltype-seantis-dir-events-directory {
-  #landingPageIntro {
-    margin-bottom: 2em;
-  }
-
-  .event-banner-image {
-    float: left;
-    padding-bottom: 1em;
-    padding-right: 2em;
-    width: 15%;
-  }
-
-  .event-banner-text {
-    float: left;
-    width: 60%;
-  }
-
-  @media screen and (max-width: $screen-tablet-landscape) {
-    .event-banner-image {
-      display: none;
-    }
-    .event-banner-text {
-      width: 100%;
-    }
-  }
-}
-/* @end */
-
-
 /* @group event directory: submit your event */
 .your-event {
   margin-bottom: 1rem;
