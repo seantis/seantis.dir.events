@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.6.1 (unreleased)
+1.6.1 (2015-12-14)
 ~~~~~~~~~~~~~~~~~~
 
 - Avoids AttributeError if event's short description is None.
