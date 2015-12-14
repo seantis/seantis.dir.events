@@ -5,7 +5,11 @@ Changelog
 1.6.1 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Avoids AttributeError if event's short description is None.
+  [treinhard]
+
+- Include title in recurrence url to avoid ambiguity.
+  [msom]
 
 1.6 (2015-12-02)
 ~~~~~~~~~~~~~~~~

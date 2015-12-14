@@ -193,6 +193,9 @@ def recurrence_url(directory, event):
     baseurl = directory.absolute_url()
     baseurl += '?range=this_and_next_year&search=true&searchtext=%s'
     searchtext = ''
+    if event.title:
+        searchtext += event.title.encode('utf-8') + ' '
     if event.short_description:
-        searchtext = event.short_description.encode('utf-8')
+        searchtext += event.short_description.encode('utf-8')
+    searchtext = searchtext.strip()
     return baseurl % urllib.quote(searchtext)
