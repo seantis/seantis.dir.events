@@ -434,6 +434,15 @@ class IExternalEventSourceSeantisJson(IExternalEventSource):
     )
 
 
+class IExternalEventSourceIcal(IExternalEventSource):
+    """iCal source."""
+
+    url = Website(
+        title=_(u'iCal URL'),
+        required=True
+    )
+
+
 class NoImportDataException(Exception):
     pass
 
