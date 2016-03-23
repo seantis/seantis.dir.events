@@ -834,7 +834,7 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(events[0]['cat2'], set(['cat21']))
 
     def test_ical_import(self):
-        ical_string = '\n'.join(
+        ical_string = '\n'.join((
             'BEGIN:VCALENDAR',
             'VERSION:2.0',
             'PRODID:-//CodX Software AG//WinFAP TS 9.0',
@@ -855,16 +855,25 @@ class TestImport(IntegrationTestCase):
             'END:DAYLIGHT',
             'END:VTIMEZONE',
             'BEGIN:VEVENT',
-            'UID:F2D33EA6-6B28-44E9-9C40-AF3661C94F09',
+            'UID:F2D33EA6',
             'ORGANIZER:feuerwehr@steinhausen.ch',
             'DTSTAMP:20150707T105252Z',
             'LAST-MODIFIED:20150707T105252Z',
             'DTSTART;VALUE=DATE:20161222',
             'DTEND;VALUE=DATE:20170105',
             'SUMMARY;LANGUAGE=de:Weihnachtsferien',
+            'DESCRIPTION;LANGUAGE=de:GVZG 1601',
+            'END:VEVENT',
+            'BEGIN:VEVENT',
+            'UID:D9ED6A0B',
+            'DTSTAMP:20151013T121911Z',
+            'LAST-MODIFIED:20151013T121911Z',
+            'DTSTART;TZID="W. Europe Standard Time":20161115T193000',
+            'DURATION:PT2H0M0S',
+            'SUMMARY;LANGUAGE=de:5. Uebung Fahrtraining C',
             'END:VEVENT',
             'END:VCALENDAR'
-        )
+        ))
 
         context = mock.Mock()
         context.url = 'url'
@@ -872,122 +881,84 @@ class TestImport(IntegrationTestCase):
 
         source = EventsSourceIcal(context)
         events = [event for event in source.fetch(ical_string)]
+
         self.assertEquals(len(events), 2)
 
-        self.assertTrue(
-            default_now() - events[0]['last_update'] < timedelta(seconds=10)
-        )
-        self.assertEquals(events[0]['fetch_id'], 'url')
-        self.assertEquals(events[0]['id'], 'id1')
-        self.assertEquals(events[0]['source_id'], 'id1')
-        self.assertEquals(events[0]['title'], 'title')
-        self.assertEquals(events[0]['short_description'], u'short_description')
-        self.assertEquals(events[0]['long_description'], u'h\xe4nsel')
-        self.assertEquals(events[0]['event_url'], 'http://www.event.ch')
-        self.assertEquals(events[0]['registration'], 'http://www.tickets.ch')
-        self.assertEquals(events[0]['location_url'], 'http://www.location.ch')
-        self.assertEquals(events[0]['image'], 'img_url')
-        self.assertEquals(events[0]['image_name'], 'img_name')
-        self.assertEquals(events[0]['attachment_1'], 'a1_url')
-        self.assertEquals(events[0]['attachment_1_name'], 'a1_name')
-        self.assertEquals(events[0]['attachment_2'], 'a2_url')
-        self.assertEquals(events[0]['attachment_2_name'], 'a2_name')
-        self.assertEquals(events[0]['organizer'], 'organizer')
-        self.assertEquals(events[0]['street'], 'street')
-        self.assertEquals(events[0]['housenumber'], 'housenumber')
-        self.assertEquals(events[0]['locality'], 'locality')
-        self.assertEquals(events[0]['zipcode'], '1234')
-        self.assertEquals(events[0]['town'], 'town')
-        self.assertEquals(events[0]['contact_name'], 'contact_name')
-        self.assertEquals(events[0]['contact_email'], 'contact@ema.il')
-        self.assertEquals(events[0]['contact_phone'], '+12 (3) 45 678 90 12')
-        self.assertEquals(events[0]['latitude'], '1.0')
-        self.assertEquals(events[0]['longitude'], '2.0')
-        self.assertEquals(events[0]['timezone'], 'Europe/Zurich')
-        self.assertEquals(events[0]['start'], datetime(2014, 1, 15, 0, 0,
-                                                       tzinfo=pytz.UTC))
-        self.assertEquals(events[0]['end'], datetime(2014, 1, 15, 23, 59, 59,
+        e = events[0]
+        self.assertEquals(e['attachment_1'], None)
+        self.assertEquals(e['attachment_2'], None)
+        self.assertEquals(e['cat1'], set())
+        self.assertEquals(e['cat2'], set())
+        self.assertEquals(e['contact_email'], '')
+        self.assertEquals(e['contact_name'], '')
+        self.assertEquals(e['contact_phone'], '')
+        self.assertEquals(e['end'], datetime(2017, 1, 5, 0, 0,
+                                             tzinfo=pytz.UTC))
+        self.assertEquals(e['event_url'], '')
+        self.assertEquals(e['fetch_id'], 'url')
+        self.assertEquals(e['housenumber'], '')
+        self.assertEquals(e['image'], None)
+        self.assertEquals(e['last_update'], datetime(2015, 7, 7, 10, 52, 52,
                                                      tzinfo=pytz.UTC))
-        self.assertEquals(events[0]['recurrence'],
-                          'RRULE:FREQ=WEEKLY;BYDAY=MO,TU;UNTIL=20150101T0000Z')
-        self.assertEquals(events[0]['whole_day'], True)
-        self.assertEquals(events[0]['cat1'], set(['cat11', 'cat12']))
-        self.assertEquals(events[0]['cat2'], set(['cat21']))
-        self.assertEquals(events[0]['submitter'], 'sumitter')
-        self.assertEquals(events[0]['submitter_email'], 'submitter@ma.il')
+        self.assertEquals(e['latitude'], None)
+        self.assertEquals(e['locality'], '')
+        self.assertEquals(e['location_url'], '')
+        self.assertEquals(e['long_description'], '')
+        self.assertEquals(e['longitude'], None)
+        self.assertEquals(e['organizer'], '')
+        self.assertEquals(e['prices'], '')
+        self.assertEquals(e['recurrence'], '')
+        self.assertEquals(e['registration'], '')
+        self.assertEquals(e['short_description'], u'Gvzg 1601')
+        self.assertEquals(e['source_id'], u'F2D33Ea6')
+        self.assertEquals(e['start'], datetime(2016, 12, 22, 0, 0,
+                                               tzinfo=pytz.UTC))
+        self.assertEquals(e['street'], '')
+        self.assertEquals(e['submitter'], u'feuerwehr@steinhausen.ch')
+        self.assertEquals(e['submitter_email'], u'feuerwehr@steinhausen.ch')
+        self.assertEquals(e['timezone'], 'Europe/Zurich')
+        self.assertEquals(e['title'], u'Weihnachtsferien')
+        self.assertEquals(e['town'], '')
+        self.assertEquals(e['whole_day'], False)
+        self.assertEquals(e['zipcode'], '')
 
-        self.assertEquals(
-            events[1]['last_update'],
-            datetime(2014, 1, 21, 9, 21, 47, tzinfo=pytz.UTC)
-        )
-        self.assertEquals(events[1]['latitude'], None)
-        self.assertEquals(events[1]['longitude'], None)
-        self.assertEquals(events[1]['timezone'], 'UTC')
-        self.assertEquals(events[1]['start'], datetime(2014, 1, 19, 15, 0,
-                                                       tzinfo=pytz.UTC))
-        self.assertEquals(events[1]['end'], datetime(2014, 1, 19, 16, 0,
+        e = events[1]
+        self.assertEquals(e['attachment_1'], None)
+        self.assertEquals(e['attachment_2'], None)
+        self.assertEquals(e['cat1'], set([]))
+        self.assertEquals(e['cat2'], set([]))
+        self.assertEquals(e['contact_email'], '')
+        self.assertEquals(e['contact_name'], '')
+        self.assertEquals(e['contact_phone'], '')
+        self.assertEquals(e['end'], datetime(2016, 11, 15, 20, 30,
+                                             tzinfo=pytz.UTC))
+        self.assertEquals(e['event_url'], '')
+        self.assertEquals(e['fetch_id'], 'url')
+        self.assertEquals(e['housenumber'], '')
+        self.assertEquals(e['image'], None)
+        self.assertEquals(e['last_update'], datetime(2015, 10, 13, 12, 19, 11,
                                                      tzinfo=pytz.UTC))
-        self.assertEquals(events[1]['whole_day'], False)
-        self.assertEquals(events[1]['cat1'], set(['cat13', 'cat14']))
-        self.assertEquals(events[1]['cat2'], set(['cat21', 'cat22', 'cat23']))
-
-        # Filter by categories
-        context.do_filter = False
-        context.cat1 = 'cat5'
-        context.cat2 = 'cat6'
-        source = EventsSourceSeantisJson(context)
-        events = [event for event in source.fetch(json_string)]
-        self.assertEquals(len(events), 2)
-
-        context.do_filter = True
-
-        context.cat1 = ''
-        context.cat2 = ''
-        source = EventsSourceSeantisJson(context)
-        events = [event for event in source.fetch(json_string)]
-        self.assertEquals(len(events), 2)
-
-        context.cat1 = 'cat1'
-        context.cat2 = ''
-        source = EventsSourceSeantisJson(context)
-        events = [event for event in source.fetch(json_string)]
-        self.assertEquals(len(events), 0)
-
-        context.cat1 = 'cat11'
-        context.cat2 = ''
-        source = EventsSourceSeantisJson(context)
-        events = [event for event in source.fetch(json_string)]
-        self.assertEquals(len(events), 1)
-        self.assertEquals(events[0]['cat1'], set(['cat11', 'cat12']))
-
-        context.cat1 = 'cat12'
-        context.cat2 = ''
-        source = EventsSourceSeantisJson(context)
-        events = [event for event in source.fetch(json_string)]
-        self.assertEquals(len(events), 1)
-        self.assertEquals(events[0]['cat1'], set(['cat11', 'cat12']))
-
-        context.cat1 = ''
-        context.cat2 = 'cat23'
-        source = EventsSourceSeantisJson(context)
-        events = [event for event in source.fetch(json_string)]
-        self.assertEquals(len(events), 1)
-        self.assertEquals(events[0]['cat2'], set(['cat21', 'cat22', 'cat23']))
-
-        context.cat1 = ''
-        context.cat2 = 'cat24'
-        source = EventsSourceSeantisJson(context)
-        events = [event for event in source.fetch(json_string)]
-        self.assertEquals(len(events), 0)
-
-        context.do_filter = True
-        context.cat1 = 'cat11'
-        context.cat2 = 'cat21'
-        source = EventsSourceSeantisJson(context)
-        events = [event for event in source.fetch(json_string)]
-        self.assertEquals(len(events), 1)
-        self.assertEquals(events[0]['cat1'], set(['cat11', 'cat12']))
-        self.assertEquals(events[0]['cat2'], set(['cat21']))
+        self.assertEquals(e['latitude'], None)
+        self.assertEquals(e['locality'], '')
+        self.assertEquals(e['location_url'], '')
+        self.assertEquals(e['long_description'], '')
+        self.assertEquals(e['longitude'], None)
+        self.assertEquals(e['organizer'], '')
+        self.assertEquals(e['prices'], '')
+        self.assertEquals(e['recurrence'], '')
+        self.assertEquals(e['registration'], '')
+        self.assertEquals(e['short_description'], 'default')
+        self.assertEquals(e['source_id'], u'D9Ed6A0B')
+        self.assertEquals(e['start'], datetime(2016, 11, 15, 18, 30,
+                                               tzinfo=pytz.UTC))
+        self.assertEquals(e['street'], '')
+        self.assertEquals(e['submitter'], 'ical@example.com')
+        self.assertEquals(e['submitter_email'], 'ical@example.com')
+        self.assertEquals(e['timezone'], 'Europe/Zurich')
+        self.assertEquals(e['title'], u'5. Uebung Fahrtraining C')
+        self.assertEquals(e['town'], '')
+        self.assertEquals(e['whole_day'], False)
+        self.assertEquals(e['zipcode'], '')
 
     def test_seantis_import_build_url(self):
         context = mock.Mock()
