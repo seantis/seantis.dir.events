@@ -442,6 +442,11 @@ class IExternalEventSourceIcal(IExternalEventSource):
         required=True
     )
 
+    default_description = TextLine(
+        title=_(u'Default Short Description'),
+        required=True
+    )
+
 
 class NoImportDataException(Exception):
     pass

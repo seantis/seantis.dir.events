@@ -5,7 +5,7 @@ name = 'seantis.dir.events'
 description = (
     "Directory of upcoming Events."
 )
-version = '1.6.2'
+version = '1.7'
 
 
 def get_long_description():
@@ -73,7 +73,7 @@ setup(name=name, version=version, description=description,
           'blist',
           'functools32',
           'isodate',
-          'icalendar>=3.5',
+          'icalendar>=3.9.2',
       ],
       extras_require=dict(
           zug=zug_require,

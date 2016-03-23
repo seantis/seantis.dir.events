@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-12-21 14:58+0000\n"
+"POT-Creation-Date: 2016-03-23 09:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,7 +21,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr ""
 
-#: ./interfaces.py:516
+#: ./interfaces.py:521
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr ""
 
@@ -69,7 +69,7 @@ msgstr ""
 msgid "Attachment 2"
 msgstr ""
 
-#: ./interfaces.py:558
+#: ./interfaces.py:563
 #: ./templates/macros.pt:192
 msgid "Attachments"
 msgstr ""
@@ -145,6 +145,10 @@ msgstr ""
 #: ./interfaces.py:281
 #: ./templates/directory.pt:63
 msgid "Date"
+msgstr ""
+
+#: ./interfaces.py:446
+msgid "Default Short Description"
 msgstr ""
 
 #: ./form.py:780
@@ -331,7 +335,7 @@ msgstr ""
 msgid "Image"
 msgstr ""
 
-#: ./interfaces.py:533
+#: ./interfaces.py:538
 msgid "Images"
 msgstr ""
 
@@ -445,15 +449,15 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: ./interfaces.py:538
+#: ./interfaces.py:543
 msgid "PDF"
 msgstr ""
 
-#: ./interfaces.py:498
+#: ./interfaces.py:503
 msgid "Please choose at least one category"
 msgstr ""
 
-#: ./interfaces.py:508
+#: ./interfaces.py:513
 msgid "Please enter at least one suggestion"
 msgstr ""
 
@@ -497,7 +501,7 @@ msgstr ""
 msgid "Show all occurrences"
 msgstr ""
 
-#: ./interfaces.py:474
+#: ./interfaces.py:479
 msgid "Source"
 msgstr ""
 
@@ -583,7 +587,7 @@ msgstr ""
 msgid "The number of events to import every 15 minutes."
 msgstr ""
 
-#: ./interfaces.py:475
+#: ./interfaces.py:480
 msgid "The source id to check for. Leave empty for any source."
 msgstr ""
 
@@ -644,11 +648,11 @@ msgstr ""
 msgid "Tu"
 msgstr ""
 
-#: ./interfaces.py:531
+#: ./interfaces.py:536
 msgid "Unknown image format"
 msgstr ""
 
-#: ./interfaces.py:552
+#: ./interfaces.py:557
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr ""
 
@@ -687,7 +691,7 @@ msgstr ""
 msgid "Whole Day"
 msgstr ""
 
-#: ./interfaces.py:571
+#: ./interfaces.py:576
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr ""
 

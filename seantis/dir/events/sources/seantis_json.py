@@ -1,14 +1,9 @@
 import json
-import pytz
-
-from logging import getLogger
-log = getLogger('seantis.dir.events')
 
 from dateutil.parser import parse
 from five import grok
 from urllib import quote_plus
 from urllib2 import urlopen
-
 from seantis.dir.events.dates import default_now, as_timezone
 from seantis.dir.events.interfaces import (
     IExternalEventCollector,
