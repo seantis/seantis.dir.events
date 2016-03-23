@@ -299,7 +299,9 @@ class TestImport(IntegrationTestCase):
                 'prices', 'registration',
                 'source_id', 'fetch_id'
             ]
-            now = default_now().replace(microsecond=0)
+            now = default_now().replace(
+                year=2015, month=1, day=1, microsecond=0
+            )
             then = now + timedelta(days=10)
 
             event = {s: s for s in string_values}
