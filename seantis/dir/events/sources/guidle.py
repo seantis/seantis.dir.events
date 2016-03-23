@@ -1,23 +1,20 @@
 import string
 
-from logging import getLogger
-log = getLogger('seantis.dir.events')
-
 from datetime import timedelta
 from dateutil.parser import parse
-
-from lxml import objectify
-from urllib2 import urlopen
-
 from five import grok
-from zope.component import queryAdapter
-
+from logging import getLogger
+from lxml import objectify
 from seantis.dir.events.interfaces import (
     IExternalEventCollector,
     IExternalEventSourceGuidle,
     IGuidleClassifier,
     NoImportDataException
 )
+from urllib2 import urlopen
+from zope.component import queryAdapter
+
+log = getLogger('seantis.dir.events')
 
 
 class DefaultGuidleClassfier(object):

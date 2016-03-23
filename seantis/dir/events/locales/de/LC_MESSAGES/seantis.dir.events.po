@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2015-10-27 10:34+0000\n"
+"POT-Creation-Date: 2016-03-23 09:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 msgid "${chars} characters left"
 msgstr "${chars} Zeichen übrig"
 
-#: ./interfaces.py:507
+#: ./interfaces.py:521
 msgid "${type} bigger than ${max} Megabyte are not allowed"
 msgstr "${type} grösser als ${max} Megabyte sind nicht erlaubt"
 
@@ -30,7 +30,7 @@ msgstr "Importquellenbedingung hinzufügen"
 msgid "Adjust"
 msgstr "Korrigieren"
 
-#: ./templates/directory.pt:126
+#: ./templates/directory.pt:143
 msgid "All Events"
 msgstr "Alle Veranstaltungen"
 
@@ -46,13 +46,13 @@ msgstr "Erlaubt den Import von Veranstaltungen aus einem anderen Veranstaltungs-
 msgid "Allows to import events from guidle.com"
 msgstr "Erlabut den Import von Veranstaltungen von guidle.com"
 
+#: ./profiles/default/types/seantis.dir.events.sourceical.xml
+msgid "Allows to import events from iCalendar"
+msgstr "Erlaubt den Import von Veranstaltungen von iCalendar"
+
 #: ./conditions.py:73
 msgid "An import source condition makes the rule apply only to content with the given import source."
 msgstr "Eine Importquellenbedingung überprüft einen Inhalt auf dessen Import-Quelle."
-
-#: ./templates/directory.pt:54
-msgid "Any"
-msgstr "Egal"
 
 #: ./item.py:130
 msgid "Attachment ${number}"
@@ -66,8 +66,8 @@ msgstr "Anhang 1"
 msgid "Attachment 2"
 msgstr "Anhang 2"
 
-#: ./interfaces.py:549
-#: ./templates/macros.pt:183
+#: ./interfaces.py:563
+#: ./templates/macros.pt:192
 msgid "Attachments"
 msgstr "Anhänge"
 
@@ -79,23 +79,23 @@ msgstr "Lösche automatisch bereits importierte Veranstaltungen, welche nicht me
 msgid "Back"
 msgstr "Zurück"
 
-#: ./templates/directory.pt:122
+#: ./templates/directory.pt:139
 msgid "Calendar Export"
 msgstr "Kalender Export"
 
-#: ./templates/macros.pt:198
+#: ./templates/macros.pt:207
 msgid "Calendar export for all occurrences of this event"
 msgstr "Kalender Export für alle Wiederholungen dieser Veranstaltung"
 
-#: ./templates/macros.pt:206
+#: ./templates/macros.pt:215
 msgid "Calendar export for this event"
 msgstr "Kalender Export für diese Veranstaltung"
 
-#: ./templates/macros.pt:201
+#: ./templates/macros.pt:210
 msgid "Calendar export for this occurrence only"
 msgstr "Kalender Export nur für diese Wiederholung"
 
-#: ./templates/macros.pt:195
+#: ./templates/macros.pt:204
 msgid "Calendars (iCal)"
 msgstr "Kalender (iCal)"
 
@@ -107,7 +107,7 @@ msgstr "Abbrechen"
 msgid "Cancel Event Submission"
 msgstr "Abbrechen"
 
-#: ./templates/directory.pt:138
+#: ./templates/directory.pt:155
 msgid "Configure Imports"
 msgstr "Imports konfigurieren"
 
@@ -140,15 +140,19 @@ msgid "Custom date range"
 msgstr "Benutzerdefinierte Zeitspanne"
 
 #: ./interfaces.py:281
-#: ./templates/directory.pt:69
+#: ./templates/directory.pt:63
 msgid "Date"
 msgstr "Datum"
+
+#: ./interfaces.py:446
+msgid "Default Short Description"
+msgstr "Standard für Kurzbeschrieb"
 
 #: ./form.py:780
 msgid "Detail Preview"
 msgstr "Details-Vorschau"
 
-#: ./templates/directory.pt:32
+#: ./templates/directory.pt:131
 msgid "Dou you have an event to share?"
 msgstr "Sie organisieren eine Veranstaltung?"
 
@@ -248,19 +252,15 @@ msgstr "Veranstaltungs-Verzeichnis Eintrag"
 msgid "Events directory URL"
 msgstr "URL des Veranstaltungs-Verzeichnis"
 
-#: ./templates/directory.pt:131
+#: ./templates/directory.pt:148
 msgid "Events matching the current filter"
 msgstr "Veranstaltungen die dem aktuellen Filter entsprechen"
-
-#: ./templates/directory.pt:51
-msgid "Filter"
-msgstr "Filtern"
 
 #: ./interfaces.py:411
 msgid "Filter events"
 msgstr "Filtere Veranstaltungen"
 
-#: ./templates/directory.pt:131
+#: ./templates/directory.pt:148
 msgid "Filtered Events"
 msgstr "Gefilterte Veranstaltungen"
 
@@ -304,7 +304,7 @@ msgstr "Guidle Import"
 msgid "Guidle URL to download from"
 msgstr "Guidle-URL"
 
-#: ./directory.py:433
+#: ./directory.py:477
 msgid "Hidden"
 msgstr "Versteckt"
 
@@ -332,11 +332,11 @@ msgstr "Erfasser von Veranstaltungen müssen diesen Allgemeinen Geschäftsbeding
 msgid "Image"
 msgstr "Bild"
 
-#: ./interfaces.py:524
+#: ./interfaces.py:538
 msgid "Images"
 msgstr "Bilder"
 
-#: ./templates/directory.pt:102
+#: ./templates/directory.pt:106
 msgid "Import"
 msgstr "Import"
 
@@ -369,7 +369,7 @@ msgid "List Preview (No Occurrences)"
 msgstr "Listen-Vorschau (Keine Wiederholungen)"
 
 #: ./interfaces.py:178
-#: ./templates/macros.pt:136
+#: ./templates/macros.pt:145
 msgid "Locality"
 msgstr "Lokalität"
 
@@ -417,11 +417,11 @@ msgstr "Name"
 msgid "No changes were applied"
 msgstr "Keine Änderungen"
 
-#: ./directory.py:235
+#: ./directory.py:254
 msgid "No events for the current daterange"
 msgstr "Keine Veranstaltungen gefunden."
 
-#: ./directory.py:237
+#: ./directory.py:256
 msgid "No events for the current state"
 msgstr "Keine Veranstaltungen gefunden."
 
@@ -442,19 +442,19 @@ msgid "On these days"
 msgstr "An diesen Tagen"
 
 #: ./interfaces.py:220
-#: ./templates/macros.pt:154
+#: ./templates/macros.pt:163
 msgid "Organizer"
 msgstr "Organisator"
 
-#: ./interfaces.py:529
+#: ./interfaces.py:543
 msgid "PDF"
 msgstr "PDF"
 
-#: ./interfaces.py:489
+#: ./interfaces.py:503
 msgid "Please choose at least one category"
 msgstr "Bitte wählen Sie mindestens eine Kategorie"
 
-#: ./interfaces.py:499
+#: ./interfaces.py:513
 msgid "Please enter at least one suggestion"
 msgstr "Bitte geben Sie mindestens einen Vorschlag ein"
 
@@ -466,7 +466,7 @@ msgstr "Preise"
 msgid "Publication of event was denied"
 msgstr "Die Veranstaltung wurde abgelehnt"
 
-#: ./directory.py:432
+#: ./directory.py:476
 msgid "Published"
 msgstr "Veröffentlicht"
 
@@ -474,7 +474,7 @@ msgstr "Veröffentlicht"
 msgid "Recurrence"
 msgstr "Wiederholung"
 
-#: ./templates/macros.pt:213
+#: ./templates/macros.pt:222
 msgid "Recurring Event"
 msgstr "Wiederholende Veranstaltung"
 
@@ -486,10 +486,6 @@ msgstr "Sa"
 msgid "Save Event"
 msgstr "Veranstaltung speichern"
 
-#: ./templates/directory.pt:42
-msgid "Search"
-msgstr "Suche"
-
 #: ./form.py:454
 msgid "Send us your events and we will publish them"
 msgstr "Senden Sie uns Ihre Veranstaltung und wir werden sie veröffentlichen"
@@ -498,11 +494,11 @@ msgstr "Senden Sie uns Ihre Veranstaltung und wir werden sie veröffentlichen"
 msgid "Short Description"
 msgstr "Kurzbeschrieb"
 
-#: ./templates/macros.pt:215
+#: ./templates/macros.pt:71
 msgid "Show all occurrences"
 msgstr "Alle Wiederholungen anzeigen"
 
-#: ./interfaces.py:465
+#: ./interfaces.py:479
 msgid "Source"
 msgstr "Quelle"
 
@@ -526,7 +522,7 @@ msgstr "Von"
 msgid "Starts each day at"
 msgstr "Täglich von"
 
-#: ./templates/directory.pt:95
+#: ./templates/directory.pt:93
 msgid "State"
 msgstr "Status"
 
@@ -542,16 +538,16 @@ msgstr "So"
 msgid "Submit"
 msgstr "Melden"
 
-#: ./templates/directory.pt:33
+#: ./templates/directory.pt:132
 msgid "Submit Your Event"
 msgstr "Veranstaltung melden"
 
-#: ./directory.py:427
+#: ./directory.py:471
 msgid "Submitted"
 msgstr "Gemeldet"
 
 #: ./form.py:810
-#: ./templates/macros.pt:221
+#: ./templates/macros.pt:230
 msgid "Submitter"
 msgstr "Erfasser"
 
@@ -575,7 +571,7 @@ msgstr "Vorgeschlagene Werte für die Wo-Kategorie"
 msgid "Synchronise deleted events"
 msgstr "Synchronisiere gelöschte Veranstaltungen"
 
-#: ./directory.py:478
+#: ./directory.py:526
 #: ./interfaces.py:87
 msgid "Terms and Conditions"
 msgstr "Allgemeine Geschäftsbedingungen"
@@ -588,7 +584,7 @@ msgstr "Do"
 msgid "The number of events to import every 15 minutes."
 msgstr "Anzahl der Veranstaltungen, welche alle 15 Minuten importiert werden."
 
-#: ./interfaces.py:466
+#: ./interfaces.py:480
 msgid "The source id to check for. Leave empty for any source."
 msgstr "Die ID der zu überprüfende Quelle. Alle Quellen, falls leer."
 
@@ -612,7 +608,7 @@ msgstr "Dieses Jahr"
 msgid "This and Next Year"
 msgstr "Dieses und nächstes Jahr"
 
-#: ./templates/macros.pt:214
+#: ./templates/macros.pt:223
 msgid "This is a recurring event"
 msgstr "Dies ist eine sich wiederholende Veranstaltung"
 
@@ -621,7 +617,7 @@ msgstr "Dies ist eine sich wiederholende Veranstaltung"
 msgid "This is an imported event and not editable."
 msgstr "Dies ist eine importierte Veranstaltung und kann nicht editiert werden."
 
-#: ./templates/macros.pt:171
+#: ./templates/macros.pt:180
 msgid "Ticket"
 msgstr "Ticket"
 
@@ -649,11 +645,11 @@ msgstr "Ort"
 msgid "Tu"
 msgstr "Di"
 
-#: ./interfaces.py:522
+#: ./interfaces.py:536
 msgid "Unknown image format"
 msgstr "Unbekanntes Bild-Format"
 
-#: ./interfaces.py:543
+#: ./interfaces.py:557
 msgid "Unsupported fileformat. Supported is ${formats}"
 msgstr "Nicht unterstütztes Dateiformat. Unterstützt wird ${formats}"
 
@@ -674,7 +670,7 @@ msgstr "Quelle, welche diese Veranstaltung importiert hat"
 msgid "We"
 msgstr "Mi"
 
-#: ./directory.py:41
+#: ./directory.py:37
 #: ./interfaces.py:417
 msgid "What"
 msgstr "Was"
@@ -683,7 +679,7 @@ msgstr "Was"
 msgid "When will this event occur?"
 msgstr "Wann wird diese Veranstaltung stattfinden?"
 
-#: ./directory.py:41
+#: ./directory.py:37
 #: ./interfaces.py:423
 msgid "Where"
 msgstr "Wo"
@@ -692,7 +688,7 @@ msgstr "Wo"
 msgid "Whole Day"
 msgstr "Ganztags"
 
-#: ./interfaces.py:562
+#: ./interfaces.py:576
 msgid "You have to agree to the terms and conditions to submit this event"
 msgstr "Sie müssen den Allgemeinen Geschäftsbedingungen zustimmen bevor Sie diese Veranstaltung melden"
 
@@ -703,3 +699,11 @@ msgstr "Sie dürfen nicht mehr als ${max} Wiederholungen erfassen"
 #: ./interfaces.py:196
 msgid "Zipcode"
 msgstr "PLZ"
+
+#: ./profiles/default/types/seantis.dir.events.sourceical.xml
+msgid "iCal Import"
+msgstr "iCal Import"
+
+#: ./interfaces.py:441
+msgid "iCal URL"
+msgstr "iCal URL"

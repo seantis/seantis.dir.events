@@ -368,3 +368,9 @@ def upgrade_1020_to_1021(context):
     setup.runImportStepFromProfile(
         'profile-seantis.dir.events:default', 'jsregistry'
     )
+
+
+def upgrade_1021_to_1022(context):
+    setup = getToolByName(context, 'portal_setup')
+    profile = 'profile-seantis.dir.events:default'
+    setup.runImportStepFromProfile(profile, 'typeinfo')

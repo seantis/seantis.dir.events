@@ -1,23 +1,159 @@
 import mock
 import pytz
-
-from datetime import datetime, timedelta
+import transaction
 
 from collective.geo.geographer.interfaces import IGeoreferenced
+from datetime import datetime, timedelta
 from plone.app.event.base import default_timezone
 from plone.dexterity.utils import createContentInContainer
-from zope.interface import alsoProvides
-
 from seantis.dir.events.catalog import reindex_directory
 from seantis.dir.events.dates import default_now
-from seantis.dir.events.sources import (
-    import_scheduler, ExternalEventImporter, IExternalEvent
-)
+from seantis.dir.events.sources import ExternalEventImporter, IExternalEvent
 from seantis.dir.events.sources.guidle import EventsSourceGuidle
 from seantis.dir.events.sources.seantis_json import EventsSourceSeantisJson
-from seantis.dir.events.tests import IntegrationTestCase
+from seantis.dir.events.sources.ical import EventsSourceIcal
 
-import transaction
+from seantis.dir.events.tests import IntegrationTestCase
+from zope.interface import alsoProvides
+
+
+GUIDLE_TEST_DATA = """<?xml version="1.0" encoding="UTF-8"?>
+<guidle:exportData xmlns:guidle="http://www.guidle.com">
+<guidle:groupSet>
+<guidle:group>
+<guidle:offer id="123">
+<guidle:lastUpdateDate>
+  2013-07-26T16:00:43.208+02:00
+</guidle:lastUpdateDate>
+<guidle:offerDetail>
+  <guidle:title>Title</guidle:title>
+  <guidle:shortDescription>Description</guidle:shortDescription>
+  <guidle:longDescription>Long Descritption</guidle:longDescription>
+  <guidle:homepage>http://www.example.ch</guidle:homepage>
+  <guidle:images>
+    <guidle:image>
+      <guidle:url>http://www.example.ch/1.png</guidle:url>
+    </guidle:image>
+  </guidle:images>
+</guidle:offerDetail>
+<guidle:address>
+  <guidle:company>Address</guidle:company>
+  <guidle:zip>1234</guidle:zip>
+  <guidle:city>City</guidle:city>
+  <guidle:country>Country</guidle:country>
+  <guidle:latitude>1.0</guidle:latitude>
+  <guidle:longitude>2.0</guidle:longitude>
+</guidle:address>
+<guidle:contact>
+  <guidle:email>info@example.ch</guidle:email>
+  <guidle:telephone_1>000 111 22 33</guidle:telephone_1>
+  <guidle:company>Company</guidle:company>
+</guidle:contact>
+<guidle:schedules>
+  <guidle:date>
+    <guidle:startDate>2017-08-25</guidle:startDate>
+    <guidle:endDate>2017-09-03</guidle:endDate>
+    <guidle:weekdays>
+      <guidle:day>Mo</guidle:day>
+      <guidle:day>Tu</guidle:day>
+    </guidle:weekdays>
+  </guidle:date>
+</guidle:schedules>
+<guidle:classifications>
+  <guidle:classification name="class">
+  </guidle:classification>
+</guidle:classifications>
+</guidle:offer>
+<guidle:offer id="234">
+<guidle:lastUpdateDate>
+  2013-07-26T16:00:43.208+02:00
+</guidle:lastUpdateDate>
+<guidle:offerDetail>
+  <guidle:title>Title</guidle:title>
+  <guidle:shortDescription>Description</guidle:shortDescription>
+  <guidle:longDescription>Long Descritption</guidle:longDescription>
+  <guidle:homepage>http://www.example.ch</guidle:homepage>
+  <guidle:images>
+    <guidle:image>
+      <guidle:url>http://www.example.ch/1.png</guidle:url>
+    </guidle:image>
+  </guidle:images>
+</guidle:offerDetail>
+<guidle:address>
+  <guidle:company>Address</guidle:company>
+  <guidle:zip>1234</guidle:zip>
+  <guidle:city>City</guidle:city>
+  <guidle:country>Country</guidle:country>
+</guidle:address>
+<guidle:contact>
+  <guidle:email>info@example.ch</guidle:email>
+  <guidle:telephone_1>000 111 22 33</guidle:telephone_1>
+  <guidle:company>Company</guidle:company>
+</guidle:contact>
+<guidle:schedules>
+  <guidle:date>
+    <guidle:startDate>2017-08-25</guidle:startDate>
+    <guidle:endDate>2017-08-25</guidle:endDate>
+    <guidle:startTime>09:15:00</guidle:startTime>
+    <guidle:endTime>20:50:00</guidle:endTime>
+  </guidle:date>
+</guidle:schedules>
+<guidle:classifications>
+  <guidle:classification name="class">
+  </guidle:classification>
+</guidle:classifications>
+</guidle:offer>
+<guidle:offer id="50_1">
+<guidle:lastUpdateDate>
+  2014-05-28T11:20:35.736+02:00
+</guidle:lastUpdateDate>
+<guidle:offerDetail id="345">
+  <guidle:title>Issue 50</guidle:title>
+</guidle:offerDetail>
+<guidle:address>
+  <guidle:city>City</guidle:city>
+</guidle:address>
+<guidle:contact></guidle:contact>
+<guidle:schedules>
+  <guidle:date>
+    <guidle:startDate>2014-03-12</guidle:startDate>
+    <guidle:endDate>2014-12-31</guidle:endDate>
+    <guidle:startTime>00:00:00</guidle:startTime>
+    <guidle:endTime>00:00:00</guidle:endTime>
+  </guidle:date>
+</guidle:schedules>
+<guidle:classifications>
+  <guidle:classification name="class">
+  </guidle:classification>
+</guidle:classifications>
+</guidle:offer>
+<guidle:offer id="50_2">
+<guidle:lastUpdateDate>
+  2014-05-28T11:20:35.736+02:00
+</guidle:lastUpdateDate>
+<guidle:offerDetail id="345">
+  <guidle:title>Issue 50 (2)</guidle:title>
+</guidle:offerDetail>
+<guidle:address>
+  <guidle:city>City</guidle:city>
+</guidle:address>
+<guidle:contact></guidle:contact>
+<guidle:schedules>
+  <guidle:date>
+    <guidle:startDate>2014-01-01</guidle:startDate>
+    <guidle:endDate>2014-02-14</guidle:endDate>
+    <guidle:startTime>07:00:00</guidle:startTime>
+    <guidle:endTime>19:00:00</guidle:endTime>
+  </guidle:date>
+</guidle:schedules>
+<guidle:classifications>
+  <guidle:classification name="class">
+  </guidle:classification>
+</guidle:classifications>
+</guidle:offer>
+</guidle:group>
+</guidle:groupSet>
+</guidle:exportData>"""
 
 
 class TestImport(IntegrationTestCase):
@@ -44,7 +180,7 @@ class TestImport(IntegrationTestCase):
         }
 
         for attr in defaults:
-            if not attr in kw:
+            if attr not in kw:
                 kw[attr] = defaults[attr]
 
         return createContentInContainer(
@@ -109,7 +245,7 @@ class TestImport(IntegrationTestCase):
         }
 
         for attr in defaults:
-            if not attr in kw:
+            if attr not in kw:
                 kw[attr] = defaults[attr]
 
         return kw
@@ -451,143 +587,7 @@ class TestImport(IntegrationTestCase):
             self.cleanup_after_fetch_one()
 
     def test_guidle_import(self):
-        xml = """<?xml version="1.0" encoding="UTF-8"?>
-<guidle:exportData xmlns:guidle="http://www.guidle.com">
-  <guidle:groupSet>
-    <guidle:group>
-      <guidle:offer id="123">
-        <guidle:lastUpdateDate>
-          2013-07-26T16:00:43.208+02:00
-        </guidle:lastUpdateDate>
-        <guidle:offerDetail>
-          <guidle:title>Title</guidle:title>
-          <guidle:shortDescription>Description</guidle:shortDescription>
-          <guidle:longDescription>Long Descritption</guidle:longDescription>
-          <guidle:homepage>http://www.example.ch</guidle:homepage>
-          <guidle:images>
-            <guidle:image>
-              <guidle:url>http://www.example.ch/1.png</guidle:url>
-            </guidle:image>
-          </guidle:images>
-        </guidle:offerDetail>
-        <guidle:address>
-          <guidle:company>Address</guidle:company>
-          <guidle:zip>1234</guidle:zip>
-          <guidle:city>City</guidle:city>
-          <guidle:country>Country</guidle:country>
-          <guidle:latitude>1.0</guidle:latitude>
-          <guidle:longitude>2.0</guidle:longitude>
-        </guidle:address>
-        <guidle:contact>
-          <guidle:email>info@example.ch</guidle:email>
-          <guidle:telephone_1>000 111 22 33</guidle:telephone_1>
-          <guidle:company>Company</guidle:company>
-        </guidle:contact>
-        <guidle:schedules>
-          <guidle:date>
-            <guidle:startDate>2017-08-25</guidle:startDate>
-            <guidle:endDate>2017-09-03</guidle:endDate>
-            <guidle:weekdays>
-              <guidle:day>Mo</guidle:day>
-              <guidle:day>Tu</guidle:day>
-            </guidle:weekdays>
-          </guidle:date>
-        </guidle:schedules>
-        <guidle:classifications>
-          <guidle:classification name="class">
-          </guidle:classification>
-        </guidle:classifications>
-      </guidle:offer>
-      <guidle:offer id="234">
-        <guidle:lastUpdateDate>
-          2013-07-26T16:00:43.208+02:00
-        </guidle:lastUpdateDate>
-        <guidle:offerDetail>
-          <guidle:title>Title</guidle:title>
-          <guidle:shortDescription>Description</guidle:shortDescription>
-          <guidle:longDescription>Long Descritption</guidle:longDescription>
-          <guidle:homepage>http://www.example.ch</guidle:homepage>
-          <guidle:images>
-            <guidle:image>
-              <guidle:url>http://www.example.ch/1.png</guidle:url>
-            </guidle:image>
-          </guidle:images>
-        </guidle:offerDetail>
-        <guidle:address>
-          <guidle:company>Address</guidle:company>
-          <guidle:zip>1234</guidle:zip>
-          <guidle:city>City</guidle:city>
-          <guidle:country>Country</guidle:country>
-        </guidle:address>
-        <guidle:contact>
-          <guidle:email>info@example.ch</guidle:email>
-          <guidle:telephone_1>000 111 22 33</guidle:telephone_1>
-          <guidle:company>Company</guidle:company>
-        </guidle:contact>
-        <guidle:schedules>
-          <guidle:date>
-            <guidle:startDate>2017-08-25</guidle:startDate>
-            <guidle:endDate>2017-08-25</guidle:endDate>
-            <guidle:startTime>09:15:00</guidle:startTime>
-            <guidle:endTime>20:50:00</guidle:endTime>
-          </guidle:date>
-        </guidle:schedules>
-        <guidle:classifications>
-          <guidle:classification name="class">
-          </guidle:classification>
-        </guidle:classifications>
-      </guidle:offer>
-      <guidle:offer id="50_1">
-        <guidle:lastUpdateDate>
-          2014-05-28T11:20:35.736+02:00
-        </guidle:lastUpdateDate>
-        <guidle:offerDetail id="345">
-          <guidle:title>Issue 50</guidle:title>
-        </guidle:offerDetail>
-        <guidle:address>
-          <guidle:city>City</guidle:city>
-        </guidle:address>
-        <guidle:contact></guidle:contact>
-        <guidle:schedules>
-          <guidle:date>
-            <guidle:startDate>2014-03-12</guidle:startDate>
-            <guidle:endDate>2014-12-31</guidle:endDate>
-            <guidle:startTime>00:00:00</guidle:startTime>
-            <guidle:endTime>00:00:00</guidle:endTime>
-          </guidle:date>
-        </guidle:schedules>
-        <guidle:classifications>
-          <guidle:classification name="class">
-          </guidle:classification>
-        </guidle:classifications>
-      </guidle:offer>
-      <guidle:offer id="50_2">
-        <guidle:lastUpdateDate>
-          2014-05-28T11:20:35.736+02:00
-        </guidle:lastUpdateDate>
-        <guidle:offerDetail id="345">
-          <guidle:title>Issue 50 (2)</guidle:title>
-        </guidle:offerDetail>
-        <guidle:address>
-          <guidle:city>City</guidle:city>
-        </guidle:address>
-        <guidle:contact></guidle:contact>
-        <guidle:schedules>
-          <guidle:date>
-            <guidle:startDate>2014-01-01</guidle:startDate>
-            <guidle:endDate>2014-02-14</guidle:endDate>
-            <guidle:startTime>07:00:00</guidle:startTime>
-            <guidle:endTime>19:00:00</guidle:endTime>
-          </guidle:date>
-        </guidle:schedules>
-        <guidle:classifications>
-          <guidle:classification name="class">
-          </guidle:classification>
-        </guidle:classifications>
-      </guidle:offer>
-    </guidle:group>
-  </guidle:groupSet>
-</guidle:exportData>"""
+        xml = GUIDLE_TEST_DATA
 
         context = mock.Mock()
         context.url = 'url'
@@ -834,6 +834,133 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(len(events), 1)
         self.assertEquals(events[0]['cat1'], set(['cat11', 'cat12']))
         self.assertEquals(events[0]['cat2'], set(['cat21']))
+
+    def test_ical_import(self):
+        ical_string = '\n'.join((
+            'BEGIN:VCALENDAR',
+            'VERSION:2.0',
+            'PRODID:-//CodX Software AG//WinFAP TS 9.0',
+            'METHOD:PUBLISH',
+            'BEGIN:VTIMEZONE',
+            'TZID:W. Europe Standard Time',
+            'BEGIN:STANDARD',
+            'DTSTART:16011028T030000',
+            'TZOFFSETFROM:+0200',
+            'TZOFFSETTO:+0100',
+            'RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=10',
+            'END:STANDARD',
+            'BEGIN:DAYLIGHT',
+            'DTSTART:16010325T020000',
+            'TZOFFSETFROM:+0100',
+            'TZOFFSETTO:+0200',
+            'RRULE:FREQ=YEARLY;BYDAY=-1SU;BYMONTH=3',
+            'END:DAYLIGHT',
+            'END:VTIMEZONE',
+            'BEGIN:VEVENT',
+            'UID:F2D33EA6',
+            'ORGANIZER:feuerwehr@steinhausen.ch',
+            'DTSTAMP:20150707T105252Z',
+            'LAST-MODIFIED:20150707T105252Z',
+            'DTSTART;VALUE=DATE:20161222',
+            'DTEND;VALUE=DATE:20170105',
+            'SUMMARY;LANGUAGE=de:Weihnachtsferien',
+            'DESCRIPTION;LANGUAGE=de:GVZG 1601',
+            'END:VEVENT',
+            'BEGIN:VEVENT',
+            'UID:D9ED6A0B',
+            'DTSTAMP:20151013T121911Z',
+            'LAST-MODIFIED:20151013T121911Z',
+            'DTSTART;TZID="W. Europe Standard Time":20161115T193000',
+            'DURATION:PT2H0M0S',
+            'SUMMARY;LANGUAGE=de:5. Uebung Fahrtraining C',
+            'END:VEVENT',
+            'END:VCALENDAR'
+        ))
+
+        context = mock.Mock()
+        context.url = 'url'
+        context.default_description = 'default'
+
+        source = EventsSourceIcal(context)
+        events = [event for event in source.fetch(ical_string)]
+
+        self.assertEquals(len(events), 2)
+
+        e = events[0]
+        self.assertEquals(e['attachment_1'], None)
+        self.assertEquals(e['attachment_2'], None)
+        self.assertEquals(e['cat1'], set())
+        self.assertEquals(e['cat2'], set())
+        self.assertEquals(e['contact_email'], '')
+        self.assertEquals(e['contact_name'], '')
+        self.assertEquals(e['contact_phone'], '')
+        self.assertEquals(e['end'], datetime(2017, 1, 5, 0, 0,
+                                             tzinfo=pytz.UTC))
+        self.assertEquals(e['event_url'], '')
+        self.assertEquals(e['fetch_id'], 'url')
+        self.assertEquals(e['housenumber'], '')
+        self.assertEquals(e['image'], None)
+        self.assertEquals(e['last_update'], datetime(2015, 7, 7, 10, 52, 52,
+                                                     tzinfo=pytz.UTC))
+        self.assertEquals(e['latitude'], None)
+        self.assertEquals(e['locality'], '')
+        self.assertEquals(e['location_url'], '')
+        self.assertEquals(e['long_description'], '')
+        self.assertEquals(e['longitude'], None)
+        self.assertEquals(e['organizer'], '')
+        self.assertEquals(e['prices'], '')
+        self.assertEquals(e['recurrence'], '')
+        self.assertEquals(e['registration'], '')
+        self.assertEquals(e['short_description'], u'Gvzg 1601')
+        self.assertEquals(e['source_id'], u'F2D33Ea6')
+        self.assertEquals(e['start'], datetime(2016, 12, 22, 0, 0,
+                                               tzinfo=pytz.UTC))
+        self.assertEquals(e['street'], '')
+        self.assertEquals(e['submitter'], u'feuerwehr@steinhausen.ch')
+        self.assertEquals(e['submitter_email'], u'feuerwehr@steinhausen.ch')
+        self.assertEquals(e['timezone'], 'Europe/Zurich')
+        self.assertEquals(e['title'], u'Weihnachtsferien')
+        self.assertEquals(e['town'], '')
+        self.assertEquals(e['whole_day'], False)
+        self.assertEquals(e['zipcode'], '')
+
+        e = events[1]
+        self.assertEquals(e['attachment_1'], None)
+        self.assertEquals(e['attachment_2'], None)
+        self.assertEquals(e['cat1'], set([]))
+        self.assertEquals(e['cat2'], set([]))
+        self.assertEquals(e['contact_email'], '')
+        self.assertEquals(e['contact_name'], '')
+        self.assertEquals(e['contact_phone'], '')
+        self.assertEquals(e['end'], datetime(2016, 11, 15, 20, 30,
+                                             tzinfo=pytz.UTC))
+        self.assertEquals(e['event_url'], '')
+        self.assertEquals(e['fetch_id'], 'url')
+        self.assertEquals(e['housenumber'], '')
+        self.assertEquals(e['image'], None)
+        self.assertEquals(e['last_update'], datetime(2015, 10, 13, 12, 19, 11,
+                                                     tzinfo=pytz.UTC))
+        self.assertEquals(e['latitude'], None)
+        self.assertEquals(e['locality'], '')
+        self.assertEquals(e['location_url'], '')
+        self.assertEquals(e['long_description'], '')
+        self.assertEquals(e['longitude'], None)
+        self.assertEquals(e['organizer'], '')
+        self.assertEquals(e['prices'], '')
+        self.assertEquals(e['recurrence'], '')
+        self.assertEquals(e['registration'], '')
+        self.assertEquals(e['short_description'], 'default')
+        self.assertEquals(e['source_id'], u'D9Ed6A0B')
+        self.assertEquals(e['start'], datetime(2016, 11, 15, 18, 30,
+                                               tzinfo=pytz.UTC))
+        self.assertEquals(e['street'], '')
+        self.assertEquals(e['submitter'], 'ical@example.com')
+        self.assertEquals(e['submitter_email'], 'ical@example.com')
+        self.assertEquals(e['timezone'], 'Europe/Zurich')
+        self.assertEquals(e['title'], u'5. Uebung Fahrtraining C')
+        self.assertEquals(e['town'], '')
+        self.assertEquals(e['whole_day'], False)
+        self.assertEquals(e['zipcode'], '')
 
     def test_seantis_import_build_url(self):
         context = mock.Mock()

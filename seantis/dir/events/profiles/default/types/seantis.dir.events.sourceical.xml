@@ -1,26 +1,21 @@
 <?xml version="1.0"?>
-<object name="seantis.dir.events.directory" meta_type="Dexterity FTI"
+<object name="seantis.dir.events.sourceical" meta_type="Dexterity FTI"
    i18n:domain="seantis.dir.events" xmlns:i18n="http://xml.zope.org/namespaces/i18n">
 
  <!-- Basic metadata -->
- <property name="title" i18n:translate="">Events Directory</property>
- <property name="description" i18n:translate=""></property>
- <property name="icon_expr">string:${portal_url}/folder_icon.png</property>
+ <property name="title" i18n:translate="">iCal Import</property>
+ <property name="description" i18n:translate="">Allows to import events from iCalendar</property>
+ <property name="icon_expr">string:${portal_url}/topic_icon.png</property>
  <property name="allow_discussion">False</property>
- <property name="global_allow">True</property>
+ <property name="global_allow">False</property>
  <property name="filter_content_types">True</property>
- <property name="allowed_content_types">
-     <element value="seantis.dir.events.item" />
-     <element value="seantis.dir.events.sourceguidle" />
-     <element value="seantis.dir.events.sourceseantisjson" />
-     <element value="seantis.dir.events.sourceical" />
- </property>
+ <property name="allowed_content_types"></property>
 
  <!-- schema interface -->
- <property name="schema">seantis.dir.events.directory.IEventsDirectory</property>
+ <property name="schema">seantis.dir.events.sources.ical.IExternalEventSourceIcal</property>
 
  <!-- class used for content items -->
- <property name="klass">seantis.dir.events.directory.EventsDirectory</property>
+  <property name="klass">plone.dexterity.content.Item</property>
 
  <!-- add permission -->
  <property name="add_permission">cmf.AddPortalContent</property>
@@ -49,12 +44,4 @@
     url_expr="string:${object_url}/edit" visible="True">
   <permission value="Modify portal content"/>
  </action>
- <action title="Import" action_id="import" category="object" condition_expr=""
-    url_expr="string:${object_url}/import" visible="True">
-  <permission value="Modify portal content"/>
-  </action>
-  <action title="Export" action_id="export" category="object" condition_expr=""
-    url_expr="string:${object_url}/export" visible="True">
-  <permission value="Modify portal content"/>
-  </action>
 </object>
