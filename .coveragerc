@@ -7,3 +7,4 @@ omit =
     */test*
     */distutils/__init__.py
     */upgrades.py
+    */mock.py
