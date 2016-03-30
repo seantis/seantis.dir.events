@@ -911,8 +911,8 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(e['prices'], '')
         self.assertEquals(e['recurrence'], '')
         self.assertEquals(e['registration'], '')
-        self.assertEquals(e['short_description'], u'Gvzg 1601')
-        self.assertEquals(e['source_id'], u'F2D33Ea6')
+        self.assertEquals(e['short_description'], u'GVZG 1601')
+        self.assertEquals(e['source_id'], u'F2D33EA6')
         self.assertEquals(e['start'], datetime(2016, 12, 22, 0, 0,
                                                tzinfo=pytz.UTC))
         self.assertEquals(e['street'], '')
@@ -950,7 +950,7 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(e['recurrence'], '')
         self.assertEquals(e['registration'], '')
         self.assertEquals(e['short_description'], 'default')
-        self.assertEquals(e['source_id'], u'D9Ed6A0B')
+        self.assertEquals(e['source_id'], u'D9ED6A0B')
         self.assertEquals(e['start'], datetime(2016, 11, 15, 18, 30,
                                                tzinfo=pytz.UTC))
         self.assertEquals(e['street'], '')

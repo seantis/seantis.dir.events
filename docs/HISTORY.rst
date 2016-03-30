@@ -5,7 +5,8 @@ Changelog
 1.7.1 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Don't capitalize texts in ical import.
+  [msom]
 
 1.7 (2016-03-23)
 ~~~~~~~~~~~~~~~~

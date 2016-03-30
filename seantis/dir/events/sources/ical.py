@@ -16,9 +16,6 @@ log = getLogger('seantis.dir.events')
 
 class Missing():
 
-    def title(self):
-        return ''
-
     @property
     def dt(self):
         return None
@@ -51,7 +48,7 @@ class EventsSourceIcal(grok.Adapter):
 
             e = {}
 
-            uid = event.get('uid', Missing()).title()
+            uid = str(event.get('uid', ''))
             start = event.get('dtstart', Missing()).dt
             end = event.get('dtend', Missing()).dt
             duration = event.get('duration', Missing()).dt
@@ -76,12 +73,12 @@ class EventsSourceIcal(grok.Adapter):
             e['fetch_id'] = self.context.url
             e['last_update'] = event.get('last-modified', Missing()).dt
             e['source_id'] = uid
-            e['title'] = event.get('summary', Missing()).title()
-            e['locality'] = event.get('location', Missing()).title()
-            des = event.get('description', Missing()).title()
+            e['title'] = str(event.get('summary', ''))
+            e['locality'] = str(event.get('location', ''))
+            des = str(event.get('description', ''))
             des = self.context.default_description if not des else des
             e['short_description'] = des
-            organizer = event.get('organizer', Missing()).title().lower()
+            organizer = str(event.get('organizer', ''))
             organizer = 'ical@example.com' if not organizer else organizer
             e['submitter'] = organizer
             e['submitter_email'] = organizer
