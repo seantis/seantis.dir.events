@@ -48,7 +48,7 @@ class EventsSourceIcal(grok.Adapter):
 
             e = {}
 
-            uid = str(event.get('uid', ''))
+            uid = event.get('uid', '').encode('utf-8')
             start = event.get('dtstart', Missing()).dt
             end = event.get('dtend', Missing()).dt
             duration = event.get('duration', Missing()).dt
@@ -73,12 +73,12 @@ class EventsSourceIcal(grok.Adapter):
             e['fetch_id'] = self.context.url
             e['last_update'] = event.get('last-modified', Missing()).dt
             e['source_id'] = uid
-            e['title'] = str(event.get('summary', ''))
-            e['locality'] = str(event.get('location', ''))
-            des = str(event.get('description', ''))
+            e['title'] = event.get('summary', '').encode('utf-8')
+            e['locality'] = event.get('location', '').encode('utf-8')
+            des = event.get('description', '').encode('utf-8')
             des = self.context.default_description if not des else des
             e['short_description'] = des
-            organizer = str(event.get('organizer', ''))
+            organizer = event.get('organizer', '').encode('utf-8')
             organizer = 'ical@example.com' if not organizer else organizer
             e['submitter'] = organizer
             e['submitter_email'] = organizer
