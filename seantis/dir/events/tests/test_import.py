@@ -857,6 +857,25 @@ class TestImport(IntegrationTestCase):
             'END:DAYLIGHT',
             'END:VTIMEZONE',
             'BEGIN:VEVENT',
+            'UID:D9ED6A0B',
+            'DTSTAMP:20151013T121911Z',
+            'LAST-MODIFIED:20151013T121911Z',
+            'DTSTART;TZID="W. Europe Standard Time":20161115T193000',
+            'DURATION:PT2H0M0S',
+            'SUMMARY;LANGUAGE=de:5. Uebung Fahrtraining C',
+            'END:VEVENT',
+            'BEGIN:VEVENT',
+            'UID:7DF26883',
+            'ORGANIZER:feuerwehr@steinhausen.ch',
+            'DTSTAMP:20150928T134125Z',
+            'LAST-MODIFIED:20150928T134125Z',
+            'DTSTART;VALUE=DATE:20160402',
+            'DTEND;VALUE=DATE:20160403',
+            'SUMMARY;LANGUAGE=de:EFK Neueingeteilte im Verkehrsdienst',
+            'LOCATION;LANGUAGE=de:FFZ, 6300 Zug',
+            'DESCRIPTION;LANGUAGE=de:GVZG 1653',
+            'END:VEVENT',
+            'BEGIN:VEVENT',
             'UID:F2D33EA6',
             'ORGANIZER:feuerwehr@steinhausen.ch',
             'DTSTAMP:20150707T105252Z',
@@ -865,14 +884,6 @@ class TestImport(IntegrationTestCase):
             'DTEND;VALUE=DATE:20170105',
             'SUMMARY;LANGUAGE=de:Weihnachtsferien',
             'DESCRIPTION;LANGUAGE=de:GVZG 1601',
-            'END:VEVENT',
-            'BEGIN:VEVENT',
-            'UID:D9ED6A0B',
-            'DTSTAMP:20151013T121911Z',
-            'LAST-MODIFIED:20151013T121911Z',
-            'DTSTART;TZID="W. Europe Standard Time":20161115T193000',
-            'DURATION:PT2H0M0S',
-            'SUMMARY;LANGUAGE=de:5. Uebung Fahrtraining C',
             'END:VEVENT',
             'END:VCALENDAR'
         ))
@@ -884,47 +895,9 @@ class TestImport(IntegrationTestCase):
         source = EventsSourceIcal(context)
         events = [event for event in source.fetch(ical_string)]
 
-        self.assertEquals(len(events), 2)
+        self.assertEquals(len(events), 3)
 
         e = events[0]
-        self.assertEquals(e['attachment_1'], None)
-        self.assertEquals(e['attachment_2'], None)
-        self.assertEquals(e['cat1'], set())
-        self.assertEquals(e['cat2'], set())
-        self.assertEquals(e['contact_email'], '')
-        self.assertEquals(e['contact_name'], '')
-        self.assertEquals(e['contact_phone'], '')
-        self.assertEquals(e['end'], datetime(2017, 1, 5, 0, 0,
-                                             tzinfo=pytz.UTC))
-        self.assertEquals(e['event_url'], '')
-        self.assertEquals(e['fetch_id'], 'url')
-        self.assertEquals(e['housenumber'], '')
-        self.assertEquals(e['image'], None)
-        self.assertEquals(e['last_update'], datetime(2015, 7, 7, 10, 52, 52,
-                                                     tzinfo=pytz.UTC))
-        self.assertEquals(e['latitude'], None)
-        self.assertEquals(e['locality'], '')
-        self.assertEquals(e['location_url'], '')
-        self.assertEquals(e['long_description'], '')
-        self.assertEquals(e['longitude'], None)
-        self.assertEquals(e['organizer'], '')
-        self.assertEquals(e['prices'], '')
-        self.assertEquals(e['recurrence'], '')
-        self.assertEquals(e['registration'], '')
-        self.assertEquals(e['short_description'], u'GVZG 1601')
-        self.assertEquals(e['source_id'], u'F2D33EA6')
-        self.assertEquals(e['start'], datetime(2016, 12, 22, 0, 0,
-                                               tzinfo=pytz.UTC))
-        self.assertEquals(e['street'], '')
-        self.assertEquals(e['submitter'], u'feuerwehr@steinhausen.ch')
-        self.assertEquals(e['submitter_email'], u'feuerwehr@steinhausen.ch')
-        self.assertEquals(e['timezone'], 'Europe/Zurich')
-        self.assertEquals(e['title'], u'Weihnachtsferien')
-        self.assertEquals(e['town'], '')
-        self.assertEquals(e['whole_day'], False)
-        self.assertEquals(e['zipcode'], '')
-
-        e = events[1]
         self.assertEquals(e['attachment_1'], None)
         self.assertEquals(e['attachment_2'], None)
         self.assertEquals(e['cat1'], set([]))
@@ -960,6 +933,82 @@ class TestImport(IntegrationTestCase):
         self.assertEquals(e['title'], u'5. Uebung Fahrtraining C')
         self.assertEquals(e['town'], '')
         self.assertEquals(e['whole_day'], False)
+        self.assertEquals(e['zipcode'], '')
+
+        e = events[1]
+        self.assertEquals(e['attachment_1'], None)
+        self.assertEquals(e['attachment_2'], None)
+        self.assertEquals(e['cat1'], set([]))
+        self.assertEquals(e['cat2'], set([]))
+        self.assertEquals(e['contact_email'], '')
+        self.assertEquals(e['contact_name'], '')
+        self.assertEquals(e['contact_phone'], '')
+        self.assertEquals(e['end'], datetime(2016, 4, 2, 21, 59, 59, 999999,
+                                             tzinfo=pytz.UTC))
+        self.assertEquals(e['event_url'], '')
+        self.assertEquals(e['fetch_id'], 'url')
+        self.assertEquals(e['housenumber'], '')
+        self.assertEquals(e['image'], None)
+        self.assertEquals(e['last_update'], datetime(2015, 9, 28, 13, 41, 25,
+                                                     tzinfo=pytz.UTC))
+        self.assertEquals(e['latitude'], None)
+        self.assertEquals(e['locality'], 'FFZ, 6300 Zug')
+        self.assertEquals(e['location_url'], '')
+        self.assertEquals(e['long_description'], '')
+        self.assertEquals(e['longitude'], None)
+        self.assertEquals(e['organizer'], '')
+        self.assertEquals(e['prices'], '')
+        self.assertEquals(e['recurrence'], '')
+        self.assertEquals(e['registration'], '')
+        self.assertEquals(e['short_description'], 'GVZG 1653')
+        self.assertEquals(e['source_id'], u'7DF26883')
+        self.assertEquals(e['start'], datetime(2016, 4, 1, 22, 0,
+                                               tzinfo=pytz.UTC))
+        self.assertEquals(e['street'], '')
+        self.assertEquals(e['submitter'], 'feuerwehr@steinhausen.ch')
+        self.assertEquals(e['submitter_email'], 'feuerwehr@steinhausen.ch')
+        self.assertEquals(e['timezone'], 'Europe/Zurich')
+        self.assertEquals(e['title'], u'EFK Neueingeteilte im Verkehrsdienst')
+        self.assertEquals(e['town'], '')
+        self.assertEquals(e['whole_day'], True)
+        self.assertEquals(e['zipcode'], '')
+
+        e = events[2]
+        self.assertEquals(e['attachment_1'], None)
+        self.assertEquals(e['attachment_2'], None)
+        self.assertEquals(e['cat1'], set())
+        self.assertEquals(e['cat2'], set())
+        self.assertEquals(e['contact_email'], '')
+        self.assertEquals(e['contact_name'], '')
+        self.assertEquals(e['contact_phone'], '')
+        self.assertEquals(e['end'], datetime(2017, 1, 4, 22, 59, 59, 999999,
+                                             tzinfo=pytz.UTC))
+        self.assertEquals(e['event_url'], '')
+        self.assertEquals(e['fetch_id'], 'url')
+        self.assertEquals(e['housenumber'], '')
+        self.assertEquals(e['image'], None)
+        self.assertEquals(e['last_update'], datetime(2015, 7, 7, 10, 52, 52,
+                                                     tzinfo=pytz.UTC))
+        self.assertEquals(e['latitude'], None)
+        self.assertEquals(e['locality'], '')
+        self.assertEquals(e['location_url'], '')
+        self.assertEquals(e['long_description'], '')
+        self.assertEquals(e['longitude'], None)
+        self.assertEquals(e['organizer'], '')
+        self.assertEquals(e['prices'], '')
+        self.assertEquals(e['recurrence'], '')
+        self.assertEquals(e['registration'], '')
+        self.assertEquals(e['short_description'], u'GVZG 1601')
+        self.assertEquals(e['source_id'], u'F2D33EA6')
+        self.assertEquals(e['start'], datetime(2016, 12, 21, 23, 0,
+                                               tzinfo=pytz.UTC))
+        self.assertEquals(e['street'], '')
+        self.assertEquals(e['submitter'], u'feuerwehr@steinhausen.ch')
+        self.assertEquals(e['submitter_email'], u'feuerwehr@steinhausen.ch')
+        self.assertEquals(e['timezone'], 'Europe/Zurich')
+        self.assertEquals(e['title'], u'Weihnachtsferien')
+        self.assertEquals(e['town'], '')
+        self.assertEquals(e['whole_day'], True)
         self.assertEquals(e['zipcode'], '')
 
     def test_seantis_import_build_url(self):

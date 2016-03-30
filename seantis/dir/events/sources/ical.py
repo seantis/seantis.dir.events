@@ -1,9 +1,9 @@
 import icalendar
+import pytz
 
-from datetime import datetime
+from datetime import date, datetime, timedelta
 from five import grok
 from logging import getLogger
-from pytz import UTC
 from urllib2 import urlopen
 from seantis.dir.events.interfaces import (
     IExternalEventCollector,
@@ -21,14 +21,18 @@ class Missing():
         return None
 
 
-def as_utc(value):
+def as_timezone(value, timezone):
     if isinstance(value, datetime):
         if value.tzinfo:
-            return UTC.normalize(value)
+            return timezone.normalize(value)
 
-        return UTC.localize(value)
+        return timezone.localize(value)
 
-    return UTC.localize(datetime(value.year, value.month, value.day))
+    return timezone.localize(datetime(value.year, value.month, value.day))
+
+
+def as_utc(value):
+    return as_timezone(value, pytz.UTC)
 
 
 class EventsSourceIcal(grok.Adapter):
@@ -53,6 +57,16 @@ class EventsSourceIcal(grok.Adapter):
             end = event.get('dtend', Missing()).dt
             duration = event.get('duration', Missing()).dt
 
+            e['whole_day'] = False
+            if type(start) is date and type(end) is date:
+                e['whole_day'] = True
+
+            if type(start) is date:
+                start = as_timezone(start, pytz.timezone('Europe/Zurich'))
+            if type(end) is date:
+                end = as_timezone(end, pytz.timezone('Europe/Zurich'))
+                end = end - timedelta(microseconds=1)
+
             if start and end:
                 e['start'] = as_utc(start)
                 e['end'] = as_utc(end)
@@ -68,7 +82,6 @@ class EventsSourceIcal(grok.Adapter):
             # instead of olson names. We do the same here as with guidle and
             # assume Europe/Zurich!
             e['timezone'] = 'Europe/Zurich'
-            e['whole_day'] = e['start'] == e['end']
 
             e['fetch_id'] = self.context.url
             e['last_update'] = event.get('last-modified', Missing()).dt

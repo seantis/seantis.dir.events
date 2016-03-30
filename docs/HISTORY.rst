@@ -8,6 +8,9 @@ Changelog
 - Don't capitalize texts in ical import.
   [msom]
 
+- Fix whole day events in ical import.
+  [msom]
+
 1.7 (2016-03-23)
 ~~~~~~~~~~~~~~~~
 
