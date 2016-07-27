@@ -8,6 +8,9 @@ Changelog
 - Add missing test dependencies.
   [msom]
 
+- Depend on the latest plone.app.event version.
+  [msom]
+
 1.5.2 (2015-11-12)
 ~~~~~~~~~~~~~~~~~~
 
