@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.5.3 (unreleased)
+1.5.3 (2016-07-27)
 ~~~~~~~~~~~~~~~~~~
 
 - Add missing test dependencies.
