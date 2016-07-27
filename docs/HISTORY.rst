@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.7.2 (unreleased)
+1.7.2 (2016-07-27)
 ~~~~~~~~~~~~~~~~~~
 
 - Depend on the latest plone.app.event version.
