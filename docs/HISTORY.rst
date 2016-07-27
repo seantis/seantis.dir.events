@@ -2,6 +2,12 @@
 Changelog
 ---------
 
+1.5.3 (unreleased)
+~~~~~~~~~~~~~~~~~~
+
+- Add missing test dependencies.
+  [msom]
+
 1.5.2 (2015-11-12)
 ~~~~~~~~~~~~~~~~~~
 

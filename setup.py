@@ -5,7 +5,7 @@ name = 'seantis.dir.events'
 description = (
     "Directory of upcoming Events."
 )
-version = '1.5.2'
+version = '1.5.3'
 
 
 def get_long_description():
@@ -28,8 +28,9 @@ teamraum_require = [
 tests_require = [
     'collective.betterbrowser>=0.4',
     'collective.testcaselayer',
+    'mock',
     'plone.app.testing',
-    'mock'
+    'unittest2',
 ]
 
 setup(name=name, version=version, description=description,
