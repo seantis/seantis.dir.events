@@ -5,7 +5,8 @@ Changelog
 1.7.2 (unreleased)
 ~~~~~~~~~~~~~~~~~~
 
-Nothing yet.
+- Depend on the latest plone.app.event version.
+  [msom]
 
 1.7.1 (2016-03-30)
 ~~~~~~~~~~~~~~~~~~
