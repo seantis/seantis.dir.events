@@ -62,7 +62,7 @@ class CommonBrowserTests(BrowserTestCase):
         }
 
         for attr in defaults:
-            if not attr in kw:
+            if attr not in kw:
                 kw[attr] = defaults[attr]
 
         return kw
