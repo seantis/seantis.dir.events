@@ -1,43 +1,40 @@
 import logging
-log = logging.getLogger('seantis.dir.events')
-
 import transaction
-from transaction.interfaces import ISavepointDataManager
-from transaction._transaction import AbortSavepoint
 
+from blist import sortedset
 from datetime import datetime, timedelta
 from five import grok
-from itertools import ifilter, islice
 from functools import partial
-
+from itertools import ifilter, islice
 from plone.app.event.ical.exporter import construct_icalendar
 from plone.memoize import instance
-
-from threading import Lock
 from plone.synchronize import synchronized
-
-from zope.interface import implements
+from Products.CMFCore.interfaces import IActionSucceededEvent
+from seantis.dir.base.catalog import DirectoryCatalog
+from seantis.dir.base.interfaces import IDirectoryCatalog
+from seantis.dir.base.utils import previous_and_next
+from seantis.dir.events import dates
+from seantis.dir.events import recurrence
+from seantis.dir.events import utils
+from seantis.dir.events.interfaces import (
+    IEventsDirectory,
+    IEventsDirectoryItem,
+    IExternalEvent,
+    IExternalEventSource
+)
+from threading import Lock
+from transaction._transaction import AbortSavepoint
+from transaction.interfaces import ISavepointDataManager
 from zope.annotation.interfaces import IAnnotations
+from zope.interface import implements
 from zope.lifecycleevent.interfaces import (
     IObjectMovedEvent,
     IObjectModifiedEvent,
     IObjectRemovedEvent
 )
-from Products.CMFCore.interfaces import IActionSucceededEvent
 
-from seantis.dir.base.catalog import DirectoryCatalog
-from seantis.dir.base.interfaces import IDirectoryCatalog
-from seantis.dir.base.utils import previous_and_next, cached_property
 
-from seantis.dir.events import utils
-from seantis.dir.events import dates
-from seantis.dir.events import recurrence
-from seantis.dir.events.interfaces import (
-    IEventsDirectory, IEventsDirectoryItem, IExternalEvent,
-    IExternalEventSource
-)
-
-from blist import sortedset
+log = logging.getLogger('seantis.dir.events')
 
 
 # this is just awful
@@ -539,7 +536,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
 
     @instance.clearafter
     def set_import_source(self, source):
-        if not source in [s['id'] for s in self.import_sources()]:
+        if source not in [s['id'] for s in self.import_sources()]:
             source = ''
         self._import_source = source
 
@@ -623,7 +620,7 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         )
 
     def limit_subset_to_source(self):
-        if self.import_source != '' and self.subset == None:
+        if self.import_source != '' and self.subset is None:
             self.subset = sorted(self.query(), key=self.sortkey())
 
     def export(self, search=None, term=None, max=None, imported=False, **kw):

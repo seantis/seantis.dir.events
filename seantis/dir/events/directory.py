@@ -1,5 +1,4 @@
 import logging
-log = logging.getLogger('seantis.dir.events')
 
 from AccessControl import getSecurityManager
 from datetime import date
@@ -15,13 +14,18 @@ from seantis.dir.events import _
 from seantis.dir.events import dates
 from seantis.dir.events import utils
 from seantis.dir.events.interfaces import (
-    IEventsDirectory, IActionGuard, IResourceViewedEvent, IExternalEvent
+    IEventsDirectory,
+    IActionGuard,
+    IResourceViewedEvent,
+    IExternalEvent
 )
 from seantis.dir.events.recurrence import grouped_occurrences
 from urllib import quote_plus
 from zope.component import queryAdapter
 from zope.event import notify
 from zope.interface import implements
+
+log = logging.getLogger('seantis.dir.events')
 
 
 class ResourceViewedEvent(object):
