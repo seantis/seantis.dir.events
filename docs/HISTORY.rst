@@ -2,7 +2,7 @@
 Changelog
 ---------
 
-1.8 (unreleased)
+1.8 (2016-10-25)
 ~~~~~~~~~~~~~~~~
 
 - Add new state filter: Archived.
