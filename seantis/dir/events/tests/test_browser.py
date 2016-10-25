@@ -103,13 +103,27 @@ class CommonBrowserTests(BrowserTestCase):
         self.assertFalse('Archive' in fourchan.contents)
 
         # archiving the event should hide it again
-        browser.getLink('Archive').click()
+        browser.getLink('Archive', index=1).click()
         browser.open('/veranstaltungen')
 
         self.assertFalse('Some Party' in browser.contents)
 
         fourchan.open(browser.url)
         self.assertFalse('SomeParty' in browser.contents)
+
+        # archive it permanently (both events)
+        browser.open('/veranstaltungen?state=archived')
+        self.assertTrue('Some Party' in browser.contents)
+        self.assertTrue('Archive permanently' in browser.contents)
+        browser.getLink('Archive permanently').click()
+
+        browser.open('/veranstaltungen?state=archived')
+        self.assertTrue('Some Party' in browser.contents)
+        self.assertTrue('Archive permanently' in browser.contents)
+        browser.getLink('Archive permanently').click()
+
+        browser.open('/veranstaltungen?state=archived')
+        self.assertFalse('Some Party' in browser.contents)
 
     def test_preview(self):
 

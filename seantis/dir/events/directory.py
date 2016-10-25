@@ -478,7 +478,8 @@ class EventsDirectoryView(directory.View):
         return [
             ('submitted', submitted),
             ('published', _(u'Published')),
-            ('hidden', _(u'Hidden'))
+            ('hidden', _(u'Hidden')),
+            ('archived', _(u'Archived')),
         ]
 
     def state_url(self, method):

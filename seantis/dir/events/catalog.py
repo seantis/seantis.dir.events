@@ -451,9 +451,12 @@ class EventsDirectoryCatalog(DirectoryCatalog):
         self.ix_submitted = self.index_for_state('submitted')
         self.ix_published = self.index_for_state('published')
         self.ix_hidden = self.index_for_state('hidden')
+        self.ix_archived = self.index_for_state('archived')
         self.indices = dict(
-            submitted=self.ix_submitted, published=self.ix_published,
-            hidden=self.ix_hidden
+            submitted=self.ix_submitted,
+            published=self.ix_published,
+            hidden=self.ix_hidden,
+            archived=self.ix_archived
         )
 
     def daterange_dates(self):

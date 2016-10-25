@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-03-23 09:06+0000\n"
+"POT-Creation-Date: 2016-10-25 14:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,7 +54,15 @@ msgstr "Erlaubt den Import von Veranstaltungen von iCalendar"
 msgid "An import source condition makes the rule apply only to content with the given import source."
 msgstr "Eine Importquellenbedingung überprüft einen Inhalt auf dessen Import-Quelle."
 
-#: ./item.py:130
+#: ./configure.zcml:122
+msgid "Apply only when the current content object has the given source"
+msgstr ""
+
+#: ./directory.py:482
+msgid "Archived"
+msgstr "Archiviert"
+
+#: ./item.py:133
 msgid "Attachment ${number}"
 msgstr "Anhang ${number}"
 
@@ -78,6 +86,10 @@ msgstr "Lösche automatisch bereits importierte Veranstaltungen, welche nicht me
 #: ./form.py:928
 msgid "Back"
 msgstr "Zurück"
+
+#: ./configure.zcml:71
+msgid "Base Profile for Seantis Dir Events, Minimal Styles"
+msgstr ""
 
 #: ./templates/directory.pt:139
 msgid "Calendar Export"
@@ -184,6 +196,14 @@ msgstr "Erfassen"
 msgid "Event"
 msgstr "Veranstaltung"
 
+#: ./configure.zcml:62
+msgid "Event Data relevant in a submission, but not for display"
+msgstr ""
+
+#: ./configure.zcml:122
+msgid "Event Import Source"
+msgstr ""
+
 #: ./form.py:600
 msgid "Event Preview Updated"
 msgstr "Veranstaltungs Vorschau Aktualisiert"
@@ -195,6 +215,10 @@ msgstr "\"Veranstaltung melden\" Link"
 #: ./form.py:720
 msgid "Event Saved"
 msgstr "Veranstaltung gespeichert"
+
+#: ./configure.zcml:62
+msgid "Event Submission Data"
+msgstr ""
 
 #: ./form.py:898
 msgid "Event Submission Finish"
@@ -224,15 +248,19 @@ msgstr "Veranstaltungs-Meldung abgebrochen"
 msgid "Event submitted"
 msgstr "Veranstaltung gemeldet"
 
-#: ./item.py:182
+#: ./item.py:185
 msgid "Event was archived"
 msgstr "Die Veranstaltung wurde archiviert"
 
-#: ./item.py:184
+#: ./item.py:188
+msgid "Event was archived permanently"
+msgstr "Dier Veranstaltung wurde permanent archiviert"
+
+#: ./item.py:187
 msgid "Event was hidden"
 msgstr "Die Veranstaltung wurde versteckt"
 
-#: ./item.py:181
+#: ./item.py:184
 msgid "Event was published"
 msgstr "Die Veranstaltung wurde veröffentlicht"
 
@@ -304,7 +332,7 @@ msgstr "Guidle Import"
 msgid "Guidle URL to download from"
 msgstr "Guidle-URL"
 
-#: ./directory.py:477
+#: ./directory.py:481
 msgid "Hidden"
 msgstr "Versteckt"
 
@@ -315,6 +343,10 @@ msgstr "Hausnummer"
 #: ./form.py:829
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
 msgstr "Ich stimme den <a target='_blank' href='${url}'>Allgemeinen Geschäftsbedingungen</a> zu"
+
+#: ./configure.zcml:87
+msgid "IZug Basetheme Profile for Seantis Dir Events"
+msgstr ""
 
 #: ./interfaces.py:99
 msgid "If a link is given, the \"submit event\" link on the directory will point to that link, instead of the internal submit form. If left empty, the internal submit form remains. Use this, if events should be submitted on an external website. "
@@ -417,11 +449,11 @@ msgstr "Name"
 msgid "No changes were applied"
 msgstr "Keine Änderungen"
 
-#: ./directory.py:254
+#: ./directory.py:258
 msgid "No events for the current daterange"
 msgstr "Keine Veranstaltungen gefunden."
 
-#: ./directory.py:256
+#: ./directory.py:260
 msgid "No events for the current state"
 msgstr "Keine Veranstaltungen gefunden."
 
@@ -458,15 +490,19 @@ msgstr "Bitte wählen Sie mindestens eine Kategorie"
 msgid "Please enter at least one suggestion"
 msgstr "Bitte geben Sie mindestens einen Vorschlag ein"
 
+#: ./configure.zcml:95
+msgid "Plonetheme Teamraum Profile for Seantis Dir Events"
+msgstr ""
+
 #: ./interfaces.py:244
 msgid "Prices"
 msgstr "Preise"
 
-#: ./item.py:183
+#: ./item.py:186
 msgid "Publication of event was denied"
 msgstr "Die Veranstaltung wurde abgelehnt"
 
-#: ./directory.py:476
+#: ./directory.py:480
 msgid "Published"
 msgstr "Veröffentlicht"
 
@@ -485,6 +521,22 @@ msgstr "Sa"
 #: ./form.py:682
 msgid "Save Event"
 msgstr "Veranstaltung speichern"
+
+#: ./configure.zcml:71
+msgid "Seantis Dir Events"
+msgstr ""
+
+#: ./configure.zcml:79
+msgid "Seantis Dir Events - for default plone theme"
+msgstr ""
+
+#: ./configure.zcml:87
+msgid "Seantis Dir Events - for izug.basetheme"
+msgstr ""
+
+#: ./configure.zcml:95
+msgid "Seantis Dir Events - for plonetheme.teamraum"
+msgstr ""
 
 #: ./form.py:454
 msgid "Send us your events and we will publish them"
@@ -542,7 +594,7 @@ msgstr "Melden"
 msgid "Submit Your Event"
 msgstr "Veranstaltung melden"
 
-#: ./directory.py:471
+#: ./directory.py:475
 msgid "Submitted"
 msgstr "Gemeldet"
 
@@ -567,11 +619,15 @@ msgstr "Vorgeschlagene Werte für die Was-Kategorie"
 msgid "Suggested Values for the Where-Category"
 msgstr "Vorgeschlagene Werte für die Wo-Kategorie"
 
+#: ./configure.zcml:79
+msgid "Sunburst Profile for Seantis Dir Events, Usually You Want This"
+msgstr ""
+
 #: ./interfaces.py:363
 msgid "Synchronise deleted events"
 msgstr "Synchronisiere gelöschte Veranstaltungen"
 
-#: ./directory.py:526
+#: ./directory.py:531
 #: ./interfaces.py:87
 msgid "Terms and Conditions"
 msgstr "Allgemeine Geschäftsbedingungen"
@@ -670,7 +726,7 @@ msgstr "Quelle, welche diese Veranstaltung importiert hat"
 msgid "We"
 msgstr "Mi"
 
-#: ./directory.py:37
+#: ./directory.py:41
 #: ./interfaces.py:417
 msgid "What"
 msgstr "Was"
@@ -679,7 +735,7 @@ msgstr "Was"
 msgid "When will this event occur?"
 msgstr "Wann wird diese Veranstaltung stattfinden?"
 
-#: ./directory.py:37
+#: ./directory.py:41
 #: ./interfaces.py:423
 msgid "Where"
 msgstr "Wo"

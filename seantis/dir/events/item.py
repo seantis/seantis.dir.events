@@ -43,7 +43,10 @@ def onClonedEvent(item, event):
 
 class EventsDirectoryItem(item.DirectoryItem):
 
-    actions_order = ('submit', 'publish', 'deny', 'archive', 'hide')
+    actions_order = (
+        'submit', 'publish', 'deny', 'archive', 'hide',
+        'archive_permanently'
+    )
 
     # there's currently an issue with seantis.dir.events, plone.app.event and
     # plone.app.imaging. this mock function servers as a work-around.
@@ -181,7 +184,8 @@ class DoActionView(grok.View):
         'publish': _(u'Event was published'),
         'archive': _(u'Event was archived'),
         'deny': _(u'Publication of event was denied'),
-        'hide': _(u'Event was hidden')
+        'hide': _(u'Event was hidden'),
+        'archive_permanently': _(u'Event was archived permanently')
     }
 
     def render(self):

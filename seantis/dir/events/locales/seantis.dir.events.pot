@@ -4,7 +4,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-03-23 09:06+0000\n"
+"POT-Creation-Date: 2016-10-25 14:05+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -57,7 +57,15 @@ msgstr ""
 msgid "An import source condition makes the rule apply only to content with the given import source."
 msgstr ""
 
-#: ./item.py:130
+#: ./configure.zcml:122
+msgid "Apply only when the current content object has the given source"
+msgstr ""
+
+#: ./directory.py:482
+msgid "Archived"
+msgstr ""
+
+#: ./item.py:133
 msgid "Attachment ${number}"
 msgstr ""
 
@@ -80,6 +88,10 @@ msgstr ""
 
 #: ./form.py:928
 msgid "Back"
+msgstr ""
+
+#: ./configure.zcml:71
+msgid "Base Profile for Seantis Dir Events, Minimal Styles"
 msgstr ""
 
 #: ./templates/directory.pt:139
@@ -187,6 +199,14 @@ msgstr ""
 msgid "Event"
 msgstr ""
 
+#: ./configure.zcml:62
+msgid "Event Data relevant in a submission, but not for display"
+msgstr ""
+
+#: ./configure.zcml:122
+msgid "Event Import Source"
+msgstr ""
+
 #: ./form.py:600
 msgid "Event Preview Updated"
 msgstr ""
@@ -197,6 +217,10 @@ msgstr ""
 
 #: ./form.py:720
 msgid "Event Saved"
+msgstr ""
+
+#: ./configure.zcml:62
+msgid "Event Submission Data"
 msgstr ""
 
 #: ./form.py:898
@@ -227,15 +251,19 @@ msgstr ""
 msgid "Event submitted"
 msgstr ""
 
-#: ./item.py:182
+#: ./item.py:185
 msgid "Event was archived"
 msgstr ""
 
-#: ./item.py:184
+#: ./item.py:188
+msgid "Event was archived permanently"
+msgstr ""
+
+#: ./item.py:187
 msgid "Event was hidden"
 msgstr ""
 
-#: ./item.py:181
+#: ./item.py:184
 msgid "Event was published"
 msgstr ""
 
@@ -307,7 +335,7 @@ msgstr ""
 msgid "Guidle URL to download from"
 msgstr ""
 
-#: ./directory.py:477
+#: ./directory.py:481
 msgid "Hidden"
 msgstr ""
 
@@ -317,6 +345,10 @@ msgstr ""
 
 #: ./form.py:829
 msgid "I agree to the <a target='_blank' href='${url}'>Terms and Conditions</a>"
+msgstr ""
+
+#: ./configure.zcml:87
+msgid "IZug Basetheme Profile for Seantis Dir Events"
 msgstr ""
 
 #: ./interfaces.py:99
@@ -420,11 +452,11 @@ msgstr ""
 msgid "No changes were applied"
 msgstr ""
 
-#: ./directory.py:254
+#: ./directory.py:258
 msgid "No events for the current daterange"
 msgstr ""
 
-#: ./directory.py:256
+#: ./directory.py:260
 msgid "No events for the current state"
 msgstr ""
 
@@ -461,15 +493,19 @@ msgstr ""
 msgid "Please enter at least one suggestion"
 msgstr ""
 
+#: ./configure.zcml:95
+msgid "Plonetheme Teamraum Profile for Seantis Dir Events"
+msgstr ""
+
 #: ./interfaces.py:244
 msgid "Prices"
 msgstr ""
 
-#: ./item.py:183
+#: ./item.py:186
 msgid "Publication of event was denied"
 msgstr ""
 
-#: ./directory.py:476
+#: ./directory.py:480
 msgid "Published"
 msgstr ""
 
@@ -487,6 +523,22 @@ msgstr ""
 
 #: ./form.py:682
 msgid "Save Event"
+msgstr ""
+
+#: ./configure.zcml:71
+msgid "Seantis Dir Events"
+msgstr ""
+
+#: ./configure.zcml:79
+msgid "Seantis Dir Events - for default plone theme"
+msgstr ""
+
+#: ./configure.zcml:87
+msgid "Seantis Dir Events - for izug.basetheme"
+msgstr ""
+
+#: ./configure.zcml:95
+msgid "Seantis Dir Events - for plonetheme.teamraum"
 msgstr ""
 
 #: ./form.py:454
@@ -545,7 +597,7 @@ msgstr ""
 msgid "Submit Your Event"
 msgstr ""
 
-#: ./directory.py:471
+#: ./directory.py:475
 msgid "Submitted"
 msgstr ""
 
@@ -570,11 +622,15 @@ msgstr ""
 msgid "Suggested Values for the Where-Category"
 msgstr ""
 
+#: ./configure.zcml:79
+msgid "Sunburst Profile for Seantis Dir Events, Usually You Want This"
+msgstr ""
+
 #: ./interfaces.py:363
 msgid "Synchronise deleted events"
 msgstr ""
 
-#: ./directory.py:526
+#: ./directory.py:531
 #: ./interfaces.py:87
 msgid "Terms and Conditions"
 msgstr ""
@@ -673,7 +729,7 @@ msgstr ""
 msgid "We"
 msgstr ""
 
-#: ./directory.py:37
+#: ./directory.py:41
 #: ./interfaces.py:417
 msgid "What"
 msgstr ""
@@ -682,7 +738,7 @@ msgstr ""
 msgid "When will this event occur?"
 msgstr ""
 
-#: ./directory.py:37
+#: ./directory.py:41
 #: ./interfaces.py:423
 msgid "Where"
 msgstr ""
@@ -710,4 +766,3 @@ msgstr ""
 #: ./interfaces.py:441
 msgid "iCal URL"
 msgstr ""
-

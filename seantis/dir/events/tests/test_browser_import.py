@@ -131,15 +131,15 @@ class CommonBrowserTests(BrowserTestCase):
 
         # Imported Events can be hidden
         admin.open('/veranstaltungen?source=')
-        self.assertTrue('Hide' in admin.contents)
-        self.assertTrue('Archive' not in admin.contents)
+        self.assertTrue('action=hide' in admin.contents)
+        self.assertTrue('action=archive' not in admin.contents)
 
         # Hide an event
         admin.open('/veranstaltungen/event1-2/do-action?action=hide')
         admin.open('/veranstaltungen')
         self.assertTrue('/event1-2' not in admin.contents)
         admin.open('/veranstaltungen?state=hidden')
-        self.assertTrue('Publish' in admin.contents)
+        self.assertTrue('action=publish' in admin.contents)
         self.assertTrue('/event1-2' in admin.contents)
 
         # Re-publish it

@@ -2,10 +2,11 @@
 Changelog
 ---------
 
-1.7.3 (unreleased)
-~~~~~~~~~~~~~~~~~~
+1.8 (unreleased)
+~~~~~~~~~~~~~~~~
 
-Nothing yet
+- Add new state filter: Archived.
+  [msom]
 
 1.7.2 (2016-07-27)
 ~~~~~~~~~~~~~~~~~~
