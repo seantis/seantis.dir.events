@@ -306,8 +306,9 @@ class DateGroup(EventBaseGroup):
             'submission_range_end_date'
         )
         for field in date_widget_fields:
+            self.fields['submission_date']
             self.fields[field].widgetFactory = ParameterizedWidgetFactory(
-                DateWidget, first_day=first_weekday_sun0
+                DateWidget, first_day=first_weekday_sun0, years_range=(0, 5)
             )
 
         self.fields['submission_days'].widgetFactory = CheckBoxFieldWidget

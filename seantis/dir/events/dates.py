@@ -7,7 +7,7 @@ from plone.app.event.base import default_timezone
 from seantis.dir.events import utils
 from seantis.dir.events import _
 
-default_daterange = 'this_and_next_year'
+default_daterange = 'all'
 
 
 def eventrange():
@@ -21,7 +21,7 @@ def eventrange():
     # is Baker / Howland Island with an UTC Offset of -12
     return (
         this_morning - timedelta(seconds=60 * 60 * 12),
-        this_morning + timedelta(days=365 * 2)
+        this_morning + timedelta(days=366 * 6)
     )
 
 
@@ -291,6 +291,11 @@ class DateRanges(object):
     def overlaps(self, method, start, end):
         s, e = getattr(self, method)
         return overlaps(s, e, start, end)
+
+    @property
+    @daterange(_(u'All'), _(u'All'))
+    def all(self):
+        return self.this_year[0], self.this_year[1] + timedelta(days=5 * 366)
 
     @property
     @daterange(_(u'Today'))

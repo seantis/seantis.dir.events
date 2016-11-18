@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2016-10-25 14:05+0000\n"
+"POT-Creation-Date: 2016-11-18 09:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI +ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,6 +29,10 @@ msgstr "Importquellenbedingung hinzufügen"
 #: ./form.py:872
 msgid "Adjust"
 msgstr "Korrigieren"
+
+#: ./dates.py:296
+msgid "All"
+msgstr "Alle"
 
 #: ./templates/directory.pt:143
 msgid "All Events"
@@ -147,7 +151,7 @@ msgstr "Weiter"
 msgid "Coordinates"
 msgstr "Koordinaten"
 
-#: ./dates.py:399
+#: ./dates.py:405
 msgid "Custom date range"
 msgstr "Benutzerdefinierte Zeitspanne"
 
@@ -300,27 +304,27 @@ msgstr "Abschliessen"
 msgid "Fr"
 msgstr "Fr"
 
-#: ./dates.py:399
+#: ./dates.py:405
 msgid "From ... to ..."
 msgstr "Von ... bis ..."
 
-#: ./dates.py:317
+#: ./dates.py:323
 msgid "From 4pm this Friday until 12pm this Sunday"
 msgstr "Von diesem Freitag 16 Uhr bis diesen Sonntag Nacht"
 
-#: ./dates.py:332
+#: ./dates.py:338
 msgid "From today until 12pm this Sunday"
 msgstr "Von Heute bis Sonntag Nacht"
 
-#: ./dates.py:393
+#: ./dates.py:399
 msgid "From today until the end of next year"
 msgstr "Von Heute bis Ende nächstes Jahr"
 
-#: ./dates.py:357
+#: ./dates.py:363
 msgid "From today until the end of the month"
 msgstr "Von Heute bis Monatsende"
 
-#: ./dates.py:371
+#: ./dates.py:377
 msgid "From today until the end of this year"
 msgstr "Von Heute bis Jahresende"
 
@@ -644,23 +648,23 @@ msgstr "Anzahl der Veranstaltungen, welche alle 15 Minuten importiert werden."
 msgid "The source id to check for. Leave empty for any source."
 msgstr "Die ID der zu überprüfende Quelle. Alle Quellen, falls leer."
 
-#: ./dates.py:357
+#: ./dates.py:363
 msgid "This Month"
 msgstr "Diesen Monat"
 
-#: ./dates.py:332
+#: ./dates.py:338
 msgid "This Week"
 msgstr "Diese Woche"
 
-#: ./dates.py:317
+#: ./dates.py:323
 msgid "This Weekend"
 msgstr "Dieses Wochenende"
 
-#: ./dates.py:371
+#: ./dates.py:377
 msgid "This Year"
 msgstr "Dieses Jahr"
 
-#: ./dates.py:393
+#: ./dates.py:399
 msgid "This and Next Year"
 msgstr "Dieses und nächstes Jahr"
 
