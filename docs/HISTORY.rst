@@ -2,6 +2,9 @@
 Changelog
 ---------
 
+1.9 (2016-11-18)
+~~~~~~~~~~~~~~~~
+
 - Add a new date filter: All (next 5 years).
   [msom]
 
