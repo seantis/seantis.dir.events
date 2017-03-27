@@ -2,6 +2,12 @@
 Changelog
 ---------
 
+1.9.1 (unreleased)
+~~~~~~~~~~~~~~~~~~
+
+- Add missing dependency.
+  [msom]
+
 1.9 (2016-11-18)
 ~~~~~~~~~~~~~~~~
 
