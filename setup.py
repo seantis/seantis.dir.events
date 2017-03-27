@@ -18,6 +18,7 @@ def get_long_description():
 
     return '\n'.join((readme, contributors, history))
 
+
 zug_require = [
     'ftw.contentmenu',
     'izug.basetheme',
@@ -52,6 +53,7 @@ setup(name=name, version=version, description=description,
           'setuptools',
           'Plone>=4.3',
           'python-dateutil',
+          'plone.app.event[archetypes]',
           'plone.app.event[dexterity]>=1.1.6',
           'plone.app.jquerytools',
           'plone.event>=1.3',
