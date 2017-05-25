@@ -7,18 +7,18 @@ The events are exported as JSON. Calling the export view returns an array of eve
 | Name              | Type             | Opt. *3)* | Description                              |
 | ----------------- | ---------------- | --------- | ---------------------------------------- |
 | last_update       | String           | -         | The date and time of the last change. ISO 8601 format. |
-| id                | String           | *****     | The unique identifier of the event.      |
-| url               | String           | *****     | The URL of the event.                    |
-| title             | String           | *****     | The title of the event.                  |
-| short_description | String           | *****     | The short description of the event. Up to 140 characters. |
+| id                | String           | *         | The unique identifier of the event.      |
+| url               | String           | *         | The URL of the event.                    |
+| title             | String           | *         | The title of the event.                  |
+| short_description | String           | *         | The short description of the event. Up to 140 characters. |
 | long_description  | String           | -         | The long description of the event.       |
-| cat1              | Array of Strings | *****     | The *what* categories. A new category is automatically added to the existing categories. |
-| cat2              | Array of Strings | *****     | The *where* categories. A new category is automatically added to the existing categories. |
-| start             | String           | *****     | The start date and time of the event. ISO 8601 format (UTC). *2), 3)* |
-| end               | String           | *****     | The start date and time of the event. ISO 8601 format (UTC). |
-| recurrence        | String           | *****     | An iCalendar RRULE (RFC 2445) describing the recurrence of the event. *3)* |
-| whole_day         | Boolean          | *****     | True, if this is an all-day event.       |
-| timezone          | String           | *****     | The timezone of the event . It is the name in the form of `area/location` as used by the IANA tz database. *2)* |
+| cat1              | Array of Strings | *         | The *what* categories. A new category is automatically added to the existing categories. |
+| cat2              | Array of Strings | *         | The *where* categories. A new category is automatically added to the existing categories. |
+| start             | String           | *         | The start date and time of the event. ISO 8601 format (UTC). *2), 3)* |
+| end               | String           | *         | The start date and time of the event. ISO 8601 format (UTC). |
+| recurrence        | String           | *         | An iCalendar RRULE (RFC 2445) describing the recurrence of the event. *3)* |
+| whole_day         | Boolean          | *         | True, if this is an all-day event.       |
+| timezone          | String           | *         | The timezone of the event . It is the name in the form of `area/location` as used by the IANA tz database. *2)* |
 | locality          | String           | -         | The name of the locatity this event happens. |
 | street            | String           | -         | The street number of the locality.       |
 | housenumber       | String           | -         | The house number of the locality.        |
@@ -69,4 +69,3 @@ To export the calendar as JSON, open `{URL to Calendar}?type=json`. The followin
 ## Importing
 
 It is possible to provide a source for importing events. Just provide a web service that returns your events in the format specified (use RRULES whenever possible). Optionally implement the category filter parameters.
-
